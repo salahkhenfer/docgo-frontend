@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import Logo from "../src/assets/logo.png";
+/* import { Outlet } from "react-router-dom"; */
+import Logo from "../src/assets/Logo.png";
 
 import "./index.css";
+import LendingPage from "./LandingPage/LandingPage";
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
   useEffect(() => {
     const fetch_images = () => {
       return new Promise((resolve, reject) => {
@@ -66,19 +67,7 @@ function App() {
 
   return (
     <div>
-      {loading ? (
-        <div className=" w-screen h-screen flex flex-col items-center justify-center">
-          <img src={Logo} alt="Logo" className=" w-32 mb-1 " />
-          <span className="loader"></span>
-        </div>
-      ) : (
-        <div>
-          {/* <NavBar /> */}
-          <div className="">
-            <Outlet />
-          </div>
-        </div>
-      )}
+      <LendingPage />
     </div>
   );
 }
