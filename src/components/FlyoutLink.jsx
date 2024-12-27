@@ -9,9 +9,9 @@ function FlyoutLink({ children, href, FlyoutContent }) {
     <div
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      className="relative w-fit h-fit"
+      className="relative w-fit h-fi hover:cursor-pointer  "
     >
-      <a href={href} className="relative text-white">
+      <a href={href} className="relative text-customGray">
         {children}
       </a>
       <AnimatePresence>
@@ -25,7 +25,7 @@ function FlyoutLink({ children, href, FlyoutContent }) {
             className="absolute left-1/2 top-12 bg-white text-black"
           >
             <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
-            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-white" />
+
             <FlyoutContent />
           </motion.div>
         )}
