@@ -50,7 +50,7 @@ function Navigation() {
         </div>
         <LightColoredButton text="Être étudiant" />
       </nav>
-      {/*  navigtion for mobile */}
+
       <NavigationMobile />
     </>
   );

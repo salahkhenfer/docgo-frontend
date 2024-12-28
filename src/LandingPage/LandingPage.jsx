@@ -1,6 +1,7 @@
 import HereoSection from "./Layout/HereoSection";
 import Navigation from "./Layout/Navigation";
 import StudySection from "./Layout/StudySection";
+import WhatToDoSection from "./Layout/WhatToDoSection";
 
 function LendingPage() {
   return (
@@ -8,6 +9,8 @@ function LendingPage() {
       <Navigation />
       <HereoSection />
       <StudySection />
+
+      <WhatToDoSection />
     </div>
   );
 }
