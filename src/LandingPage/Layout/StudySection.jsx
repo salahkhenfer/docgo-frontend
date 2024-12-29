@@ -3,8 +3,8 @@ import Select from "../../components/Select";
 
 function StudySection() {
   return (
-    <div className="3xl:py-16 3xl:px-80 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6  sm-sm:max-lg-sm:px-4">
-      <div className="gap-20 p-2 bg-customBlueLight mx-auto my-80   rounded-3xl w-[91rem] sm-sm:flex-col sm-sm:w-full  sm-sm:gap-0 sm-sm:pb-8 flex sm-lg:flex-row items-center justify-around ">
+    <div className="3xl:py-16 3xl:px-60 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6  sm-sm:max-lg-sm:px-4">
+      <div className="gap-20 p-2 bg-customBlueLight mx-auto my-80 sm-sm:max-sm:my-20  rounded-3xl w-[91rem] sm-sm:flex-col sm-sm:w-full  sm-sm:gap-0 sm-sm:pb-8 flex sm-lg:flex-row items-center justify-around ">
         <img
           className="scale-125 -translate-y-16 sm-sm:scale-90 sm-lg:scale-110 lg-md:scale-125 "
           src="../../../src/assets/ girl.png"
@@ -34,5 +34,4 @@ function StudySection() {
     </div>
   );
 }
-
 export default StudySection;

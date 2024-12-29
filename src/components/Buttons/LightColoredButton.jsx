@@ -1,9 +1,9 @@
-function LightColoredButton({ text, style }) {
+function LightColoredButton({ text, style, icon = "" }) {
   return (
     <button
       className={`bg-white text-customBlue border-[3px] border-solid border-customBlue px-8 py-3 rounded-3xl font-medium md:max-lg:text-sm  md:max-lg:px-4 md:max-lg:py-2 ${style}`}
     >
-      {text}
+      {icon} {text}
     </button>
   );
 }

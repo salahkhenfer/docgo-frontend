@@ -1,4 +1,8 @@
 import AboutUsSection from "./Layout/AboutUsSection";
+import CoursesSection from "./Layout/CoursesSection";
+import Footer from "./Layout/Footer";
+import FrequentlyAskedQuestions from "./Layout/FrequentlyAskedQuestions";
+import Helpsection from "./Layout/Helpsection";
 import HereoSection from "./Layout/HereoSection";
 import Navigation from "./Layout/Navigation";
 import OurServices from "./Layout/OurServices";
@@ -14,6 +18,10 @@ function LendingPage() {
       <WhatToDoSection />
       <AboutUsSection />
       <OurServices />
+      <CoursesSection />
+      <FrequentlyAskedQuestions />
+      <Helpsection />
+      <Footer />
     </div>
   );
 }
