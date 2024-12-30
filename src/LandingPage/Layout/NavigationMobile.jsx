@@ -91,7 +91,7 @@ const NavigationMobile = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed left-0 top-0 w-full h-full bg-white origin-top p-4"
+            className="fixed left-0 top-0 w-full h-full bg-white origin-top p-4  z-[1000]"
           >
             <div className="flex h-full flex-col gap-28">
               <motion.img

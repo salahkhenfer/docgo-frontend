@@ -14,6 +14,7 @@ function AboutUsSection() {
 
   return (
     <div
+      id="aboutUs"
       className="relative w-full min-h-screen py-16 flex items-center justify-center px-4 sm:px-6 lg:px-8"
       style={{
         backgroundImage: `url(${BackgroundImage})`,

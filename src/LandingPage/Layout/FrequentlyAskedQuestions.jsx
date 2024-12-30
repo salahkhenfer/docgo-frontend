@@ -12,6 +12,7 @@ function FrequentlyAskedQuestions() {
         backgroundAttachment: "fixed",
         backgroundPosition: "right",
         backgroundRepeat: "no-repeat",
+
         backgroundSize: "contain",
       }}
       className="w-full flex justify-center items-center bg-sky-50 mt-10 md:mt-20 min-h-screen relative"

@@ -2,7 +2,7 @@ import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import DropDownContent from "../../components/DropDownContent";
 import FlyoutLink from "../../components/FlyoutLink";
 import NavigationMobile from "./NavigationMobile";
-
+import { Link as ScrollSmooth } from "react-scroll";
 function Navigation() {
   return (
     <>
@@ -41,12 +41,28 @@ function Navigation() {
           >
             Autres spécialités{" "}
           </FlyoutLink>
-          <a href="#" className="no-underline text-customGray">
+          <ScrollSmooth
+            to="ourServices"
+            spy={true}
+            smooth={true}
+            hashSpy={true}
+            offset={-100}
+            duration={500}
+            className="no-underline text-customGray hover:cursor-pointer"
+          >
             Nos services
-          </a>
-          <a href="#" className="no-underline text-customGray">
+          </ScrollSmooth>
+          <ScrollSmooth
+            to="aboutUs"
+            spy={true}
+            smooth={true}
+            hashSpy={true}
+            offset={-100}
+            duration={500}
+            className="no-underline text-customGray hover:cursor-pointer"
+          >
             À propos de nous
-          </a>
+          </ScrollSmooth>
         </div>
         <LightColoredButton text="Être étudiant" />
       </nav>

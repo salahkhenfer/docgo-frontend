@@ -5,6 +5,8 @@ import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Auth/login/Login";
 import Register from "./Auth/register/Register";
 
+import LandingPage from "./LandingPage/LandingPage";
+
 const Routers = createBrowserRouter([
   {
     path: "/",
@@ -17,7 +19,7 @@ const Routers = createBrowserRouter([
       },
       {
         path: "/Home",
-        // element: <LandingPage />,
+        element: <LandingPage />,
         errorElement: <ErrorElement />,
       },
     ],

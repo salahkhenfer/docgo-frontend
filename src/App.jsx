@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-/* import { Outlet } from "react-router-dom"; */
+
 import Logo from "../src/assets/Logo.png";
 
 import "./index.css";
-import LendingPage from "./LandingPage/LandingPage";
+
+import { Outlet } from "react-router-dom";
 
 function App() {
   const [setLoading] = useState(true);
@@ -65,11 +66,7 @@ function App() {
       });
   }, []);
 
-  return (
-    <div>
-      <LendingPage />
-    </div>
-  );
+  return <div>{<Outlet />}</div>;
 }
 
 export default App;

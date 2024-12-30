@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { Link as ScrollSmooth } from "react-scroll";
 
 function FlyoutLink({ children, href, FlyoutContent }) {
   const [open, setOpen] = useState(false);
@@ -9,11 +10,20 @@ function FlyoutLink({ children, href, FlyoutContent }) {
     <div
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      className="relative w-fit h-fi hover:cursor-pointer  "
+      className="relative w-fit h-fit z-[1000] hover:cursor-pointer  "
     >
-      <a href={href} className="relative text-customGray">
+      <ScrollSmooth
+        to={href}
+        activeClass="active"
+        spy={true}
+        smooth={true}
+        hashSpy={true}
+        offset={50}
+        duration={500}
+        className="relative text-customGray"
+      >
         {children}
-      </a>
+      </ScrollSmooth>
       <AnimatePresence>
         {showFlyout && (
           <motion.div
@@ -22,7 +32,7 @@ function FlyoutLink({ children, href, FlyoutContent }) {
             exit={{ opacity: 0, y: 15 }}
             style={{ translateX: "-50%" }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute left-1/2 top-12 bg-white text-black"
+            className="absolute left-1/2 top-12  text-black"
           >
             <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
 

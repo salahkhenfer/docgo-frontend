@@ -14,7 +14,7 @@ function CardCourse({
   const lengthStar = new Array(starsNumber);
 
   return (
-    <motion.div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 w-full min-w-[280px] sm:min-w-[320px] lg:min-w-[380px]">
+    <motion.div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 w-full min-w-[240px] sm:min-w-[300px] lg:min-w-[380px]">
       <img
         className="w-full h-auto object-cover rounded-lg"
         src={url}
@@ -27,24 +27,24 @@ function CardCourse({
             key={index}
             src="../../src/assets/Star 3.png"
             alt="star icon"
-            className="w-4 sm:w-5 lg:w-6"
+            className="w-3 sm:w-4 lg:w-6"
           />
         ))}
       </div>
 
-      <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold text-customGray leading-normal">
+      <h3 className="text-sm sm:text-base lg:text-2xl xl:text-3xl font-semibold text-customGray leading-normal">
         {title}
       </h3>
 
-      <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-customGray font-medium">
+      <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-customGray font-medium">
         Le professeur : {ProfesseorName}
       </p>
 
-      <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-customGray font-light leading-normal line-clamp-3">
+      <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-customGray font-light leading-normal line-clamp-3">
         {description}
       </p>
 
-      <span className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-customGray font-bold">
+      <span className="text-sm sm:text-lg lg:text-2xl xl:text-3xl text-customGray font-bold">
         {price}DA
       </span>
 
@@ -53,7 +53,7 @@ function CardCourse({
           <img
             src="../../src/assets/hour.png"
             alt="hour icon"
-            className="w-4 sm:w-5 lg:w-6"
+            className="w-3 sm:w-4 lg:w-6"
           />
           <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
             {hours} heures
@@ -63,7 +63,7 @@ function CardCourse({
           <img
             src="../../src/assets/study.png"
             alt="study icon"
-            className="w-4 sm:w-5 lg:w-6"
+            className="w-3 sm:w-4 lg:w-6"
           />
           <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
             {lessonNumber} leçons
@@ -75,7 +75,7 @@ function CardCourse({
         <img
           src="../../src/assets/certeficate.png"
           alt="certeficate icon"
-          className="w-4 sm:w-5 lg:w-6"
+          className="w-3 sm:w-4 lg:w-6"
         />
         <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
           Certificat disponible
@@ -83,7 +83,7 @@ function CardCourse({
       </div>
 
       <DarkColorButton
-        style="2xl:w-full lg:text-base sm:w-[60%]  text-sm sm:text-base "
+        style="w-full text-xs sm:text-sm lg:text-base"
         text="Voir plus de détails"
       />
     </motion.div>

@@ -2,7 +2,10 @@ import Service from "../../components/Service";
 
 function OurServices() {
   return (
-    <div className="py-16 px-28 my-80 sm-sm:max-sm:my-20  flex flex-col  gap-12 items-center lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm-sm:max-lg-sm:px-4">
+    <div
+      id="ourServices"
+      className="py-16 px-28 my-48 sm-sm:max-sm:my-20  flex flex-col  gap-12 items-center lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm-sm:max-lg-sm:px-4"
+    >
       <h1 className="2xl:text-3xl sm:max-xl:text-2xl sm-sm:text-xl   font-medium text-customGray">
         Nos services
       </h1>

@@ -7,6 +7,7 @@ function CoursesSection() {
   const [position, setPosition] = useState(0);
   const [showLeftChevron, setShowLeftChevron] = useState(false);
   const [showRightChevron, setShowRightChevron] = useState(true);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
   const carousel = useRef();
   const cardsContainer = useRef();
 
@@ -17,11 +18,9 @@ function CoursesSection() {
     const contentWidth = cardsContainer.current.scrollWidth;
     const maxScroll = contentWidth - containerWidth;
 
-    // Update chevron visibility
     setShowLeftChevron(Math.abs(position) > 1);
     setShowRightChevron(Math.abs(position) < maxScroll - 1);
 
-    // Update total scrollable width
     setWidth(maxScroll);
   };
 
@@ -31,9 +30,9 @@ function CoursesSection() {
 
   useEffect(() => {
     const handleResize = () => {
-      // Reset position on resize to prevent content from being stuck
       setPosition(0);
       checkBoundaries();
+      setIsSmallScreen(window.innerWidth <= 768);
     };
 
     window.addEventListener("resize", handleResize);
@@ -43,7 +42,6 @@ function CoursesSection() {
   const getSlideAmount = () => {
     if (!carousel.current) return 0;
 
-    // Get one card's width including its gap
     const cards = carousel.current.getElementsByClassName("card-wrapper");
     if (cards.length === 0) return 0;
 
@@ -51,7 +49,6 @@ function CoursesSection() {
     const cardWidth = cards[0].offsetWidth;
     const cardMargin = parseInt(cardStyle.marginRight) || 0;
 
-    // Return the total width of one card including its gap
     return cardWidth + cardMargin;
   };
 
@@ -65,12 +62,19 @@ function CoursesSection() {
     const slideAmount = getSlideAmount();
     let newPosition = position - slideAmount;
 
-    // Prevent scrolling beyond the last card
     if (Math.abs(newPosition) > width) {
       newPosition = -width;
     }
 
     setPosition(newPosition);
+  };
+
+  const handleDragEnd = (event, info) => {
+    const dragDistance = info.offset.x;
+    const newPosition = Math.min(0, Math.max(position + dragDistance, -width));
+
+    setPosition(newPosition);
+    checkBoundaries();
   };
 
   const cards = [
@@ -137,7 +141,7 @@ function CoursesSection() {
   ];
 
   return (
-    <div className="flex items-center gap-4 sm:gap-8 lg:gap-16 mt-36 py-8 sm:py-12 lg:py-16 px-4 sm:px-8 lg:px-28 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm-sm:max-lg-sm:px-4">
+    <div className="flex items-center gap-4 sm:gap-8 lg:gap-16 xl:gap-24 2xl:gap-32 mt-20 py-8 sm:py-12 lg:py-16 px-4 sm:px-8 lg:px-28 xl:px-36 2xl:px-48">
       {showLeftChevron && (
         <button
           className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer flex-shrink-0"
@@ -152,21 +156,24 @@ function CoursesSection() {
       )}
       <motion.div
         ref={carousel}
-        className="flex flex-col gap-8 sm:gap-12 lg:gap-16 p-4 sm:p-8 lg:p-16 overflow-hidden"
+        className="flex flex-col gap-8 sm:gap-12 lg:gap-16 xl:gap-24 2xl:gap-32 p-4 sm:p-8 lg:p-16 overflow-hidden"
       >
-        <h1 className="text-center text-xl sm:text-2xl lg:text-5xl font-medium text-customGray">
+        <h1 className="text-center text-xl sm:text-2xl lg:text-5xl xl:text-6xl font-medium text-customGray">
           Approfondissez vos connaissances avec nos cours
         </h1>
         <motion.div
           ref={cardsContainer}
+          drag={isSmallScreen ? "x" : false}
+          dragConstraints={{ left: -width, right: 0 }}
+          onDragEnd={handleDragEnd}
           animate={{ x: position }}
           transition={{ duration: 0.5 }}
-          className="flex gap-4 sm:gap-8 lg:gap-16 items-center"
+          className="flex gap-4 sm:gap-8 lg:gap-16 xl:gap-24 2xl:gap-32 items-center"
         >
           {cards.map((card, index) => (
             <div
               key={index}
-              className="card-wrapper flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[380px]"
+              className="card-wrapper flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[380px] xl:w-[440px] 2xl:w-[500px]"
             >
               <CardCourse
                 url={card.url}
