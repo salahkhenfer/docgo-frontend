@@ -6,7 +6,7 @@ const AnswerQuestion = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="p-3 md:p-4 bg-white rounded-lg shadow-sm">
+    <div className="p-3 md:p-3 bg-white rounded-lg shadow-sm">
       <div className="flex flex-col gap-2">
         <motion.div
           className="flex justify-between items-center cursor-pointer"
@@ -14,7 +14,7 @@ const AnswerQuestion = ({ question, answer }) => {
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
         >
-          <p className="font-semibold text-lg md:text-2xl text-gray-700 pr-4">
+          <p className="font-semibold text-base md:text-lg text-gray-700 pr-4">
             {question}
           </p>
           <motion.div
@@ -39,7 +39,7 @@ const AnswerQuestion = ({ question, answer }) => {
               transition={{ duration: 0.3 }}
               style={{ overflow: "hidden" }}
             >
-              <p className="text-base md:text-lg text-gray-600 font-light leading-normal">
+              <p className="text-sm md:text-base text-gray-600 font-light leading-normal">
                 {answer}
               </p>
             </motion.div>

@@ -1,45 +1,51 @@
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import DropDownContent from "../../components/DropDownContent";
 import FlyoutLink from "../../components/FlyoutLink";
+import LanguageDropdown from "../../components/LanguageDropdown";
 import NavigationMobile from "./NavigationMobile";
 import { Link as ScrollSmooth } from "react-scroll";
+import { useTranslation } from "react-i18next";
 function Navigation() {
+  const { t } = useTranslation();
+
   return (
     <>
-      <nav className="flex justify-between items-center  px-28 py-16 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm:max-md:p-4  sm-sm:max-md:hidden">
+      <nav
+        className={`flex justify-between items-center px-28 py-16 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm:max-md:p-4  sm-sm:max-lg:hidden`}
+      >
         <img
-          className="w-28 h-28 rounded-full  md:max-3xl:w-20 md:max-3xl:h-20 md:max-lg:w-16 md:max-lg:h-16"
+          className="w-24 h-24 rounded-full  md:w-16 md:h-16 lg:w-20 lg:h-20"
           src="./src/assets/Logo.png"
           alt="Godoc Agency logo"
         />
-        <div className="flex justify-center items-center gap-8 text-xl font-medium lg:max-3xl:text-base lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3  ">
+        <div className="flex justify-center items-center gap-8 text-lg font-medium lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3  ">
           <FlyoutLink
             href="#"
             FlyoutContent={() => (
               <DropDownContent
                 links={[
-                  { href: "#", text: "Pharmacien" },
-                  { href: "#", text: "Médecine" },
-                  { href: "#", text: "Sage-femme" },
-                  { href: "#", text: "Infirmière" },
+                  { href: "#", text: t("Pharmacist") },
+                  { href: "#", text: t("Medicine") },
+                  { href: "#", text: t("Midwife") },
+                  { href: "#", text: t("Nurse") },
                 ]}
               />
             )}
           >
-            Spécialités médicales
+            {t("Specialites")}
           </FlyoutLink>
           <FlyoutLink
             href="#"
             FlyoutContent={() => (
               <DropDownContent
                 links={[
-                  { href: "#", text: "Campus France" },
-                  { href: "#", text: "Écoles privées" },
+                  { href: "#", text: t("CampusFrance") },
+                  { href: "#", text: t("PrivateSchools") },
                 ]}
               />
             )}
           >
-            Autres spécialités{" "}
+            {t("OtherSpecialties")}
           </FlyoutLink>
           <ScrollSmooth
             to="ourServices"
@@ -50,7 +56,7 @@ function Navigation() {
             duration={500}
             className="no-underline text-customGray hover:cursor-pointer"
           >
-            Nos services
+            {t("OurServicesLink")}
           </ScrollSmooth>
           <ScrollSmooth
             to="aboutUs"
@@ -61,10 +67,16 @@ function Navigation() {
             duration={500}
             className="no-underline text-customGray hover:cursor-pointer"
           >
-            À propos de nous
+            {t("AboutUsLink")}
           </ScrollSmooth>
         </div>
-        <LightColoredButton text="Être étudiant" />
+        <LanguageDropdown />
+        <LightColoredButton
+          text={t("BeingAstudent")}
+          style={
+            "md:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8"
+          }
+        />
       </nav>
 
       <NavigationMobile />

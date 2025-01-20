@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 function Programme({ program }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white rounded-lg shadow-sm border p-4 flex flex-col sm:flex-row gap-4">
       <div className="w-full sm:w-48 h-48 relative">
@@ -15,10 +18,10 @@ function Programme({ program }) {
           {program.price}
         </p>
         <p className="text-sm text-gray-600 mb-4">
-          Description: {program.description}
+          {t("Description")}: {program.description}
         </p>
         <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
-          Voir details
+          {t("Detail")}
         </button>
       </div>
     </div>

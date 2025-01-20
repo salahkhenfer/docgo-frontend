@@ -1,7 +1,8 @@
 import DarkColorButton from "./Buttons/DarkColorButton";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
-function CardCourse({
+const CardCourse = ({
   url,
   title,
   ProfesseorName,
@@ -10,84 +11,77 @@ function CardCourse({
   hours,
   lessonNumber,
   starsNumber,
-}) {
-  const lengthStar = new Array(starsNumber);
+}) => {
+  const { t } = useTranslation();
 
   return (
-    <motion.div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 w-full min-w-[240px] sm:min-w-[300px] lg:min-w-[380px]">
+    <motion.div className="flex flex-col gap-2 cursor-grab w-[260px] sm:w-[300px] md:w-[320px] p-2">
       <img
-        className="w-full h-auto object-cover rounded-lg"
+        className="w-full h-32 sm:h-40 object-cover rounded-lg"
         src={url}
-        alt={`${title} course`}
+        alt={title}
       />
 
-      <div className="flex items-center gap-1 sm:gap-2">
-        {lengthStar.map((_, index) => (
+      <div className="flex gap-1 ">
+        {[...Array(starsNumber)].map((_, i) => (
           <img
-            key={index}
+            key={i}
             src="../../src/assets/Star 3.png"
-            alt="star icon"
-            className="w-3 sm:w-4 lg:w-6"
+            alt={t("Star")}
+            className="w-3"
           />
         ))}
       </div>
 
-      <h3 className="text-sm sm:text-base lg:text-2xl xl:text-3xl font-semibold text-customGray leading-normal">
+      <h3 className="text-sm sm:text-base font-semibold text-customGray truncate">
         {title}
       </h3>
-
-      <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-customGray font-medium">
-        Le professeur : {ProfesseorName}
+      <p className="text-xs text-customGray">
+        {t("Professor")} {ProfesseorName}
       </p>
-
-      <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-customGray font-light leading-normal line-clamp-3">
-        {description}
+      <p className="text-xs text-customGray line-clamp-2">
+        {t("CourseDescription")}
       </p>
-
-      <span className="text-sm sm:text-lg lg:text-2xl xl:text-3xl text-customGray font-bold">
-        {price}DA
+      <span className="text-sm font-bold text-customGray">
+        {price} {t("Currency")}
       </span>
 
-      <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-        <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-1">
           <img
             src="../../src/assets/hour.png"
-            alt="hour icon"
-            className="w-3 sm:w-4 lg:w-6"
+            alt={t("Duration")}
+            className="w-3"
           />
-          <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
-            {hours} heures
-          </span>
+          <span>{hours}h</span>
         </div>
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1">
           <img
             src="../../src/assets/study.png"
-            alt="study icon"
-            className="w-3 sm:w-4 lg:w-6"
+            alt={t("Lessons")}
+            className="w-3"
           />
-          <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
-            {lessonNumber} leçons
+          <span>
+            {lessonNumber} {t("Lessons")}
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-1 text-xs">
         <img
           src="../../src/assets/certeficate.png"
-          alt="certeficate icon"
-          className="w-3 sm:w-4 lg:w-6"
+          alt={t("Certificate")}
+          className="w-3"
         />
-        <span className="text-xs sm:text-sm lg:text-base xl:text-lg text-customGray font-medium">
-          Certificat disponible
-        </span>
+        <span>{t("CertificateAvailable")}</span>
       </div>
 
       <DarkColorButton
-        style="w-full text-xs sm:text-sm lg:text-base"
-        text="Voir plus de détails"
+        text={t("ViewMoreDetails")}
+        style="sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2"
       />
     </motion.div>
   );
-}
+};
 
 export default CardCourse;

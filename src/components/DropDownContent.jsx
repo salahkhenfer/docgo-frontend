@@ -1,8 +1,8 @@
 function DropDownContent({ links }) {
   const Style =
-    "text-customGray font-medium  px-6 py-3  hover:bg-sky-50 lg:max-3xl:px-4 lg:max-3xl:py-2 md:max-lg:px-2 md:max-lg:py-1";
+    "text-customGray font-medium  px-6 py-3  hover:bg-sky-50 lg:px-4 lg:py-2 md:px-2 md:py-1";
   return (
-    <div className="flex flex-col text-lg  gap-4 rounded-xl bg-white  border-[2px] border-solid border-gray-400 w-64 lg:max-3xl:text-base md:max-lg:text-[12px] lg:max-3xl:w-48 md:max-lg:w-44 ">
+    <div className="flex flex-col text-base   rounded-xl bg-white  border-[2px] border-solid border-gray-400 w-64 md:text-[12px] md:gap-2 lg:text-sm lg:w-44 md:w-36 ">
       {links.map((link, index) => {
         if (index === 0)
           return (

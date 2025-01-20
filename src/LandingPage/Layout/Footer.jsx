@@ -1,47 +1,50 @@
+import { useTranslation } from "react-i18next";
+import { Link as ScrollSmooth } from "react-scroll";
 function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gray-50 px-4 py-12 md:px-8 lg:px-16">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-28">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              Spécialités médicales
+              {t("Specialites")}
             </h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Pharmacien
+                  {t("Pharmacist")}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Médecine
+                  {t("Medicine")}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Sage-femme
+                  {t("Midwife")}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Infirmière
+                  {t("Nurse")}
                 </a>
               </li>
             </ul>
 
             <h3 className="text-lg font-semibold text-gray-900 pt-6">
-              Autres spécialités
+              {t("OtherSpecialties")}
             </h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Campus France
+                  {t("CampusFrance")}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Écoles privées
+                  {t("PrivateSchools")}
                 </a>
               </li>
             </ul>
@@ -49,27 +52,51 @@ function Footer() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              Nos services
+              {t("OurServicesLink")}
             </h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  À propos de nous
-                </a>
+                <ScrollSmooth
+                  to={"aboutUs"}
+                  spy={true}
+                  smooth={true}
+                  hashSpy={true}
+                  offset={-100}
+                  duration={500}
+                  className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
+                >
+                  {t("AboutUsLink")}
+                </ScrollSmooth>
+              </li>
+              <li>
+                <ScrollSmooth
+                  to={"FAQ"}
+                  spy={true}
+                  smooth={true}
+                  hashSpy={true}
+                  offset={-100}
+                  duration={500}
+                  className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
+                >
+                  {"FAQ"}
+                </ScrollSmooth>
+              </li>
+              <li>
+                <ScrollSmooth
+                  to={"Steps"}
+                  spy={true}
+                  smooth={true}
+                  hashSpy={true}
+                  offset={-100}
+                  duration={500}
+                  className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
+                >
+                  {t("TheStages")}
+                </ScrollSmooth>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Les étapes
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Contactez-nous
+                  {t("ContactUs")}
                 </a>
               </li>
             </ul>
@@ -79,22 +106,30 @@ function Footer() {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Étudier à l'étranger ?
+                  {t("StudyAbroad")}
+                </a>
+              </li>
+              <li>
+                <ScrollSmooth
+                  to={"Coureses"}
+                  spy={true}
+                  smooth={true}
+                  hashSpy={true}
+                  offset={-100}
+                  duration={500}
+                  className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
+                >
+                  {t("OurCourses")}
+                </ScrollSmooth>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900">
+                  {t("ToRegister")}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Nos cours
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  Se connecter
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  S'inscrire
+                  {t("SignIn")}
                 </a>
               </li>
             </ul>
@@ -106,10 +141,7 @@ function Footer() {
               alt="Logo"
               className="w-12 h-12"
             />
-            <p className="text-gray-600">
-              Notre plateforme offrant des opportunités pour étudier à
-              l'étranger et des cours en ligne innovants.
-            </p>
+            <p className="text-gray-600">{t("OurPlatform")}</p>
 
             <div className="flex space-x-4">
               <a href="#" className="text-gray-600 hover:text-gray-900">

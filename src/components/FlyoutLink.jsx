@@ -32,9 +32,9 @@ function FlyoutLink({ children, href, FlyoutContent }) {
             exit={{ opacity: 0, y: 15 }}
             style={{ translateX: "-50%" }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute left-1/2 top-12  text-black"
+            className="absolute left-1/2 md:top-10 lg:top-12 text-black"
           >
-            <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
+            <div className="absolute -top-6 left-0 right-0 h-6  bg-transparent" />
 
             <FlyoutContent />
           </motion.div>

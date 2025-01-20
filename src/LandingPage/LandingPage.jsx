@@ -7,6 +7,8 @@ import Helpsection from "./Layout/Helpsection";
 import HereoSection from "./Layout/HereoSection";
 import Navigation from "./Layout/Navigation";
 import OurServices from "./Layout/OurServices";
+import ProgrammePage from "./Layout/ProgrammePage";
+import ProgramSearch from "./Layout/ProgramSearch";
 
 import StudySection from "./Layout/StudySection";
 import WhatToDoSection from "./Layout/WhatToDoSection";
@@ -19,9 +21,7 @@ function LandingPage() {
       <Reveal>
         <HereoSection />
       </Reveal>
-      <Reveal>
-        <StudySection />
-      </Reveal>
+
       <Reveal>
         <WhatToDoSection />
       </Reveal>
@@ -39,8 +39,9 @@ function LandingPage() {
       </Reveal>
       <Reveal>
         <Helpsection />
+        <Footer />
       </Reveal>
-      <Footer />
+      {/*  <ProgramSearch /> */}
     </div>
   );
 }

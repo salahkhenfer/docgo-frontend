@@ -1,36 +1,33 @@
-import { useState } from "react";
-
 import FindProgramme from "../../components/FindProgramme";
 import Programme from "../../components/Programme";
 import ThereIsNothing from "../../components/ThereIsNothing";
+import { useTranslation } from "react-i18next";
 
 const ProgramSearch = () => {
-  const [programs] = useState([
+  const { t } = useTranslation();
+  const programs = [
     {
       id: 1,
-      title: "France programme",
+      title: t("FranceProgram"),
       price: "435 DA",
-      description:
-        "Vel et sit sequi. Quos dolorem atque. Nisi autem ut eveniet qui molestiae nulla repellat. Repellendus nemo saepe. Laboriosam consequatur voluptas amet quibusdam. Et quaerat aspernatur.",
+      description: t("desc"),
       flag: "../../../src/assets/france flag.png",
     },
     {
       id: 2,
-      title: "France programme",
+      title: t("FranceProgram"),
       price: "435 DA",
-      description:
-        "Vel et sit sequi. Quos dolorem atque. Nisi autem ut eveniet qui molestiae nulla repellat. Repellendus nemo saepe. Laboriosam consequatur voluptas amet quibusdam. Et quaerat aspernatur.",
+      description: t("desc"),
       flag: "../../../src/assets/france flag.png",
     },
     {
       id: 3,
-      title: "France programme",
+      title: t("FranceProgram"),
       price: "435 DA",
-      description:
-        "Vel et sit sequi. Quos dolorem atque. Nisi autem ut eveniet qui molestiae nulla repellat. Repellendus nemo saepe. Laboriosam consequatur voluptas amet quibusdam. Et quaerat aspernatur.",
+      description: t("desc"),
       flag: "../../../src/assets/france flag.png",
     },
-  ]);
+  ];
 
   return (
     <div className="">
@@ -38,12 +35,14 @@ const ProgramSearch = () => {
         <FindProgramme />
       </div>
 
-      {/* <div className="space-y-6 max-w-4xl mx-auto p-4">
-        {programs.map((program, index) => (
-          <Programme program={program} key={index} />
-        ))}
-      </div> */}
-      <ThereIsNothing />
+      {
+        <div className="space-y-6 max-w-4xl mx-auto p-4">
+          {programs.map((program, index) => (
+            <Programme program={program} key={index} />
+          ))}
+        </div>
+      }
+      {/*    <ThereIsNothing /> */}
     </div>
   );
 };
