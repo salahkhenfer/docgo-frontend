@@ -5,7 +5,29 @@ import Logo from "../src/assets/Logo.png";
 import "./index.css";
 
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+const LanguageFontWrapper = ({ children }) => {
+  const { i18n } = useTranslation();
 
+  const getFontClass = () => {
+    switch (i18n.language) {
+      case "ar":
+        return "font-readex";
+      case "fr":
+        return "font-poppins";
+      default:
+        return "font-roboto";
+    }
+  };
+
+  return (
+    <div
+      className={`${getFontClass()} ${i18n.language === "ar" ? "rtl" : "ltr"}`}
+    >
+      {children}
+    </div>
+  );
+};
 function App() {
   const [setLoading] = useState(true);
   useEffect(() => {
@@ -66,7 +88,7 @@ function App() {
       });
   }, []);
 
-  return <div>{<Outlet />}</div>;
+  return <LanguageFontWrapper>{<Outlet />}</LanguageFontWrapper>;
 }
 
 export default App;

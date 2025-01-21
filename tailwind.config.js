@@ -18,6 +18,11 @@ export default {
         customBlue: "#3B82F6",
         customBlueLight: "#2E5698",
       },
+      fontFamily: {
+        readex: ["Readex Pro", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+      },
     },
   },
   plugins: [],

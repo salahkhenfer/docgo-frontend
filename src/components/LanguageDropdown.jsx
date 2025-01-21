@@ -29,7 +29,7 @@ const LanguageDropdown = () => {
     <div className="relative inline-block">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between lg:px-4 lg:py-2 sm-sm:px-2 sm-sm:py-1  bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="flex items-center justify-between lg:px-2 lg:py-1 sm-sm:px-2 sm-sm:py-1  bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         {languages.find((lang) => lang.code === selectedLanguage)?.flag}
         <span className="ml-2">▼</span>

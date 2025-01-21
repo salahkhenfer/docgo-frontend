@@ -12,10 +12,10 @@ function OurServices() {
         "flex flex-col gap-12 items-center lg:px-20 lg:py-12 md:px-8 md:py-6 sm-sm:px-4"
       }
     >
-      <h1 className="2xl:text-xl sm:max-xl:text-lg sm-sm:text-base font-medium text-customGray">
+      <h1 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium text-customGray">
         {t("OurServices")}
       </h1>
-      <div className="flex gap-12 sm-sm:max-md:flex-col sm-sm:max-sm:text-center">
+      <div className="flex items-center justify-center gap-12 sm-sm:max-md:flex-col sm-sm:max-sm:text-center">
         <Service
           url={"../../../src/assets/Knwoledge 1 (1) 1.png"}
           h1={t("GuidanceForStudyingAbroad")}

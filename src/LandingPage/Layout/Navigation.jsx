@@ -70,13 +70,15 @@ function Navigation() {
             {t("AboutUsLink")}
           </ScrollSmooth>
         </div>
-        <LanguageDropdown />
-        <LightColoredButton
-          text={t("BeingAstudent")}
-          style={
-            "md:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8"
-          }
-        />
+        <div className="flex gap-8">
+          <LightColoredButton
+            text={t("BeingAstudent")}
+            style={
+              "md:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8"
+            }
+          />
+          <LanguageDropdown />
+        </div>
       </nav>
 
       <NavigationMobile />
