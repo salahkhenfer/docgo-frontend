@@ -3,7 +3,7 @@
   "OtherSpecialties": "تخصصات أخرى",
   "OurServicesLink": "خدماتنا",
   "AboutUsLink": "حولنا",
-  "BeingAstudent": "كطالب",
+  "BeingAstudent": "التسجيل  كطالب  ",
   "Pharmacist": "صيدلي",
   "Medicine": "الطب",
   "Midwife": "ممرضة",
@@ -94,5 +94,13 @@
   "Detail": "عرض التفاصيل",
   "FindProgramme": "ابحث عن برنامج",
   "ChoseCuntry": "اختر البلد والتخصص والبحث عنه",
-  "Research": "بحث"
+  "Research": "بحث",
+  "NoProgramFound ": "لم يتم العثور على برنامج",
+  "TrouverUnProgramme": "ابحث عن برنامج",
+  "TrouverUnProgrammeDes": "اختر البلد والتخصص وابحث",
+  "QuelProgrammeVoulezVousEtudier": "ما البرنامج الذي ترغب في الدراسة؟",
+  "OuVoulezVousEtudier": "أين ترغب في الدراسة؟",
+  "Apply": " تفاصيل  ",
+  "TousLesProgrammes": "جميع البرامج",
+  "TousLesPays": "جميع البلدان"
 }

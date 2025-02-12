@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { MdLanguage } from "react-icons/md";
 
 const LanguageDropdown = () => {
   const { i18n } = useTranslation();
@@ -9,14 +10,14 @@ const LanguageDropdown = () => {
   );
 
   const languages = [
-    { code: "fr", name: "Français", flag: "🇫🇷" },
-    { code: "ar", name: "عربي", flag: "🇸🇦" },
+    { code: "fr", name: "Français" },
+    { code: "ar", name: "عربي" },
   ];
 
   useEffect(() => {
-    setSelectedLanguage(i18n.language);
     document.documentElement.dir = i18n.dir();
     document.documentElement.lang = i18n.language;
+    document.title = i18n.t("appTitle");
   }, [i18n.language]);
 
   const handleChangeLanguage = (code) => {
@@ -32,11 +33,13 @@ const LanguageDropdown = () => {
         className="flex items-center justify-between lg:px-4 lg:py-2 sm-sm:px-2 sm-sm:py-1  bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         {languages.find((lang) => lang.code === selectedLanguage)?.flag}
-        <span className="ml-2">▼</span>
+        <span className="ml-2">
+          <MdLanguage />
+        </span>
       </button>
 
       {isOpen && (
-        <ul className="absolute left-0 mt-2 lg:w-40 md:w-32 sm-sm:w-24 bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-40 overflow-auto sm:w-48">
+        <ul className="absolute left-0 mt-2 lg:w-40 md:w-32 sm-sm:w-24 bg-white border  shadow-lg z-10 max-h-40 overflow-auto sm:w-48">
           {languages.map((lang) => (
             <li
               key={lang.code}

@@ -66,7 +66,7 @@ function FrequentlyAskedQuestions() {
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-end w-full sm:w-[80%] md:w-[60%] lg:w-[50%] ml-auto">
+        {/* <div className="flex flex-col sm:flex-row gap-4 items-center justify-end w-full sm:w-[80%] md:w-[60%] lg:w-[50%] ml-auto">
           <LightColoredButton
             style="sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2 flex justify-center items-center gap-2 text-center"
             text={t("previous")}
@@ -101,7 +101,7 @@ function FrequentlyAskedQuestions() {
               )
             }
           />
-        </div>
+        </div> */}
       </Container>
     </div>
   );

@@ -94,5 +94,13 @@
   "Detail": "Voir details",
   "FindProgramme": "Trouver un programme",
   "ChoseCuntry": "Choisir le pays et la spécialité et recherché",
-  "Research": "Rechercher"
+  "Research": "Rechercher",
+  "NoProgramFound": "Aucun programme trouvé",
+  "TrouverUnProgramme": "Trouver un programme",
+  "TrouverUnProgrammeDes": "Choisir le pays et la spécialité et rechercher",
+  "QuelProgrammeVoulezVousEtudier": "Quel programme voulez-vous étudier ?",
+  "OuVoulezVousEtudier": "Où voulez-vous étudier ?",
+  "Apply": "Détails",
+  "TousLesProgrammes": "Tous les programmes",
+  "TousLesPays": "Tous les pays"
 }

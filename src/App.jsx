@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
-
 import Logo from "../src/assets/Logo.png";
-
 import "./index.css";
-
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import HelpSection from "./LandingPage/Layout/Helpsection";
+import Footer from "./LandingPage/Layout/Footer";
+import Reveal from "./components/Reveal";
+import Navigation from "./LandingPage/Layout/Navigation";
 
 function App() {
   const [setLoading] = useState(true);
+  const { i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    i18n.language || "fr"
+  );
+
   useEffect(() => {
     const fetch_images = () => {
       return new Promise((resolve, reject) => {
@@ -29,25 +36,26 @@ function App() {
     const fetch_fonts = () => {
       return new Promise((resolve, reject) => {
         const fontURL =
-          "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
+          "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap";
+
         const loadFont = (url) => {
           return new Promise((resolve, reject) => {
             const link = document.createElement("link");
             link.href = url;
             link.rel = "stylesheet";
             link.onload = () => {
-              resolve(); // Resolve promise when font is loaded
+              resolve();
             };
             link.onerror = () => {
               document.getElementById("root").style.fontFamily = "sans-serif";
-              resolve(); // Resolve even if font fails to load
+              resolve();
             };
             document.head.appendChild(link);
-            document.getElementById("root").style.fontFamily = "Poppins";
+            document.getElementById("root").style.fontFamily = "Rubik";
           });
         };
 
-        // Load the font
+        // Load the Rubik font
         loadFont(fontURL)
           .then(resolve)
           .catch(() => {
@@ -66,7 +74,16 @@ function App() {
       });
   }, []);
 
-  return <div>{<Outlet />}</div>;
+  return (
+    <div>
+      {" "}
+      <Navigation /> {/* Ensure this is the correct component */}
+      <Outlet />
+      <Reveal>
+        <Footer />
+      </Reveal>
+    </div>
+  );
 }
 
 export default App;

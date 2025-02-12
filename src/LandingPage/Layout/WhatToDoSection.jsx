@@ -10,7 +10,7 @@ function WhatToDoSection() {
         <h1 className="sm-sm:text-xl sm-sm:font-medium sm-sm:leading-normal 2xl:text-2xl">
           {t("WhatToDoToStudyAbroad")}
         </h1>
-        <div className="grid place-items-center sm-sm:grid-cols-1 gap-12 md:grid-cols-2 lg-md:grid-cols-4">
+        <div className="grid place-items-center sm-sm:grid-cols-1 gap-12 md:grid-cols-4 lg-md:grid-cols-4">
           <Step
             Number={1}
             label={t("Register")}

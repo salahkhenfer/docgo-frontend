@@ -1,25 +1,36 @@
 import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import Reveal from "./components/Reveal";
+import HelpSection from "./LandingPage/Layout/Helpsection";
+import Footer from "./LandingPage/Layout/Footer";
+import Navigation from "./LandingPage/Layout/Navigation";
 
 function Default() {
+  // Uncomment and replace with actual authentication logic when needed.
   // const { isAuth, userType } = useAppContext();
+  const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     //     if (!isAuth || !userType) {
-  //     // navigate("/Home"); // If not authenticated or userType is missing, go to Home.
-  //     //     } else if (userType === "teacher") {
-  //     //         navigate("/Teacher"); // Navigate to the Teacher dashboard.
-  //     //     } else if (userType === "student") {
-  //     //         navigate("/Student"); // Navigate to the Student dashboard.
-  //     //     } else {
-  //     //         navigate("/Home"); // Default fallback to Home if conditions are unclear.
-  //     //     }
-  //   }, []); // Make sure to include dependencies here.
-
-  // return null; // No need to return anything from this component.
+  useEffect(() => {
+    // Example of authentication-based redirection
+    // if (!isAuth || !userType) {
+    //   navigate("/Home");
+    // } else if (userType === "teacher") {
+    //   navigate("/Teacher");
+    // } else if (userType === "student") {
+    //   navigate("/Student");
+    // } else {
+    //   navigate("/Home");
+    // }
+  }, [navigate]); // Added `navigate` to dependencies
 
   return (
-    <div className="min-h-screen text-red-600 flex items-center justify-center text-2xl font-bold  ">
-      <h1 className="text-2xl font-bold text-red-600"> Default Page</h1>
+    <div>
+      <Navigation /> {/* Ensure this is the correct component */}
+      <Outlet />
+      <HelpSection /> {/* Added if it's needed */}
+      <Reveal>
+        <Footer />
+      </Reveal>
     </div>
   );
 }
