@@ -178,7 +178,7 @@ const NavigationMobile = () => {
                       )
                     )}
 
-                    <LightColoredButton text={"Sign Up and Explore"} />
+                    <LightColoredButton text={t("SignUpAndExplore")} />
                   </motion.div>
                 </div>
               </motion.div>

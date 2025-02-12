@@ -3,14 +3,18 @@ import LightColoredButton from "./Buttons/LightColoredButton";
 
 function Service({ url, h1, h3, p, btn }) {
   return (
-    <div className="flex flex-col gap-6 p-10 bg-sky-50 rounded-xl shadow-lg shadow-customBlue">
+    <div className="flex flex-col sm-sm:max-sm:items-center gap-6 p-4 lg:w-1/3 sm:w-1/2 sm-sm:w-10/12 bg-sky-50 rounded-xl shadow-lg shadow-customBlue">
       <img
+<<<<<<< HEAD
         className="md:max-w-56  md:max-h-56 sm-sm:max-w-40 sm-sm:max-h-40  self-center"
+=======
+        className="md:max-w-56  md:max-h-56 sm-sm:max-w-36 sm-sm:max-h-36  self-center"
+>>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
         src={`${url}`}
         alt={`${h1}`}
       />
-      <h1 className=" md:text-lg sm-sm:text-base font-medium ">{h1}</h1>
-      <h3 className=" border-b-2 border-gray-400 inline-block pb-2  2xl:text-lg xl:text-base sm-sm:max-md:text-sm font-medium">
+      <h1 className=" md:text-base sm-sm:text-sm font-medium ">{h1}</h1>
+      <h3 className=" border-b-2 border-gray-400 inline-block pb-2 xl:text-base sm-sm:max-md:text-sm font-medium">
         {h3}
       </h3>
       <p className="md:text-sm   sm-sm:text-[12px] font-normal leading-normal">

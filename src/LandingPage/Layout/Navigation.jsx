@@ -73,6 +73,7 @@ function Navigation() {
             {t("AboutUsLink")}
           </ScrollSmooth>
         </div>
+<<<<<<< HEAD
         <div className=" flex justify-center items-center gap-8 font-medium text-lg lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3">
           <LanguageDropdown />
           <Link to="/login">
@@ -83,6 +84,16 @@ function Navigation() {
               }
             />
           </Link>
+=======
+        <div className="flex gap-8">
+          <LightColoredButton
+            text={t("BeingAstudent")}
+            style={
+              "md:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8"
+            }
+          />
+          <LanguageDropdown />
+>>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
         </div>
       </nav>
 

@@ -5,8 +5,8 @@ function Footer() {
   return (
     <footer className="bg-gray-50 px-4 py-12 md:px-8 lg:px-16 max-lg:text-center">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-28">
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-28 md:gap-20 sm-sm:gap-8">
+          <div className="space-y-2">
             <h3 className="text-lg font-semibold text-gray-900">
               {t("Specialites")}
             </h3>

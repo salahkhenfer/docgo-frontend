@@ -7,13 +7,13 @@ function HeroSection() {
   return (
     <div className="flex justify-between items-center w-full h-full py-16 px-28 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm-sm:max-lg-sm:flex-col sm-sm:max-lg-sm:px-4">
       <div className="flex flex-col items-start gap-5 w-[50%] py-16 sm-sm:max-lg-sm:items-center sm-sm:max-lg-sm:w-full">
-        <p className="text-lg text-customGray font-normal md:max-3xl:text-base md:max-lg-md:text-sm sm-sm:max-lg-sm:text-sm sm-sm:max-lg-sm:text-center">
+        <p className="text-xl text-customGray font-normal md:max-3xl:text-lg md:max-lg-md:text-base sm-sm:max-lg-sm:text-sm sm-sm:max-lg-sm:text-center">
           {t("ExploreOpportunities")}
         </p>
-        <h1 className=" text-customGray font-medium leading-snug lg:text-2xl lg-md:leading-normal md:text-lg sm-sm:max-lg-sm:text-center sm-sm:text-lg">
+        <h1 className=" text-customGray font-medium leading-snug lg:text-3xl lg-md:leading-normal md:text-lg sm-sm:max-lg-sm:text-center sm-sm:text-lg">
           {t("DiveIntoPossibilities")}
         </h1>
-        <p className="text-lg text-customGray leading-10 font-normal md:max-3xl:text-base lg-md:max-3xl:leading-normal md:max-lg-md:text-sm sm-sm:max-lg-sm:text-center sm-sm:max-lg-sm:text-sm">
+        <p className="text-xl text-customGray leading-10 font-normal md:max-3xl:text-lg lg-md:max-3xl:leading-normal md:max-lg-md:text-base sm-sm:max-lg-sm:text-center sm-sm:max-lg-sm:text-sm">
           {t("JoinUsToDiscover")}
         </p>
         <DarkColorButton

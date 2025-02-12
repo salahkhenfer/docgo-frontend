@@ -72,10 +72,7 @@ function FrequentlyAskedQuestions() {
             text={t("previous")}
             icon={
               isRTL ? (
-                <img
-                  src="../../../src/assets/arrow-right.png"
-                  alt={t("nextIcon")}
-                />
+                ""
               ) : (
                 <img
                   src="../../../src/assets/arrow-left.png"
@@ -89,10 +86,7 @@ function FrequentlyAskedQuestions() {
             text={t("next")}
             icon={
               isRTL ? (
-                <img
-                  src="../../../src/assets/arrow-left.png"
-                  alt={t("previousIcon")}
-                />
+                ""
               ) : (
                 <img
                   src="../../../src/assets/arrow-right.png"
