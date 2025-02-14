@@ -13,11 +13,7 @@ function OurServices() {
         "flex flex-col gap-12 items-center lg:px-20 lg:py-12 md:px-8 md:py-6 sm-sm:px-4"
       }
     >
-<<<<<<< HEAD
       <h1 className=" text-3xl font-medium text-customGray">
-=======
-      <h1 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium text-customGray">
->>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
         {t("OurServices")}
       </h1>
       <div className="flex items-center justify-center gap-12 sm-sm:max-md:flex-col sm-sm:max-sm:text-center">

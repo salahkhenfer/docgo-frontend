@@ -6,6 +6,7 @@ import Login from "./Auth/login/Login";
 import Register from "./Auth/register/Register";
 import LandingPage from "./LandingPage/LandingPage";
 import { SearchProgram } from "./Pages/SearchProgram";
+import { ProgramDetails } from "./Pages/ProgramDetailes";
 
 const Routers = createBrowserRouter([
   {
@@ -14,12 +15,16 @@ const Routers = createBrowserRouter([
     errorElement: <ErrorElement />, // Error handling applied to the main layout
     children: [
       {
-        index: true, // No leading slash
+        index: true,
         element: <LandingPage />,
       },
       {
-        path: "searchProgram", // Added if needed
+        path: "searchProgram",
         element: <SearchProgram />,
+      },
+      {
+        path: "searchProgram/:programId", // Ensure consistency in URL param casing
+        element: <ProgramDetails />,
       },
     ],
   },

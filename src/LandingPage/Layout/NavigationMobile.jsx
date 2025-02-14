@@ -5,9 +5,12 @@ import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import { Link as ScrollSmooth } from "react-scroll";
 import { useTranslation } from "react-i18next";
 import LanguageDropdown from "../../components/LanguageDropdown";
+import logo from "../../assets/logo.png";
 
-const NavigationMobile = () => {
+const NavigationMobile = ({ CustomAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const user = null;
+
   const { t } = useTranslation();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
@@ -93,7 +96,7 @@ const NavigationMobile = () => {
     },
   ];
 
-  return (
+  return user ? (
     <header className="lg:hidden">
       {!isOpen && (
         <nav className="flex justify-between items-center px-4 py-4">
@@ -178,7 +181,7 @@ const NavigationMobile = () => {
                       )
                     )}
 
-                    <LightColoredButton text={t("SignUpAndExplore")} />
+                    <LightColoredButton text={"Sign Up and Explore"} />
                   </motion.div>
                 </div>
               </motion.div>
@@ -186,6 +189,22 @@ const NavigationMobile = () => {
           </motion.div>
         )}
       </AnimatePresence>
+    </header>
+  ) : (
+    <header className="lg:hidden">
+      <nav className="flex justify-between items-center px-4 py-4">
+        <motion.img
+          className="w-14 h-14 rounded-full"
+          src={logo}
+          alt="logo"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        />
+        <div className="flex items-center justify-between gap-4">
+          <LanguageDropdown />
+          <CustomAvatar />
+        </div>
+      </nav>
     </header>
   );
 };

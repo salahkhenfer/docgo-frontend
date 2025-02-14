@@ -1,17 +1,11 @@
 import Reveal from "../components/Reveal";
 import AboutUsSection from "./Layout/AboutUsSection";
 import CoursesSection from "./Layout/CoursesSection";
-import Footer from "./Layout/Footer";
 import FrequentlyAskedQuestions from "./Layout/FrequentlyAskedQuestions";
 import HelpSection from "./Layout/Helpsection";
-import Helpsection from "./Layout/Helpsection";
 import HereoSection from "./Layout/HereoSection";
-import Navigation from "./Layout/Navigation";
 import OurServices from "./Layout/OurServices";
-import ProgrammePage from "./Layout/ProgrammePage";
-import ProgramSearch from "./Layout/ProgramSearch";
 
-import StudySection from "./Layout/StudySection";
 import WhatToDoSection from "./Layout/WhatToDoSection";
 
 function LandingPage() {
@@ -38,8 +32,6 @@ function LandingPage() {
       <Reveal>
         <HelpSection />
       </Reveal>
-
-      {/*  <ProgramSearch /> */}
     </div>
   );
 }

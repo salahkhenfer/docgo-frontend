@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Select from "react-select";
 import { ProgramCard } from "../components/programs/ProgramCard";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export function SearchProgram() {
+  const { t } = useTranslation();
   const [study, setStudy] = useState(null);
   const [location, setLocation] = useState(null);
 

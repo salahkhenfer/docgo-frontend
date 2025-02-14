@@ -95,7 +95,6 @@
   "FindProgramme": "ابحث عن برنامج",
   "ChoseCuntry": "اختر البلد والتخصص والبحث عنه",
   "Research": "بحث",
-<<<<<<< HEAD
   "NoProgramFound ": "لم يتم العثور على برنامج",
   "TrouverUnProgramme": "ابحث عن برنامج",
   "TrouverUnProgrammeDes": "اختر البلد والتخصص وابحث",
@@ -103,8 +102,10 @@
   "OuVoulezVousEtudier": "أين ترغب في الدراسة؟",
   "Apply": " تفاصيل  ",
   "TousLesProgrammes": "جميع البرامج",
-  "TousLesPays": "جميع البلدان"
-=======
-  "SignUpAndExplore": "التسجيل والاستكشاف"
->>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
+  "TousLesPays": "جميع البلدان",
+  "SignUpAndExplore": "التسجيل والاستكشاف",
+  "MyApplications": "طلباتي",
+  "home": "الصفحة الرئيسية",
+  "logout": "تسجيل الخروج",
+  "notifications": "الإشعارات"
 }

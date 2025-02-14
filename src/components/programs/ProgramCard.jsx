@@ -2,7 +2,7 @@ import { t } from "i18next";
 
 export function ProgramCard({ title, price, description, imageUrl }) {
   return (
-    <div className="border rounded-lg p-6 flex gap-6">
+    <div className="border rounded-lg p-6 flex max-lg:flex-col gap-6">
       <img
         src={imageUrl || "/placeholder.svg"}
         alt="French Flag"

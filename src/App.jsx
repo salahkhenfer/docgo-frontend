@@ -3,35 +3,11 @@ import Logo from "../src/assets/Logo.png";
 import "./index.css";
 import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-<<<<<<< HEAD
 import HelpSection from "./LandingPage/Layout/Helpsection";
 import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
 import Navigation from "./LandingPage/Layout/Navigation";
-=======
-const LanguageFontWrapper = ({ children }) => {
-  const { i18n } = useTranslation();
->>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
 
-  const getFontClass = () => {
-    switch (i18n.language) {
-      case "ar":
-        return "font-readex";
-      case "fr":
-        return "font-poppins";
-      default:
-        return "font-roboto";
-    }
-  };
-
-  return (
-    <div
-      className={`${getFontClass()} ${i18n.language === "ar" ? "rtl" : "ltr"}`}
-    >
-      {children}
-    </div>
-  );
-};
 function App() {
   const [setLoading] = useState(true);
   const { i18n } = useTranslation();
@@ -98,7 +74,6 @@ function App() {
       });
   }, []);
 
-<<<<<<< HEAD
   return (
     <div>
       {" "}
@@ -109,9 +84,6 @@ function App() {
       </Reveal>
     </div>
   );
-=======
-  return <LanguageFontWrapper>{<Outlet />}</LanguageFontWrapper>;
->>>>>>> a4e8094d23ac86fd3e30c8615d3cf76875a2f99d
 }
 
 export default App;
