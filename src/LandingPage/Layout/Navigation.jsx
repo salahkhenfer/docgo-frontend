@@ -34,65 +34,79 @@ function Navigation() {
     setUser(true);
   };
 
-  const CustomAvatar = () => (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB457] to-[#FF705B] 
-                   flex items-center justify-center border-2 border-white hover:opacity-90 
+  const CustomAvatar = () => {
+    const dropdownRef = useRef(null);
+
+    // Close dropdown when navigating
+    const handleNavigation = () => {
+      setIsDropdownOpen(false);
+    };
+
+    return (
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB457] to-[#FF705B]
+                   flex items-center justify-center border-2 border-white hover:opacity-90
                    transition-all duration-300 transform hover:scale-105"
-      >
-        <FaUser className="text-black/80 w-5 h-5" />
-      </button>
-
-      {isDropdownOpen && (
-        <div
-          className={`absolute  ${
-            i18n.language == "fr" ? "right-0 " : "left-0"
-          }   top-12 w-56 bg-white rounded-lg shadow-xl py-2 z-50
-                      transform transition-all duration-200 origin-top-right
-                      animate-fadeIn`}
         >
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm font-semibold text-gray-600">اسم الحساب</p>
-            <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
-          </div>
+          <FaUser className="text-black/80 w-5 h-5" />
+        </button>
 
-          <button
-            className="w-full px-4 py-2  text-sm hover:bg-gray-50 
-                     transition-colors duration-200 flex items-center  gap-2"
-            onClick={() => setIsDropdownOpen(false)}
+        {isDropdownOpen && (
+          <div
+            className={`absolute ${
+              i18n.language == "fr" ? "right-0 " : "left-0"
+            } top-12 w-56 bg-white rounded-lg shadow-xl py-2 z-50
+                     transform transition-all duration-200 origin-top-right
+                     animate-fadeIn`}
           >
-            <span> {t("home")} </span>
-          </button>
-          <button
-            className="w-full px-4 py-2  text-sm hover:bg-gray-50 
-                     transition-colors duration-200 flex items-center  gap-2"
-            onClick={() => setIsDropdownOpen(false)}
-          >
-            <span>{t("MyApplications")}</span>
-          </button>
-          <button
-            className="w-full px-4 py-2  text-sm hover:bg-gray-50 
-                     transition-colors duration-200 flex items-center  gap-2"
-            onClick={() => setIsDropdownOpen(false)}
-          >
-            <span>{t("notifications")}</span>
-    
-          </button>
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-sm font-semibold text-gray-600">اسم الحساب</p>
+              <p className="text-sm font-semibold text-gray-800">
+                {user?.name}
+              </p>
+            </div>
 
-          <button
-            className="w-full px-4 py-2  text-sm text-red-600 
+            <button
+              className="w-full px-4 py-4 text-sm hover:bg-gray-50
+                     transition-colors duration-200 flex items-center gap-2"
+              onClick={() => setIsDropdownOpen(false)}
+            >
+              <span>{t("home")}</span>
+            </button>
+
+            <Link
+              to="/myApplications"
+              className="w-full px-4 py-2text-sm hover:bg-gray-50
+                     transition-colors duration-200 flex items-center"
+              onClick={handleNavigation}
+            >
+              {t("MyApplications")}
+            </Link>
+
+            <Link
+              to="/notifications"
+              className="w-full px-4 py-2 text-sm hover:bg-gray-50
+                     transition-colors duration-200 flex items-center gap-2"
+              onClick={() => setIsDropdownOpen(false)}
+            >
+              <span>{t("notifications")}</span>
+            </Link>
+
+            <button
+              className="w-full px-4 py-2 text-sm text-red-600
                      hover:bg-red-50 transition-colors duration-200
-                     flex items-center  gap-2"
-            onClick={handleLogout}
-          >
-            <span> {t("Logout")} </span>
-          </button>
-        </div>
-      )}
-    </div>
-  );
+                     flex items-center gap-2"
+              onClick={handleLogout}
+            >
+              <span>{t("Logout")}</span>
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const MainContent = () => (
     <div

@@ -1,4 +1,5 @@
 import { t } from "i18next";
+import { Link } from "react-router-dom";
 
 export function ProgramCard({ title, price, description, imageUrl }) {
   return (
@@ -15,9 +16,12 @@ export function ProgramCard({ title, price, description, imageUrl }) {
           <span className="font-medium"> {t("Description")} </span>
           <span className="text-gray-600">{description}</span>
         </div>
-        <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        <Link
+          to="/searchProgram/1"
+          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
           {t("Apply")}
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import Register from "./Auth/register/Register";
 import LandingPage from "./LandingPage/LandingPage";
 import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
+import MyApplications from "./Pages/MyApplications";
 
 const Routers = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const Routers = createBrowserRouter([
       {
         path: "searchProgram/:programId", // Ensure consistency in URL param casing
         element: <ProgramDetails />,
+      },
+      {
+        path: "MyApplications", // Ensure consistency in URL param casing
+        element: <MyApplications />,
       },
     ],
   },

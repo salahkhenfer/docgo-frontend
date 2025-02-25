@@ -101,11 +101,22 @@
   "QuelProgrammeVoulezVousEtudier": "ما البرنامج الذي ترغب في الدراسة؟",
   "OuVoulezVousEtudier": "أين ترغب في الدراسة؟",
   "Apply": " تفاصيل  ",
+  "ApplyInProgram": "تقديم الطلب",
   "TousLesProgrammes": "جميع البرامج",
   "TousLesPays": "جميع البلدان",
   "SignUpAndExplore": "التسجيل والاستكشاف",
   "MyApplications": "طلباتي",
   "home": "الصفحة الرئيسية",
   "logout": "تسجيل الخروج",
-  "notifications": "الإشعارات"
+  "notifications": "الإشعارات",
+  "appTitle": "DOCGO",
+  "AreYouSure": "هل أنت متأكد؟",
+  "Delete": "حذف",
+  "Cancel": "إلغاء",
+  "YouWontBeAbleToRevertThis": "لن تتمكن من التراجع عن هذا!",
+  "YesDeleteIt": "نعم، !",
+  "Deleted": "تم ",
+  "YourFileHasBeenDeleted": "تم الانهاء.",
+  "Oops": "عفوًا",
+  "SomethingWentWrong": "حدث خطأ ما!"
 }

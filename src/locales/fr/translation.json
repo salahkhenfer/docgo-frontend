@@ -101,11 +101,20 @@
   "QuelProgrammeVoulezVousEtudier": "Quel programme voulez-vous étudier ?",
   "OuVoulezVousEtudier": "Où voulez-vous étudier ?",
   "Apply": "Détails",
+  "ApplyInProgram": "Postuler",
   "TousLesProgrammes": "Tous les programmes",
   "TousLesPays": "Tous les pays",
   "SignUpAndExplore": "Inscrivez-vous et explorez",
   "MyApplications": "Mon application ",
   "home": "Accueil",
   "logout": "Déconnexion",
-  "notifications ": "Notifications"
+  "notifications ": "Notifications",
+  "appTitle": "DOCGO",
+  "AreYouSure": "Êtes-vous sûr ?",
+  "YouWontBeAbleToRevertThis": "Vous ne pourrez pas revenir en arrière !",
+  "YesDeleteIt": "Oui !",
+  "Delete": "Oui",
+  "Cancel": "Annuler",
+  "YourFileHasBeenDeleted": "Votre fichier a été supprimé !",
+  "Deleted": "faite"
 }
