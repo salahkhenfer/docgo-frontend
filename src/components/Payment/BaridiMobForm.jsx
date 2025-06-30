@@ -18,7 +18,7 @@ const BaridiMobForm = () => {
   };
 
   return (
-    <main className="max-w-[400px] mx-auto p-4 h-screen flex flex-col justify-start">
+    <main className="max-w-[400px] mx-auto p-4  flex flex-col justify-start">
       <header className="w-full mb-6">
         <h1 className="text-3xl font-semibold text-zinc-800">
           Processus de paiement

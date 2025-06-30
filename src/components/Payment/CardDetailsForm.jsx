@@ -1,9 +1,8 @@
-"use client";
-
 import React from "react";
 import { Button } from "@heroui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 
 // Compact FormField component
 const FormField = ({
@@ -40,11 +39,13 @@ const FormField = ({
 
 // Compact validation schema
 const validationSchema = Yup.object({
-  cardName: Yup.string().required("Requis").min(3, "Min 3 caractères"),
+  cardName: Yup.string()
+    .required(t("required"))
+    .min(3, t("minLength", { length: 3 })),
   cardNumber: Yup.string()
-    .required("Requis")
-    .matches(/^[0-9\s]{13,19}$/, "Numéro invalide")
-    .test("test-number", "Numéro invalide", (value) => {
+    .required(t("required"))
+    .matches(/^[0-9\s]{13,19}$/, t("invalidCardNumber"))
+    .test("test-number", t("invalidCardNumber"), (value) => {
       const cardNumber = (value || "").replace(/\s/g, "");
       if (cardNumber.length < 13) return false;
 
@@ -63,17 +64,17 @@ const validationSchema = Yup.object({
       return sum % 10 === 0;
     }),
   expiryDate: Yup.string()
-    .required("Requis")
-    .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, "Format MM/YY")
-    .test("test-expiry", "Expirée", (value) => {
+    .required(t("required"))
+    .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, t("invalidExpiryFormat"))
+    .test("test-expiry", t("expiredCard"), (value) => {
       if (!value) return false;
       const [month, year] = value.split("/");
       const expiryDate = new Date(20 + year, month - 1, 1);
       return expiryDate > new Date();
     }),
   cvv: Yup.string()
-    .required("Requis")
-    .matches(/^[0-9]{3,4}$/, "3-4 chiffres"),
+    .required(t("required"))
+    .matches(/^[0-9]{3,4}$/, t("invalidCVV")),
 });
 
 // Formatters
@@ -103,22 +104,23 @@ const formatExpiryDate = (value) => {
 };
 
 const CardDetailsForm = () => {
+  const { t } = useTranslation();
   return (
     <div className="w-full max-w-md mx-auto p-3 bg-white shadow-sm rounded-lg">
-      <h2 className="text-lg font-bold mb-3 text-zinc-800">Paiement</h2>
+      <h2 className="text-lg font-bold mb-3 text-zinc-800">{t("payment")}</h2>
 
       <Formik
         initialValues={{
-          cardName: "Huda Dadoune",
-          cardNumber: "1483 6520 7615 2386",
-          expiryDate: "12/25",
-          cvv: "123",
+          cardName: "",
+          cardNumber: "",
+          expiryDate: "",
+          cvv: "",
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           console.log("Form submitted:", values);
           setTimeout(() => {
-            alert("Paiement réussi!");
+            alert(t("paymentSuccess"));
             setSubmitting(false);
           }, 500);
         }}
@@ -128,9 +130,9 @@ const CardDetailsForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
                 <FormField
-                  label="Nom sur la carte"
+                  label={t("cardName")}
                   name="cardName"
-                  placeholder="Entrez le nom"
+                  placeholder={t("enterCardName")}
                   errors={errors}
                   touched={touched}
                 />
@@ -138,9 +140,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-2">
                 <FormField
-                  label="Numéro de carte"
+                  label={t("cardNumber")}
                   name="cardNumber"
-                  placeholder="XXXX XXXX XXXX XXXX"
+                  placeholder={t("enterCardNumber")}
                   errors={errors}
                   touched={touched}
                   onChange={(e) => {
@@ -152,9 +154,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-1">
                 <FormField
-                  label="Expiration"
+                  label={t("expiryDate")}
                   name="expiryDate"
-                  placeholder="MM/YY"
+                  placeholder={t("enterExpiryDate")}
                   errors={errors}
                   touched={touched}
                   onChange={(e) => {
@@ -166,9 +168,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-1">
                 <FormField
-                  label="CVV"
+                  label={t("cvv")}
                   name="cvv"
-                  placeholder="123"
+                  placeholder={t("enterCVV")}
                   errors={errors}
                   touched={touched}
                 />
@@ -203,10 +205,10 @@ const CardDetailsForm = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Traitement...
+                    {t("processing")}
                   </span>
                 ) : (
-                  "Terminer le paiement"
+                  t("completePayment")
                 )}
               </Button>
             </div>
