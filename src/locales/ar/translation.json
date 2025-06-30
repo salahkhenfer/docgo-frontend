@@ -147,5 +147,21 @@
   "LePlusRecent": "الأكثر حداثة",
   "Duree": "المدة",
   "Recherche": "البحث",
-  "TousLesCours": "جميع الدورات"
+  "TousLesCours": "جميع الدورات",
+  "heure": "ساعة",
+  "hours": "ساعات",
+  "cours": "دورة",
+  "Completezvotreeducation": "أكمل تعليمك",
+  "course": {
+    "title": "أساسيات التصميم: من البداية إلى الاحتراف",
+    "subtitle": "الفيديو التعليمي",
+    "readComments": "قراءة التعليقات",
+    "writeFeedback": "اكتب تعليقك",
+    "leaveFeedback": "اترك رأيك",
+    "rating": "التقييم",
+    "commentPlaceholder": "اكتب تعليقك هنا...",
+    "submit": "إرسال",
+    "thankYou": "شكراً لك!",
+    "comment": "التعليق"
+  }
 }

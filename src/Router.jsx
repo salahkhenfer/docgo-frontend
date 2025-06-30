@@ -9,6 +9,8 @@ import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
 import MyApplications from "./Pages/MyApplications";
 import AllCourses from "./Pages/AllCourses";
+import CourseDetails from "./Pages/CourseDetails";
+import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
 
 const Routers = createBrowserRouter([
   {
@@ -35,6 +37,15 @@ const Routers = createBrowserRouter([
       {
         path: "AllCourses", // Ensure consistency in URL param casing
         element: <AllCourses />,
+      },
+      {
+        path: "CourseDetails", // Ensure consistency in URL param casing
+        element: <CourseDetails />,
+      },
+
+      {
+        path: "CourseDetails/AllContentVideosCourse", // ✅ fixed (no leading slash)
+        element: <AllContentVideosCourse />,
       },
     ],
   },

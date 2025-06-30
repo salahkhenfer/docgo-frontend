@@ -1,8 +1,5 @@
-"use client";
-import { t } from "i18next";
-import { CourseCard } from "./CourseCard";
-import { use } from "react";
 import { useTranslation } from "react-i18next";
+import { CourseCard } from "./CourseCard";
 
 export function CourseGrid() {
   const courses = [

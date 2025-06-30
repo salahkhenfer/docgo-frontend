@@ -144,5 +144,22 @@
   "LePlusRecent": "Le plus récent",
   "Duree": "Durée",
   "Recherche": "Recherche",
-  "TousLesCours": "Tous les cours"
+  "TousLesCours": "Tous les cours",
+  "heure": "heure",
+
+  "cours": "cours",
+  "heures": "heures",
+  "Completezvotreeducation": "Complétez votre éducation",
+  "course": {
+    "title": "Fondements du design : Des bases à la maîtrise professionnelle",
+    "subtitle": "Section",
+    "readComments": "Lire les commentaires",
+    "writeFeedback": "Écrire votre propre commentaire",
+    "leaveFeedback": "Laissez votre avis",
+    "rating": "Note",
+    "commentPlaceholder": "Votre commentaire...",
+    "submit": "Envoyer",
+    "thankYou": "Merci !",
+    "comment": "Commentaire"
+  }
 }
