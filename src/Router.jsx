@@ -8,6 +8,7 @@ import LandingPage from "./LandingPage/LandingPage";
 import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
 import MyApplications from "./Pages/MyApplications";
+import AllCourses from "./Pages/AllCourses";
 
 const Routers = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const Routers = createBrowserRouter([
       {
         path: "MyApplications", // Ensure consistency in URL param casing
         element: <MyApplications />,
+      },
+      {
+        path: "AllCourses", // Ensure consistency in URL param casing
+        element: <AllCourses />,
       },
     ],
   },

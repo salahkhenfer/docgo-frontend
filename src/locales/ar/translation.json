@@ -136,5 +136,16 @@
   "invalidCVV": "CVV غير صالح",
   "paymentSuccess": "تم الدفع بنجاح!",
   "processing": "جاري المعالجة...",
-  "completePayment": "إتمام الدفع"
+  "completePayment": "إتمام الدفع",
+
+  "RechercherUnCours": "ابحث عن دورة...",
+  "Gratuit": "مجاني",
+  "Payant": "مدفوع",
+  "AvecCertificat": "مع شهادة",
+  "Sans": "بدون",
+  "Dernier": "الأحدث",
+  "LePlusRecent": "الأكثر حداثة",
+  "Duree": "المدة",
+  "Recherche": "البحث",
+  "TousLesCours": "جميع الدورات"
 }

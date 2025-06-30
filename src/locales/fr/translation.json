@@ -134,5 +134,15 @@
   "invalidCVV": "CVV invalide",
   "paymentSuccess": "Paiement réussi!",
   "processing": "Traitement...",
-  "completePayment": "Terminer le paiement"
+  "completePayment": "Terminer le paiement",
+  "RechercherUnCours": "Rechercher un cours...",
+  "Gratuit": "Gratuit",
+  "Payant": "Payant",
+  "AvecCertificat": "Avec certificat",
+  "Sans": "Sans",
+  "Dernier": "Dernier",
+  "LePlusRecent": "Le plus récent",
+  "Duree": "Durée",
+  "Recherche": "Recherche",
+  "TousLesCours": "Tous les cours"
 }
