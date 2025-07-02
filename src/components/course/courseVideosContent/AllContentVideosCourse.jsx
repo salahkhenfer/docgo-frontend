@@ -1,5 +1,7 @@
+import { Outlet } from "react-router-dom";
 import { CourseSidebar } from "./CourseSidebar";
 import { CourseVideosContent } from "./CourseVideosContent";
+import QuizContent from "../../../Pages/QuizContent";
 
 function AllContentVideosCourse() {
   return (
@@ -7,7 +9,7 @@ function AllContentVideosCourse() {
       <div className="mt-10 w-full max-w-[1360px] max-md:max-w-full" space={32}>
         <div className="flex gap-5 max-md:flex-col max-md:">
           <CourseSidebar />
-          <CourseVideosContent />
+          <QuizContent />
         </div>
       </div>
     </div>
