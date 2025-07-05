@@ -50,7 +50,8 @@ export function CourseSidebar() {
             {sections.map((section) => {
               const isActive = section.id === activeSectionId;
               return (
-                <button
+                <Link
+                  to={section.completed ? `section${section.id}` : "#"}
                   key={section.id}
                   onClick={() => setActiveSectionId(section.id)}
                   className={`flex gap-4 items-center p-4 w-full rounded-2xl border transition-all duration-200 text-left ${
@@ -75,7 +76,7 @@ export function CourseSidebar() {
                   {section.completed && (
                     <FaCheck className="w-4 h-4 shrink-0 text-green-600" />
                   )}
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -100,14 +101,14 @@ export function CourseSidebar() {
           </div>
 
           <div className="mt-6 flex items-center gap-2">
-            {allCompleted ? (
-              <a
-                href="/certificate"
+            {!allCompleted ? (
+              <Link
+                to="Certificate"
                 className="text-blue-600 hover:underline flex items-center gap-2"
               >
                 <FaCheckCircle className="text-green-600" />
                 Certificat + PDF
-              </a>
+              </Link>
             ) : (
               <span className="text-gray-400 flex items-center gap-2">
                 <FaLock /> Certificat + PDF (verrouillé)
