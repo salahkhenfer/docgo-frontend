@@ -2,22 +2,8 @@
 import React, { useState } from "react";
 import Checkbox from "./Checkbox";
 
-function CheckboxQuestion() {
+function CheckboxQuestion({ options }) {
   const [selectedOptions, setSelectedOptions] = useState(["B", "D"]);
-
-  const options = [
-    { id: "A", label: "A) Pour deviner ce que veulent les utilisateurs" },
-    {
-      id: "B",
-      label: "B) Pour comprendre les besoins et comportements des utilisateurs",
-    },
-    { id: "C", label: "C) Pour créer des designs accrocheurs" },
-    {
-      id: "D",
-      label:
-        "D) pour créer des designs centrés sur l'utilisateur qui résolvent de vrais problèmes",
-    },
-  ];
 
   const handleOptionChange = (optionId) => {
     setSelectedOptions((prev) =>

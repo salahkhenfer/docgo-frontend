@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { FaCheckCircle, FaLock, FaCircle, FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export function CourseSidebar() {
   const [activeSectionId, setActiveSectionId] = useState(1);
@@ -36,14 +37,14 @@ export function CourseSidebar() {
   const allCompleted = sections.every((s) => s.completed);
 
   return (
-    <aside className="w-[28%] max-md:ml-0 max-md:w-full">
+    <aside className="  relative max-md:ml-0 max-md:w-full">
       <div className="flex flex-col items-start pr-8 pl-20 border-r border-solid min-h-[1015px] text-zinc-800 max-md:px-5 max-md:mt-8">
         <h1 className="text-2xl font-semibold leading-9 text-zinc-800">
           Fondements du design : Des bases à la maîtrise professionnelle
         </h1>
 
         {/* Sections Navigation */}
-        <section className="mt-8 max-w-full w-[264px]">
+        <section className="mt-8 max-w-full   w-[264px]">
           <h2 className="text-xl leading-10 text-zinc-800">Contenu du cours</h2>
           <nav className="mt-4 w-full text-sm leading-5 max-w-[264px]">
             {sections.map((section) => {
@@ -83,14 +84,14 @@ export function CourseSidebar() {
         {/* Locked Features */}
         <section className="mt-8 text-xl leading-10 w-full max-w-[264px]">
           <div className="mt-6 flex items-center gap-2">
-            {allCompleted ? (
-              <a
-                href="/quiz"
+            {!allCompleted ? (
+              <Link
+                to="quiz"
                 className="text-blue-600 hover:underline flex items-center gap-2"
               >
                 <FaCheckCircle className="text-green-600" />
                 Quiz débloqué
-              </a>
+              </Link>
             ) : (
               <span className="text-gray-400 flex items-center gap-2">
                 <FaLock /> Quiz (verrouillé)

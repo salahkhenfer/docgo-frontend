@@ -117,3 +117,4 @@ export function SearchProgram() {
     </div>
   );
 }
+export default SearchProgram;

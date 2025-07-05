@@ -9,8 +9,13 @@ import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
 import MyApplications from "./Pages/MyApplications";
 import AllCourses from "./Pages/AllCourses";
-import CourseDetails from "./Pages/CourseDetails";
+
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
+import QuizContent from "./Pages/QuizContent";
+import CourseVideosContent from "./components/course/courseVideosContent/CourseVideosContent";
+import Course from "./Pages/Course";
+import { CourseDetails } from "./components/course/CourseDetails";
+import Certificate from "./Pages/Certificate";
 
 const Routers = createBrowserRouter([
   {
@@ -39,13 +44,37 @@ const Routers = createBrowserRouter([
         element: <AllCourses />,
       },
       {
-        path: "CourseDetails", // Ensure consistency in URL param casing
-        element: <CourseDetails />,
-      },
+        path: "CourseDetails/:courseId",
+        element: <Course />,
+        children: [
+          {
+            index: true, // Default route for CourseDetails
+            element: <CourseDetails />, // Render CourseDetails component by default
+          },
 
-      {
-        path: "CourseDetails/AllContentVideosCourse", // ✅ fixed (no leading slash)
-        element: <AllContentVideosCourse />,
+          {
+            path: "videos",
+            element: <AllContentVideosCourse />,
+            children: [
+              {
+                index: true,
+                element: <CourseVideosContent />, // default if no video selected
+              },
+              {
+                path: ":videoId", // ✅ match video ID from URL
+                element: <CourseVideosContent />, // reuse same component with ID
+              },
+              {
+                path: "quiz",
+                element: <QuizContent />,
+              },
+              {
+                path: "Certificate",
+                element: <Certificate />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
