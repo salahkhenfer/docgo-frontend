@@ -1,10 +1,168 @@
-import Slider from "react-slick";
 import { useRef, useState, useEffect } from "react";
-import { TestimonialCard } from "./TestimonialCard";
-import { useTranslation } from "react-i18next";
+import { ChevronLeft, ChevronRight, Star, Play, Pause } from "lucide-react";
+
+// TestimonialCard component
+function TestimonialCard({
+  testimonial,
+  author,
+  role,
+  avatar,
+  rating,
+  date,
+  showDate = true,
+  showRating = true,
+}) {
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-full">
+      <div className="flex items-start gap-4">
+        <img
+          src={avatar}
+          alt={author}
+          className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+          onError={(e) => {
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              author
+            )}&background=0ea5e9&color=fff`;
+          }}
+        />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2">
+            <h4 className="font-semibold text-gray-900 truncate">{author}</h4>
+            {showRating && (
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < rating
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-gray-600 mb-3">{role}</p>
+          <p className="text-gray-800 text-sm leading-relaxed">{testimonial}</p>
+          {showDate && (
+            <p className="text-xs text-gray-500 mt-3">{formatDate(date)}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Custom Slider component
+function CustomSlider({ children, slidesToShow = 2 }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesToShowResponsive, setSlidesToShowResponsive] =
+    useState(slidesToShow);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSlidesToShowResponsive(1);
+      } else {
+        setSlidesToShowResponsive(slidesToShow);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [slidesToShow]);
+
+  const totalSlides = children.length;
+  const maxSlide = Math.max(0, totalSlides - slidesToShowResponsive);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev <= 0 ? maxSlide : prev - 1));
+  };
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{
+            transform: `translateX(-${
+              currentSlide * (100 / slidesToShowResponsive)
+            }%)`,
+          }}
+        >
+          {children.map((child, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 px-2"
+              style={{ width: `${100 / slidesToShowResponsive}%` }}
+            >
+              {child}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {totalSlides > slidesToShowResponsive && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-shadow z-10"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-shadow z-10"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </>
+      )}
+
+      <div className="flex justify-center mt-4 gap-2">
+        {Array.from({ length: maxSlide + 1 }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`w-2 h-2 rounded-full transition-colors ${
+              i === currentSlide ? "bg-cyan-500" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function CourseVideosContent() {
-  const { t } = useTranslation();
+  // Translation fallback
+  const t = (key) => {
+    const translations = {
+      "course.thankYou": "Merci pour votre commentaire !",
+      "course.rating": "Note",
+      "course.comment": "Commentaire",
+      "course.readComments": "Lire les commentaires",
+      "course.writeFeedback": "Écrire un avis",
+      "course.leaveFeedback": "Laissez votre avis",
+      "course.commentPlaceholder": "Partagez votre expérience avec ce cours...",
+      "course.submit": "Soumettre",
+    };
+    return translations[key] || key;
+  };
 
   // Video player states
   const videoRef = useRef(null);
@@ -17,18 +175,20 @@ export function CourseVideosContent() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
-  // Data state (simulating backend response)
+  // Data state
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Simulated backend data structure
+  // Mock data
   const mockBackendData = {
     id: "video_001",
-    url: "https://cdn.pixabay.com/video/2024/05/31/214592_large.mp4",
-    thumbnail: "https://cdn.pixabay.com/video/2024/05/31/214592_thumbnail.jpg",
-    duration: 1800, // 30 minutes in seconds
-    title: "Introduction to Web Development",
-    description: "Get started with the fundamentals of web development",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    thumbnail:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
+    duration: 1800,
+    title: "Introduction au Développement Web",
+    description:
+      "Apprenez les fondamentaux du développement web avec ce cours complet",
 
     statistics: {
       totalViews: 15420,
@@ -45,7 +205,7 @@ export function CourseVideosContent() {
         author: "Mohamed Yan",
         role: "Étudiante en France",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/6ff491269cba4203f3ad0701f0e9de0cd42c8008",
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
         rating: 5,
         date: "2024-01-15",
         courseId: "course_001",
@@ -57,7 +217,7 @@ export function CourseVideosContent() {
         author: "Fatima Zohra",
         role: "Étudiante en Allemagne",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/5d9a259579fe50840511b1b3a869d2e696e22e6f",
+          "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
         rating: 4,
         date: "2024-01-10",
         courseId: "course_001",
@@ -69,7 +229,7 @@ export function CourseVideosContent() {
         author: "Karim Belkacem",
         role: "Étudiant au Canada",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/6ff491269cba4203f3ad0701f0e9de0cd42c8008",
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
         rating: 5,
         date: "2024-01-08",
         courseId: "course_001",
@@ -81,7 +241,7 @@ export function CourseVideosContent() {
         author: "Lina Haddad",
         role: "Étudiante en Belgique",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/5d9a259579fe50840511b1b3a869d2e696e22e6f",
+          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
         rating: 4,
         date: "2024-01-05",
         courseId: "course_001",
@@ -93,7 +253,7 @@ export function CourseVideosContent() {
         author: "Ahmed Bouali",
         role: "Développeur Full Stack",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/6ff491269cba4203f3ad0701f0e9de0cd42c8008",
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
         rating: 5,
         date: "2024-01-01",
         courseId: "course_001",
@@ -105,7 +265,7 @@ export function CourseVideosContent() {
         author: "Yasmine Alami",
         role: "Designer UX/UI",
         avatar:
-          "https://cdn.builder.io/api/v1/image/assets/TEMP/5d9a259579fe50840511b1b3a869d2e696e22e6f",
+          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
         rating: 4,
         date: "2023-12-28",
         courseId: "course_001",
@@ -118,7 +278,6 @@ export function CourseVideosContent() {
     const fetchCourseData = async () => {
       setLoading(true);
       try {
-        // Simulate API delay
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setCourseData(mockBackendData);
       } catch (error) {
@@ -133,55 +292,53 @@ export function CourseVideosContent() {
 
   // Video player handlers
   const handlePlay = () => {
-    videoRef.current?.play();
-    setPlaying(true);
+    if (videoRef.current) {
+      videoRef.current.play();
+      setPlaying(true);
+    }
   };
 
   const handlePause = () => {
-    videoRef.current?.pause();
-    setPlaying(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setPlaying(false);
+    }
   };
 
   const handleToggle = () => {
     isPlaying ? handlePause() : handlePlay();
   };
 
-  // Utility function for time formatting
+  // Fixed time formatting
   function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   }
 
-  // Slider settings
-  const sliderSettings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    pauseOnHover: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
+  // Handle video time updates
+  const handleTimeUpdate = (e) => {
+    setCurrentTime(e.target.currentTime);
+  };
+
+  const handleLoadedMetadata = (e) => {
+    setDuration(e.target.duration);
+  };
+
+  // Handle timeline scrubbing
+  const handleSeek = (e) => {
+    const time = parseFloat(e.target.value);
+    if (videoRef.current && !isNaN(time)) {
+      videoRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
   };
 
   // Handle feedback submission
   const handleFeedbackSubmit = async () => {
+    if (!rating || !comment.trim()) return;
+
     try {
       alert(
         `${t("course.thankYou")}\n${t("course.rating")}: ${rating} ★\n${t(
@@ -193,7 +350,7 @@ export function CourseVideosContent() {
       setShowFeedbackForm(false);
     } catch (error) {
       console.error("Error submitting feedback:", error);
-      alert("Error submitting feedback. Please try again.");
+      alert("Erreur lors de la soumission. Veuillez réessayer.");
     }
   };
 
@@ -220,7 +377,7 @@ export function CourseVideosContent() {
         <div className="flex flex-col w-full max-md:mt-8 max-md:max-w-full">
           <div className="text-center py-8">
             <p className="text-red-600">
-              Error loading course data. Please try again.
+              Erreur lors du chargement des données. Veuillez réessayer.
             </p>
           </div>
         </div>
@@ -241,16 +398,16 @@ export function CourseVideosContent() {
             </p>
 
             {/* Course Statistics */}
-            <div className="flex gap-6 mt-4 text-sm text-neutral-600">
+            <div className="flex gap-6 mt-4 text-sm text-neutral-600 flex-wrap">
               <span>
-                {courseData.statistics.totalViews.toLocaleString()} views
+                {courseData.statistics.totalViews.toLocaleString()} vues
               </span>
               <span>
-                {courseData.statistics.totalStudents.toLocaleString()} students
+                {courseData.statistics.totalStudents.toLocaleString()} étudiants
               </span>
               <span>
                 ★ {courseData.statistics.averageRating} (
-                {courseData.statistics.totalReviews} reviews)
+                {courseData.statistics.totalReviews} avis)
               </span>
             </div>
           </header>
@@ -263,59 +420,59 @@ export function CourseVideosContent() {
                 ref={videoRef}
                 src={courseData.url}
                 poster={courseData.thumbnail}
-                onTimeUpdate={(e) => setCurrentTime(e.target.currentTime)}
-                onLoadedMetadata={(e) => setDuration(e.target.duration)}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
+                onEnded={() => setPlaying(false)}
               />
 
+              {/* Play/Pause Button Overlay */}
               <div
                 role="button"
                 onClick={handleToggle}
-                className="absolute left-0 top-0 flex h-full w-full items-center justify-center cursor-pointer"
+                className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-20 transition-opacity hover:bg-opacity-30"
               >
                 <div
-                  className={`z-20 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-500 text-white transition-all duration-500 md:h-20 md:w-20 hover:bg-cyan-600 ${
+                  className={`z-20 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-500 text-white transition-all duration-300 md:h-20 md:w-20 hover:bg-cyan-600 hover:scale-110 ${
                     isPlaying ? "invisible select-none opacity-0" : ""
                   }`}
                 >
-                  {/* Play Icon */}
-                  <svg
-                    className="h-12 w-12 md:h-16 md:w-16 ml-1"
-                    stroke="currentColor"
-                    viewBox="0 0 512 512"
-                  >
-                    <path
-                      d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeMiterlimit="10"
-                      strokeWidth="32"
-                    />
-                    <path d="M176 176v160l160-80z" fill="currentColor" />
-                  </svg>
+                  {isPlaying ? (
+                    <Pause className="h-8 w-8 md:h-10 md:w-10" />
+                  ) : (
+                    <Play className="h-8 w-8 md:h-10 md:w-10 ml-1" />
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Video Timeline */}
+            {/* Video Controls */}
             <div className="w-full mt-4 px-2 md:px-0 max-w-[860px] mx-auto">
-              <input
-                type="range"
-                min={0}
-                max={duration}
-                step={0.1}
-                value={currentTime}
-                onChange={(e) => {
-                  const time = parseFloat(e.target.value);
-                  if (videoRef.current) {
-                    videoRef.current.currentTime = time;
-                    setCurrentTime(time);
-                  }
-                }}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-              />
-              <div className="flex justify-between text-sm text-neutral-600 mt-2">
+              <div className="flex items-center gap-4 mb-2">
+                <button
+                  onClick={handleToggle}
+                  className="text-cyan-500 hover:text-cyan-600 transition-colors"
+                >
+                  {isPlaying ? (
+                    <Pause className="w-6 h-6" />
+                  ) : (
+                    <Play className="w-6 h-6" />
+                  )}
+                </button>
+                <div className="flex-1">
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 0}
+                    step={0.1}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-cyan-500 slider"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between text-sm text-neutral-600">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
@@ -328,12 +485,20 @@ export function CourseVideosContent() {
           <div className="flex gap-2 flex-wrap items-center text-zinc-800">
             <button
               onClick={() => setShowFeedbackForm(false)}
-              className="px-6 py-2 bg-white rounded-lg border text-base font-medium hover:bg-gray-50 transition-colors"
+              className={`px-6 py-2 rounded-lg border text-base font-medium transition-colors ${
+                !showFeedbackForm
+                  ? "bg-cyan-500 text-white border-cyan-500"
+                  : "bg-white text-zinc-800 border-gray-300 hover:bg-gray-50"
+              }`}
             >
               {t("course.readComments")} ({courseData.testimonials.length})
             </button>
             <button
-              className="px-4 py-2 text-base text-blue-600 hover:underline transition-colors"
+              className={`px-6 py-2 rounded-lg border text-base font-medium transition-colors ${
+                showFeedbackForm
+                  ? "bg-cyan-500 text-white border-cyan-500"
+                  : "bg-white text-cyan-500 border-cyan-500 hover:bg-cyan-50"
+              }`}
               onClick={() => setShowFeedbackForm(true)}
             >
               {t("course.writeFeedback")}
@@ -352,7 +517,7 @@ export function CourseVideosContent() {
                   <button
                     key={star}
                     onClick={() => setRating(star)}
-                    className={`text-2xl transition-colors hover:scale-110 ${
+                    className={`text-2xl transition-all hover:scale-110 ${
                       rating >= star
                         ? "text-yellow-400"
                         : "text-gray-300 hover:text-yellow-200"
@@ -383,7 +548,7 @@ export function CourseVideosContent() {
                   }}
                   className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
                 >
-                  Cancel
+                  Annuler
                 </button>
                 <button
                   onClick={handleFeedbackSubmit}
@@ -397,29 +562,33 @@ export function CourseVideosContent() {
           )}
 
           {/* Testimonials Section */}
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold text-zinc-800 mb-6">
-              Student Reviews ({courseData.testimonials.length})
-            </h3>
+          {!showFeedbackForm && (
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold text-zinc-800 mb-6">
+                Avis des étudiants ({courseData.testimonials.length})
+              </h3>
 
-            {courseData.testimonials.length > 0 ? (
-              <Slider {...sliderSettings}>
-                {courseData.testimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="h-full px-2">
+              {courseData.testimonials.length > 0 ? (
+                <CustomSlider slidesToShow={2}>
+                  {courseData.testimonials.map((testimonial) => (
                     <TestimonialCard
+                      key={testimonial.id}
                       {...testimonial}
                       showDate={true}
                       showRating={true}
                     />
-                  </div>
-                ))}
-              </Slider>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                <p>No reviews yet. Be the first to leave a review!</p>
-              </div>
-            )}
-          </div>
+                  ))}
+                </CustomSlider>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>
+                    Aucun avis pour le moment. Soyez le premier à laisser un
+                    avis !
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       </div>
     </main>
