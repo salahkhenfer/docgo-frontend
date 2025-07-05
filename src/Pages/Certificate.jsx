@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
 import jsPDF from "jspdf";
-
 import {
   Download,
   Share2,
@@ -20,15 +19,14 @@ export default function Certificate() {
 
   // Mock certificate data - replace with your actual data
   const certificateData = {
-    studentName: " salah khenfer",
+    studentName: "salah khenfer",
     courseName: "Advanced React Development & Modern JavaScript",
     completionDate: "2024-12-15",
-    instructor: "Dr. imad ",
+    instructor: "Dr. imad",
     grade: "Excellence",
     courseHours: "120",
-
     certificateId: "CERT-2024-RD-001",
-    institution: "DocGo ",
+    institution: "DocGo",
   };
 
   const generatePDF = async () => {
@@ -36,9 +34,9 @@ export default function Certificate() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // Set canvas dimensions for A4 size (at 300 DPI)
-    canvas.width = 2480; // A4 width at 300 DPI
-    canvas.height = 3508; // A4 height at 300 DPI
+    // Set canvas dimensions (scaled down from original)
+    canvas.width = 2480;
+    canvas.height = 1748;
 
     // Clear canvas with white background
     ctx.fillStyle = "#ffffff";
@@ -57,71 +55,71 @@ export default function Certificate() {
     borderGradient.addColorStop(0.75, "#10b981");
     borderGradient.addColorStop(1, "#3b82f6");
 
-    // Draw border
-    ctx.lineWidth = 30;
+    // Draw border (thickness scaled proportionally)
+    ctx.lineWidth = 20; // Reduced from 30
     ctx.strokeStyle = borderGradient;
-    ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+    ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80); // Reduced margin
 
-    // Draw decorative circle
+    // Draw decorative circle (position and size adjusted)
     const decorativeGradient = ctx.createRadialGradient(
-      2100,
-      300,
+      2200, // Adjusted x position
+      250, // Adjusted y position
       0,
-      2100,
-      300,
-      100
+      2200,
+      250,
+      70 // Reduced radius
     );
     decorativeGradient.addColorStop(0, "#fbbf24");
     decorativeGradient.addColorStop(1, "#f59e0b");
     ctx.fillStyle = decorativeGradient;
     ctx.beginPath();
-    ctx.arc(2100, 300, 100, 0, 2 * Math.PI);
+    ctx.arc(2200, 250, 70, 0, 2 * Math.PI);
     ctx.fill();
 
-    // Draw trophy emoji (simplified as text)
-    ctx.font = "80px serif";
+    // Draw trophy emoji (size reduced)
+    ctx.font = "60px 'Poppins', sans-serif"; // Reduced from 80px
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-    ctx.fillText("🏆", 2100, 330);
+    ctx.fillText("🏆", 2200, 280); // Adjusted position
 
-    // Main title
-    ctx.font = "bold 120px serif";
-    const titleGradient = ctx.createLinearGradient(0, 500, canvas.width, 500);
+    // Main title with adjusted size
+    ctx.font = "bold 90px 'Poppins', sans-serif"; // Reduced from 120px
+    const titleGradient = ctx.createLinearGradient(0, 350, canvas.width, 350);
     titleGradient.addColorStop(0, "#1e40af");
     titleGradient.addColorStop(1, "#8b5cf6");
     ctx.fillStyle = titleGradient;
     ctx.textAlign = "center";
-    ctx.fillText("CERTIFICAT D'EXCELLENCE", canvas.width / 2, 500);
+    ctx.fillText("CERTIFICAT D'EXCELLENCE", canvas.width / 2, 350);
 
-    // Subtitle
-    ctx.font = "60px serif";
+    // Subtitle with adjusted size
+    ctx.font = "600 45px 'Poppins', sans-serif"; // Reduced from 60px
     ctx.fillStyle = "#6b7280";
-    ctx.fillText("est décerné à", canvas.width / 2, 650);
+    ctx.fillText("est décerné à", canvas.width / 2, 450);
 
-    // Student name
-    ctx.font = "bold 100px serif";
-    const nameGradient = ctx.createLinearGradient(0, 800, canvas.width, 800);
+    // Student name with adjusted size
+    ctx.font = "bold 75px 'Poppins', sans-serif"; // Reduced from 100px
+    const nameGradient = ctx.createLinearGradient(0, 600, canvas.width, 600);
     nameGradient.addColorStop(0, "#059669");
     nameGradient.addColorStop(1, "#0d9488");
     ctx.fillStyle = nameGradient;
-    ctx.fillText(certificateData.studentName, canvas.width / 2, 800);
+    ctx.fillText(certificateData.studentName, canvas.width / 2, 600);
 
-    // Course description
-    ctx.font = "50px serif";
+    // Course description with adjusted size
+    ctx.font = "500 40px 'Poppins', sans-serif"; // Reduced from 50px
     ctx.fillStyle = "#6b7280";
     ctx.fillText(
       "pour avoir terminé avec succès le programme de formation",
       canvas.width / 2,
-      950
+      700
     );
 
-    // Course name
-    ctx.font = "bold 70px serif";
+    // Course name with adjusted size
+    ctx.font = "bold 55px 'Poppins', sans-serif"; // Reduced from 70px
     ctx.fillStyle = "#1f2937";
     const courseLines = certificateData.courseName.split(" ");
     let line1 = "";
     let line2 = "";
-    const maxWidth = 1800;
+    const maxWidth = 2100; // Reduced from 3000
 
     for (let i = 0; i < courseLines.length; i++) {
       const testLine = line1 + courseLines[i] + " ";
@@ -134,15 +132,15 @@ export default function Certificate() {
     }
 
     if (line2) {
-      ctx.fillText(line1.trim(), canvas.width / 2, 1100);
-      ctx.fillText(line2, canvas.width / 2, 1200);
+      ctx.fillText(line1.trim(), canvas.width / 2, 800);
+      ctx.fillText(line2, canvas.width / 2, 900);
     } else {
-      ctx.fillText(line1.trim(), canvas.width / 2, 1150);
+      ctx.fillText(line1.trim(), canvas.width / 2, 850);
     }
 
-    // Details section
-    const detailsY = line2 ? 1400 : 1350;
-    ctx.font = "bold 50px serif";
+    // Details section with adjusted sizes
+    const detailsY = line2 ? 1000 : 950;
+    ctx.font = "bold 40px 'Poppins', sans-serif"; // Reduced from 50px
     ctx.fillStyle = "#3b82f6";
     ctx.fillText(certificateData.grade, canvas.width / 2 - 600, detailsY);
     ctx.fillText(certificateData.courseHours + "h", canvas.width / 2, detailsY);
@@ -152,85 +150,45 @@ export default function Certificate() {
       detailsY
     );
 
-    ctx.font = "35px serif";
+    ctx.font = "500 30px 'Poppins', sans-serif"; // Reduced from 35px
     ctx.fillStyle = "#6b7280";
-    ctx.fillText("Résultat", canvas.width / 2 - 600, detailsY + 60);
-    ctx.fillText("Durée", canvas.width / 2, detailsY + 60);
-    ctx.fillText("Date", canvas.width / 2 + 600, detailsY + 60);
+    ctx.fillText("Résultat", canvas.width / 2 - 600, detailsY + 50);
+    ctx.fillText("Durée", canvas.width / 2, detailsY + 50);
+    ctx.fillText("Date", canvas.width / 2 + 600, detailsY + 50);
 
-    // Skills section
-    const skillsY = detailsY + 200;
-    ctx.font = "bold 40px serif";
-    ctx.fillStyle = "#4b5563";
-    ctx.fillText("Compétences acquises:", canvas.width / 2, skillsY);
-
-    // Draw skill tags
-    ctx.font = "35px serif";
-    ctx.fillStyle = "#ffffff";
-    const skillsPerRow = 3;
-    const skillWidth = 400;
-    const skillHeight = 80;
-    const startX =
-      (canvas.width - (skillsPerRow * skillWidth + (skillsPerRow - 1) * 50)) /
-      2;
-
-    certificateData.skills.forEach((skill, index) => {
-      const row = Math.floor(index / skillsPerRow);
-      const col = index % skillsPerRow;
-      const x = startX + col * (skillWidth + 50);
-      const y = skillsY + 80 + row * (skillHeight + 30);
-
-      // Draw skill background
-      const skillGradient = ctx.createLinearGradient(
-        x,
-        y,
-        x + skillWidth,
-        y + skillHeight
-      );
-      skillGradient.addColorStop(0, "#3b82f6");
-      skillGradient.addColorStop(1, "#8b5cf6");
-      ctx.fillStyle = skillGradient;
-      ctx.fillRect(x, y, skillWidth, skillHeight);
-
-      // Draw skill text
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.fillText(skill, x + skillWidth / 2, y + skillHeight / 2 + 10);
-    });
-
-    // Signatures
-    const signaturesY = canvas.height - 600;
-    ctx.font = "bold 45px serif";
+    // Signatures with adjusted sizes and positions
+    const signaturesY = canvas.height - 300;
+    ctx.font = "bold 35px 'Poppins', sans-serif"; // Reduced from 45px
     ctx.fillStyle = "#374151";
     ctx.textAlign = "center";
 
     // Instructor signature
     ctx.fillText(
       certificateData.instructor,
-      canvas.width / 2 - 500,
+      canvas.width / 2 - 500, // Reduced spacing
       signaturesY
     );
-    ctx.font = "35px serif";
+    ctx.font = "500 30px 'Poppins', sans-serif"; // Reduced from 35px
     ctx.fillStyle = "#6b7280";
     ctx.fillText(
       "Instructeur Certifié",
       canvas.width / 2 - 500,
-      signaturesY + 50
+      signaturesY + 40
     );
 
     // Institution signature
-    ctx.font = "bold 45px serif";
+    ctx.font = "bold 35px 'Poppins', sans-serif";
     ctx.fillStyle = "#374151";
     ctx.fillText(
       certificateData.institution,
       canvas.width / 2 + 500,
       signaturesY
     );
-    ctx.font = "35px serif";
+    ctx.font = "500 30px 'Poppins', sans-serif";
     ctx.fillStyle = "#6b7280";
-    ctx.fillText("Institution", canvas.width / 2 + 500, signaturesY + 50);
+    ctx.fillText("Institution", canvas.width / 2 + 500, signaturesY + 40);
 
-    // Draw signature lines
+    // Draw signature lines (shorter)
     ctx.strokeStyle = "#374151";
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -240,14 +198,14 @@ export default function Certificate() {
     ctx.lineTo(canvas.width / 2 + 700, signaturesY - 30);
     ctx.stroke();
 
-    // Certificate ID
-    ctx.font = "30px serif";
+    // Certificate ID with adjusted size
+    ctx.font = "500 25px 'Poppins', sans-serif"; // Reduced from 30px
     ctx.fillStyle = "#9ca3af";
     ctx.textAlign = "right";
     ctx.fillText(
       `ID: ${certificateData.certificateId}`,
-      canvas.width - 100,
-      canvas.height - 100
+      canvas.width - 80,
+      canvas.height - 80
     );
 
     return canvas;
@@ -257,23 +215,19 @@ export default function Certificate() {
     try {
       const canvas = await generatePDF();
 
-      const imgData = canvas.toDataURL("image/png");
+      // Compress the image as JPEG to reduce size
+      const imgData = canvas.toDataURL("image/jpeg", 0.7); // 70% quality
 
       const pdf = new jsPDF({
-        orientation: "portrait",
+        orientation: "landscape",
         unit: "pt",
         format: "a4",
       });
 
-      // Calculate dimensions to fit the A4 page
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pageWidth;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
       pdf.save(
         `certificat-${certificateData.studentName
           .replace(/\s+/g, "-")
