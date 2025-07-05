@@ -99,7 +99,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
   return user ? (
     <header className="lg:hidden">
       {!isOpen && (
-        <nav className="flex justify-between items-center px-4 py-4">
+        <nav className="flex justify-between items-center px-4 py-2 ">
           <motion.img
             className="w-14 h-14 rounded-full"
             src="../../../src/assets/Logo.png"
@@ -161,7 +161,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
                       ) : (
                         <motion.div
                           key={index}
-                          className="px-1 py-4 bg-white hover:bg-sky-50 transition-colors duration-200"
+                          className="px-1 py-2 bg-white hover:bg-sky-50 transition-colors duration-200"
                           whileHover={{ x: 10 }}
                           whileTap={{ scale: 0.98 }}
                         >
@@ -192,7 +192,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
     </header>
   ) : (
     <header className="lg:hidden">
-      <nav className="flex justify-between items-center px-4 py-4">
+      <nav className="flex justify-between items-center px-4 py-2">
         <motion.img
           className="w-14 h-14 rounded-full"
           src={logo}

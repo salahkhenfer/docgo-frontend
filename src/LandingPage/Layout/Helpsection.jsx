@@ -10,7 +10,7 @@ function HelpSection() {
           <img
             src="../../../src/assets/beautiful girl contact us.png"
             alt="contact us"
-            className="lg:max-w-[500px] lg:max-h-[500px] sm:max-w-[400px] sm-sm:max-h-[350px] w-[500px]  object-center"
+            className="lg:max-w-[500px] lg:max-h-[500px] sm:max-w-[400px] sm-sm:max-h-[350px] w-[500px]  object-cover"
           />
 
           <div className="w-full md:w-1/2 p-6 md:p-8 lg:p-12 bg-[#F4F4F5] backdrop-blur-[400px] ">
