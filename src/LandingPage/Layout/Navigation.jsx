@@ -2,7 +2,7 @@ import { Link as ScrollSmooth } from "react-scroll";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import DropDownContent from "../../components/DropDownContent";
 import FlyoutLink from "../../components/FlyoutLink";
