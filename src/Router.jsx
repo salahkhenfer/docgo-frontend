@@ -16,7 +16,7 @@ import CourseVideosContent from "./components/course/courseVideosContent/CourseV
 import Course from "./Pages/Course";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
-import UserProfile from "./Pages/userProfile";
+import UserProfile from "./Pages/UserProfile";
 
 const Routers = createBrowserRouter([
   {
