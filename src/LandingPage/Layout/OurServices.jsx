@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import Container from "../../components/Container";
 import Service from "../../components/Service";
 import { Link } from "react-router-dom";
+import Knwoledge1 from "../../assets/Knwoledge 1 (1) 1.png";
+import Knwoledge2 from "../../assets/Knowledge 2 1.png";
 
 function OurServices() {
   const { t } = useTranslation();
@@ -18,7 +20,7 @@ function OurServices() {
       </h1>
       <div className="flex items-center justify-center gap-12 sm-sm:max-md:flex-col sm-sm:max-sm:text-center">
         <Service
-          url={"../../../src/assets/Knwoledge 1 (1) 1.png"}
+          url={Knwoledge1}
           h1={t("GuidanceForStudyingAbroad")}
           h3={t("StudyingAbroadChangesPerspective")}
           p={t("GuidanceDescription")}
@@ -26,7 +28,7 @@ function OurServices() {
         />
 
         <Service
-          url={"../../../src/assets/Knowledge 2 1.png"}
+          url={Knwoledge2}
           h1={t("OnlineCourses")}
           h3={t("LearnAnything")}
           p={t("OnlineCoursesDescription")}

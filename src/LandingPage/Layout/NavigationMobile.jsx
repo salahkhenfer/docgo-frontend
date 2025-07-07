@@ -6,6 +6,9 @@ import logo from "../../assets/Logo.png";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import Collaps from "../../components/Collaps";
 import LanguageDropdown from "../../components/LanguageDropdown";
+import close from "../../assets/close.svg";
+import { menu } from "framer-motion/client";
+import MenuIcon from "../../assets/menu.svg"; // Adjust the path as necessary
 
 const NavigationMobile = ({ CustomAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -102,7 +105,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
         <nav className="flex justify-between items-center px-4 py-2 ">
           <motion.img
             className="w-14 h-14 rounded-full"
-            src="../../../src/assets/Logo.png"
+            src={logo}
             alt="logo"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -112,7 +115,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
             <motion.img
               onClick={toggleMenu}
               className="w-8 h-8 cursor-pointer"
-              src="../../../src/assets/menu.svg"
+              src={MenuIcon}
               alt="menu icon"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -134,7 +137,7 @@ const NavigationMobile = ({ CustomAvatar }) => {
               <motion.img
                 onClick={toggleMenu}
                 className="ml-auto w-8 h-8 cursor-pointer"
-                src="../../../src/assets/close.svg"
+                src={close}
                 alt="close icon"
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}

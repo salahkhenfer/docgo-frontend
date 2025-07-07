@@ -5,6 +5,8 @@ import Switch from "../../components/Switch";
 import BackgroundImage from "../../../src/assets/three monochrome plastic spheres.png";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import Container from "../../components/Container";
+import GeometricShapes from "../../../src/assets/geometric shapes.png";
+import phoneIcon from "../../../src/assets/phone.png"; // Adjust the path as necessary
 
 function FrequentlyAskedQuestions() {
   const { t, i18n } = useTranslation();
@@ -25,7 +27,7 @@ function FrequentlyAskedQuestions() {
       <Container style="flex flex-col sm-sm:gap-4 bg-sky-50 opacity-95 md:gap-6 p-4 md:p-16 w-full md:w-[90%] lg:w-[80%] xl:w-[70%] max-w-7xl relative z-10">
         <img
           className="w-full h-full object-contain"
-          src="../../../src/assets/geometric shapes.png"
+          src={GeometricShapes}
           alt={t("geometricShapes")}
         />
 
@@ -40,11 +42,7 @@ function FrequentlyAskedQuestions() {
         <DarkColorButton
           style="flex gap-2 items-center justify-center text-center self-center sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2"
           icon={
-            <img
-              src="../../../src/assets/phone.png"
-              alt={t("phoneIcon")}
-              className="w-5 h-5"
-            />
+            <img src={phoneIcon} alt={t("phoneIcon")} className="w-5 h-5" />
           }
           text={t("contactUs")}
         />

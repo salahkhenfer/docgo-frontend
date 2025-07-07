@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import DarkColorButton from "../../components/Buttons/DarkColorButton";
 import Container from "../../components/Container";
+import contactus from "../../../src/assets/beautiful girl contact us.png"; // Adjust the path as necessary
 function HelpSection() {
   const { t } = useTranslation();
   return (
@@ -8,7 +9,7 @@ function HelpSection() {
       <div className=" rounded-2xl shadow-lg overflow-hidden">
         <div className="flex flex-col items-center sm:flex-row bg-[#F4F4F5] backdrop-blur-[400px]">
           <img
-            src="../../../src/assets/beautiful girl contact us.png"
+            src={contactus}
             alt="contact us"
             className="lg:max-w-[500px] lg:max-h-[500px] sm:max-w-[400px] sm-sm:max-h-[350px] w-[500px]  object-cover"
           />

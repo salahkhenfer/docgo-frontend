@@ -1,5 +1,6 @@
 import DarkColorButton from "../../components/Buttons/DarkColorButton";
 import Select from "../../components/Select";
+import girlImg from "../../assets/ girl.png";
 
 function StudySection() {
   return (
@@ -7,7 +8,7 @@ function StudySection() {
       <div className="gap-20 p-2 bg-customBlueLight mx-auto my-80 sm-sm:max-sm:my-20  rounded-3xl w-[91rem] sm-sm:flex-col sm-sm:w-full  sm-sm:gap-0 sm-sm:pb-8 flex sm-lg:flex-row items-center justify-around ">
         <img
           className="scale-125 -translate-y-16 sm-sm:scale-90 sm-lg:scale-110 lg-md:scale-125 "
-          src="../../../src/assets/ girl.png"
+          src={girlImg}
           alt="girl image"
         />
         <form className="flex flex-col gap-5">

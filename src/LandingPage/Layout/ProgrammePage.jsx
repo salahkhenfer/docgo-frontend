@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
+import backgroundImage from "../../assets/paris.png"; // Adjust the path as necessary
 
 const ProgrammePage = () => {
-  const backgroundImage = "../../../src/assets/paris.png";
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-6">

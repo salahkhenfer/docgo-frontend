@@ -1,18 +1,24 @@
 import { useTranslation } from "react-i18next";
 import Flag from "../../components/Flag";
 import BackgroundImage from "../../assets/About us.png";
+import FranceFlag from "../../../src/assets/France.png";
+import CanadaFlag from "../../../src/assets/Canada.png";
+import EnglandFlag from "../../../src/assets/England.png";
+import GermanyFlag from "../../../src/assets/Germany.png";
+import BelgiumFlag from "../../../src/assets/Belgium.png";
+import UnitedStatesFlag from "../../../src/assets/UnitedStates.png";
 
 function AboutUsSection() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
 
   const flags = [
-    { url: "../../../src/assets/France.png", name: t("France") },
-    { url: "../../../src/assets/canada.png", name: t("Canada") },
-    { url: "../../../src/assets/England.png", name: t("England") },
-    { url: "../../../src/assets/Germany.png", name: t("Germany") },
-    { url: "../../../src/assets/Belgium.png", name: t("Belgium") },
-    { url: "../../../src/assets/UnitedStates.png", name: t("UnitedStates") },
+    { url: FranceFlag, name: t("France") },
+    { url: CanadaFlag, name: t("Canada") },
+    { url: EnglandFlag, name: t("England") },
+    { url: GermanyFlag, name: t("Germany") },
+    { url: BelgiumFlag, name: t("Belgium") },
+    { url: UnitedStatesFlag, name: t("UnitedStates") },
   ];
 
   return (
