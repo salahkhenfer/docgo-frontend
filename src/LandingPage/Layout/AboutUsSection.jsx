@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import Flag from "../../components/Flag";
 import BackgroundImage from "../../assets/About us.png";
 import FranceFlag from "../../../src/assets/France.png";
-import CanadaFlag from "../../../src/assets/Canada.png";
+import CanadaFlag from "../../../src/assets/canada.png";
 import EnglandFlag from "../../../src/assets/England.png";
 import GermanyFlag from "../../../src/assets/Germany.png";
 import BelgiumFlag from "../../../src/assets/Belgium.png";
