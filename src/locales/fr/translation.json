@@ -161,5 +161,35 @@
     "submit": "Envoyer",
     "thankYou": "Merci !",
     "comment": "Commentaire"
+  },
+  "profile": {
+    "professional_member": "Membre professionnel",
+    "completed_courses": "cours terminés",
+    "in_progress_courses": "cours en cours"
+  },
+  "courses": {
+    "title": "Vos cours",
+    "progress": "Progression",
+    "continue": "Continuer",
+    "view_all": "Voir tous les cours"
+  },
+  "applications": {
+    "title": "Mes candidatures",
+    "submitted": "Soumise le:",
+    "deadline": "Deadline:",
+    "view_all": "Voir toutes les candidatures",
+    "status": {
+      "approved": "Accepté",
+      "pending": "En attente",
+      "under_review": "En cours d'examen",
+      "rejected": "Rejeté",
+      "unknown": "Statut inconnu"
+    }
+  },
+  "certificates": {
+    "title": "Mes certificats",
+    "issued_by": "Délivré par",
+    "view_official": "Voir le certificat officiel",
+    "view_all": "Voir tous les certificats"
   }
 }

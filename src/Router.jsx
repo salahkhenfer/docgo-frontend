@@ -16,6 +16,7 @@ import CourseVideosContent from "./components/course/courseVideosContent/CourseV
 import Course from "./Pages/Course";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
+import UserProfile from "./Pages/userProfile";
 
 const Routers = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const Routers = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "userProfile",
+        element: <UserProfile />,
       },
     ],
   },

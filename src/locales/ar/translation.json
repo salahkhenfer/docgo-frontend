@@ -163,5 +163,36 @@
     "submit": "إرسال",
     "thankYou": "شكراً لك!",
     "comment": "التعليق"
+  },
+
+  "profile": {
+    "professional_member": "عضو محترف",
+    "completed_courses": "دورات مكتملة",
+    "in_progress_courses": "دورات قيد التقدم"
+  },
+  "courses": {
+    "title": "دوراتك",
+    "progress": "التقدم",
+    "continue": "استمر",
+    "view_all": "عرض جميع الدورات"
+  },
+  "applications": {
+    "title": "طلباتي",
+    "submitted": "تم التقديم في:",
+    "deadline": "الموعد النهائي:",
+    "view_all": "عرض جميع الطلبات",
+    "status": {
+      "approved": "مقبول",
+      "pending": "قيد الانتظار",
+      "under_review": "قيد المراجعة",
+      "rejected": "مرفوض",
+      "unknown": "حالة غير معروفة"
+    }
+  },
+  "certificates": {
+    "title": "شهاداتي",
+    "issued_by": "صادر عن",
+    "view_official": "عرض الشهادة الرسمية",
+    "view_all": "عرض جميع الشهادات"
   }
 }

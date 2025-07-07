@@ -1,11 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FaDollarSign, FaClock, FaStar, FaPlay, FaLock } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export const CourseDetails = () => {
   const { t } = useTranslation();
 
   const courseData = {
+    id: "1",
     title: "Fondements du design : Des bases à la maîtrise professionnelle",
     description:
       "Apprenez les principes de design essentiels, explorez la théorie des couleurs, la typographie et le design d'interface utilisateur, et acquérez de l'expérience pratique avec des outils comme Adobe Illustrator et Figma. Ce cours est idéal pour toute personne souhaitant améliorer ses compétences en design ou démarrer une carrière dans le design.",
@@ -115,9 +117,12 @@ export const CourseDetails = () => {
           </div>
         </div>
         <div className="mt-5">
-          <button className="px-6 py-3 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition">
+          <Link
+            to={`/CourseDetails/${courseData.id}/videos`}
+            className="px-6 py-3 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition"
+          >
             {t("Completezvotreeducation")}
-          </button>
+          </Link>
         </div>
       </header>
 
