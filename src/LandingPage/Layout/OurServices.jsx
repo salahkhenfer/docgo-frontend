@@ -25,6 +25,7 @@ function OurServices() {
           h3={t("StudyingAbroadChangesPerspective")}
           p={t("GuidanceDescription")}
           btn={t("SignUpAndDiscover")}
+          to="/SearchProgram"
         />
 
         <Service
@@ -33,6 +34,7 @@ function OurServices() {
           h3={t("LearnAnything")}
           p={t("OnlineCoursesDescription")}
           btn={t("DiscoverAllCourses")}
+          to="/AllCourses"
         />
       </div>
     </Container>

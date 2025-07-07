@@ -1,9 +1,9 @@
 import React from "react";
-import { MyApplicationCard } from "../components/myApplications/MyApplicationCard";
+import MyApplicationCard from "../components/myApplications/MyApplicationCard";
 
 function MyApplications() {
   const programData = {
-    title: "France programme",
+    title: "France Programme",
     description:
       "Vel et sit sequi. Quos dolorem atque. Nisi autem ut eveniet qui molestiae nulla repellat. Repellendus nemo saepe. Laboriosam consequatur voluptas amet quibusdam. Et quaerat asperiores.",
     imageUrl:
@@ -11,16 +11,23 @@ function MyApplications() {
   };
 
   return (
-    <main className="flex overflow-hidden flex-col pb-16 bg-white">
-      <section className="self-center mt-12 w-full max-w-[1290px] max-md:mt-10 max-md:max-w-full">
-        <MyApplicationCard program={programData} status="rejected" />
-        <div className="mt-8">
-          <MyApplicationCard program={programData} status="accepted" />
+    <main className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 py-8 lg:py-12">
+        <div className="mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+            My Applications
+          </h1>
+          <p className="text-gray-600">
+            Track the status of your program applications
+          </p>
         </div>
-        <div className="mt-8">
+
+        <div className="space-y-6">
+          <MyApplicationCard program={programData} status="rejected" />
+          <MyApplicationCard program={programData} status="accepted" />
           <MyApplicationCard program={programData} status="pending" />
         </div>
-      </section>
+      </div>
     </main>
   );
 }

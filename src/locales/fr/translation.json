@@ -56,7 +56,7 @@
   "ViewMoreDetails": "Voir plus de détails",
   "geometricShapes": "formes géométriques",
   "faqTitle": "Questions fréquemment posées",
-  "faqDescription": "Ce sont les questions les plus fréquemment posées sur EduVoyage. Vous ne trouvez pas ce que vous cherchez ?",
+  "faqDescription": "Ce sont les questions les plus fréquemment posées sur DOCGO. Vous ne trouvez pas ce que vous cherchez ?",
   "phoneIcon": "icône de téléphone",
   "contactUs": "Entrer en contact",
   "faqQuestion1": "Comment commencer le processus pour étudier à l'étranger ?",
@@ -160,7 +160,12 @@
     "commentPlaceholder": "Votre commentaire...",
     "submit": "Envoyer",
     "thankYou": "Merci !",
-    "comment": "Commentaire"
+    "comment": "Commentaire",
+    "views": "Vues",
+    "students": "Étudiants",
+    "reviews": "Avis",
+    "testimonials": "Avis des étudiants",
+    "courseContent": "Contenu du cours"
   },
   "profile": {
     "professional_member": "Membre professionnel",
@@ -191,5 +196,22 @@
     "issued_by": "Délivré par",
     "view_official": "Voir le certificat officiel",
     "view_all": "Voir tous les certificats"
+  },
+  "notificationsWord": "Notifications",
+  "notifications": {
+    "title": "Notifications",
+    "description": "Restez informé de l'état de votre candidature et des mises à jour importantes",
+    "markAllAsRead": "Marquer tout comme lu",
+    "unreadCount": "{{unread}} non lu sur {{total}} au total",
+    "filterBy": "Filtrer par :",
+    "filter": {
+      "all": "Tout",
+      "unread": "Non lu",
+      "read": "Lu",
+      "applications": "Candidatures"
+    },
+    "noNotificationsFound": "Aucune notification trouvée",
+    "tryAdjustingSearch": "Essayez d'ajuster vos termes de recherche",
+    "allCaughtUp": "Vous êtes à jour !"
   }
 }

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import LightColoredButton from "./Buttons/LightColoredButton";
 
-function Service({ url, h1, h3, p, btn }) {
+function Service({ url, h1, h3, p, btn, to }) {
   return (
     <div className="flex flex-col sm-sm:max-sm:items-center gap-6 p-4 lg:w-1/3 sm:w-1/2 sm-sm:w-10/12 bg-sky-50 rounded-xl shadow-lg shadow-customBlue">
       <img
@@ -17,7 +17,7 @@ function Service({ url, h1, h3, p, btn }) {
         {p}
       </p>
       <div className="2xl:w-[60%] xl:w-[70%] sm-sm:w-[90%]">
-        <Link to="/SearchProgram">
+        <Link to={to}>
           <LightColoredButton
             style={
               "sm-sm:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2 "

@@ -56,7 +56,7 @@
   "ViewMoreDetails": "عرض المزيد من التفاصيل",
   "geometricShapes": "أشكال هندسية",
   "faqTitle": "الأسئلة المتكررة",
-  "faqDescription": "هذه هي الأسئلة الأكثر شيوعًا حول EduVoyage. لا تجد ما تبحث عنه؟",
+  "faqDescription": "هذه هي الأسئلة الأكثر شيوعًا حول DOCGO. لا تجد ما تبحث عنه؟",
   "phoneIcon": "أيقونة الهاتف",
   "contactUs": "تواصل معنا",
   "faqQuestion1": "كيف أبدأ عملية الدراسة في الخارج؟",
@@ -108,7 +108,7 @@
   "MyApplications": "طلباتي",
   "home": "الصفحة الرئيسية",
   "logout": "تسجيل الخروج",
-  "notifications": "الإشعارات",
+  "notificationsWord": "الإشعارات",
   "appTitle": "DOCGO",
   "AreYouSure": "هل أنت متأكد؟",
   "Delete": "حذف",
@@ -162,7 +162,12 @@
     "commentPlaceholder": "اكتب تعليقك هنا...",
     "submit": "إرسال",
     "thankYou": "شكراً لك!",
-    "comment": "التعليق"
+    "comment": "التعليق",
+    "views": "المشاهدات",
+    "students": "الطلاب",
+    "reviews": "المراجعات",
+    "testimonials": "شهادات الطلاب",
+    "courseContent": "محتوى الدورة"
   },
 
   "profile": {
@@ -194,5 +199,21 @@
     "issued_by": "صادر عن",
     "view_official": "عرض الشهادة الرسمية",
     "view_all": "عرض جميع الشهادات"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "description": "ابق على اطلاع دائم بحالة طلبك والتحديثات المهمة",
+    "markAllAsRead": "تعيين الكل كمقروء",
+    "unreadCount": "{{unread}} غير مقروء من أصل {{total}} إجمالي",
+    "filterBy": "تصفية حسب:",
+    "filter": {
+      "all": "الكل",
+      "unread": "غير مقروء",
+      "read": "مقروء",
+      "applications": "الطلبات"
+    },
+    "noNotificationsFound": "لم يتم العثور على إشعارات",
+    "tryAdjustingSearch": "حاول تعديل مصطلحات البحث",
+    "allCaughtUp": "أنت محدث تماماً!"
   }
 }

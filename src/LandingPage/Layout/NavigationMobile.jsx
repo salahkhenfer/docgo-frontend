@@ -9,6 +9,7 @@ import LanguageDropdown from "../../components/LanguageDropdown";
 import close from "../../assets/close.svg";
 import { menu } from "framer-motion/client";
 import MenuIcon from "../../assets/menu.svg"; // Adjust the path as necessary
+import { Link } from "react-router-dom";
 
 const NavigationMobile = ({ CustomAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,12 +81,12 @@ const NavigationMobile = ({ CustomAvatar }) => {
     {
       type: "collapse",
       title: t("Specialites"),
-      children: [t("Pharmacist"), t("Medicine"), t("Midwife"), t("Nurse")],
+      to: "searchProgram",
     },
     {
       type: "collapse",
       title: t("OtherSpecialties"),
-      children: [t("CampusFrance"), t("PrivateSchools")],
+      to: "searchProgram",
     },
     {
       type: "scroll",
@@ -154,35 +155,26 @@ const NavigationMobile = ({ CustomAvatar }) => {
                     className="flex flex-col gap-2"
                     variants={mobileLinksvars}
                   >
-                    {navItems.map((item, index) =>
-                      item.type === "collapse" ? (
-                        <Collaps
-                          key={index}
-                          perentLink={item.title}
-                          childLink={item.children}
-                        />
-                      ) : (
-                        <motion.div
-                          key={index}
-                          className="px-1 py-2 bg-white hover:bg-sky-50 transition-colors duration-200"
-                          whileHover={{ x: 10 }}
-                          whileTap={{ scale: 0.98 }}
+                    {navItems.map((item, index) => (
+                      <motion.div
+                        key={index}
+                        className="px-1 py-2 bg-white hover:bg-sky-50 transition-colors duration-200"
+                        whileHover={{ x: 10 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Link
+                          to={
+                            item.type === "scroll"
+                              ? item.to
+                              : `/searchProgram/${item.to}`
+                          }
+                          onClick={handleSetActive}
+                          className="text-customBlue"
                         >
-                          <ScrollSmooth
-                            to={item.to}
-                            spy={true}
-                            smooth={true}
-                            hashSpy={true}
-                            offset={-100}
-                            duration={500}
-                            onSetActive={handleSetActive}
-                            className="block no-underline text-customGray hover:cursor-pointer"
-                          >
-                            {item.title}
-                          </ScrollSmooth>
-                        </motion.div>
-                      )
-                    )}
+                          {t(item.title)}
+                        </Link>
+                      </motion.div>
+                    ))}
 
                     <LightColoredButton text={"Sign Up and Explore"} />
                   </motion.div>

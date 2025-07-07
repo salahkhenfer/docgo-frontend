@@ -133,6 +133,7 @@ export function CourseGrid() {
         {courses.map((course, index) => (
           <CourseCard
             key={index}
+            id={index + 1}
             imageUrl={course.imageUrl}
             title={course.title}
             description={course.description}

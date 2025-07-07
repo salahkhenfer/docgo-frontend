@@ -34,6 +34,7 @@
     "sass": "^1.83.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.22.2",
+    "swiper": "^11.2.10",
     "yup": "^1.6.1"
   },
   "devDependencies": {

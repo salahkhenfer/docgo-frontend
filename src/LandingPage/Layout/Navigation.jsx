@@ -91,7 +91,7 @@ function Navigation() {
                      transition-colors duration-200 flex items-center gap-2"
               onClick={() => setIsDropdownOpen(false)}
             >
-              <span>{t("notifications")}</span>
+              <span>{t("notificationsWord")}</span>
             </Link>
 
             <button
@@ -113,34 +113,19 @@ function Navigation() {
       className="flex justify-center items-center gap-8 text-lg font-medium 
                     lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3"
     >
-      <FlyoutLink
-        href="#"
-        FlyoutContent={() => (
-          <DropDownContent
-            links={[
-              { href: "#", text: t("Pharmacist") },
-              { href: "#", text: t("Medicine") },
-              { href: "#", text: t("Midwife") },
-              { href: "#", text: t("Nurse") },
-            ]}
-          />
-        )}
+      <Link
+        to="/searchProgram"
+        className="no-underline text-customGray hover:cursor-pointer"
       >
         {t("Specialites")}
-      </FlyoutLink>
-      <FlyoutLink
-        href="#"
-        FlyoutContent={() => (
-          <DropDownContent
-            links={[
-              { href: "#", text: t("CampusFrance") },
-              { href: "#", text: t("PrivateSchools") },
-            ]}
-          />
-        )}
+      </Link>
+      <Link
+        to="/searchProgram"
+        className="no-underline text-customGray hover:cursor-pointer"
       >
         {t("OtherSpecialties")}
-      </FlyoutLink>
+      </Link>
+
       <ScrollSmooth
         to="ourServices"
         spy={true}

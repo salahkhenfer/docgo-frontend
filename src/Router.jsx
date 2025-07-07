@@ -17,6 +17,7 @@ import Course from "./Pages/Course";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
 import UserProfile from "./Pages/UserProfile";
+import NotificationsPage from "./Pages/NotificationsPage";
 
 const Routers = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const Routers = createBrowserRouter([
       {
         path: "AllCourses", // Ensure consistency in URL param casing
         element: <AllCourses />,
+      },
+      {
+        path: "Notifications", // Ensure consistency in URL param casing
+        element: <NotificationsPage />, // Assuming you have a NotificationsPage component
       },
       {
         path: "CourseDetails/:courseId",

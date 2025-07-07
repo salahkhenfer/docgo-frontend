@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star, Play, Pause } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // TestimonialCard component
 function TestimonialCard({
@@ -150,19 +151,7 @@ function CustomSlider({ children, slidesToShow = 2 }) {
 
 export function CourseVideosContent() {
   // Translation fallback
-  const t = (key) => {
-    const translations = {
-      "course.thankYou": "Merci pour votre commentaire !",
-      "course.rating": "Note",
-      "course.comment": "Commentaire",
-      "course.readComments": "Lire les commentaires",
-      "course.writeFeedback": "Écrire un avis",
-      "course.leaveFeedback": "Laissez votre avis",
-      "course.commentPlaceholder": "Partagez votre expérience avec ce cours...",
-      "course.submit": "Soumettre",
-    };
-    return translations[key] || key;
-  };
+  const { t } = useTranslation();
 
   // Video player states
   const videoRef = useRef(null);
@@ -400,14 +389,16 @@ export function CourseVideosContent() {
             {/* Course Statistics */}
             <div className="flex gap-6 mt-4 text-sm text-neutral-600 flex-wrap">
               <span>
-                {courseData.statistics.totalViews.toLocaleString()} vues
+                {courseData.statistics.totalViews.toLocaleString()}{" "}
+                {t("course.views")}
               </span>
               <span>
-                {courseData.statistics.totalStudents.toLocaleString()} étudiants
+                {courseData.statistics.totalStudents.toLocaleString()}{" "}
+                {t("course.students")}
               </span>
               <span>
                 ★ {courseData.statistics.averageRating} (
-                {courseData.statistics.totalReviews} avis)
+                {courseData.statistics.totalReviews} {t("course.reviews")})
               </span>
             </div>
           </header>
@@ -565,7 +556,7 @@ export function CourseVideosContent() {
           {!showFeedbackForm && (
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-zinc-800 mb-6">
-                Avis des étudiants ({courseData.testimonials.length})
+                {t("course.testimonials")}({courseData.testimonials.length})
               </h3>
 
               {courseData.testimonials.length > 0 ? (

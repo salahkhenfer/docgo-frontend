@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import CardCourse from "../../components/CardCourse";
 import Container from "../../components/Container";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import img from "../../../src/assets/image.png"; // Adjust the path as necessary
 
 function CoursesSection() {
   const { t, i18n } = useTranslation();
@@ -15,7 +16,7 @@ function CoursesSection() {
   const carouselRef = useRef(null);
 
   const cards = Array(6).fill({
-    url: "../../../src/assets/image.png",
+    url: img,
     title: "UI UX Design Course",
     description:
       "The UI/UX design specialization adopts a design-centered approach...",

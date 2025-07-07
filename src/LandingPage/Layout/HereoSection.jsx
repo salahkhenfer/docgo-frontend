@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import DarkColorButton from "../../components/Buttons/DarkColorButton";
 import StudyForm from "../../components/StudyForm";
+import { Link } from "react-router-dom";
 
 function HeroSection() {
   const { t } = useTranslation();
@@ -16,12 +17,14 @@ function HeroSection() {
         <p className="text-xl text-customGray leading-10 font-normal md:max-3xl:text-lg lg-md:max-3xl:leading-normal md:max-lg-md:text-base sm-sm:max-lg-sm:text-center sm-sm:max-lg-sm:text-sm">
           {t("JoinUsToDiscover")}
         </p>
-        <DarkColorButton
-          text={t("StudyAbroad")}
-          style={
-            "md:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-base sm-sm:text-sm  px-8"
-          }
-        />
+        <Link to="/SearchProgram">
+          <DarkColorButton
+            text={t("StudyAbroad")}
+            style={
+              "md:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-base sm-sm:text-sm  px-8"
+            }
+          />
+        </Link>
       </div>
       <StudyForm />
     </div>

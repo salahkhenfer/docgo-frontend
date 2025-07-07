@@ -1,8 +1,15 @@
 import { t } from "i18next";
 import { useState } from "react";
 import { BsHeartFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
-export function CourseCard({ imageUrl, title, description, hasImage = true }) {
+export function CourseCard({
+  id,
+  imageUrl,
+  title,
+  description,
+  hasImage = true,
+}) {
   const [liked, setLiked] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [hasImageError, setHasImageError] = useState(false);
@@ -44,9 +51,15 @@ export function CourseCard({ imageUrl, title, description, hasImage = true }) {
         </div>
 
         {/* Button */}
-        <button className="gap-2 self-start px-8 py-3 mt-4 text-base leading-relaxed text-white bg-blue-500 rounded-full hover:bg-blue-600 transition">
+        <Link
+          to={`/CourseDetails/${id}`}
+          onClick={() => window.scrollTo(0, 0)}
+          aria-label={t("Detail")}
+          data-testid="course-detail-link"
+          className="gap-2 self-start px-8 py-3 mt-4 text-base leading-relaxed text-white bg-blue-500 rounded-full hover:bg-blue-600 transition"
+        >
           {t("Detail")}
-        </button>
+        </Link>
       </div>
 
       {/* Heart Icon */}

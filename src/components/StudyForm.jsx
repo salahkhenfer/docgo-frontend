@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import DarkColorButton from "./Buttons/DarkColorButton";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const StudyForm = () => {
   const [subject, setSubject] = useState("");
@@ -69,12 +70,20 @@ const StudyForm = () => {
         />
       </div>
 
-      <DarkColorButton
+      {/* <DarkColorButton
         text={t("ToRegister")}
         style={
           "md:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-base sm-sm:text-sm  px-8 w-full"
         }
-      />
+      /> */}
+      <Link to="/SearchProgram">
+        <DarkColorButton
+          text={t("ToRegister")}
+          style={
+            "md:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-base sm-sm:text-sm  px-8 w-full"
+          }
+        />
+      </Link>
     </div>
   );
 };
