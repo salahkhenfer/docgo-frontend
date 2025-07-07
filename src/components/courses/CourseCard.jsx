@@ -23,7 +23,7 @@ export function CourseCard({
           <>
             {/* Skeleton shown while image loads or fails */}
             {(!isImageLoaded || hasImageError) && (
-              <div className="w-full aspect-[2.06] bg-gray-200 animate-pulse rounded-lg mb-4" />
+              <div className="w-full absolute aspect-[2.06] bg-gray-200 animate-pulse rounded-lg mb-4" />
             )}
             {/* Actual Image */}
             {!hasImageError && (

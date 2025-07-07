@@ -3,8 +3,20 @@ import React, { useState } from "react";
 import { FaCheckCircle, FaLock, FaCircle, FaCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export function CourseSidebar() {
+export function CourseSidebar({ setSidebarOpen, sidebarOpen }) {
   const [activeSectionId, setActiveSectionId] = useState(1);
+
+  const handleSectionClick = (id) => {
+    setActiveSectionId(id);
+    setSidebarOpen(false); // Close sidebar on section click
+  };
+
+  const handleClickQuiz = () => {
+    setSidebarOpen(false); // Close sidebar when clicking on quiz
+  };
+  const handleClickCertificate = () => {
+    setSidebarOpen(false); // Close sidebar when clicking on certificate
+  };
 
   const sections = [
     {
@@ -37,8 +49,8 @@ export function CourseSidebar() {
   const allCompleted = sections.every((s) => s.completed);
 
   return (
-    <aside className="  relative max-md:ml-0 max-md:w-full">
-      <div className="flex flex-col items-start pr-8 pl-20 border-r border-solid min-h-[1015px] text-zinc-800 max-md:px-5 max-md:mt-8">
+    <aside className="   max-md:ml-0 max-md:w-full">
+      <div className="flex   flex-col items-start pr-8 pl-20 border-r border-solid min-h-[1015px] text-zinc-800 max-md:px-5 max-md:mt-8">
         <h1 className="text-2xl font-semibold leading-9 text-zinc-800">
           Fondements du design : Des bases à la maîtrise professionnelle
         </h1>
@@ -53,7 +65,7 @@ export function CourseSidebar() {
                 <Link
                   to={section.completed ? `section${section.id}` : "#"}
                   key={section.id}
-                  onClick={() => setActiveSectionId(section.id)}
+                  onClick={() => handleSectionClick(section.id)}
                   className={`flex gap-4 items-center p-4 w-full rounded-2xl border transition-all duration-200 text-left ${
                     section.completed
                       ? "border-green-600 text-green-600"
@@ -84,7 +96,10 @@ export function CourseSidebar() {
 
         {/* Locked Features */}
         <section className="mt-8 text-xl leading-10 w-full max-w-[264px]">
-          <div className="mt-6 flex items-center gap-2">
+          <div
+            onClick={handleClickQuiz}
+            className="mt-6 flex items-center gap-2"
+          >
             {!allCompleted ? (
               <Link
                 to="quiz"
@@ -100,7 +115,10 @@ export function CourseSidebar() {
             )}
           </div>
 
-          <div className="mt-6 flex items-center gap-2">
+          <div
+            onClick={handleClickCertificate}
+            className="mt-6 flex items-center gap-2"
+          >
             {!allCompleted ? (
               <Link
                 to="Certificate"

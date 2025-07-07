@@ -94,8 +94,8 @@ export default function Certificate() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen relative w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
+      <div className="max-w-6xl relative mx-auto">
         {/* Congratulations Banner */}
         <div className="text-center mb-8">
           <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white p-8 rounded-2xl mb-6 shadow-2xl relative overflow-hidden">
