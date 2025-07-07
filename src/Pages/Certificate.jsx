@@ -1,18 +1,8 @@
-"use client";
-import React, { useState, useRef } from "react";
 import jsPDF from "jspdf";
-import {
-  Download,
-  Share2,
-  Eye,
-  FileText,
-  Award,
-  Star,
-  Calendar,
-  User,
-} from "lucide-react";
-import generatePDFCertificate from "../components/certificate/generatePDFCertificate";
+import { Award, Calendar, Download, Eye, Star, User } from "lucide-react";
+import { useRef, useState } from "react";
 import Swal from "sweetalert2";
+import generatePDFCertificate from "../components/certificate/generatePDFCertificate";
 
 export default function Certificate() {
   const [isDownloading, setIsDownloading] = useState(false);

@@ -1,10 +1,8 @@
-"use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import RadioButton from "./RadioButton";
 
 function MultipleChoiceQuestion({ options }) {
   const [selectedOption, setSelectedOption] = useState("D");
-
 
   return (
     <div className="mt-6 w-full max-md:max-w-full">

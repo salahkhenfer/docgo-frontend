@@ -1,6 +1,3 @@
-"use client";
-import React from "react";
-
 function RadioButton({ isSelected, onChange }) {
   return (
     <button

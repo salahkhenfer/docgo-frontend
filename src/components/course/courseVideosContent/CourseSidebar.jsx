@@ -1,6 +1,5 @@
-"use client";
-import React, { useState } from "react";
-import { FaCheckCircle, FaLock, FaCircle, FaCheck } from "react-icons/fa";
+import { useState } from "react";
+import { FaCheck, FaCheckCircle, FaCircle, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export function CourseSidebar({ setSidebarOpen, sidebarOpen }) {
