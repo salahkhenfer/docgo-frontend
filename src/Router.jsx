@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import Default from "./Default";
+
 import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Auth/login/Login";
 import Register from "./Auth/register/Register";
