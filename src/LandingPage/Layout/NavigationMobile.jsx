@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Collaps from "../../components/Collaps";
-import LightColoredButton from "../../components/Buttons/LightColoredButton";
-import { Link as ScrollSmooth } from "react-scroll";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link as ScrollSmooth } from "react-scroll";
+import logo from "../../assets/Logo.png";
+import LightColoredButton from "../../components/Buttons/LightColoredButton";
+import Collaps from "../../components/Collaps";
 import LanguageDropdown from "../../components/LanguageDropdown";
-import logo from "../../assets/logo.png";
 
 const NavigationMobile = ({ CustomAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);

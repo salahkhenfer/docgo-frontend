@@ -1,15 +1,15 @@
-import { Link as ScrollSmooth } from "react-scroll";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { Link as ScrollSmooth } from "react-scroll";
 import logo from "../../assets/Logo.png";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import DropDownContent from "../../components/DropDownContent";
 import FlyoutLink from "../../components/FlyoutLink";
 import LanguageDropdown from "../../components/LanguageDropdown";
-import NavigationMobile from "./NavigationMobile";
-import { FaUser } from "react-icons/fa";
 import i18n from "../../i18n";
+import NavigationMobile from "./NavigationMobile";
 
 function Navigation() {
   const { t } = useTranslation();
