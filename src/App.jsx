@@ -8,7 +8,9 @@ import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
 import Navigation from "./LandingPage/Layout/Navigation";
 import visitService from "./services/VisitTrackerService";
+import { useAppContext } from "./AppContext";
 
+import axios from "axios";
 function App() {
     const [loading, setLoading] = useState(true);
     const { i18n } = useTranslation();
@@ -27,7 +29,30 @@ function App() {
         };
     }, [location.pathname]);
 
+    const { set_Auth, store_login } = useAppContext();
+
     useEffect(() => {
+        setLoading(true);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/Check_Auth",
+                    {
+                        withCredentials: true,
+                        validateStatus: () => true,
+                    }
+                );
+                if (response.status == 200) {
+                    store_login(response.data.userId, response.data.userType);
+                    // setUserType(response.data.userType);
+                    set_Auth(true);
+                } else {
+                    set_Auth(false);
+                }
+            } catch (error) {
+                set_Auth(false);
+            }
+        };
         const fetch_images = () => {
             return new Promise((resolve, reject) => {
                 const images = [Logo];
@@ -80,25 +105,30 @@ function App() {
             });
         };
 
-        Promise.all([fetch_fonts(), fetch_images()])
-            .then(() => {
+        Promise.all([fetchData(), fetch_fonts(), fetch_images()]).finally(
+            () => {
                 setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+            }
+        );
     }, []);
-
-    return (
-        <div>
-            {" "}
-            <Navigation /> {/* Ensure this is the correct component */}
-            <Outlet />
-            <Reveal>
-                <Footer />
-            </Reveal>
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className=" w-screen h-screen flex flex-col items-center justify-center">
+                <img src={Logo} alt="Logo" className=" w-32 mb-1 " />
+                <span className="loader"></span>
+            </div>
+        );
+    } else
+        return (
+                <div>
+                    {" "}
+                    <Navigation /> {/* Ensure this is the correct component */}
+                    <Outlet />
+                    <Reveal>
+                        <Footer />
+                    </Reveal>
+                </div>
+        );
 }
 
 export default App;
