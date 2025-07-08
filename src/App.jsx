@@ -9,7 +9,7 @@ import Reveal from "./components/Reveal";
 import Navigation from "./LandingPage/Layout/Navigation";
 import visitService from "./services/VisitTrackerService";
 import { useAppContext } from "./AppContext";
-
+import MainLoading from "./MainLoading";
 import axios from "axios";
 function App() {
     const [loading, setLoading] = useState(true);
@@ -107,27 +107,28 @@ function App() {
 
         Promise.all([fetchData(), fetch_fonts(), fetch_images()]).finally(
             () => {
-                setLoading(false);
+                setLoading(true);
             }
         );
     }, []);
     if (loading) {
         return (
-            <div className=" w-screen h-screen flex flex-col items-center justify-center">
-                <img src={Logo} alt="Logo" className=" w-32 mb-1 " />
-                <span className="loader"></span>
-            </div>
+            // <div className=" w-screen h-screen flex flex-col items-center justify-center">
+            //     <img src={Logo} alt="Logo" className=" w-32 mb-1 " />
+            //     <span className="loader"></span>
+            // </div>
+            <MainLoading />
         );
     } else
         return (
-                <div>
-                    {" "}
-                    <Navigation /> {/* Ensure this is the correct component */}
-                    <Outlet />
-                    <Reveal>
-                        <Footer />
-                    </Reveal>
-                </div>
+            <div>
+                {" "}
+                <Navigation /> {/* Ensure this is the correct component */}
+                <Outlet />
+                <Reveal>
+                    <Footer />
+                </Reveal>
+            </div>
         );
 }
 
