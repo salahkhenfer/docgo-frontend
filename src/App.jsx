@@ -107,7 +107,7 @@ function App() {
 
         Promise.all([fetchData(), fetch_fonts(), fetch_images()]).finally(
             () => {
-                setLoading(true);
+                setLoading(false);
             }
         );
     }, []);
