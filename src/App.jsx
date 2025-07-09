@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import HelpSection from "./LandingPage/Layout/Helpsection";
 import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
-import Navigation from "./LandingPage/Layout/Navigation";
+import Navigation from "./LandingPage/Layout/Navbar/Navigation";
 import visitService from "./services/VisitTrackerService";
 import { useAppContext } from "./AppContext";
 import MainLoading from "./MainLoading";
@@ -18,6 +18,10 @@ function App() {
         i18n.language || "fr"
     );
     const location = useLocation();
+    const { user, set_Auth, store_login } = useAppContext();
+    useEffect(() => {
+        console.log("Current data:", user);
+    }, [user]);
 
     useEffect(() => {
         // Track page visit whenever location changes
@@ -28,8 +32,6 @@ function App() {
             visitService.updateDuration();
         };
     }, [location.pathname]);
-
-    const { set_Auth, store_login } = useAppContext();
 
     useEffect(() => {
         setLoading(true);
