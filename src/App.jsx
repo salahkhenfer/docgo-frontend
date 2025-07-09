@@ -18,7 +18,7 @@ function App() {
         i18n.language || "fr"
     );
     const location = useLocation();
-    const { user, set_Auth, store_login } = useAppContext();
+    const { user, set_user, set_Auth, store_login } = useAppContext();
     useEffect(() => {
         console.log("Current data:", user);
     }, [user]);
@@ -53,6 +53,9 @@ function App() {
                 }
             } catch (error) {
                 set_Auth(false);
+            } finally {
+                set_Auth(true);
+                set_user(true);
             }
         };
         const fetch_images = () => {
