@@ -1,0 +1,17 @@
+export const Countries = [
+    "France",
+    "Canada",
+    "Belgique",
+    "Suisse",
+    "Maroc",
+    "Algérie",
+    "Tunisie",
+    "Sénégal",
+    "Côte d'Ivoire",
+    "Luxembourg",
+    "États-Unis",
+    "Royaume-Uni",
+    "Allemagne",
+    "Espagne",
+    "Italie",
+];

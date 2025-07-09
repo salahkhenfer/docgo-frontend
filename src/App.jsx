@@ -18,7 +18,7 @@ function App() {
         i18n.language || "fr"
     );
     const location = useLocation();
-    const { user, set_user, set_Auth, store_login } = useAppContext();
+    const { user, set_user, set_Auth } = useAppContext();
     useEffect(() => {
         console.log("Current data:", user);
     }, [user]);
@@ -45,18 +45,19 @@ function App() {
                     }
                 );
                 if (response.status == 200) {
-                    store_login(response.data.userId, response.data.userType);
-                    // setUserType(response.data.userType);
                     set_Auth(true);
+                    set_user(response.data.user);
                 } else {
                     set_Auth(false);
                 }
             } catch (error) {
                 set_Auth(false);
-            } finally {
-                set_Auth(true);
-                set_user(true);
             }
+            // Uncomment the following lines if you wanna test the authentication flow
+            // finally {
+            //     set_Auth(true);
+            //     set_user(true);
+            // }
         };
         const fetch_images = () => {
             return new Promise((resolve, reject) => {

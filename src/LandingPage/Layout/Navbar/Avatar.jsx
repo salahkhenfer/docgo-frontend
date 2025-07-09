@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../AppContext";
 import i18n from "../../../i18n";
+import handleLogout from "../../../API/Logout";
 
+import axios from "axios";
 const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
     const { t } = useTranslation();
-    const { user, set_Auth } = useAppContext();
+    const { user, set_Auth, set_user, store_logout } = useAppContext();
     const avatarDropdownRef = useRef(null);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     // Add click outside handler
     useEffect(() => {
@@ -25,14 +28,34 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, [setIsDropdownOpen]);
-
-    // Handle logout action
-    const handleLogout = () => {
-        setIsDropdownOpen(false);
-        if (set_Auth) {
-            set_Auth(false);
-        }
+    const logout = () => {
+        handleLogout({
+            setAuth: set_Auth,
+            setUser: set_user,
+            storeLogout: store_logout,
+            setIsDropdownOpen: setIsDropdownOpen,
+        });
     };
+    // Handle logout action
+    // const handleLogout = async () => {
+    //     try {
+    //         // Send a request to the logout endpoint on the server
+    //         const response = await axios.post(
+    //             `${API_URL}/Logout`,
+    //             {},
+    //             {
+    //                 withCredentials: true,
+    //                 validateStatus: () => true,
+    //             }
+    //         );
+    //     } finally {
+    //         setIsDropdownOpen(false);
+    //         store_logout();
+    //         set_Auth(false);
+    //         set_user(null);
+    //         window.location.href = "/";
+    //     }
+    // };
 
     return (
         <div className="relative" ref={avatarDropdownRef}>
@@ -93,7 +116,7 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
                     <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600
                         hover:bg-red-50 transition-colors duration-200"
-                        onClick={handleLogout}
+                        onClick={logout}
                     >
                         <span>{t("Logout")}</span>
                     </button>

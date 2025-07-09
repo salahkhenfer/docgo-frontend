@@ -2,8 +2,8 @@ import { createBrowserRouter, ScrollRestoration } from "react-router-dom";
 import App from "./App";
 
 import ErrorElement from "./erorrhandle/ErrorElement";
-import Login from "./Auth/login/Login";
-import Register from "./Auth/register/Register";
+import Login from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
 import LandingPage from "./LandingPage/LandingPage";
 import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
@@ -16,7 +16,7 @@ import CourseVideosContent from "./components/course/courseVideosContent/CourseV
 import Course from "./Pages/Course";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
-import UserProfile from "./Pages/UserProfile";
+import Profile from "./Pages/Profile";
 import NotificationsPage from "./Pages/NotificationsPage";
 
 const Routers = createBrowserRouter([
@@ -89,8 +89,8 @@ const Routers = createBrowserRouter([
                 ],
             },
             {
-                path: "userProfile",
-                element: <UserProfile />,
+                path: "Profile",
+                element: <Profile />,
             },
         ],
     },
