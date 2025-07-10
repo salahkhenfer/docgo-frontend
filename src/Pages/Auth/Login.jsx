@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import InlineLoading from "../../InlineLoading";
 import Swal from "sweetalert2";
-
+import axios from "axios";
 const Login = () => {
     const backgroundImage = "../../../src/assets/Login.png";
     const [formData, setFormData] = useState({
@@ -40,29 +40,26 @@ const Login = () => {
 
             try {
                 // Replace with your actual login API endpoint
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/login`,
+                const response = await axios.post(
+                    `${import.meta.env.VITE_API_URL}/Login`,
+                    formData,
                     {
-                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(formData),
+                        withCredentials: true,
                     }
                 );
+                console.log("respose from the login  : ", response.data);
+                const data = response.data;
 
-                const data = await response.json();
-
-                if (!response.ok) {
+                if (response.status !== 200 || response.status > 299) {
                     throw new Error(data.message || "Échec de la connexion");
                 }
 
                 // Success - update auth context
                 set_Auth(true);
                 set_user(data.user);
-
-                // Store token in localStorage or sessionStorage
-                localStorage.setItem("token", data.token);
 
                 Swal.fire({
                     title: "Connexion réussie",

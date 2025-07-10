@@ -44,6 +44,8 @@ function App() {
                         validateStatus: () => true,
                     }
                 );
+                console.log("Response from Check_Auth:", response);
+                
                 if (response.status == 200) {
                     set_Auth(true);
                     set_user(response.data.user);

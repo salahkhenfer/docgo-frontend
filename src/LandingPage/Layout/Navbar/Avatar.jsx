@@ -10,6 +10,7 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
     const { user, set_Auth, set_user, store_logout } = useAppContext();
     const avatarDropdownRef = useRef(null);
 
+    const { i18n } = useTranslation();
     // Add click outside handler
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -33,7 +34,6 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
             setIsDropdownOpen: setIsDropdownOpen,
         });
     };
-    
 
     return (
         <div className="relative" ref={avatarDropdownRef}>
@@ -48,8 +48,11 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
 
             {isDropdownOpen && (
                 <div
-                    className="fixed md:right-[20px] md:top-[70px] right-4 top-20 w-56 bg-white rounded-lg shadow-xl py-2
-                    z-[9999]"
+                    className={`fixed ${
+                        i18n.language === "ar"
+                            ? "md:left-[20px] left-4"
+                            : "md:right-[20px] right-4"
+                    } md:top-[70px] top-20 w-56 bg-white rounded-lg shadow-xl py-2 z-[9999]`}
                     style={{
                         boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                         border: "1px solid rgba(0,0,0,0.1)",
@@ -68,6 +71,14 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
                         </p>
                     </div>
 
+                    <Link
+                        to="/Profile"
+                        className="block w-full px-4 py-2 text-sm hover:bg-gray-50
+                        transition-colors duration-200"
+                        onClick={() => setIsDropdownOpen(false)}
+                    >
+                        <span>{t("Profile")}</span>
+                    </Link>
                     <Link
                         to="/"
                         className="block w-full px-4 py-2 text-sm hover:bg-gray-50

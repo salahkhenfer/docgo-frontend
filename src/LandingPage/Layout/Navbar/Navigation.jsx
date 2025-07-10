@@ -14,7 +14,7 @@ function Navigation() {
     const { t } = useTranslation();
     const { user } = useAppContext();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    const { i18n } = useTranslation();
     const MainContent = () => {
         return (
             <div className="flex justify-center items-center gap-5 lg:max-3xl:gap-4 lg:text-base">
@@ -68,9 +68,31 @@ function Navigation() {
                     />
                 </Link>
                 <MainContent />
-                <div
+                {/* <div
                     className="flex justify-center items-center gap-8 font-medium text-lg 
                       lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3"
+                >
+                    <LanguageDropdown />
+                    {user ? (
+                        <CustomAvatar
+                            isDropdownOpen={isDropdownOpen}
+                            setIsDropdownOpen={setIsDropdownOpen}
+                        />
+                    ) : (
+                        <Link to="/login">
+                            <LightColoredButton
+                                text={t("BeingAstudent")}
+                                style="md:text-[12px] md:px-2 md:py-1 lg:px-8 lg:py-2 lg:text-sm px-8"
+                            />
+                        </Link>
+                    )}
+                </div>
+                 */}
+                <div
+                    className={`flex justify-${
+                        i18n.language === "ar" ? "end" : "start"
+                    } items-center gap-8 font-medium text-lg 
+                    lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3`}
                 >
                     <LanguageDropdown />
                     {user ? (
