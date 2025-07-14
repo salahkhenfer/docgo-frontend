@@ -1,111 +1,8 @@
-// import { createBrowserRouter, ScrollRestoration } from "react-router-dom";
-// import App from "./App";
-
-// import ErrorElement from "./erorrhandle/ErrorElement";
-// import Login from "./Pages/Auth/Login";
-// import Register from "./Pages/Auth/Register";
-// import LandingPage from "./LandingPage/LandingPage";
-// import { SearchProgram } from "./Pages/SearchProgram";
-// import { ProgramDetails } from "./Pages/ProgramDetailes";
-// import MyApplications from "./Pages/MyApplications";
-// import AllCourses from "./Pages/AllCourses";
-
-// import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
-// import QuizContent from "./Pages/QuizContent";
-// import CourseVideosContent from "./components/course/courseVideosContent/CourseVideosContent";
-// import Course from "./Pages/Course";
-// import { CourseDetails } from "./components/course/CourseDetails";
-// import Certificate from "./Pages/Certificate";
-// import Profile from "./Pages/Profile";
-// import NotificationsPage from "./Pages/NotificationsPage";
-
-// const Routers = createBrowserRouter([
-//     {
-//         path: "/",
-//         element: (
-//             <>
-//                 <App />,
-//                 <ScrollRestoration />
-//             </>
-//         ),
-
-//         errorElement: <ErrorElement />, // Error handling applied to the main layout
-//         children: [
-//             {
-//                 index: true,
-//                 element: <LandingPage />,
-//             },
-//             {
-//                 path: "searchProgram",
-//                 element: <SearchProgram />,
-//             },
-//             {
-//                 path: "searchProgram/:programId", // Ensure consistency in URL param casing
-//                 element: <ProgramDetails />,
-//             },
-//             {
-//                 path: "MyApplications", // Ensure consistency in URL param casing
-//                 element: <MyApplications />,
-//             },
-//             {
-//                 path: "AllCourses", // Ensure consistency in URL param casing
-//                 element: <AllCourses />,
-//             },
-//             {
-//                 path: "Notifications", // Ensure consistency in URL param casing
-//                 element: <NotificationsPage />, // Assuming you have a NotificationsPage component
-//             },
-//             {
-//                 path: "CourseDetails/:courseId",
-//                 element: <Course />,
-//                 children: [
-//                     {
-//                         index: true, // Default route for CourseDetails
-//                         element: <CourseDetails />, // Render CourseDetails component by default
-//                     },
-
-//                     {
-//                         path: "videos",
-//                         element: <AllContentVideosCourse />,
-//                         children: [
-//                             {
-//                                 index: true,
-//                                 element: <CourseVideosContent />, // default if no video selected
-//                             },
-//                             {
-//                                 path: ":videoId", // ✅ match video ID from URL
-//                                 element: <CourseVideosContent />, // reuse same component with ID
-//                             },
-//                             {
-//                                 path: "quiz",
-//                                 element: <QuizContent />,
-//                             },
-//                             {
-//                                 path: "Certificate",
-//                                 element: <Certificate />,
-//                             },
-//                         ],
-//                     },
-//                 ],
-//             },
-//             {
-//                 path: "Profile",
-//                 element: <Profile />,
-//             },
-//         ],
-//     },
-//     {
-//         path: "login",
-//         element: <Login />,
-//     },
-//     {
-//         path: "register",
-//         element: <Register />,
-//     },
-// ]);
-
-// export default Routers;
-import { createBrowserRouter, ScrollRestoration } from "react-router-dom";
+import {
+    createBrowserRouter,
+    ScrollRestoration,
+    redirect,
+} from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -127,9 +24,41 @@ import Certificate from "./Pages/Certificate";
 import Profile from "./Pages/Profile";
 import NotificationsPage from "./Pages/NotificationsPage";
 
+// Case-insensitive loader
+const caseInsensitiveLoader = ({ request }) => {
+    const url = new URL(request.url);
+    const normalizedPath = url.pathname.toLowerCase();
+
+    if (url.pathname !== normalizedPath) {
+        return redirect(normalizedPath + url.search + url.hash);
+    }
+    return null;
+};
+
+// Auth protection loader
+const protectedLoader = ({ request }) => {
+    const user = localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (!user) {
+        const url = new URL(request.url);
+        return redirect(`/login?from=${encodeURIComponent(url.pathname)}`);
+    }
+    return null;
+};
+
+// Combined loader for protected routes
+const protectedCaseInsensitiveLoader = ({ request }) => {
+    // First check case sensitivity
+    const caseResult = caseInsensitiveLoader({ request });
+    if (caseResult) return caseResult;
+
+    // Then check authentication
+    return protectedLoader({ request });
+};
+
 const Routers = createBrowserRouter([
     {
         path: "/",
+        loader: caseInsensitiveLoader,
         element: (
             <>
                 <App />
@@ -143,36 +72,29 @@ const Routers = createBrowserRouter([
                 element: <LandingPage />,
             },
             {
-                path: "searchProgram",
+                path: "searchprogram",
                 element: <SearchProgram />,
             },
             {
-                path: "searchProgram/:programId",
+                path: "searchprogram/:programId",
                 element: <ProgramDetails />,
             },
-            // Protected routes that require authentication
             {
-                path: "MyApplications",
-                element: (
-                    <ProtectedRoute>
-                        <MyApplications />
-                    </ProtectedRoute>
-                ),
+                path: "myapplications",
+                loader: protectedCaseInsensitiveLoader,
+                element: <MyApplications />,
             },
             {
-                path: "AllCourses",
+                path: "allcourses",
                 element: <AllCourses />,
             },
             {
-                path: "Notifications",
-                element: (
-                    <ProtectedRoute>
-                        <NotificationsPage />
-                    </ProtectedRoute>
-                ),
+                path: "notifications",
+                loader: protectedCaseInsensitiveLoader,
+                element: <NotificationsPage />,
             },
             {
-                path: "CourseDetails/:courseId",
+                path: "coursedetails/:courseId",
                 element: <Course />,
                 children: [
                     {
@@ -181,11 +103,8 @@ const Routers = createBrowserRouter([
                     },
                     {
                         path: "videos",
-                        element: (
-                            <ProtectedRoute>
-                                <AllContentVideosCourse />
-                            </ProtectedRoute>
-                        ),
+                        loader: protectedCaseInsensitiveLoader,
+                        element: <AllContentVideosCourse />,
                         children: [
                             {
                                 index: true,
@@ -200,7 +119,7 @@ const Routers = createBrowserRouter([
                                 element: <QuizContent />,
                             },
                             {
-                                path: "Certificate",
+                                path: "certificate",
                                 element: <Certificate />,
                             },
                         ],
@@ -208,16 +127,12 @@ const Routers = createBrowserRouter([
                 ],
             },
             {
-                path: "Profile",
-                element: (
-                    <ProtectedRoute>
-                        <Profile />
-                    </ProtectedRoute>
-                ),
+                path: "profile",
+                loader: protectedCaseInsensitiveLoader,
+                element: <Profile />,
             },
         ],
     },
-    // Auth routes that redirect if already logged in
     {
         path: "login",
         element: (
