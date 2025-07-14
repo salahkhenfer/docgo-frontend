@@ -1,4 +1,20 @@
 {
+    "loading": "Chargement",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "no_data": "Aucune donnée disponible",
+    "profile": {
+        "professional_member": "Membre Professionnel",
+        "completed": "Terminé",
+        "in_progress": "En cours",
+        "certificates": "Certificats",
+        "applications": "Candidatures",
+        "email": "Email",
+        "country": "Pays",
+        "study_field": "Domaine d'études",
+        "study_domain": "Spécialité",
+        "phone": "Téléphone"
+    },
     "Profile": "Profil",
     "Specialites": "Spécialités ",
     "OtherSpecialties": "Autres spécialités",

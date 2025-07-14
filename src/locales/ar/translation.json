@@ -1,4 +1,20 @@
 {
+    "loading": "جارٍ التحميل",
+    "error": "خطأ",
+    "retry": "إعادة المحاولة",
+    "no_data": "لا توجد بيانات متاحة",
+    "profile": {
+        "professional_member": "عضو محترف",
+        "completed": "مكتمل",
+        "in_progress": "قيد التقدم",
+        "certificates": "الشهادات",
+        "applications": "الطلبات",
+        "email": "البريد الإلكتروني",
+        "country": "البلد",
+        "study_field": "مجال الدراسة",
+        "study_domain": "تخصص الدراسة",
+        "phone": "الهاتف"
+    },
     "Profile": "الحساب الشخصي",
     "Specialites": "التخصصات  ",
     "OtherSpecialties": "تخصصات أخرى",

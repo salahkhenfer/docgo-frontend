@@ -1,9 +1,14 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useEffect } from "react";
+import axios from "axios";
 
 const AppContext = createContext();
 
 export const useAppContext = () => {
-    return useContext(AppContext);
+    const context = useContext(AppContext);
+    if (!context) {
+        throw new Error("useAppContext must be used within an AppProvider");
+    }
+    return context;
 };
 
 const initialState = {
@@ -12,7 +17,9 @@ const initialState = {
     userType: null,
     user: null,
     Notifications: null,
+    loading: true,
 };
+
 const reducer = (state, action) => {
     switch (action.type) {
         case "LOGOUT":
@@ -31,13 +38,20 @@ const reducer = (state, action) => {
         case "SET_USER":
             return {
                 ...state,
-                user: action.payload, // Update user data
+                user: action.payload,
+                isAuth: !!action.payload,
+                userId: action.payload?.id || null,
+                userType: action.payload?.userType || null,
             };
-
         case "SET_NOTIFICATIONS":
             return {
                 ...state,
                 Notifications: action.payload,
+            };
+        case "SET_LOADING":
+            return {
+                ...state,
+                loading: action.payload,
             };
         default:
             return state;
@@ -46,13 +60,26 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+    // Configure axios defaults
+    axios.defaults.withCredentials = true;
+
     const set_Auth = (isAuth) => {
         dispatch({ type: "SET_AUTH", payload: isAuth });
     };
 
-    const store_logout = () => {
-        dispatch({ type: "LOGOUT" });
+    const store_logout = async () => {
+        try {
+            await axios.post(API_URL + "/Logout");
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
+            dispatch({ type: "LOGOUT" });
+        }
     };
+
     const set_user = (user) => {
         dispatch({ type: "SET_USER", payload: user });
     };
@@ -63,12 +90,102 @@ export const AppProvider = ({ children }) => {
             payload: Notifications,
         });
     };
+
+    const setLoading = (loading) => {
+        dispatch({ type: "SET_LOADING", payload: loading });
+    };
+
+    const checkAuthStatus = async () => {
+        try {
+            setLoading(true);
+            // Use consistent endpoint name (check_Auth)
+            const response = await axios.get(API_URL + "/check_Auth", {
+                withCredentials: true,
+                validateStatus: () => true, // Don't throw on any status
+            });
+
+            console.log("Auth check response:", response);
+
+            if (response.status === 200 && response.data.user) {
+                set_user(response.data.user);
+                return true;
+            } else {
+                set_user(null);
+                return false;
+            }
+        } catch (error) {
+            console.log("Auth check failed:", error);
+            set_user(null);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const login = async (credentials) => {
+        try {
+            const response = await axios.post(API_URL + "/Login", credentials, {
+                withCredentials: true,
+                validateStatus: () => true,
+            });
+
+            if (response.status === 200 && response.data.user) {
+                set_user(response.data.user);
+                return { success: true, user: response.data.user };
+            } else {
+                return {
+                    success: false,
+                    message: response.data?.message || "Login failed",
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || "Login failed",
+            };
+        }
+    };
+
+    const register = async (userData) => {
+        try {
+            const response = await axios.post(API_URL + "/Register", userData, {
+                withCredentials: true,
+                validateStatus: () => true,
+            });
+
+            if (response.status === 200) {
+                return { success: true, data: response.data };
+            } else {
+                return {
+                    success: false,
+                    message: response.data?.message || "Registration failed",
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || "Registration failed",
+            };
+        }
+    };
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
     const AppContextValue = {
+        // All your existing values
         ...state,
         set_Notifications,
         store_logout,
         set_Auth,
         set_user,
+
+        // New authentication methods
+        checkAuthStatus,
+        login,
+        register,
+        isAuthenticated: state.isAuth,
     };
 
     return (

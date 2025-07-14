@@ -1,184 +1,192 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ProfileInfoSection from "../components/userProfile/ProfileInfoSection";
 import CoursesProfileSection from "../components/userProfile/CoursesProfileSection";
 import ApplicationsProfileSection from "../components/userProfile/ApplicationsProfileSection";
 import CertificatesProfileSection from "../components/userProfile/CertificatesProfileSection";
+import { useAppContext } from "../AppContext";
+import axios from "axios";
 
 const Profile = () => {
+    const { t } = useTranslation();
     const [courseSlide, setCourseSlide] = useState(0);
     const [applicationSlide, setApplicationSlide] = useState(0);
     const [certificateSlide, setCertificateSlide] = useState(0);
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { user } = useAppContext();
 
-    const userData = {
-        profile: {
-            name: "Huda Dadoune",
-            avatar: "https://cdn.builder.io/api/v1/image/assets/TEMP/5b2d0004ed9b5da25976b7f2d4a16021c173fb4f",
-            status: "Membre professionnel",
-            stats: {
-                completed: 15,
-                inProgress: 2,
-                learningTime: "16 heures par semaine",
-            },
-        },
-        payments: [
-            {
-                id: 1,
-                amount: "2000$",
-                purpose: "étudier en France 🇫🇷",
-                date: "2024-01-15",
-            },
-            {
-                id: 2,
-                amount: "400$",
-                purpose: "les cours 🎓",
-                date: "2024-01-10",
-            },
-        ],
-        courses: [
-            {
-                id: 1,
-                title: "Cours de design UI UX",
-                description:
-                    "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-                progress: 75,
-                duration: "12 semaines",
-            },
-            {
-                id: 2,
-                title: "Développement Web Frontend",
-                description:
-                    "Apprenez les technologies modernes du développement frontend avec React, Vue.js et les dernières pratiques...",
-                progress: 45,
-                duration: "10 semaines",
-            },
-            {
-                id: 3,
-                title: "Marketing Digital",
-                description:
-                    "Maîtrisez les stratégies de marketing digital, SEO, publicité en ligne et analyse des données...",
-                progress: 90,
-                duration: "8 semaines",
-            },
-            {
-                id: 4,
-                title: "Gestion de Projet Agile",
-                description:
-                    "Découvrez les méthodologies agiles, Scrum, et les outils de gestion de projet moderne...",
-                progress: 30,
-                duration: "6 semaines",
-            },
-            {
-                id: 5,
-                title: "Data Science et Analytics",
-                description:
-                    "Introduction à l'analyse de données, Python, et les outils de visualisation...",
-                progress: 60,
-                duration: "14 semaines",
-            },
-        ],
-        applications: [
-            {
-                id: 1,
-                program: "Master en Informatique",
-                university: "Université de Paris",
-                country: "France",
-                status: "approved",
-                submissionDate: "2024-01-20",
-                deadline: "2024-03-15",
-            },
-            {
-                id: 2,
-                program: "MBA International",
-                university: "HEC Montréal",
-                country: "Canada",
-                status: "pending",
-                submissionDate: "2024-02-01",
-                deadline: "2024-04-01",
-            },
-            {
-                id: 3,
-                program: "Doctorat en IA",
-                university: "ETH Zurich",
-                country: "Suisse",
-                status: "rejected",
-                submissionDate: "2024-01-10",
-                deadline: "2024-02-28",
-            },
-            {
-                id: 4,
-                program: "Master en Design",
-                university: "Royal College of Art",
-                country: "Royaume-Uni",
-                status: "under_review",
-                submissionDate: "2024-02-15",
-                deadline: "2024-05-01",
-            },
-        ],
-        certificates: [
-            {
-                id: 1,
-                title: "Certificat UI/UX Design",
-                issuer: "Adobe",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
-                officialUrl:
-                    "https://adobe.com/certificates/ux-design-cert-123",
-                issueDate: "2024-01-15",
-            },
-            {
-                id: 2,
-                title: "Certificat React Developer",
-                issuer: "Meta",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
-                officialUrl: "https://meta.com/certificates/react-dev-456",
-                issueDate: "2024-02-01",
-            },
-            {
-                id: 3,
-                title: "Certificat Digital Marketing",
-                issuer: "Google",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
-                officialUrl:
-                    "https://google.com/certificates/digital-marketing-789",
-                issueDate: "2024-01-28",
-            },
-            {
-                id: 4,
-                title: "Certificat Project Management",
-                issuer: "PMI",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
-                officialUrl: "https://pmi.org/certificates/project-mgmt-101",
-                issueDate: "2024-02-10",
-            },
-        ],
+    useEffect(() => {
+        fetchProfileData();
+    }, []);
+
+    const fetchProfileData = async () => {
+        try {
+            setLoading(true);
+            const userId = user?.id;
+
+            if (!userId) {
+                setError("Authentication required");
+                return;
+            }
+
+            const API_URL = import.meta.env.VITE_API_URL;
+            const response = await axios.get(
+                `${API_URL}/users/${userId}/Profile`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            // Backend returns the data directly, not wrapped in response.data for axios
+            setProfileData(response.data);
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            setError(error.response?.data?.error || error.message);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">{t("loading")}...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600">
+                        {t("error")}: {error}
+                    </p>
+                    <button
+                        onClick={fetchProfileData}
+                        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        {t("retry")}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!profileData) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <p className="text-gray-600">{t("no_data")}</p>
+            </div>
+        );
+    }
+
+    // Transform backend data to match component expectations
+    const transformedProfile = {
+        name: `${profileData.user.firstName} ${profileData.user.lastName}`,
+        firstName: profileData.user.firstName,
+        lastName: profileData.user.lastName,
+        email: profileData.user.email,
+        avatar:
+            profileData.user.profilePicture ||
+            "https://cdn.builder.io/api/v1/image/assets/TEMP/5b2d0004ed9b5da25976b7f2d4a16021c173fb4f",
+        country: profileData.user.country,
+        studyField: profileData.user.studyField,
+        studyDomain: profileData.user.studyDomain,
+        phoneNumber: profileData.user.phoneNumber,
+        stats: profileData.statistics,
+    };
+
+    // Transform courses from progress data
+    const transformedCourses = profileData.progress.courses.map((progress) => ({
+        id: progress.Course?.id || progress.id,
+        title: progress.Course?.Title || "Unknown Course",
+        description: `Course Duration: ${
+            progress.Course?.Duration || "Unknown"
+        }`,
+        progress: Math.round(progress.CurrentProgress || 0),
+        duration: progress.Course?.Duration,
+        imageUrl: progress.Course?.ImageUrl,
+        isCompleted: progress.IsCompleted,
+        lastWatchedAt: progress.LastWatchedAt,
+    }));
+
+    // Transform applications (combine programs and courses)
+    const transformedApplications = [
+        ...profileData.applications.programs.map((app) => ({
+            id: app.id,
+            program: app.Program?.title || "Unknown Program",
+            university: app.Program?.organization || "Unknown University",
+            country: app.Program?.location || "Unknown",
+            status: app.status,
+            submissionDate: app.createdAt,
+            deadline: app.Program?.applicationDeadline,
+            type: "program",
+            scholarshipAmount: app.Program?.scholarshipAmount,
+            currency: app.Program?.currency,
+        })),
+        ...profileData.applications.courses.map((app) => ({
+            id: app.id,
+            program: app.Course?.Title || "Unknown Course",
+            university: "DocGo Platform",
+            country: "Online",
+            status: app.status,
+            submissionDate: app.createdAt,
+            type: "course",
+            price: app.Course?.Price,
+            level: app.Course?.Level,
+            category: app.Course?.Category,
+        })),
+    ];
+
+    // Transform certificates
+    const transformedCertificates = profileData.certificates.courses.map(
+        (cert) => ({
+            id: cert.id,
+            title: `Certificate - ${cert.Course?.Title}`,
+            issuer: "DocGo Platform",
+            imageUrl:
+                cert.Course?.ImageUrl ||
+                "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+            officialUrl: cert.certificateUrl || "#",
+            issueDate: cert.createdAt,
+            course: cert.Course,
+        })
+    );
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 lg:p-8">
             <div className="max-w-7xl mx-auto space-y-12">
-                <ProfileInfoSection profile={userData.profile} />
+                <ProfileInfoSection profile={transformedProfile} />
 
-                <CoursesProfileSection
-                    courses={userData.courses}
-                    currentSlide={courseSlide}
-                    setSlide={setCourseSlide}
-                />
+                {transformedCourses.length > 0 && (
+                    <CoursesProfileSection
+                        courses={transformedCourses}
+                        currentSlide={courseSlide}
+                        setSlide={setCourseSlide}
+                    />
+                )}
 
-                <ApplicationsProfileSection
-                    applications={userData.applications}
-                    currentSlide={applicationSlide}
-                    setSlide={setApplicationSlide}
-                />
+                {transformedApplications.length > 0 && (
+                    <ApplicationsProfileSection
+                        applications={transformedApplications}
+                        currentSlide={applicationSlide}
+                        setSlide={setApplicationSlide}
+                    />
+                )}
 
-                <CertificatesProfileSection
-                    certificates={userData.certificates}
-                    currentSlide={certificateSlide}
-                    setSlide={setCertificateSlide}
-                />
+                {transformedCertificates.length > 0 && (
+                    <CertificatesProfileSection
+                        certificates={transformedCertificates}
+                        currentSlide={certificateSlide}
+                        setSlide={setCertificateSlide}
+                    />
+                )}
             </div>
         </div>
     );
