@@ -6,6 +6,8 @@ import { StudyFields, StudyDomains } from "../../data/fields";
 import { Countries } from "../../data/Countries";
 import { User } from "lucide-react";
 import axios from "axios";
+import { useTranslation } from "react-i18next"; // Add this import
+
 const EditProfile = () => {
     const { user, updateUserProfile } = useAppContext();
     const navigate = useNavigate();
@@ -21,6 +23,20 @@ const EditProfile = () => {
         phoneNumber: "",
         profile_pic_link: "",
     });
+    const { i18n } = useTranslation(); // Add this to get current language
+    // Function to get country name based on current language
+    const getCountryDisplayName = (countryString) => {
+        const [french, arabic] = countryString.split(" / ");
+        return i18n.language === "ar" ? arabic : french;
+    };
+    // Function to get placeholder text based on language
+    const getSelectCountryText = () => {
+        return i18n.language === "ar" ? "اختر البلد" : "Choisissez le pays";
+    };
+    const getFields = (optionString) => {
+        const [english_french, arabic] = optionString.split(" / ");
+        return i18n.language === "ar" ? arabic : english_french;
+    };
 
     useEffect(() => {
         if (user) {
@@ -189,7 +205,9 @@ const EditProfile = () => {
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Edit Profile
+                            {i18n.language === "ar"
+                                ? "تعديل الحساب الشخصي"
+                                : "Modifier le profil"}
                         </h1>
                         <button
                             onClick={() => navigate("/profile")}
@@ -246,11 +264,14 @@ const EditProfile = () => {
                                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 {uploadingImage
-                                    ? "Uploading..."
-                                    : "Upload Profile Picture"}
+                                    ? i18n.language === "ar"
+                                        ? "جاري تحميل الصورة..."
+                                        : "Téléchargement en cours..."
+                                    : i18n.language === "ar"
+                                    ? "تحميل صورة الملف الشخصي"
+                                    : "Télécharger la photo de profil"}
                             </button>
                         </div>
-
                         {/* Personal Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -258,7 +279,10 @@ const EditProfile = () => {
                                     htmlFor="firstName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    First Name *
+                                    {i18n.language === "ar"
+                                        ? "الاسم الأول"
+                                        : "Nom"}{" "}
+                                    *
                                 </label>
                                 <input
                                     type="text"
@@ -278,7 +302,10 @@ const EditProfile = () => {
                                     htmlFor="lastName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    Last Name *
+                                    {i18n.language === "ar"
+                                        ? "اسم العائلة"
+                                        : "Nom de famille"}{" "}
+                                    *
                                 </label>
                                 <input
                                     type="text"
@@ -293,13 +320,15 @@ const EditProfile = () => {
                                 />
                             </div>
                         </div>
-
                         <div>
                             <label
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Email Address *
+                                {i18n.language === "ar"
+                                    ? "عنوان البريد الإلكتروني"
+                                    : "Adresse email"}{" "}
+                                *
                             </label>
                             <input
                                 type="email"
@@ -311,13 +340,14 @@ const EditProfile = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
-
                         <div>
                             <label
                                 htmlFor="phoneNumber"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Phone Number
+                                {i18n.language === "ar"
+                                    ? "رقم الهاتف"
+                                    : "Numéro de téléphone"}
                             </label>
                             <input
                                 type="tel"
@@ -329,13 +359,12 @@ const EditProfile = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
-
                         <div>
                             <label
                                 htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Country
+                                {i18n.language === "ar" ? "البلد" : "Pays"}
                             </label>
                             <select
                                 id="country"
@@ -343,20 +372,31 @@ const EditProfile = () => {
                                 value={formData.country}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                style={{
+                                    direction:
+                                        i18n.language === "ar" ? "rtl" : "ltr",
+                                    textAlign:
+                                        i18n.language === "ar"
+                                            ? "right"
+                                            : "left",
+                                }}
                             >
-                                <option value="">Select a country</option>
+                                <option value="">
+                                    {getSelectCountryText()}
+                                </option>
                                 {Countries.map((country) => (
                                     <option key={country} value={country}>
-                                        {country}
+                                        {getCountryDisplayName(country)}
                                     </option>
                                 ))}
                             </select>
                         </div>
-
                         {/* Academic Information */}
                         <div className="border-t pt-6">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">
-                                Academic Information
+                                {i18n.language === "ar"
+                                    ? "المعلومات الأكاديمية"
+                                    : "Informations académiques"}
                             </h3>
 
                             <div className="space-y-4">
@@ -365,7 +405,9 @@ const EditProfile = () => {
                                         htmlFor="studyField"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        Field of Study
+                                        {i18n.language === "ar"
+                                            ? "التخصص الأكاديمي"
+                                            : "Domaine d'étude"}
                                     </label>
                                     <select
                                         id="studyField"
@@ -373,13 +415,25 @@ const EditProfile = () => {
                                         value={formData.studyField}
                                         onChange={handleChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        style={{
+                                            direction:
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr",
+                                            textAlign:
+                                                i18n.language === "ar"
+                                                    ? "right"
+                                                    : "left",
+                                        }}
                                     >
                                         <option value="">
-                                            Select your field
+                                            {i18n.language === "ar"
+                                                ? "اختر مجال الدراسة"
+                                                : "choisissez le domaine d'étude"}
                                         </option>
                                         {StudyFields.map((field) => (
                                             <option key={field} value={field}>
-                                                {field}
+                                                {getFields(field)}
                                             </option>
                                         ))}
                                     </select>
@@ -390,7 +444,9 @@ const EditProfile = () => {
                                         htmlFor="studyDomain"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        Study Domain/Specialization
+                                        {i18n.language === "ar"
+                                            ? "التخصص"
+                                            : "Spécialisation"}
                                     </label>
                                     <select
                                         id="studyDomain"
@@ -398,20 +454,31 @@ const EditProfile = () => {
                                         value={formData.studyDomain}
                                         onChange={handleChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        style={{
+                                            direction:
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr",
+                                            textAlign:
+                                                i18n.language === "ar"
+                                                    ? "right"
+                                                    : "left",
+                                        }}
                                     >
                                         <option value="">
-                                            Select your specialization
+                                            {i18n.language === "ar"
+                                                ? "اختر التخصص"
+                                                : "choisissez la spécialisation"}
                                         </option>
                                         {StudyDomains.map((domain) => (
                                             <option key={domain} value={domain}>
-                                                {domain}
+                                                {getFields(domain)}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                             </div>
                         </div>
-
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 pt-6">
                             <button

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StudyFields, StudyDomains } from "../../data/fields";
 import { Countries } from "../../data/Countries";
+import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
 
 const Register_Sterp_2 = ({
@@ -17,8 +18,19 @@ const Register_Sterp_2 = ({
     backgroundImage = "../../src/assets/Login.png", // Default background image
     AnimatedSelect,
 }) => {
+    const { i18n } = useTranslation();
+
     // Add local validation state
     const [phoneError, setPhoneError] = useState("");
+
+    // Function to get localized display name
+    const getLocalizedOption = (optionString) => {
+        if (!optionString || !optionString.includes(" / ")) {
+            return optionString;
+        }
+        const [french, arabic] = optionString.split(" / ");
+        return i18n.language === "ar" ? arabic : french;
+    };
 
     // Custom handler for phone number changes
     const handlePhoneChange = (e) => {
@@ -40,7 +52,11 @@ const Register_Sterp_2 = ({
             const phoneRegex = /^[+]?[\d\s\-().]{6,20}$/;
 
             if (!phoneRegex.test(phone)) {
-                setPhoneError("Le format du numéro de téléphone est invalide.");
+                const errorMessage =
+                    i18n.language === "ar"
+                        ? "تنسيق رقم الهاتف غير صالح."
+                        : "Le format du numéro de téléphone est invalide.";
+                setPhoneError(errorMessage);
                 return;
             }
         }
@@ -49,11 +65,21 @@ const Register_Sterp_2 = ({
         handleSubmit(e);
     };
 
+    // Get localized text based on current language
+    const getText = (arabicText, frenchText) => {
+        return i18n.language === "ar" ? arabicText : frenchText;
+    };
+
     return (
         <div className="w-full transition-all duration-300 ease-in-out">
-            <h2 className="text-2xl font-bold mb-2">S'inscrire</h2>
+            <h2 className="text-2xl font-bold mb-2">
+                {getText("التسجيل", "S'inscrire")}
+            </h2>
             <p className="text-gray-600 mb-6">
-                Bienvenue à Docgo, si premier pas vers votre réussite
+                {getText(
+                    "مرحباً بك في DocGo، خطوتك الأولى نحو النجاح",
+                    "Bienvenue à Docgo, votre premier pas vers votre réussite"
+                )}
             </p>
 
             {error && (
@@ -63,54 +89,127 @@ const Register_Sterp_2 = ({
             )}
 
             <form onSubmit={validateAndSubmit} className="space-y-4">
+                {/* Country Selection */}
                 <div className="relative">
-                    <div className="space-y-4">
-                        <AnimatedSelect
-                            options={Countries}
-                            placeholder="Dans quel pays souhaitez-vous poursuivre vos études ?"
-                            onChange={(value) =>
-                                handleSelectChange("country", value)
-                            }
-                            value={formData.country}
-                            maxHeight="200px" // Set a max height for the dropdown
-                            className="scrollable-options"
-                        />
-                        <AnimatedSelect
-                            options={StudyFields}
-                            placeholder="Dans quel domaine souhaitez-vous poursuivre vos études ?"
-                            onChange={(value) =>
-                                handleSelectChange("studyField", value)
-                            }
-                            value={formData.studyField}
-                            maxHeight="200px" // Set a max height for the dropdown
-                            className="scrollable-options"
-                        />
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {getText(
+                            "في أي بلد تريد متابعة دراستك؟",
+                            "Dans quel pays souhaitez-vous poursuivre vos études ?"
+                        )}
+                    </label>
+                    <select
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        style={{
+                            direction: i18n.language === "ar" ? "rtl" : "ltr",
+                            textAlign:
+                                i18n.language === "ar" ? "right" : "left",
+                        }}
+                    >
+                        <option value="">
+                            {getText("اختر البلد", "Choisissez le pays")}
+                        </option>
+                        {Countries.map((country) => (
+                            <option key={country} value={country}>
+                                {getLocalizedOption(country)}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Study Field Selection */}
                 <div className="relative">
-                    <AnimatedSelect
-                        options={StudyDomains}
-                        placeholder="Dans quel domaine souhaitez-vous poursuivre vos études et filières"
-                        onChange={(value) =>
-                            handleSelectChange("studyDomain", value)
-                        }
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {getText(
+                            "في أي مجال تريد متابعة دراستك؟",
+                            "Dans quel domaine souhaitez-vous poursuivre vos études ?"
+                        )}
+                    </label>
+                    <select
+                        name="studyField"
+                        value={formData.studyField}
+                        onChange={handleChange}
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        style={{
+                            direction: i18n.language === "ar" ? "rtl" : "ltr",
+                            textAlign:
+                                i18n.language === "ar" ? "right" : "left",
+                        }}
+                    >
+                        <option value="">
+                            {getText(
+                                "اختر مجال الدراسة",
+                                "Choisissez le domaine d'étude"
+                            )}
+                        </option>
+                        {StudyFields.map((field) => (
+                            <option key={field} value={field}>
+                                {getLocalizedOption(field)}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Study Domain Selection */}
+                <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {getText(
+                            "ما هو تخصصك؟",
+                            "Quelle est votre spécialisation ?"
+                        )}
+                    </label>
+                    <select
+                        name="studyDomain"
                         value={formData.studyDomain}
-                        maxHeight="200px" // Set a max height for the dropdown
-                        className="scrollable-options"
-                    />
+                        onChange={handleChange}
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        style={{
+                            direction: i18n.language === "ar" ? "rtl" : "ltr",
+                            textAlign:
+                                i18n.language === "ar" ? "right" : "left",
+                        }}
+                    >
+                        <option value="">
+                            {getText(
+                                "اختر التخصص",
+                                "Choisissez la spécialisation"
+                            )}
+                        </option>
+                        {StudyDomains.map((domain) => (
+                            <option key={domain} value={domain}>
+                                {getLocalizedOption(domain)}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Phone Number Input */}
                 <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {getText(
+                            "رقم الهاتف (اختياري)",
+                            "Numéro de téléphone (optionnel)"
+                        )}
+                    </label>
                     <input
                         type="tel"
                         name="phoneNumber"
-                        placeholder="Votre numéro de téléphone (optionnel)"
+                        placeholder={getText(
+                            "رقم الهاتف",
+                            "Votre numéro de téléphone"
+                        )}
                         value={formData.phoneNumber || ""}
                         onChange={handlePhoneChange}
-                        className={`w-full p-3 border rounded-lg ${
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             phoneError ? "border-red-500" : ""
                         }`}
+                        style={{
+                            direction: i18n.language === "ar" ? "rtl" : "ltr",
+                            textAlign:
+                                i18n.language === "ar" ? "right" : "left",
+                        }}
                     />
                     {phoneError && (
                         <p className="text-red-500 text-sm mt-1">
@@ -119,13 +218,24 @@ const Register_Sterp_2 = ({
                     )}
                 </div>
 
-                <div className="flex space-x-4">
+                {/* Action Buttons */}
+                <div
+                    className="flex space-x-4"
+                    style={{
+                        flexDirection:
+                            i18n.language === "ar" ? "row-reverse" : "row",
+                        gap: i18n.language === "ar" ? "1rem" : "0",
+                    }}
+                >
                     <button
                         type="button"
                         onClick={() => setStep(1)}
                         className="w-1/3 bg-gray-300 text-gray-700 p-3 rounded-lg hover:bg-gray-400 transition-colors"
+                        style={{
+                            marginLeft: i18n.language === "ar" ? "0" : "1rem",
+                        }}
                     >
-                        Retour
+                        {getText("رجوع", "Retour")}
                     </button>
                     <button
                         type="submit"
@@ -135,7 +245,7 @@ const Register_Sterp_2 = ({
                         {loading ? (
                             <InlineLoading borderColor="white" />
                         ) : (
-                            "Finalisé"
+                            getText("إنهاء", "Finaliser")
                         )}
                     </button>
                 </div>
