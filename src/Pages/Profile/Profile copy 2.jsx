@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import ProfileInfoSection from "../components/userProfile/ProfileInfoSection";
-import CoursesProfileSection from "../components/userProfile/CoursesProfileSection";
-import ApplicationsProfileSection from "../components/userProfile/ApplicationsProfileSection";
-import CertificatesProfileSection from "../components/userProfile/CertificatesProfileSection";
-import { useAppContext } from "../AppContext";
+import ProfileInfoSection from "../../components/userProfile/ProfileInfoSection";
+import CoursesProfileSection from "../../components/userProfile/CoursesProfileSection";
+import ApplicationsProfileSection from "../../components/userProfile/ApplicationsProfileSection";
+import CertificatesProfileSection from "../../components/userProfile/CertificatesProfileSection";
+import { useAppContext } from "../../AppContext";
 import axios from "axios";
 const Profile = () => {
     const { t } = useTranslation();

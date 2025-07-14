@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import ProfileInfoSection from "../components/userProfile/ProfileInfoSection";
-import CoursesProfileSection from "../components/userProfile/CoursesProfileSection";
-import ApplicationsProfileSection from "../components/userProfile/ApplicationsProfileSection";
-import CertificatesProfileSection from "../components/userProfile/CertificatesProfileSection";
-import { useAppContext } from "../AppContext";
+import ProfileInfoSection from "../../components/userProfile/ProfileInfoSection";
+import CoursesProfileSection from "../../components/userProfile/CoursesProfileSection";
+import ApplicationsProfileSection from "../../components/userProfile/ApplicationsProfileSection";
+import CertificatesProfileSection from "../../components/userProfile/CertificatesProfileSection";
+import { useAppContext } from "../../AppContext";
 import axios from "axios";
-import MainLoading from "../MainLoading";
+import MainLoading from "../../MainLoading";
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
+    const Navigate = useNavigate();
     const { t } = useTranslation();
     const [courseSlide, setCourseSlide] = useState(0);
     const [applicationSlide, setApplicationSlide] = useState(0);
@@ -85,9 +87,21 @@ const Profile = () => {
         firstName: profileData.user.firstName,
         lastName: profileData.user.lastName,
         email: profileData.user.email,
-        avatar:
-            profileData.user.profilePicture ||
-            "https://cdn.builder.io/api/v1/image/assets/TEMP/5b2d0004ed9b5da25976b7f2d4a16021c173fb4f",
+        avatar: profileData.user.profilePicture || (
+            <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                />
+            </svg>
+        ),
         country: profileData.user.country,
         studyField: profileData.user.studyField,
         studyDomain: profileData.user.studyDomain,
@@ -153,8 +167,32 @@ const Profile = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 lg:p-8">
+        <div className="min-h-screen relative bg-gray-50 p-4 lg:p-8">
             <div className="max-w-7xl mx-auto space-y-12">
+                <button
+                    onClick={() => Navigate("/profile/edit")}
+                    className="absolute top-4 right-4 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r
+                     from-blue-600 to-blue-500 text-white rounded-full shadow-md hover:from-blue-700
+                      hover:to-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400
+                       focus:ring-offset-2"
+                >
+                    <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                    </svg>
+                    <span className="text-sm font-semibold tracking-wide">
+                        {t("edit_profile") || "Edit Profile"}
+                    </span>
+                </button>
                 <ProfileInfoSection profile={transformedProfile} />
 
                 {transformedCourses.length > 0 && (

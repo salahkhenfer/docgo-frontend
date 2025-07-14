@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ProfileInfoSection from "../components/userProfile/ProfileInfoSection";
-import CoursesProfileSection from "../components/userProfile/CoursesProfileSection";
-import ApplicationsProfileSection from "../components/userProfile/ApplicationsProfileSection";
-import CertificatesProfileSection from "../components/userProfile/CertificatesProfileSection";
+import ProfileInfoSection from "../../components/userProfile/ProfileInfoSection";
+import CoursesProfileSection from "../../components/userProfile/CoursesProfileSection";
+import ApplicationsProfileSection from "../../components/userProfile/ApplicationsProfileSection";
+import CertificatesProfileSection from "../../components/userProfile/CertificatesProfileSection";
 
 const Profile = () => {
     const [courseSlide, setCourseSlide] = useState(0);

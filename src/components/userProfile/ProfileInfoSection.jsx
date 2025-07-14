@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CheckCircle, Clock, Award, FileText } from "lucide-react";
+import { CheckCircle, Clock, Award, FileText, User } from "lucide-react";
 
 const ProfileInfoSection = ({ profile }) => {
     const { t } = useTranslation();
@@ -20,15 +20,35 @@ const ProfileInfoSection = ({ profile }) => {
         <div className="bg-white rounded-3xl p-8 shadow-sm">
             <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
                 <div className="flex-shrink-0">
-                    <img
-                        src={profile?.avatar}
-                        className="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover shadow-lg"
-                        alt="Profile avatar"
-                        onError={(e) => {
-                            e.target.src =
-                                "https://via.placeholder.com/160x160?text=Profile";
-                        }}
-                    />
+                    <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center">
+                        {profile?.avatar ? (
+                            <img
+                                src={profile.avatar}
+                                className="w-full h-full object-cover"
+                                alt="Profile avatar"
+                                onError={(e) => {
+                                    // Hide the broken image and show fallback
+                                    e.target.style.display = "none";
+                                    const fallback =
+                                        e.target.nextElementSibling;
+                                    if (fallback) {
+                                        fallback.style.display = "flex";
+                                    }
+                                }}
+                            />
+                        ) : null}
+                        {/* Fallback avatar - always rendered but hidden if image loads */}
+                        <div
+                            className={`w-full h-full flex items-center justify-center ${
+                                profile?.avatar ? "hidden" : "flex"
+                            }`}
+                            style={{
+                                display: profile?.avatar ? "none" : "flex",
+                            }}
+                        >
+                            <User className="w-16 h-16 lg:w-20 lg:h-20 text-gray-400" />
+                        </div>
+                    </div>
                 </div>
                 <div className="flex-1 text-center lg:text-left">
                     <div className="flex flex-col lg:flex-row gap-4 items-center lg:items-start mb-6">

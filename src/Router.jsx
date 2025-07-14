@@ -21,7 +21,8 @@ import CourseVideosContent from "./components/course/courseVideosContent/CourseV
 import Course from "./Pages/Course";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
-import Profile from "./Pages/Profile";
+import Profile from "./Pages/Profile/Profile";
+import EditProfile from "./Pages/Profile/EditProfile";
 import NotificationsPage from "./Pages/NotificationsPage";
 
 // Case-insensitive loader
@@ -130,6 +131,11 @@ const Routers = createBrowserRouter([
                 path: "profile",
                 loader: protectedCaseInsensitiveLoader,
                 element: <Profile />,
+            },
+            {
+                path: "profile/edit",
+                loader: protectedCaseInsensitiveLoader,
+                element: <EditProfile />,
             },
         ],
     },
