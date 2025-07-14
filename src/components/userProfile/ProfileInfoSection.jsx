@@ -38,7 +38,7 @@ const ProfileInfoSection = ({ profile }) => {
                         <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full">
                             <div className="w-5 h-5 bg-amber-400 rounded-full"></div>
                             <span className="text-sm font-medium text-gray-800">
-                                {t("profile.professional_member")}
+                                {t("profile_data.professional_member")}
                             </span>
                         </div>
                     </div>
@@ -52,7 +52,7 @@ const ProfileInfoSection = ({ profile }) => {
                                     {profile?.stats?.coursesCompleted || 0}
                                 </div>
                                 <div className="text-xs text-gray-600">
-                                    {t("profile.completed")}
+                                    {t("profile_data.completed")}
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ const ProfileInfoSection = ({ profile }) => {
                                     {profile?.stats?.coursesInProgress || 0}
                                 </div>
                                 <div className="text-xs text-gray-600">
-                                    {t("profile.in_progress")}
+                                    {t("profile_data.in_progress")}
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@ const ProfileInfoSection = ({ profile }) => {
                                     {profile?.stats?.totalCertificates || 0}
                                 </div>
                                 <div className="text-xs text-gray-600">
-                                    {t("profile.certificates")}
+                                    {t("profile_data.certificates")}
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@ const ProfileInfoSection = ({ profile }) => {
                                     {profile?.stats?.totalApplications || 0}
                                 </div>
                                 <div className="text-xs text-gray-600">
-                                    {t("profile.applications")}
+                                    {t("profile_data.applications")}
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ const ProfileInfoSection = ({ profile }) => {
                         {profile?.email && (
                             <div className="text-gray-600">
                                 <span className="font-medium">
-                                    {t("profile.email")}:{" "}
+                                    {t("profile_data.email")}:{" "}
                                 </span>
                                 {profile?.email}
                             </div>
@@ -104,7 +104,7 @@ const ProfileInfoSection = ({ profile }) => {
                         {profile?.country && (
                             <div className="text-gray-600">
                                 <span className="font-medium">
-                                    {t("profile.country")}:{" "}
+                                    {t("profile_data.country")}:{" "}
                                 </span>
                                 {profile?.country}
                             </div>
@@ -112,7 +112,7 @@ const ProfileInfoSection = ({ profile }) => {
                         {profile?.studyField && (
                             <div className="text-gray-600">
                                 <span className="font-medium">
-                                    {t("profile.study_field")}:{" "}
+                                    {t("profile_data.study_field")}:{" "}
                                 </span>
                                 {profile?.studyField}
                             </div>
@@ -120,7 +120,7 @@ const ProfileInfoSection = ({ profile }) => {
                         {profile?.studyDomain && (
                             <div className="text-gray-600">
                                 <span className="font-medium">
-                                    {t("profile.study_domain")}:{" "}
+                                    {t("profile_data.study_domain")}:{" "}
                                 </span>
                                 {profile?.studyDomain}
                             </div>
@@ -128,7 +128,7 @@ const ProfileInfoSection = ({ profile }) => {
                         {profile?.phoneNumber && (
                             <div className="text-gray-600">
                                 <span className="font-medium">
-                                    {t("profile.phone")}:{" "}
+                                    {t("profile_data.phone")}:{" "}
                                 </span>
                                 {profile?.phoneNumber}
                             </div>
