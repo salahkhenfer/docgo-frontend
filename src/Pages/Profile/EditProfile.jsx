@@ -23,6 +23,8 @@ const EditProfile = () => {
         phoneNumber: "",
         profile_pic_link: "",
     });
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
     const { i18n } = useTranslation(); // Add this to get current language
     // Function to get country name based on current language
     const getCountryDisplayName = (countryString) => {
@@ -38,21 +40,6 @@ const EditProfile = () => {
         return i18n.language === "ar" ? arabic : english_french;
     };
 
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                firstName: user.firstName || "",
-                lastName: user.lastName || "",
-                email: user.email || "",
-                country: user.country || "",
-                studyField: user.studyField || "",
-                studyDomain: user.studyDomain || "",
-                phoneNumber: user.phoneNumber || "",
-                profile_pic_link: user.profile_pic_link || "",
-            });
-        }
-    }, [user]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -62,17 +49,17 @@ const EditProfile = () => {
     };
 
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        const ProfilePic = e.target.files[0];
+        if (!ProfilePic) return;
 
         // Validate file type
-        if (!file.type.startsWith("image/")) {
+        if (!ProfilePic.type.startsWith("image/")) {
             toast.error("Please select a valid image file");
             return;
         }
 
         // Validate file size (5MB max)
-        if (file.size > 5 * 1024 * 1024) {
+        if (ProfilePic.size > 5 * 1024 * 1024) {
             toast.error("Image size should be less than 5MB");
             return;
         }
@@ -81,25 +68,23 @@ const EditProfile = () => {
 
         try {
             const formDataImage = new FormData();
-            formDataImage.append("profile_pic", file);
+            formDataImage.append("ProfilePic", ProfilePic);
 
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/User/ProfilePic`,
+                `${import.meta.env.VITE_API_URL}/upload/User/ProfilePic`,
                 formDataImage,
                 {
                     withCredentials: true,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
                 }
             );
+            console.log("Image upload response:", response);
 
-            const data = await response.json();
+            const data = response.data;
 
-            if (response.ok) {
+            if (response.status === 200 || data.success) {
                 setFormData((prev) => ({
                     ...prev,
-                    profile_pic_link: data.profile_pic_link,
+                    profile_pic_link: data.fileLink,
                 }));
                 toast.success("Profile picture uploaded successfully!");
             } else {
@@ -156,6 +141,7 @@ const EditProfile = () => {
                 if (updateUserProfile) {
                     updateUserProfile(data.user);
                 }
+
                 toast.success("Profile updated successfully!");
                 navigate("/profile");
             } else {
@@ -198,7 +184,24 @@ const EditProfile = () => {
         if (user) {
             fetch_data();
         }
+        if (user) {
+            console.log("User data:", user);
+
+            setFormData({
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                email: user.email || "",
+                country: user.country || "",
+                studyField: user.studyField || "",
+                studyDomain: user.studyDomain || "",
+                phoneNumber: user.phoneNumber || "",
+                profile_pic_link: user.profile_pic_link || "",
+            });
+        } else {
+            navigate("/login");
+        }
     }, [user]);
+
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -236,7 +239,7 @@ const EditProfile = () => {
                                 <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                                     {formData.profile_pic_link ? (
                                         <img
-                                            src={formData.profile_pic_link}
+                                            src={`${API_URL}${formData.profile_pic_link}`}
                                             alt="Profile"
                                             className="w-full h-full object-cover"
                                         />

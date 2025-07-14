@@ -87,7 +87,7 @@ const Profile = () => {
         firstName: profileData.user.firstName,
         lastName: profileData.user.lastName,
         email: profileData.user.email,
-        avatar: profileData.user.profilePicture || (
+        avatar: profileData.user.profile_pic_link || (
             <svg
                 className="w-6 h-6"
                 fill="none"

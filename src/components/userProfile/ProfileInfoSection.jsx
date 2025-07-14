@@ -1,10 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle, Clock, Award, FileText, User } from "lucide-react";
-
+import { useEffect } from "react";
 const ProfileInfoSection = ({ profile }) => {
     const { t } = useTranslation();
-
+    const API_URL = import.meta.env.VITE_API_URL;
+    useEffect(() => {
+        console.log("profile pictire link", profile?.avatar);
+    }, [profile?.avatar]);
     if (!profile) {
         return (
             <div className="bg-white rounded-3xl p-8 shadow-sm">
@@ -23,7 +26,7 @@ const ProfileInfoSection = ({ profile }) => {
                     <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center">
                         {profile?.avatar ? (
                             <img
-                                src={profile.avatar}
+                                src={API_URL + profile.avatar}
                                 className="w-full h-full object-cover"
                                 alt="Profile avatar"
                                 onError={(e) => {
