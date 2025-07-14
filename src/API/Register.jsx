@@ -69,6 +69,14 @@ const handleRegister = async ({
             if (!loginResult?.success) {
                 window.location.href = "/login";
             }
+            localStorage.setItem(
+                "user",
+                JSON.stringify(loginResult?.data?.user || {})
+            );
+            sessionStorage.setItem(
+                "user",
+                JSON.stringify(loginResult?.data?.user || {})
+            );
 
             return loginResult;
         } else {

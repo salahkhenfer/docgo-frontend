@@ -108,14 +108,26 @@ export const AppProvider = ({ children }) => {
 
             if (response.status === 200 && response.data.user) {
                 set_user(response.data.user);
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(response.data.user)
+                );
+                sessionStorage.setItem(
+                    "user",
+                    JSON.stringify(response.data.user)
+                );
                 return true;
             } else {
                 set_user(null);
+                localStorage.removeItem("user");
+                sessionStorage.removeItem("user");
                 return false;
             }
         } catch (error) {
             console.log("Auth check failed:", error);
             set_user(null);
+            localStorage.removeItem("user");
+            sessionStorage.removeItem("user");
             return false;
         } finally {
             setLoading(false);
@@ -131,6 +143,15 @@ export const AppProvider = ({ children }) => {
 
             if (response.status === 200 && response.data.user) {
                 set_user(response.data.user);
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(response.data.user)
+                );
+                sessionStorage.setItem(
+                    "user",
+                    JSON.stringify(response.data.user)
+                );
+                set_Auth(true);
                 return { success: true, user: response.data.user };
             } else {
                 return {

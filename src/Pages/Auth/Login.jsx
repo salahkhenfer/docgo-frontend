@@ -60,7 +60,8 @@ const Login = () => {
                 // Success - update auth context
                 set_Auth(true);
                 set_user(data.user);
-
+                localStorage.setItem("user", JSON.stringify(data.user));
+                sessionStorage.setItem("user", JSON.stringify(data.user));
                 Swal.fire({
                     title: "Connexion réussie",
                     text: "Vous êtes maintenant connecté.",

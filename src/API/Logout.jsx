@@ -30,6 +30,8 @@ const handleLogout = async ({
         storeLogout();
         setAuth(false);
         setUser(null);
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
         window.location.href = "/";
     }
 };
