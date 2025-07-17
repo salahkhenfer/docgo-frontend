@@ -1,7 +1,7 @@
 import api from "./apiClient";
 
 export const courseService = {
-    // Get all courses with pagination and filters
+    // Get all courses with pagination and filters (works for both authenticated and guest users)
     getCourses: async (params = {}) => {
         try {
             const {
@@ -23,7 +23,8 @@ export const courseService = {
             if (category) queryParams.append("category", category);
             if (search) queryParams.append("search", search);
 
-            const response = await api.get(`/Users/Courses?${queryParams}`);
+            // Use the unified courses endpoint that handles both authenticated and guest users
+            const response = await api.get(`/Courses?${queryParams}`);
             return response.data;
         } catch (error) {
             console.error("Error fetching courses:", error);
@@ -31,10 +32,11 @@ export const courseService = {
         }
     },
 
-    // Get single course details
+    // Get single course details (works for both authenticated and guest users)
     getCourse: async (courseId) => {
         try {
-            const response = await api.get(`/Users/Courses/${courseId}`);
+            // Use the unified courses endpoint that handles both authenticated and guest users
+            const response = await api.get(`/Courses/${courseId}`);
             return response.data;
         } catch (error) {
             console.error("Error fetching course:", error);

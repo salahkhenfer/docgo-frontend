@@ -3,10 +3,10 @@ import { courseService } from "../services/courseService";
 import { useAppContext } from "../AppContext";
 
 export const useCourses = (initialParams = {}) => {
-    const { userId } = useAppContext();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -29,12 +29,6 @@ export const useCourses = (initialParams = {}) => {
 
     const fetchCourses = useCallback(
         async (params = filters) => {
-            if (!userId) {
-                setError("User not authenticated");
-                setLoading(false);
-                return;
-            }
-
             setLoading(true);
             setError(null);
 
@@ -42,14 +36,17 @@ export const useCourses = (initialParams = {}) => {
                 const response = await courseService.getCourses(params);
                 setCourses(response.courses || []);
                 setPagination(response.pagination || {});
+                setIsAuthenticated(response.isAuthenticated || false);
             } catch (err) {
                 setError(err.message || "Failed to fetch courses");
                 setCourses([]);
+                // If there's an error, treat as guest user
+                setIsAuthenticated(false);
             } finally {
                 setLoading(false);
             }
         },
-        [userId, filters]
+        [filters] // Remove userId dependency since it's not needed
     );
 
     const updateFilters = useCallback((newFilters) => {
@@ -105,6 +102,7 @@ export const useCourses = (initialParams = {}) => {
         error,
         pagination,
         filters,
+        isAuthenticated,
         searchCourses,
         changePage,
         applyFilters,
@@ -115,13 +113,13 @@ export const useCourses = (initialParams = {}) => {
 };
 
 export const useCourse = (courseId) => {
-    const { userId } = useAppContext();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const fetchCourse = useCallback(async () => {
-        if (!courseId || !userId) return;
+        if (!courseId) return;
 
         setLoading(true);
         setError(null);
@@ -129,13 +127,16 @@ export const useCourse = (courseId) => {
         try {
             const response = await courseService.getCourse(courseId);
             setCourse(response.course || response);
+            setIsAuthenticated(response.course?.isAuthenticated || false);
         } catch (err) {
             setError(err.message || "Failed to fetch course");
             setCourse(null);
+            // If there's an error, treat as guest user
+            setIsAuthenticated(false);
         } finally {
             setLoading(false);
         }
-    }, [courseId, userId]);
+    }, [courseId]);
 
     useEffect(() => {
         fetchCourse();
@@ -145,6 +146,7 @@ export const useCourse = (courseId) => {
         course,
         loading,
         error,
+        isAuthenticated,
         refetch: fetchCourse,
     };
 };

@@ -6,7 +6,7 @@ import { ErrorMessage } from "../UI/ErrorMessage";
 
 export function CourseGrid({ filters }) {
     const { t } = useTranslation();
-    const { courses, loading, error, pagination, changePage } =
+    const { courses, loading, error, pagination, isAuthenticated, changePage } =
         useCourses(filters);
 
     if (loading) {
@@ -43,9 +43,23 @@ export function CourseGrid({ filters }) {
 
     return (
         <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
-            <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
-                {t("TousLesCours")}
-            </h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
+                    {t("TousLesCours")}
+                </h2>
+
+                {/* Guest mode indicator */}
+                {!isAuthenticated && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                        <span className="text-blue-600 text-sm">
+                            👋 {t("ViewingAsGuest") || "Viewing as guest"}
+                        </span>
+                        <span className="text-blue-500 text-xs">
+                            {t("LoginForFullAccess") || "Login for full access"}
+                        </span>
+                    </div>
+                )}
+            </div>
 
             {courses.length === 0 ? (
                 <div className="flex flex-col items-center justify-center mt-12 p-8 bg-gray-50 rounded-lg">
