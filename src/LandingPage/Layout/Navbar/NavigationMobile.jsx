@@ -92,7 +92,7 @@ function NavigationMobile() {
                             {t("Programs")}
                         </Link>
                         <Link
-                            to="/Courses"
+                            to="/allcourses"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >

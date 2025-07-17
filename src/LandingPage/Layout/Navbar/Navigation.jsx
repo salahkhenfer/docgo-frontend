@@ -52,7 +52,7 @@ function Navigation() {
                     {t("Programs")}
                 </Link>
                 <Link
-                    to="/Courses"
+                    to="/allcourses"
                     className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
                     {t("Courses")}

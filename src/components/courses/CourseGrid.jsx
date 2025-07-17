@@ -1,146 +1,124 @@
 import { useTranslation } from "react-i18next";
 import { CourseCard } from "./CourseCard";
+import { useCourses } from "../../hooks/useCourses";
+import { CourseCardSkeleton } from "../UI/LoadingSpinner";
+import { ErrorMessage } from "../UI/ErrorMessage";
 
-export function CourseGrid() {
-  const courses = [
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/5c35b45c65484e09f32277e103bffb3abe2012a7?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/0a76e5f4a24915d130143a05d1466aa421f69f1b?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/076bd5738903e0c01b13edf1f9be7615709057e2?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/65452e2a76ef2ff3b4e243d3356df59b4233fb58?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/2cf4ecb1e1c3e0e8a8b3f6b12a41e96f8d158be8?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/982bc5b9f712da7dea955fbfc11287dd7d2a2496?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/bd1766443532e77ebafa599fd1db2a03858476ea?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/3379f3ff85c2033fcab7b0ef01d6b68fd8b52b03?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/cfcc256e1799a85d8b30648e97f98cb5fe99546b?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/a2936b5cdb751caae0b570822303fd8e99deeeef?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/46c1e92f41115a52bc4040537a2674929289eca8?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/c97a018f099908bd5b8845b1037e81f207899fe2?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-    {
-      imageUrl: "",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: false,
-    },
-    {
-      imageUrl: "",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: false,
-    },
-    {
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/abde435253d0e18bbdddc9165bcae22a7d96e461?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
-      title: "Cours de design UI UX",
-      description:
-        "La spécialisation en design UI/UX adopte une approche centrée sur l'interface utilisateur et l'expérience utilisateur...",
-      hasImage: true,
-    },
-  ];
-  const { t } = useTranslation();
+export function CourseGrid({ filters }) {
+    const { t } = useTranslation();
+    const { courses, loading, error, pagination, changePage } =
+        useCourses(filters);
 
-  return (
-    <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
-      <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
-        {t("TousLesCours")}
-      </h2>
-      <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
-        {courses.map((course, index) => (
-          <CourseCard
-            key={index}
-            id={index + 1}
-            imageUrl={course.imageUrl}
-            title={course.title}
-            description={course.description}
-            hasImage={course.hasImage}
-          />
-        ))}
-      </div>
-    </section>
-  );
+    if (loading) {
+        return (
+            <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
+                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
+                    {t("TousLesCours")}
+                </h2>
+                <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
+                    {/* Loading skeleton */}
+                    {Array.from({ length: 8 }).map((_, index) => (
+                        <CourseCardSkeleton key={index} />
+                    ))}
+                </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
+                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
+                    {t("TousLesCours")}
+                </h2>
+                <ErrorMessage
+                    message={error}
+                    type="error"
+                    onRetry={() => window.location.reload()}
+                    className="mt-12"
+                />
+            </section>
+        );
+    }
+
+    return (
+        <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
+            <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
+                {t("TousLesCours")}
+            </h2>
+
+            {courses.length === 0 ? (
+                <div className="flex flex-col items-center justify-center mt-12 p-8 bg-gray-50 rounded-lg">
+                    <p className="text-gray-600 text-lg">
+                        {t("NoCoursesFound") || "No courses found"}
+                    </p>
+                    <p className="text-gray-500 text-sm mt-2">
+                        {t("TryAdjustingFilters") ||
+                            "Try adjusting your search filters"}
+                    </p>
+                </div>
+            ) : (
+                <>
+                    <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
+                        {courses.map((course) => (
+                            <CourseCard
+                                key={course.id}
+                                id={course.id}
+                                imageUrl={course.ImageUrl || course.coverImage}
+                                title={course.Title}
+                                description={
+                                    course.shortDescription ||
+                                    course.Description
+                                }
+                                price={course.Price}
+                                discountPrice={course.discountPrice}
+                                currency={course.Currency}
+                                level={course.Level}
+                                averageRating={course.stats?.averageRating}
+                                totalReviews={course.stats?.totalReviews}
+                                isEnrolled={course.userStatus?.isEnrolled}
+                                enrollmentStatus={
+                                    course.userStatus?.enrollmentStatus
+                                }
+                                progress={course.userStatus?.progress}
+                                hasImage={
+                                    !!course.ImageUrl || !!course.coverImage
+                                }
+                            />
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {pagination.totalPages > 1 && (
+                        <div className="flex justify-center items-center mt-8 gap-4">
+                            <button
+                                onClick={() =>
+                                    changePage(pagination.currentPage - 1)
+                                }
+                                disabled={!pagination.hasPrevPage}
+                                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition"
+                            >
+                                {t("Previous") || "Previous"}
+                            </button>
+
+                            <span className="text-gray-600">
+                                {t("Page") || "Page"} {pagination.currentPage}{" "}
+                                {t("of") || "of"} {pagination.totalPages}
+                            </span>
+
+                            <button
+                                onClick={() =>
+                                    changePage(pagination.currentPage + 1)
+                                }
+                                disabled={!pagination.hasNextPage}
+                                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition"
+                            >
+                                {t("Next") || "Next"}
+                            </button>
+                        </div>
+                    )}
+                </>
+            )}
+        </section>
+    );
 }

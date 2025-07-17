@@ -1,7 +1,4 @@
-import axios from "axios";
-
-// const API_URL = "http://localhost:3000";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import api from "./apiClient";
 
 class VisitService {
     constructor() {
@@ -20,7 +17,7 @@ class VisitService {
             // Get referrer
             const referrer = document.referrer || null;
 
-            const response = await axios.post(`${API_URL}/visit/register`, {
+            const response = await api.post("/visit/register", {
                 page: currentPage,
                 referrer,
                 deviceType,
@@ -33,7 +30,7 @@ class VisitService {
                 // Add event listener for page unload to update duration
                 window.addEventListener(
                     "beforeunload",
-                    this.updateDuration.bind(this) 
+                    this.updateDuration.bind(this)
                 );
 
                 return response.data.visitId;
@@ -52,12 +49,9 @@ class VisitService {
                 (Date.now() - this.visitStartTime) / 1000
             ); // Duration in seconds
 
-            await axios.put(
-                `${API_URL}/visit/duration/${this.currentVisitId}`,
-                {
-                    duration,
-                }
-            );
+            await api.put(`/visit/duration/${this.currentVisitId}`, {
+                duration,
+            });
         } catch (error) {
             console.error("Error updating visit duration:", error);
         }

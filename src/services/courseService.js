@@ -1,0 +1,236 @@
+import api from "./apiClient";
+
+export const courseService = {
+    // Get all courses with pagination and filters
+    getCourses: async (params = {}) => {
+        try {
+            const {
+                page = 1,
+                limit = 12,
+                category = "",
+                search = "",
+                sortBy = "createdAt",
+                order = "DESC",
+            } = params;
+
+            const queryParams = new URLSearchParams({
+                page: page.toString(),
+                limit: limit.toString(),
+                sortBy,
+                order,
+            });
+
+            if (category) queryParams.append("category", category);
+            if (search) queryParams.append("search", search);
+
+            const response = await api.get(`/Users/Courses?${queryParams}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+            throw error;
+        }
+    },
+
+    // Get single course details
+    getCourse: async (courseId) => {
+        try {
+            const response = await api.get(`/Users/Courses/${courseId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching course:", error);
+            throw error;
+        }
+    },
+
+    // Apply for a course
+    applyCourse: async (courseData) => {
+        try {
+            const response = await api.post(`/Users/Courses/apply`, courseData);
+            return response.data;
+        } catch (error) {
+            console.error("Error applying for course:", error);
+            throw error;
+        }
+    },
+
+    // Get user's course applications
+    getUserApplications: async () => {
+        try {
+            const response = await api.get(`/Users/Courses/applications`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching user applications:", error);
+            throw error;
+        }
+    },
+
+    // Get course progress
+    getCourseProgress: async (courseId) => {
+        try {
+            const response = await api.get(
+                `/Users/Courses/${courseId}/progress`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching course progress:", error);
+            throw error;
+        }
+    },
+
+    // Update video progress
+    updateVideoProgress: async (progressData) => {
+        try {
+            const response = await api.post(
+                `/Users/Courses/progress/video`,
+                progressData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating video progress:", error);
+            throw error;
+        }
+    },
+
+    // Get all user progress
+    getAllUserProgress: async () => {
+        try {
+            const response = await api.get(`/Users/Courses/progress`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching user progress:", error);
+            throw error;
+        }
+    },
+
+    // Add course review
+    addReview: async (reviewData) => {
+        try {
+            const response = await api.post(
+                `/Users/Courses/reviews`,
+                reviewData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error adding review:", error);
+            throw error;
+        }
+    },
+
+    // Get course reviews
+    getCourseReviews: async (courseId) => {
+        try {
+            const response = await api.get(
+                `/Users/Courses/${courseId}/reviews`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching course reviews:", error);
+            throw error;
+        }
+    },
+
+    // Update review
+    updateReview: async (reviewId, reviewData) => {
+        try {
+            const response = await api.put(
+                `/Users/Courses/reviews/${reviewId}`,
+                reviewData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating review:", error);
+            throw error;
+        }
+    },
+
+    // Delete review
+    deleteReview: async (reviewId) => {
+        try {
+            const response = await api.delete(
+                `/Users/Courses/reviews/${reviewId}`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting review:", error);
+            throw error;
+        }
+    },
+
+    // Get user certificates
+    getUserCertificates: async () => {
+        try {
+            const response = await api.get(`/Users/Courses/certificates`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching certificates:", error);
+            throw error;
+        }
+    },
+
+    // Issue certificate
+    issueCertificate: async (certificateData) => {
+        try {
+            const response = await api.post(
+                `/Users/Courses/certificates/issue`,
+                certificateData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error issuing certificate:", error);
+            throw error;
+        }
+    },
+
+    // Download certificate
+    downloadCertificate: async (certificateId) => {
+        try {
+            const response = await api.get(
+                `/Users/Courses/certificates/download/${certificateId}`,
+                {
+                    responseType: "blob",
+                }
+            );
+            return response;
+        } catch (error) {
+            console.error("Error downloading certificate:", error);
+            throw error;
+        }
+    },
+
+    // Get user meets
+    getUserMeets: async () => {
+        try {
+            const response = await api.get(`/Users/Courses/meets`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching user meets:", error);
+            throw error;
+        }
+    },
+
+    // Get course meets
+    getCourseMeets: async (courseId) => {
+        try {
+            const response = await api.get(`/Users/Courses/${courseId}/meets`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching course meets:", error);
+            throw error;
+        }
+    },
+
+    // Join meet
+    joinMeet: async (meetId) => {
+        try {
+            const response = await api.get(
+                `/Users/Courses/meets/${meetId}/join`
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error joining meet:", error);
+            throw error;
+        }
+    },
+};
+
+export default courseService;
