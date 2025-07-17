@@ -91,13 +91,13 @@ function NavigationMobile() {
                         >
                             {t("Programs")}
                         </Link>
-                        {/* <Link
-                            to="/searchProgram"
+                        <Link
+                            to="/Courses"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >
-                            {t("OtherSpecialties")}
-                        </Link> */}
+                            {t("Courses")}
+                        </Link>
                         <button
                             onClick={() => handleScrollToSection("ourServices")}
                             className="text-customGray py-2 border-b border-gray-100 cursor-pointer bg-transparent border-none text-left w-full"
