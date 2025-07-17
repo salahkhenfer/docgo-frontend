@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Link as ScrollSmooth } from "react-scroll";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../../AppContext";
 import logo from "../../../assets/Logo.png";
@@ -15,43 +14,61 @@ function Navigation() {
     const { user } = useAppContext();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { i18n } = useTranslation();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Function to handle scrolling to sections
+    const handleScrollToSection = (sectionId) => {
+        if (location.pathname === "/") {
+            // If already on home page, just scroll
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        } else {
+            // Navigate to home first, then scroll
+            navigate("/");
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
+    };
     const MainContent = () => {
         return (
             <div className="flex justify-center items-center gap-5 lg:max-3xl:gap-4 lg:text-base">
                 <Link
                     to="/searchProgram"
-                    className="hover:text-[#0086C9] hover:text-lg font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
-                    {t("Specialites")}
+                    {t("Programs")}
                 </Link>
-                <Link
+                {/* <Link
                     to="/searchProgram"
-                    className="hover:text-[#0086C9] hover:text-lg font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
                     {t("OtherSpecialties")}
-                </Link>
-                <ScrollSmooth
-                    to="ourServices"
-                    spy={true}
-                    smooth={true}
-                    hashSpy={true}
-                    offset={-100}
-                    duration={500}
-                    className="hover:text-[#0086C9] hover:text-lg font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px]"
+                </Link> */}
+                <button
+                    onClick={() => handleScrollToSection("ourServices")}
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
                 >
                     {t("OurServicesLink")}
-                </ScrollSmooth>
-                <ScrollSmooth
-                    to="aboutUs"
-                    spy={true}
-                    smooth={true}
-                    hashSpy={true}
-                    offset={-100}
-                    duration={500}
-                    className="hover:text-[#0086C9] hover:text-lg font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px]"
+                </button>
+                <button
+                    onClick={() => handleScrollToSection("aboutUs")}
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
                 >
                     {t("AboutUsLink")}
-                </ScrollSmooth>
+                </button>
             </div>
         );
     };

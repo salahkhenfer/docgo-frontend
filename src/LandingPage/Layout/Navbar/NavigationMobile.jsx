@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Link as ScrollSmooth } from "react-scroll";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../../assets/Logo.png";
@@ -13,6 +12,35 @@ function NavigationMobile() {
     const [isOpen, setIsOpen] = useState(false);
     const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
     const { user } = useAppContext();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Function to handle scrolling to sections
+    const handleScrollToSection = (sectionId) => {
+        setIsOpen(false); // Close mobile menu
+        if (location.pathname === "/") {
+            // If already on home page, just scroll
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        } else {
+            // Navigate to home first, then scroll
+            navigate("/");
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+            }, 100);
+        }
+    };
 
     return (
         <div className="hidden sm-sm:max-lg:block">
@@ -61,39 +89,27 @@ function NavigationMobile() {
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >
-                            {t("Specialites")}
+                            {t("Programs")}
                         </Link>
-                        <Link
+                        {/* <Link
                             to="/searchProgram"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >
                             {t("OtherSpecialties")}
-                        </Link>
-                        <ScrollSmooth
-                            to="ourServices"
-                            spy={true}
-                            smooth={true}
-                            hashSpy={true}
-                            offset={-100}
-                            duration={500}
-                            className="text-customGray py-2 border-b border-gray-100 cursor-pointer"
-                            onClick={() => setIsOpen(false)}
+                        </Link> */}
+                        <button
+                            onClick={() => handleScrollToSection("ourServices")}
+                            className="text-customGray py-2 border-b border-gray-100 cursor-pointer bg-transparent border-none text-left w-full"
                         >
                             {t("OurServicesLink")}
-                        </ScrollSmooth>
-                        <ScrollSmooth
-                            to="aboutUs"
-                            spy={true}
-                            smooth={true}
-                            hashSpy={true}
-                            offset={-100}
-                            duration={500}
-                            className="text-customGray py-2 cursor-pointer"
-                            onClick={() => setIsOpen(false)}
+                        </button>
+                        <button
+                            onClick={() => handleScrollToSection("aboutUs")}
+                            className="text-customGray py-2 cursor-pointer bg-transparent border-none text-left w-full"
                         >
                             {t("AboutUsLink")}
-                        </ScrollSmooth>
+                        </button>
                     </div>
                 </div>
             )}
