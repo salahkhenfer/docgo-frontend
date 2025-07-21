@@ -108,7 +108,7 @@ export const courseService = {
     addReview: async (reviewData) => {
         try {
             const response = await api.post(
-                `/Users/Courses/reviews`,
+                `/Users/Courses/course_reviews`,
                 reviewData
             );
             return response.data;
@@ -118,15 +118,15 @@ export const courseService = {
         }
     },
 
-    // Get course reviews
+    // Get course course_reviews
     getCourseReviews: async (courseId) => {
         try {
             const response = await api.get(
-                `/Users/Courses/${courseId}/reviews`
+                `/Users/Courses/${courseId}/course_reviews`
             );
             return response.data;
         } catch (error) {
-            console.error("Error fetching course reviews:", error);
+            console.error("Error fetching course course_reviews:", error);
             throw error;
         }
     },
@@ -135,7 +135,7 @@ export const courseService = {
     updateReview: async (reviewId, reviewData) => {
         try {
             const response = await api.put(
-                `/Users/Courses/reviews/${reviewId}`,
+                `/Users/Courses/course_reviews/${reviewId}`,
                 reviewData
             );
             return response.data;
@@ -149,7 +149,7 @@ export const courseService = {
     deleteReview: async (reviewId) => {
         try {
             const response = await api.delete(
-                `/Users/Courses/reviews/${reviewId}`
+                `/Users/Courses/course_reviews/${reviewId}`
             );
             return response.data;
         } catch (error) {

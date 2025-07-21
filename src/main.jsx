@@ -11,17 +11,20 @@ import { HeroUIProvider } from "@heroui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { AppProvider } from "./AppContext"; // Ensure the AppProvider is default exported
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <AppProvider>
-            <I18nextProvider i18n={i18n}>
-                <HeroUIProvider>
-                    <Suspense fallback={<MainLoading />}>
-                        <RouterProvider router={Routers} />
-                    </Suspense>
-                </HeroUIProvider>
-            </I18nextProvider>
+            <FavoritesProvider>
+                <I18nextProvider i18n={i18n}>
+                    <HeroUIProvider>
+                        <Suspense fallback={<MainLoading />}>
+                            <RouterProvider router={Routers} />
+                        </Suspense>
+                    </HeroUIProvider>
+                </I18nextProvider>
+            </FavoritesProvider>
         </AppProvider>
     </StrictMode>
 );

@@ -14,6 +14,7 @@ import { SearchProgram } from "./Pages/SearchProgram";
 import { ProgramDetails } from "./Pages/ProgramDetailes";
 import MyApplications from "./Pages/MyApplications";
 import AllCourses from "./Pages/AllCourses";
+import FavoritesPage from "./Pages/FavoritesPage";
 
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
 import QuizContent from "./Pages/QuizContent";
@@ -88,6 +89,10 @@ const Routers = createBrowserRouter([
             {
                 path: "allcourses",
                 element: <AllCourses />,
+            },
+            {
+                path: "favorites",
+                element: <FavoritesPage />,
             },
             {
                 path: "notifications",
