@@ -60,17 +60,16 @@ function NavigationMobile() {
                 <div className="flex items-center gap-4">
                     <Link
                         to="/favorites"
-                        className="text-customGray py-2  flex items-center gap-2 relative"
-                        onClick={() => setIsOpen(false)}
+                        className="relative p-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
+                        title={t("Favorites") || "Favorites"}
                     >
                         {totalCount > 0 ? (
-                            <BsHeartFill className="w-4 h-4 text-xl text-red-500" />
+                            <BsHeartFill className="w-6 h-6 text-red-500" />
                         ) : (
-                            <BsHeart className="w-4 h-4 text-xl" />
+                            <BsHeart className="w-6 h-6" />
                         )}
-                        {/* {t("Favorites")} */}
                         {totalCount > 0 && (
-                            <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
                                 {totalCount > 99 ? "99+" : totalCount}
                             </span>
                         )}

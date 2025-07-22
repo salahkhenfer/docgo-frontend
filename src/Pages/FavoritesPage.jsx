@@ -105,13 +105,17 @@ const FavoritesPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                        {filteredFavorites.map((item) => (
-                            <FavoriteCard
-                                key={`${item.type || "course"}-${item.id}`}
-                                item={item}
-                                type={item.type || "course"}
-                            />
-                        ))}
+                        {filteredFavorites.map((item) => {
+                            // Handle different ID field names
+                            const itemId = item.id || item.ID || item.Id;
+                            return (
+                                <FavoriteCard
+                                    key={`${item.type || "course"}-${itemId}`}
+                                    item={item}
+                                    type={item.type || "course"}
+                                />
+                            );
+                        })}
                     </div>
                 )}
             </div>
@@ -121,6 +125,15 @@ const FavoritesPage = () => {
 
 const FavoriteCard = ({ item, type }) => {
     const isProgram = type === "program";
+
+    // Handle different ID field names
+    const itemId = item.id || item.ID || item.Id;
+
+    // Don't render if no valid item or ID
+    if (!item || !itemId) {
+        console.warn("FavoriteCard: Missing item or item ID", { item, itemId });
+        return null;
+    }
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
@@ -264,8 +277,8 @@ const FavoriteCard = ({ item, type }) => {
                 <Link
                     to={
                         isProgram
-                            ? `/programs/${item.id}`
-                            : `/coursedetails/${item.id}`
+                            ? `/programs/${itemId}`
+                            : `/coursedetails/${itemId}`
                     }
                     className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >

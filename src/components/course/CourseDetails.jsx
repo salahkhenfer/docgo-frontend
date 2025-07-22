@@ -34,26 +34,28 @@ export const CourseDetails = () => {
 
     if (hasError) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-                <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-                    <div className="text-red-500 text-5xl mb-4">❌</div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6">
+                <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
+                    <div className="text-red-500 text-4xl sm:text-5xl mb-4">
+                        ❌
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                         Unable to Load Course
                     </h2>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-sm sm:text-base text-gray-600 mb-6">
                         {error ||
                             "Something went wrong while loading the course details."}
                     </p>
                     <button
                         onClick={retry}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto text-sm sm:text-base"
                     >
-                        <IoMdRefresh className="mr-2" />
+                        <IoMdRefresh className="mr-2 w-4 h-4" />
                         Try Again
                     </button>
                     <Link
-                        to="/courses"
-                        className="inline-block mt-4 text-blue-600 hover:text-blue-700 text-sm"
+                        to="/allcourses"
+                        className="inline-block mt-4 text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
                     >
                         ← Back to Courses
                     </Link>
@@ -64,19 +66,21 @@ export const CourseDetails = () => {
 
     if (!hasData) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-                <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-                    <div className="text-gray-400 text-5xl mb-4">📚</div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6">
+                <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
+                    <div className="text-gray-400 text-4xl sm:text-5xl mb-4">
+                        📚
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                         Course Not Found
                     </h2>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-sm sm:text-base text-gray-600 mb-6">
                         The course you&apos;re looking for doesn&apos;t exist or
                         has been removed.
                     </p>
                     <Link
-                        to="/courses"
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
+                        to="/allcourses"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 inline-block text-sm sm:text-base"
                     >
                         Browse Courses
                     </Link>
@@ -119,13 +123,14 @@ export const CourseDetails = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 w-full">
             {/* Refresh Button */}
             {refetching && (
                 <div className="fixed top-4 right-4 z-50">
-                    <div className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
-                        <IoMdRefresh className="animate-spin mr-2" />
-                        Refreshing...
+                    <div className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg flex items-center text-sm sm:text-base">
+                        <IoMdRefresh className="animate-spin mr-2 w-4 h-4" />
+                        <span className="hidden sm:inline">Refreshing...</span>
+                        <span className="sm:hidden">...</span>
                     </div>
                 </div>
             )}
@@ -138,10 +143,10 @@ export const CourseDetails = () => {
             />
 
             {/* Main Content */}
-            <div className="container mx-auto px-6 py-12">
-                <div className="grid lg:grid-cols-3 gap-8">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     {/* Left Column - Main Content */}
-                    <div className="lg:col-span-2 space-y-8">
+                    <div className="lg:col-span-2 space-y-6 lg:space-y-8 order-2 lg:order-1">
                         {/* Course Content */}
                         <CourseContent
                             course={course}
@@ -162,20 +167,22 @@ export const CourseDetails = () => {
                     </div>
 
                     {/* Right Column - Sidebar */}
-                    <div className="lg:col-span-1 space-y-6">
+                    <div className="lg:col-span-1 space-y-4 lg:space-y-6 order-1 lg:order-2">
                         {/* Course Card */}
-                        <CourseSmallCard
-                            course={course}
-                            userStatus={userStatus}
-                            courseProgress={courseProgress}
-                            certificate={certificate}
-                            isEnrolled={isEnrolled}
-                            isFree={isFree}
-                            coursePrice={coursePrice}
-                            currency={currency}
-                            enrolling={enrolling}
-                            handleEnrollClick={handleEnrollClick}
-                        />
+                        <div className="lg:sticky lg:top-6">
+                            <CourseSmallCard
+                                course={course}
+                                userStatus={userStatus}
+                                courseProgress={courseProgress}
+                                certificate={certificate}
+                                isEnrolled={isEnrolled}
+                                isFree={isFree}
+                                coursePrice={coursePrice}
+                                currency={currency}
+                                enrolling={enrolling}
+                                handleEnrollClick={handleEnrollClick}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

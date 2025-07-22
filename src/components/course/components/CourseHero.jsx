@@ -4,12 +4,15 @@ import { useFavorite } from "../../../hooks/useFavorite";
 import PropTypes from "prop-types";
 
 const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
+    // Handle different ID field names
+    const courseId = course?.id || course?.ID || course?.Id;
+
     // Add favorite functionality
     const {
         isFavorited,
         loading: favoriteLoading,
         toggleFavorite,
-    } = useFavorite(course.id, "course");
+    } = useFavorite(courseId, "course");
 
     const handleToggleFavorite = (e) => {
         e.preventDefault();
@@ -17,7 +20,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
 
         // Create item object for local storage
         const courseItem = {
-            id: course.id,
+            id: courseId,
             title: course.Title || course.title,
             description: course.Description || course.description,
             price: course.Price || course.price,
@@ -31,7 +34,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
     };
 
     return (
-        <div className="relative min-h-[500px] overflow-hidden">
+        <div className="relative min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] overflow-hidden">
             {/* Creative Medical Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
                 {/* Medical DNA Helix Pattern */}
@@ -91,20 +94,20 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                 </div>
 
                 {/* Floating Medical Icons */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-5 right-20 text-white/10 text-6xl animate-pulse">
+                <div className="absolute inset-0 hidden sm:block">
+                    <div className="absolute top-5 right-20 text-white/10 text-4xl lg:text-6xl animate-pulse">
                         <FaVideo />
                     </div>
-                    <div className="absolute top-40 right-32 text-white/15 text-4xl animate-bounce">
+                    <div className="absolute top-40 right-32 text-white/15 text-3xl lg:text-4xl animate-bounce">
                         📚
                     </div>
-                    <div className="absolute bottom-32 left-32 text-white/20 text-5xl animate-pulse">
+                    <div className="absolute bottom-32 left-32 text-white/20 text-4xl lg:text-5xl animate-pulse">
                         🎓
                     </div>
-                    <div className="absolute bottom-20 right-20 text-white/100 text-6xl animate-bounce">
+                    <div className="absolute bottom-20 right-20 text-white/100 text-5xl lg:text-6xl animate-bounce">
                         ⚕️
                     </div>
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-8xl">
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-6xl lg:text-8xl">
                         🧬
                     </div>
                 </div>
@@ -114,14 +117,14 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 container mx-auto px-6 py-16">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
                 <div className="max-w-4xl relative">
                     {/* Favorite Button - Top Right */}
-                    <div className="absolute top-0 right-0">
+                    <div className="absolute -top-2 sm:top-0 right-0">
                         <button
                             onClick={handleToggleFavorite}
                             disabled={favoriteLoading}
-                            className={`p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 ${
+                            className={`p-2 sm:p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 ${
                                 favoriteLoading
                                     ? "opacity-50 cursor-not-allowed"
                                     : "hover:scale-110"
@@ -133,94 +136,98 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                             }
                         >
                             {isFavorited ? (
-                                <BsHeartFill className="w-6 h-6 text-red-400" />
+                                <BsHeartFill className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" />
                             ) : (
-                                <BsHeart className="w-6 h-6 text-white" />
+                                <BsHeart className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             )}
                         </button>
                     </div>
 
                     {/* Course Title */}
-                    <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                         {course.Title || course.title}
                     </h1>
 
                     {/* Course Subtitle */}
-                    <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+                    <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-6 sm:mb-8 leading-relaxed">
                         {course.shortDescription || course.subtitle}
                     </p>
 
                     {/* Course Description */}
-                    <p className="text-lg text-blue-50 mb-10 leading-relaxed max-w-3xl">
+                    <p className="text-base sm:text-lg text-blue-50 mb-8 sm:mb-10 leading-relaxed max-w-3xl">
                         {course.Description || course.description}
                     </p>
 
                     {/* Course Tags */}
-                    <div className="flex flex-wrap gap-3 mb-8">
-                        <span className="bg-green-500/20 text-green-200 px-4 py-2 rounded-full text-sm font-medium border border-green-400/30">
+                    <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
+                        <span className="bg-green-500/20 text-green-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-green-400/30">
                             📊 {course.Level || course.level || "Beginner"}
                         </span>
-                        <span className="bg-blue-500/20 text-blue-200 px-4 py-2 rounded-full text-sm font-medium border border-blue-400/30">
+                        <span className="bg-blue-500/20 text-blue-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-blue-400/30">
                             🌍 {course.Language || course.language || "English"}
                         </span>
-                        <span className="bg-purple-500/20 text-purple-200 px-4 py-2 rounded-full text-sm font-medium border border-purple-400/30">
+                        <span className="bg-purple-500/20 text-purple-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-purple-400/30">
                             📚{" "}
                             {course.Category ||
                                 course.category ||
                                 "Medical Education"}
                         </span>
-                        <span className="bg-orange-500/20 text-orange-200 px-4 py-2 rounded-full text-sm font-medium border border-orange-400/30">
+                        <span className="bg-orange-500/20 text-orange-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-orange-400/30">
                             🎯 {course.Field || course.field || "Healthcare"}
                         </span>
                     </div>
 
                     {/* Course Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                            <div className="flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-lg mb-4">
-                                <FaVideo className="text-blue-300 text-xl" />
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 lg:p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-blue-500/20 rounded-lg mb-2 sm:mb-3 lg:mb-4">
+                                <FaVideo className="text-blue-300 text-sm sm:text-lg lg:text-xl" />
                             </div>
-                            <div className="text-3xl font-bold text-white mb-1">
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                                 {course.videos?.length || 0}
                             </div>
-                            <div className="text-blue-200 text-sm">Videos</div>
+                            <div className="text-blue-200 text-xs sm:text-sm">
+                                Videos
+                            </div>
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                            <div className="flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-lg mb-4">
-                                <FaClock className="text-green-300 text-xl" />
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 lg:p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-green-500/20 rounded-lg mb-2 sm:mb-3 lg:mb-4">
+                                <FaClock className="text-green-300 text-sm sm:text-lg lg:text-xl" />
                             </div>
-                            <div className="text-3xl font-bold text-white mb-1">
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                                 {course.duration
                                     ? formatTotalDuration(course.duration * 60) // Convert minutes to seconds
                                     : "0h 0m"}
                             </div>
-                            <div className="text-blue-200 text-sm">
+                            <div className="text-blue-200 text-xs sm:text-sm">
                                 Duration
                             </div>
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                            <div className="flex items-center justify-center w-12 h-12 bg-orange-500/20 rounded-lg mb-4">
-                                <FaUsers className="text-orange-300 text-xl" />
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 lg:p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-orange-500/20 rounded-lg mb-2 sm:mb-3 lg:mb-4">
+                                <FaUsers className="text-orange-300 text-sm sm:text-lg lg:text-xl" />
                             </div>
-                            <div className="text-3xl font-bold text-white mb-1">
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                                 {courseStats?.enrolledCount || 0}
                             </div>
-                            <div className="text-blue-200 text-sm">
+                            <div className="text-blue-200 text-xs sm:text-sm">
                                 Students
                             </div>
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                            <div className="flex items-center justify-center w-12 h-12 bg-yellow-500/20 rounded-lg mb-4">
-                                <FaStar className="text-yellow-300 text-xl" />
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 lg:p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-yellow-500/20 rounded-lg mb-2 sm:mb-3 lg:mb-4">
+                                <FaStar className="text-yellow-300 text-sm sm:text-lg lg:text-xl" />
                             </div>
-                            <div className="text-3xl font-bold text-white mb-1">
+                            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
                                 {courseStats?.averageRating?.toFixed(1) ||
                                     "0.0"}
                             </div>
-                            <div className="text-blue-200 text-sm">Rating</div>
+                            <div className="text-blue-200 text-xs sm:text-sm">
+                                Rating
+                            </div>
                         </div>
                     </div>
                 </div>

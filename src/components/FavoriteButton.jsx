@@ -3,7 +3,20 @@ import PropTypes from "prop-types";
 import { useFavorite } from "../hooks/useFavorite";
 
 const FavoriteButton = ({ item, type, className = "", size = "w-6 h-6" }) => {
-    const { isFavorited, loading, toggleFavorite } = useFavorite(item.id, type);
+    // Handle different ID field names and ensure we have a valid ID
+    const itemId = item?.id || item?.ID || item?.Id;
+
+    // Use hook with itemId (can be undefined, hook should handle it)
+    const { isFavorited, loading, toggleFavorite } = useFavorite(itemId, type);
+
+    // Don't render if we don't have a valid item or ID
+    if (!item || !itemId) {
+        console.warn("FavoriteButton: Missing item or item ID", {
+            item,
+            itemId,
+        });
+        return null;
+    }
 
     const handleToggleFavorite = async (e) => {
         e.preventDefault();

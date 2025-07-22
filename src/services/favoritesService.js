@@ -28,11 +28,23 @@ export const addToLocalFavorites = (item, type) => {
     const favorites = getFavoritesFromStorage();
     const key = type === "course" ? "courses" : "programs";
 
+    // Handle different ID field names
+    const itemId = item.id || item.ID || item.Id;
+
+    if (!itemId) {
+        console.warn("addToLocalFavorites: Missing item ID", { item, type });
+        return favorites;
+    }
+
     // Check if already exists
-    const exists = favorites[key].some((fav) => fav.id === item.id);
+    const exists = favorites[key].some((fav) => {
+        const favId = fav.id || fav.ID || fav.Id;
+        return favId === itemId;
+    });
+
     if (!exists) {
         favorites[key].push({
-            id: item.id,
+            id: itemId, // Normalize to lowercase 'id'
             type,
             addedAt: new Date().toISOString(),
             ...item,
@@ -47,7 +59,10 @@ export const removeFromLocalFavorites = (id, type) => {
     const favorites = getFavoritesFromStorage();
     const key = type === "course" ? "courses" : "programs";
 
-    favorites[key] = favorites[key].filter((fav) => fav.id !== id);
+    favorites[key] = favorites[key].filter((fav) => {
+        const favId = fav.id || fav.ID || fav.Id;
+        return favId !== id;
+    });
     saveFavoritesToStorage(favorites);
 
     return favorites;
@@ -56,7 +71,10 @@ export const removeFromLocalFavorites = (id, type) => {
 export const isInLocalFavorites = (id, type) => {
     const favorites = getFavoritesFromStorage();
     const key = type === "course" ? "courses" : "programs";
-    return favorites[key].some((fav) => fav.id === id);
+    return favorites[key].some((fav) => {
+        const favId = fav.id || fav.ID || fav.Id;
+        return favId === id;
+    });
 };
 
 // API calls for authenticated users
