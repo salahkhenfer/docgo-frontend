@@ -10,12 +10,6 @@ const FavoritesPage = () => {
     const { favorites, loading, totalCount } = useFavorites();
     const { user } = useAppContext();
     const [activeTab, setActiveTab] = useState("all");
-    useEffect(() => {
-        console.log(
-            "FavoritesPage loaded with favorites:",
-            favorites ? favorites : "No favorites found"
-        );
-    }, [favorites]);
 
     const filterFavorites = () => {
         switch (activeTab) {
@@ -137,11 +131,10 @@ const FavoriteCard = ({ item, type }) => {
     const isProgram = type === "program";
 
     // Handle different ID field names
-    const itemId = item.id || item.ID || item.Id;
+    const itemId = item?.id || item?.ID || item?.Id;
 
     // Don't render if no valid item or ID
     if (!item || !itemId) {
-        console.warn("FavoriteCard: Missing item or item ID", { item, itemId });
         return null;
     }
 
