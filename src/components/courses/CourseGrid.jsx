@@ -6,8 +6,15 @@ import { ErrorMessage } from "../UI/ErrorMessage";
 
 export function CourseGrid({ filters }) {
     const { t } = useTranslation();
-    const { courses, loading, error, pagination, isAuthenticated, changePage } =
-        useCourses(filters);
+    const {
+        courses,
+        loading,
+        searchLoading,
+        error,
+        pagination,
+        isAuthenticated,
+        changePage,
+    } = useCourses(filters);
 
     if (loading) {
         return (
@@ -49,7 +56,7 @@ export function CourseGrid({ filters }) {
                 </h2>
 
                 {/* Guest mode indicator */}
-                {!isAuthenticated && (
+                {/* {!isAuthenticated && (
                     <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
                         <span className="text-blue-600 text-sm">
                             👋 {t("ViewingAsGuest") || "Viewing as guest"}
@@ -58,7 +65,7 @@ export function CourseGrid({ filters }) {
                             {t("LoginForFullAccess") || "Login for full access"}
                         </span>
                     </div>
-                )}
+                )} */}
             </div>
 
             {courses.length === 0 ? (
@@ -73,33 +80,51 @@ export function CourseGrid({ filters }) {
                 </div>
             ) : (
                 <>
-                    <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
-                        {courses.map((course) => (
-                            <CourseCard
-                                key={course.id}
-                                id={course.id}
-                                imageUrl={course.ImageUrl || course.coverImage}
-                                title={course.Title}
-                                description={
-                                    course.shortDescription ||
-                                    course.Description
-                                }
-                                price={course.Price}
-                                discountPrice={course.discountPrice}
-                                currency={course.Currency}
-                                level={course.Level}
-                                averageRating={course.stats?.averageRating}
-                                totalReviews={course.stats?.totalReviews}
-                                isEnrolled={course.userStatus?.isEnrolled}
-                                enrollmentStatus={
-                                    course.userStatus?.enrollmentStatus
-                                }
-                                progress={course.userStatus?.progress}
-                                hasImage={
-                                    !!course.ImageUrl || !!course.coverImage
-                                }
-                            />
-                        ))}
+                    <div
+                        className={`relative transition-all duration-300 ${
+                            searchLoading ? "opacity-60" : "opacity-100"
+                        }`}
+                    >
+                        {searchLoading && (
+                            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10 rounded-lg">
+                                <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-lg border">
+                                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                    <span className="text-gray-700 font-medium">
+                                        {t("Searching") || "Searching"}...
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
+                            {courses.map((course) => (
+                                <CourseCard
+                                    key={course.id}
+                                    id={course.id}
+                                    imageUrl={
+                                        course.ImageUrl || course.coverImage
+                                    }
+                                    title={course.Title}
+                                    description={
+                                        course.shortDescription ||
+                                        course.Description
+                                    }
+                                    price={course.Price}
+                                    discountPrice={course.discountPrice}
+                                    currency={course.Currency}
+                                    level={course.Level}
+                                    averageRating={course.stats?.averageRating}
+                                    totalReviews={course.stats?.totalReviews}
+                                    isEnrolled={course.userStatus?.isEnrolled}
+                                    enrollmentStatus={
+                                        course.userStatus?.enrollmentStatus
+                                    }
+                                    progress={course.userStatus?.progress}
+                                    hasImage={
+                                        !!course.ImageUrl || !!course.coverImage
+                                    }
+                                />
+                            ))}
+                        </div>
                     </div>
 
                     {/* Pagination */}

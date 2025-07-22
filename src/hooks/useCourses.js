@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { courseService } from "../services/courseService";
 import { useAppContext } from "../AppContext";
 
-export const useCourses = (initialParams = {}) => {
+export const useCourses = (externalFilters = {}) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [pagination, setPagination] = useState({
@@ -14,72 +15,36 @@ export const useCourses = (initialParams = {}) => {
         hasNextPage: false,
         hasPrevPage: false,
     });
-    const [filters, setFilters] = useState({
-        page: 1,
-        limit: 12,
-        category: "",
-        search: "",
-        sortBy: "createdAt",
-        order: "DESC",
-        price: "free",
-        certificate: "with",
-        date: "latest",
-        ...initialParams,
-    });
 
-    const fetchCourses = useCallback(
-        async (params = filters) => {
+    const fetchCourses = useCallback(async (params, isSearching = false) => {
+        if (isSearching) {
+            setSearchLoading(true);
+        } else {
             setLoading(true);
-            setError(null);
+        }
+        setError(null);
 
-            try {
-                const response = await courseService.getCourses(params);
-                setCourses(response.courses || []);
-                setPagination(response.pagination || {});
-                setIsAuthenticated(response.isAuthenticated || false);
-            } catch (err) {
-                setError(err.message || "Failed to fetch courses");
-                setCourses([]);
-                // If there's an error, treat as guest user
-                setIsAuthenticated(false);
-            } finally {
+        try {
+            const response = await courseService.getCourses(params);
+            setCourses(response.courses || []);
+            setPagination(response.pagination || {});
+            setIsAuthenticated(response.isAuthenticated || false);
+        } catch (err) {
+            setError(err.message || "Failed to fetch courses");
+            setCourses([]);
+            setIsAuthenticated(false);
+        } finally {
+            if (isSearching) {
+                setSearchLoading(false);
+            } else {
                 setLoading(false);
             }
-        },
-        [filters] // Remove userId dependency since it's not needed
-    );
+        }
+    }, []);
 
-    const updateFilters = useCallback((newFilters) => {
-        setFilters((prev) => ({
-            ...prev,
-            ...newFilters,
-            page: newFilters.page || 1, // Reset to page 1 when filters change
-        }));
-    }, []); // function will be created once and never change across re-renders.
-
-    const searchCourses = useCallback(
-        (searchTerm) => {
-            updateFilters({ search: searchTerm, page: 1 });
-        },
-        [updateFilters]
-    );
-
-    const changePage = useCallback(
-        (page) => {
-            updateFilters({ page });
-        },
-        [updateFilters]
-    );
-
-    const applyFilters = useCallback(
-        (filterData) => {
-            updateFilters({ ...filterData, page: 1 });
-        },
-        [updateFilters]
-    );
-
-    const resetFilters = useCallback(() => {
-        setFilters({
+    // Initial load
+    useEffect(() => {
+        const defaultFilters = {
             page: 1,
             limit: 12,
             category: "",
@@ -89,26 +54,35 @@ export const useCourses = (initialParams = {}) => {
             price: "free",
             certificate: "with",
             date: "latest",
-        });
-    }, []);
+            ...externalFilters,
+        };
+        fetchCourses(defaultFilters);
+    }, [fetchCourses]);
 
+    // Respond to external filter changes
     useEffect(() => {
-        fetchCourses(filters);
-    }, [filters, fetchCourses]);
+        if (Object.keys(externalFilters).length > 0) {
+            fetchCourses(externalFilters, true);
+        }
+    }, [externalFilters, fetchCourses]);
+
+    const changePage = useCallback(
+        (page) => {
+            const newFilters = { ...externalFilters, page };
+            fetchCourses(newFilters);
+        },
+        [externalFilters, fetchCourses]
+    );
 
     return {
         courses,
         loading,
+        searchLoading,
         error,
         pagination,
-        filters,
         isAuthenticated,
-        searchCourses,
         changePage,
-        applyFilters,
-        updateFilters,
-        resetFilters,
-        refetch: () => fetchCourses(filters),
+        refetch: () => fetchCourses(externalFilters),
     };
 };
 
@@ -131,7 +105,6 @@ export const useCourse = (courseId) => {
         } catch (err) {
             setError(err.message || "Failed to fetch course");
             setCourse(null);
-            // If there's an error, treat as guest user
             setIsAuthenticated(false);
         } finally {
             setLoading(false);
