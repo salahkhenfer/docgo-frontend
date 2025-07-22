@@ -37,6 +37,29 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
 
     return (
         <div className="relative min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] overflow-hidden">
+            <div className="absolute top-4 right-4 z-20">
+                <button
+                    onClick={handleToggleFavorite}
+                    disabled={favoriteLoading}
+                    className={`p-2 sm:p-3 rounded-full bg-white/20 backdrop-blur-md border
+                                             border-white/30 hover:bg-white/30 transition-all duration-200 ${
+                                                 favoriteLoading
+                                                     ? "opacity-50 cursor-not-allowed"
+                                                     : "hover:scale-110"
+                                             }`}
+                    title={
+                        isFavorited
+                            ? "Remove from favorites"
+                            : "Add to favorites"
+                    }
+                >
+                    {isFavorited ? (
+                        <BsHeartFill className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" />
+                    ) : (
+                        <BsHeart className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    )}
+                </button>
+            </div>
             {/* Creative Medical Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
                 {/* Medical DNA Helix Pattern */}
@@ -106,7 +129,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                     <div className="absolute bottom-32 left-32 text-white/20 text-4xl lg:text-5xl animate-pulse">
                         🎓
                     </div>
-                    <div className="absolute bottom-20 right-20 text-white/100 text-5xl lg:text-6xl animate-bounce">
+                    <div className="absolute bottom-20 right-20 text-white/20 text-5xl lg:text-6xl animate-bounce">
                         ⚕️
                     </div>
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-6xl lg:text-8xl">
@@ -119,31 +142,9 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+            <div className=" z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
                 <div className="max-w-4xl relative">
                     {/* Favorite Button - Top Right */}
-                    <div className="absolute -top-2 sm:top-0 right-0">
-                        <button
-                            onClick={handleToggleFavorite}
-                            disabled={favoriteLoading}
-                            className={`p-2 sm:p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 ${
-                                favoriteLoading
-                                    ? "opacity-50 cursor-not-allowed"
-                                    : "hover:scale-110"
-                            }`}
-                            title={
-                                isFavorited
-                                    ? "Remove from favorites"
-                                    : "Add to favorites"
-                            }
-                        >
-                            {isFavorited ? (
-                                <BsHeartFill className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" />
-                            ) : (
-                                <BsHeart className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                            )}
-                        </button>
-                    </div>
 
                     {/* Course Title */}
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useFavorites } from "../hooks/useFavorite";
@@ -10,6 +10,12 @@ const FavoritesPage = () => {
     const { favorites, loading, totalCount } = useFavorites();
     const { user } = useAppContext();
     const [activeTab, setActiveTab] = useState("all");
+    useEffect(() => {
+        console.log(
+            "FavoritesPage loaded with favorites:",
+            favorites ? favorites : "No favorites found"
+        );
+    }, [favorites]);
 
     const filterFavorites = () => {
         switch (activeTab) {
@@ -104,14 +110,18 @@ const FavoritesPage = () => {
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredFavorites.map((item) => {
                             // Handle different ID field names
                             const itemId = item.id || item.ID || item.Id;
                             return (
                                 <FavoriteCard
                                     key={`${item.type || "course"}-${itemId}`}
-                                    item={item}
+                                    item={
+                                        item.type === "course"
+                                            ? item.Course
+                                            : item.Program
+                                    }
                                     type={item.type || "course"}
                                 />
                             );
@@ -136,7 +146,10 @@ const FavoriteCard = ({ item, type }) => {
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+        <div
+            className="bg-white rounded-xl shadow-sm border
+         border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+        >
             {/* Image */}
             <div className="relative aspect-video bg-gradient-to-br from-blue-50 to-indigo-100">
                 {item.ThumbnailUrl || item.ImageUrl ? (
@@ -162,14 +175,14 @@ const FavoriteCard = ({ item, type }) => {
                 )}
 
                 {/* Favorite Button */}
-                <div className="absolute top-3 right-3">
+                {/* <div className="absolute top-3 right-3">
                     <FavoriteButton
                         item={item}
                         type={type}
                         className="bg-white/95 backdrop-blur-sm p-2 rounded-full hover:bg-white shadow-sm"
                         size="w-5 h-5"
                     />
-                </div>
+                </div> */}
 
                 {/* Type Badge */}
                 <div className="absolute top-3 left-3">
@@ -240,9 +253,9 @@ const FavoriteCard = ({ item, type }) => {
                                 </svg>
                             ))}
                         </div>
-                        <span className="ml-2 text-sm text-gray-600">
+                        {/* <span className="ml-2 text-sm text-gray-600">
                             {item.rating.average} ({item.rating.totalReviews})
-                        </span>
+                        </span> */}
                     </div>
                 )}
 
