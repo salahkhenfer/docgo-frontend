@@ -24,7 +24,7 @@ export function CourseCard({
     const [hasImageError, setHasImageError] = useState(false);
 
     const toggleLike = () => setLiked(!liked);
-
+   
     const formatPrice = (price) => {
         if (!price || price === 0) return t("Free") || "Free";
         return `${price} ${currency}`;

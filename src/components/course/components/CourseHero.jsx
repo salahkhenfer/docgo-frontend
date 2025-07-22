@@ -1,0 +1,186 @@
+import { FaClock, FaUsers, FaVideo, FaStar } from "react-icons/fa";
+import PropTypes from "prop-types";
+
+const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
+    return (
+        <div className="relative min-h-[500px] overflow-hidden">
+            {/* Creative Medical Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
+                {/* Medical DNA Helix Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                    <svg
+                        className="w-full h-full"
+                        viewBox="0 0 1000 1000"
+                        preserveAspectRatio="xMidYMid slice"
+                    >
+                        <defs>
+                            <pattern
+                                id="dna-helix"
+                                x="0"
+                                y="0"
+                                width="100"
+                                height="100"
+                                patternUnits="userSpaceOnUse"
+                            >
+                                <path
+                                    d="M20 10 Q50 30 80 10 Q50 50 20 70 Q50 90 80 70"
+                                    stroke="rgba(255,255,255,0.1)"
+                                    strokeWidth="2"
+                                    fill="none"
+                                />
+                                <circle
+                                    cx="20"
+                                    cy="10"
+                                    r="3"
+                                    fill="rgba(255,255,255,0.1)"
+                                />
+                                <circle
+                                    cx="80"
+                                    cy="10"
+                                    r="3"
+                                    fill="rgba(255,255,255,0.1)"
+                                />
+                                <circle
+                                    cx="20"
+                                    cy="70"
+                                    r="3"
+                                    fill="rgba(255,255,255,0.1)"
+                                />
+                                <circle
+                                    cx="80"
+                                    cy="70"
+                                    r="3"
+                                    fill="rgba(255,255,255,0.1)"
+                                />
+                            </pattern>
+                        </defs>
+                        <rect
+                            width="100%"
+                            height="100%"
+                            fill="url(#dna-helix)"
+                        />
+                    </svg>
+                </div>
+
+                {/* Floating Medical Icons */}
+                <div className="absolute inset-0">
+                    <div className="absolute top-5 right-20 text-white/10 text-6xl animate-pulse">
+                        <FaVideo />
+                    </div>
+                    <div className="absolute top-40 right-32 text-white/15 text-4xl animate-bounce">
+                        📚
+                    </div>
+                    <div className="absolute bottom-32 left-32 text-white/20 text-5xl animate-pulse">
+                        🎓
+                    </div>
+                    <div className="absolute bottom-20 right-20 text-white/100 text-6xl animate-bounce">
+                        ⚕️
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-8xl">
+                        🧬
+                    </div>
+                </div>
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-transparent"></div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 container mx-auto px-6 py-16">
+                <div className="max-w-4xl">
+                    {/* Course Title */}
+                    <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                        {course.Title || course.title}
+                    </h1>
+
+                    {/* Course Subtitle */}
+                    <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+                        {course.shortDescription || course.subtitle}
+                    </p>
+
+                    {/* Course Description */}
+                    <p className="text-lg text-blue-50 mb-10 leading-relaxed max-w-3xl">
+                        {course.Description || course.description}
+                    </p>
+
+                    {/* Course Tags */}
+                    <div className="flex flex-wrap gap-3 mb-8">
+                        <span className="bg-green-500/20 text-green-200 px-4 py-2 rounded-full text-sm font-medium border border-green-400/30">
+                            📊 {course.Level || course.level || "Beginner"}
+                        </span>
+                        <span className="bg-blue-500/20 text-blue-200 px-4 py-2 rounded-full text-sm font-medium border border-blue-400/30">
+                            🌍 {course.Language || course.language || "English"}
+                        </span>
+                        <span className="bg-purple-500/20 text-purple-200 px-4 py-2 rounded-full text-sm font-medium border border-purple-400/30">
+                            📚{" "}
+                            {course.Category ||
+                                course.category ||
+                                "Medical Education"}
+                        </span>
+                        <span className="bg-orange-500/20 text-orange-200 px-4 py-2 rounded-full text-sm font-medium border border-orange-400/30">
+                            🎯 {course.Field || course.field || "Healthcare"}
+                        </span>
+                    </div>
+
+                    {/* Course Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-12 h-12 bg-blue-500/20 rounded-lg mb-4">
+                                <FaVideo className="text-blue-300 text-xl" />
+                            </div>
+                            <div className="text-3xl font-bold text-white mb-1">
+                                {course.videos?.length || 0}
+                            </div>
+                            <div className="text-blue-200 text-sm">Videos</div>
+                        </div>
+
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-lg mb-4">
+                                <FaClock className="text-green-300 text-xl" />
+                            </div>
+                            <div className="text-3xl font-bold text-white mb-1">
+                                {course.duration
+                                    ? formatTotalDuration(course.duration * 60) // Convert minutes to seconds
+                                    : "0h 0m"}
+                            </div>
+                            <div className="text-blue-200 text-sm">
+                                Duration
+                            </div>
+                        </div>
+
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-12 h-12 bg-orange-500/20 rounded-lg mb-4">
+                                <FaUsers className="text-orange-300 text-xl" />
+                            </div>
+                            <div className="text-3xl font-bold text-white mb-1">
+                                {courseStats?.enrolledCount || 0}
+                            </div>
+                            <div className="text-blue-200 text-sm">
+                                Students
+                            </div>
+                        </div>
+
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                            <div className="flex items-center justify-center w-12 h-12 bg-yellow-500/20 rounded-lg mb-4">
+                                <FaStar className="text-yellow-300 text-xl" />
+                            </div>
+                            <div className="text-3xl font-bold text-white mb-1">
+                                {courseStats?.averageRating?.toFixed(1) ||
+                                    "0.0"}
+                            </div>
+                            <div className="text-blue-200 text-sm">Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+CourseHero.propTypes = {
+    course: PropTypes.object.isRequired,
+    courseStats: PropTypes.object,
+    formatTotalDuration: PropTypes.func.isRequired,
+};
+
+export default CourseHero;

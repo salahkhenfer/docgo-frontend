@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import courseService from "../services/courseService";
-import { useAuth } from "./useAuth";
+import { useAppContext } from "../AppContext";
 
 export const useCourse = (courseId) => {
     const [courseData, setCourseData] = useState(null);
@@ -12,7 +12,7 @@ export const useCourse = (courseId) => {
     const [refetching, setRefetching] = useState(false);
 
     const navigate = useNavigate();
-    const { isAuth, user } = useAuth();
+    const { isAuth, user } = useAppContext();
     const abortControllerRef = useRef(null);
 
     // Memoized fetch function to prevent unnecessary re-renders
