@@ -1,7 +1,8 @@
 import { t } from "i18next";
 import { useState } from "react";
-import { BsHeartFill } from "react-icons/bs";
+import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useFavorite } from "../../hooks/useFavorite";
 
 export function CourseCard({
     id,
@@ -19,12 +20,36 @@ export function CourseCard({
     progress = 0,
     hasImage = true,
 }) {
-    const [liked, setLiked] = useState(false);
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [hasImageError, setHasImageError] = useState(false);
 
-    const toggleLike = () => setLiked(!liked);
-   
+    // Use the favorite hook
+    const {
+        isFavorited,
+        loading: favoriteLoading,
+        toggleFavorite,
+    } = useFavorite(id, "course");
+
+    const handleToggleFavorite = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Create item object for local storage
+        const courseItem = {
+            id,
+            title,
+            description,
+            price,
+            discountPrice,
+            currency,
+            level,
+            imageUrl,
+            hasImage,
+        };
+
+        toggleFavorite(courseItem);
+    };
+
     const formatPrice = (price) => {
         if (!price || price === 0) return t("Free") || "Free";
         return `${price} ${currency}`;
@@ -188,12 +213,23 @@ export function CourseCard({
 
             {/* Heart Icon */}
             <div className="flex absolute z-10 gap-4 items-center self-start right-[21px] top-[21px]">
-                <BsHeartFill
-                    onClick={toggleLike}
-                    className={`w-10 h-10 cursor-pointer transition-colors duration-300 ${
-                        liked ? "text-red-600" : "text-gray-300"
-                    }`}
-                />
+                {isFavorited ? (
+                    <BsHeartFill
+                        onClick={handleToggleFavorite}
+                        className={`w-10 h-10 cursor-pointer transition-colors duration-300 text-red-600 ${
+                            favoriteLoading ? "opacity-50" : "hover:scale-110"
+                        }`}
+                        title="Remove from favorites"
+                    />
+                ) : (
+                    <BsHeart
+                        onClick={handleToggleFavorite}
+                        className={`w-10 h-10 cursor-pointer transition-colors duration-300 text-gray-400 hover:text-red-500 ${
+                            favoriteLoading ? "opacity-50" : "hover:scale-110"
+                        }`}
+                        title="Add to favorites"
+                    />
+                )}
             </div>
         </article>
     );

@@ -1,7 +1,35 @@
 import { FaClock, FaUsers, FaVideo, FaStar } from "react-icons/fa";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { useFavorite } from "../../../hooks/useFavorite";
 import PropTypes from "prop-types";
 
 const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
+    // Add favorite functionality
+    const {
+        isFavorited,
+        loading: favoriteLoading,
+        toggleFavorite,
+    } = useFavorite(course.id, "course");
+
+    const handleToggleFavorite = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Create item object for local storage
+        const courseItem = {
+            id: course.id,
+            title: course.Title || course.title,
+            description: course.Description || course.description,
+            price: course.Price || course.price,
+            discountPrice: course.discountPrice,
+            currency: course.Currency || course.currency,
+            level: course.Level || course.level,
+            imageUrl: course.ImageUrl || course.imageUrl,
+        };
+
+        toggleFavorite(courseItem);
+    };
+
     return (
         <div className="relative min-h-[500px] overflow-hidden">
             {/* Creative Medical Background */}
@@ -87,7 +115,31 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
 
             {/* Content */}
             <div className="relative z-10 container mx-auto px-6 py-16">
-                <div className="max-w-4xl">
+                <div className="max-w-4xl relative">
+                    {/* Favorite Button - Top Right */}
+                    <div className="absolute top-0 right-0">
+                        <button
+                            onClick={handleToggleFavorite}
+                            disabled={favoriteLoading}
+                            className={`p-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 ${
+                                favoriteLoading
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : "hover:scale-110"
+                            }`}
+                            title={
+                                isFavorited
+                                    ? "Remove from favorites"
+                                    : "Add to favorites"
+                            }
+                        >
+                            {isFavorited ? (
+                                <BsHeartFill className="w-6 h-6 text-red-400" />
+                            ) : (
+                                <BsHeart className="w-6 h-6 text-white" />
+                            )}
+                        </button>
+                    </div>
+
                     {/* Course Title */}
                     <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
                         {course.Title || course.title}

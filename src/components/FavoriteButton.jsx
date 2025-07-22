@@ -1,29 +1,14 @@
-import { useState } from "react";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import PropTypes from "prop-types";
-import { useFavorites } from "../context/FavoritesContext";
+import { useFavorite } from "../hooks/useFavorite";
 
 const FavoriteButton = ({ item, type, className = "", size = "w-6 h-6" }) => {
-    const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
-    const [loading, setLoading] = useState(false);
-
-    const isItemFavorite = isFavorite(item.id, type);
+    const { isFavorited, loading, toggleFavorite } = useFavorite(item.id, type);
 
     const handleToggleFavorite = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        setLoading(true);
-        try {
-            if (isItemFavorite) {
-                await removeFromFavorites(item.id, type);
-            } else {
-                await addToFavorites(item, type);
-            }
-        } catch (error) {
-            console.error("Error toggling favorite:", error);
-        } finally {
-            setLoading(false);
-        }
+        toggleFavorite(item);
     };
 
     return (
@@ -36,23 +21,16 @@ const FavoriteButton = ({ item, type, className = "", size = "w-6 h-6" }) => {
                 ${className}
             `}
             aria-label={
-                isItemFavorite ? `Remove from favorites` : `Add to favorites`
+                isFavorited ? `Remove from favorites` : `Add to favorites`
             }
         >
-            <svg
-                className={`${size} transition-colors duration-200`}
-                fill={isItemFavorite ? "#ef4444" : "none"}
-                stroke={isItemFavorite ? "#ef4444" : "currentColor"}
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            {isFavorited ? (
+                <BsHeartFill className={`${size} text-red-500`} />
+            ) : (
+                <BsHeart
+                    className={`${size} text-gray-400 hover:text-red-500`}
                 />
-            </svg>
+            )}
 
             {loading && (
                 <div className="absolute inset-0 flex items-center justify-center">

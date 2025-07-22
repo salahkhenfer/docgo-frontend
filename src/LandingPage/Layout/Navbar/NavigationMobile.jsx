@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import logo from "../../../assets/Logo.png";
 import LanguageDropdown from "../../../components/LanguageDropdown";
 import { useAppContext } from "../../../AppContext";
+import { useFavorites } from "../../../hooks/useFavorite";
 import CustomAvatar from "./Avatar"; // Import directly
-
 function NavigationMobile() {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,9 @@ function NavigationMobile() {
     const { user } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Add favorites hook
+    const { totalCount } = useFavorites();
 
     // Function to handle scrolling to sections
     const handleScrollToSection = (sectionId) => {
@@ -49,11 +53,28 @@ function NavigationMobile() {
                     <img
                         className="w-16 h-16 rounded-full transition-transform duration-300 hover:scale-105"
                         src={logo}
-                        alt="Godoc Agency logo"
+                        alt="Docgo Agency logo"
                     />
                 </Link>
 
                 <div className="flex items-center gap-4">
+                    <Link
+                        to="/favorites"
+                        className="text-customGray py-2  flex items-center gap-2 relative"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        {totalCount > 0 ? (
+                            <BsHeartFill className="w-4 h-4 text-xl text-red-500" />
+                        ) : (
+                            <BsHeart className="w-4 h-4 text-xl" />
+                        )}
+                        {/* {t("Favorites")} */}
+                        {totalCount > 0 && (
+                            <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
+                                {totalCount > 99 ? "99+" : totalCount}
+                            </span>
+                        )}
+                    </Link>
                     <LanguageDropdown />
 
                     {/* Use CustomAvatar directly with its own state */}
@@ -100,17 +121,20 @@ function NavigationMobile() {
                         </Link>
                         <Link
                             to="/favorites"
-                            className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2"
+                            className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2 relative"
                             onClick={() => setIsOpen(false)}
                         >
-                            <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                            </svg>
+                            {totalCount > 0 ? (
+                                <BsHeartFill className="w-4 h-4 text-red-500" />
+                            ) : (
+                                <BsHeart className="w-4 h-4" />
+                            )}
                             {t("Favorites")}
+                            {totalCount > 0 && (
+                                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
+                                    {totalCount > 99 ? "99+" : totalCount}
+                                </span>
+                            )}
                         </Link>
                         <button
                             onClick={() => handleScrollToSection("ourServices")}
