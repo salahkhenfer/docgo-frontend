@@ -10,7 +10,7 @@ import i18n from "./i18n";
 import { HeroUIProvider } from "@heroui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { AppProvider } from "./AppContext"; // Ensure the AppProvider is default exported
+import { AppProvider } from "./AppContext"; 
 import { FavoritesProvider } from "./context/FavoritesContext";
 
 createRoot(document.getElementById("root")).render(
