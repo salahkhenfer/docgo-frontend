@@ -55,6 +55,19 @@ export const courseService = {
         }
     },
 
+    // Enroll in a free course
+    enrollFreeCourse: async (courseId) => {
+        try {
+            const response = await api.post(`/Users/Courses/enroll-free`, {
+                courseId: courseId,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error enrolling in free course:", error);
+            throw error;
+        }
+    },
+
     // Get user's course applications
     getUserApplications: async () => {
         try {

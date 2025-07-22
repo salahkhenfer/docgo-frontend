@@ -15,6 +15,8 @@ import { ProgramDetails } from "./Pages/ProgramDetailes";
 import MyApplications from "./Pages/MyApplications";
 import AllCourses from "./Pages/AllCourses";
 import FavoritesPage from "./Pages/FavoritesPage";
+import PaymentPage from "./Pages/PaymentPage";
+import PaymentSuccessPage from "./Pages/PaymentSuccessPage";
 
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
 import QuizContent from "./Pages/QuizContent";
@@ -141,6 +143,16 @@ const Routers = createBrowserRouter([
                 path: "profile/edit",
                 loader: protectedCaseInsensitiveLoader,
                 element: <EditProfile />,
+            },
+            {
+                path: "payment/course/:courseId",
+                loader: protectedCaseInsensitiveLoader,
+                element: <PaymentPage />,
+            },
+            {
+                path: "payment/success/:courseId",
+                loader: protectedCaseInsensitiveLoader,
+                element: <PaymentSuccessPage />,
             },
         ],
     },

@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaDollarSign, FaClock, FaStar, FaPlay, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { courseService } from "../../services/courseService";
+import { useAppContext } from "../../AppContext";
 import MainLoading from "../../MainLoading";
+import Swal from 'sweetalert2';
 
 export const CourseDetails = () => {
-    const { t } = useTranslation();
     const { courseId } = useParams();
+    const navigate = useNavigate();
+    const { isAuth, user } = useAppContext();
     const [courseData, setCourseData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [enrolling, setEnrolling] = useState(false);
 
     useEffect(() => {
         const fetchCourseData = async () => {
@@ -77,6 +80,89 @@ export const CourseDetails = () => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+    };
+
+    // Handle enrollment click with authentication check
+    const handleEnrollClick = async () => {
+        // Check if user is authenticated
+        if (!isAuth || !user) {
+            // User is not authenticated, show authentication required message
+            // Replace the confirm with SweetAlert2
+            const result = await Swal.fire({
+                title: 'Authentication Required',
+                text: 'You need to log in to enroll in this course.',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Go to Login',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'rounded-lg',
+                    title: 'text-lg font-semibold',
+                    content: 'text-gray-600'
+                }
+            });
+
+            const confirmAuth = result.isConfirmed;
+
+            if (confirmAuth) {
+                // Navigate to login page with return URL
+                navigate(
+                    `/login?from=${encodeURIComponent(
+                        window.location.pathname
+                    )}`
+                );
+            }
+            return;
+        }
+
+        // User is authenticated, check if course is free or paid
+        const coursePrice = parseFloat(
+            courseData.course.discountPrice || courseData.course.Price
+        );
+
+        if (coursePrice === 0) {
+            // Free course - directly enroll
+            try {
+                setEnrolling(true);
+                console.log("Enrolling in free course...");
+
+                await courseService.enrollFreeCourse(courseId);
+
+                // Refresh course data to show enrolled status
+                const updatedCourse = await courseService.getCourse(courseId);
+                setCourseData(updatedCourse);
+
+                // Show success message
+                alert(
+                    "🎉 Successfully enrolled in the course! You can now access all content."
+                );
+
+                // Navigate to course videos
+                navigate(`/coursedetails/${courseId}/videos`);
+            } catch (error) {
+                console.error("Free enrollment error:", error);
+                let errorMessage =
+                    "Failed to enroll in the course. Please try again.";
+
+                if (error.response?.data?.error) {
+                    errorMessage = error.response.data.error;
+                }
+
+                alert(errorMessage);
+            } finally {
+                setEnrolling(false);
+            }
+        } else {
+            // Paid course - navigate to payment page
+            navigate(`/payment/course/${courseId}`, {
+                state: {
+                    course: courseData.course,
+                    enrollmentType: "course",
+                },
+            });
+        }
     };
 
     return (
@@ -162,18 +248,43 @@ export const CourseDetails = () => {
                         </div>
                     ) : (
                         <button
-                            className="px-6 py-3 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition"
+                            className="px-6 py-3 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
                             onClick={() => {
-                                // Handle enrollment/application logic here
-                                console.log("Apply for course");
+                                handleEnrollClick();
                             }}
+                            disabled={enrolling}
                         >
-                            {courseData.course.Price > 0
-                                ? `Enroll for ${
-                                      courseData.course.discountPrice ||
-                                      courseData.course.Price
-                                  } ${courseData.course.Currency || "DZD"}`
-                                : "Enroll for Free"}
+                            {enrolling ? (
+                                <span className="flex items-center gap-2">
+                                    <svg
+                                        className="animate-spin h-4 w-4"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            fill="none"
+                                        />
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        />
+                                    </svg>
+                                    Enrolling...
+                                </span>
+                            ) : courseData.course.Price > 0 ? (
+                                `Enroll for ${
+                                    courseData.course.discountPrice ||
+                                    courseData.course.Price
+                                } ${courseData.course.Currency || "DZD"}`
+                            ) : (
+                                "Enroll for Free"
+                            )}
                         </button>
                     )}
                 </div>
@@ -239,11 +350,11 @@ export const CourseDetails = () => {
                                             >
                                                 {formatDuration(video.duration)}
                                             </span>
-                                            {video.isPreview && (
+                                            {/* {video.isPreview && (
                                                 <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">
                                                     Preview
                                                 </span>
-                                            )}
+                                            )} */}
                                             {courseData.userStatus?.progress?.completedVideos?.includes(
                                                 video.id
                                             ) && (

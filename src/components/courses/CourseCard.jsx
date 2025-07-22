@@ -83,16 +83,35 @@ export function CourseCard({
                         {description}
                     </p>
 
-                    {/* Course Stats */}
                     <div className="flex items-center gap-4 mt-3">
-                        {averageRating && (
+                        {/* {averageRating && (
                             <div className="flex items-center gap-1">
-                                <span className="text-yellow-500">★</span>
-                                <span className="text-sm text-gray-600">
+                                <div className="flex items-center">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
+                                            key={star}
+                                            className={`text-lg ${
+                                                star <=
+                                                Math.floor(averageRating)
+                                                    ? "text-yellow-500"
+                                                    : star ===
+                                                          Math.ceil(
+                                                              averageRating
+                                                          ) &&
+                                                      averageRating % 1 !== 0
+                                                    ? "text-yellow-300"
+                                                    : "text-gray-300"
+                                            }`}
+                                        >
+                                            ★
+                                        </span>
+                                    ))}
+                                </div>
+                                <span className="text-sm text-gray-600 ml-1">
                                     {averageRating} ({totalReviews || 0})
-                                </span>
+                                </span> 
                             </div>
-                        )}
+                        )} */}
 
                         {level && (
                             <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
