@@ -38,7 +38,7 @@ const ProfileInfoSection = ({ profile }) => {
                         <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full">
                             <div className="w-5 h-5 bg-amber-400 rounded-full"></div>
                             <span className="text-sm font-medium text-gray-800">
-                                {t("profile.professional_member")}
+                                {t("profile_data.professional_member")}
                             </span>
                         </div>
                     </div>
@@ -47,28 +47,28 @@ const ProfileInfoSection = ({ profile }) => {
                             <CheckCircle className="w-5 h-5" />
                             <span>
                                 {profile.stats?.completed || 0}{" "}
-                                {t("profile.completed_courses")}
+                                {t("profile_data.completed_courses")}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 text-orange-500">
                             <Clock className="w-5 h-5" />
                             <span>
                                 {profile.stats?.inProgress || 0}{" "}
-                                {t("profile.in_progress_courses")}
+                                {t("profile_data.in_progress_courses")}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 text-blue-600">
                             <CheckCircle className="w-5 h-5" />
                             <span>
                                 {profile.stats?.totalCertificates || 0}{" "}
-                                {t("profile.certificates")}
+                                {t("profile_data.certificates")}
                             </span>
                         </div>
                     </div>
                     {profile.country && (
                         <div className="mt-4 text-gray-600">
                             <span className="font-medium">
-                                {t("profile.country")}:{" "}
+                                {t("profile_data.country")}:{" "}
                             </span>
                             {profile.country}
                         </div>
@@ -76,7 +76,7 @@ const ProfileInfoSection = ({ profile }) => {
                     {profile.studyField && (
                         <div className="mt-2 text-gray-600">
                             <span className="font-medium">
-                                {t("profile.study_field")}:{" "}
+                                {t("profile_data.study_field")}:{" "}
                             </span>
                             {profile.studyField}
                         </div>

@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { TbTargetArrow } from "react-icons/tb";
+import { useTranslation } from "react-i18next";
 import CourseInfo from "./CourseInfo";
 const CourseContent = ({
     course,
@@ -18,6 +19,8 @@ const CourseContent = ({
     upcomingMeets,
     certificate,
 }) => {
+    const { t } = useTranslation();
+
     return (
         <div className="space-y-8">
             {/* Prerequisites */}
@@ -26,7 +29,7 @@ const CourseContent = ({
                     <div className="flex items-center mb-4">
                         <FaClipboardList className="text-orange-500 text-xl mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            Prerequisites
+                            {t("course_data.prerequisites") || "Prerequisites"}
                         </h3>
                     </div>
                     <ul className="space-y-2">
@@ -50,7 +53,8 @@ const CourseContent = ({
                     <div className="flex items-center mb-4">
                         <TbTargetArrow className="text-green-500 text-xl mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            What You&apos;ll Learn
+                            {t("course_data.whatYouLearn") ||
+                                "What You'll Learn"}
                         </h3>
                     </div>
                     <div className="grid md:grid-cols-2 gap-3">
@@ -82,11 +86,12 @@ const CourseContent = ({
                     <div className="flex items-center">
                         <FaListUl className="text-blue-500 text-xl mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            Course Content
+                            {t("course_data.content")}
                         </h3>
                     </div>
                     <div className="text-sm text-gray-500">
-                        {course.videos?.length || 0} videos
+                        {course.videos?.length || 0}{" "}
+                        {t("course_data.videos") || "videos"}
                     </div>
                 </div>
 
@@ -161,7 +166,9 @@ const CourseContent = ({
                                                     </h4>
                                                     {video.isFree && (
                                                         <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full ml-2">
-                                                            Free Preview
+                                                            {t(
+                                                                "course.freePreview"
+                                                            ) || "Free Preview"}
                                                         </span>
                                                     )}
                                                 </div>
@@ -210,7 +217,10 @@ const CourseContent = ({
                 ) : (
                     <div className="text-center py-8">
                         <div className="text-gray-400 text-4xl mb-4">📹</div>
-                        <p className="text-gray-500">No videos available yet</p>
+                        <p className="text-gray-500">
+                            {t("course_data.noVideos") ||
+                                "No videos available yet"}
+                        </p>
                     </div>
                 )}
             </div>
@@ -221,7 +231,7 @@ const CourseContent = ({
                     <div className="flex items-center mb-4">
                         <span className="text-purple-500 text-xl mr-3">📚</span>
                         <h3 className="text-xl font-bold text-gray-900">
-                            Course Materials
+                            {t("course_data.materials") || "Course Materials"}
                         </h3>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">

@@ -1,5 +1,6 @@
 import { FaDollarSign, FaPlay, FaCheckCircle } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
+import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 const CourseSmallCard = ({
@@ -14,6 +15,8 @@ const CourseSmallCard = ({
     enrolling,
     handleEnrollClick,
 }) => {
+    const { t } = useTranslation();
+
     return (
         <div className="bg-white rounded-2xl shadow-2xl p-8 sticky top-6 border border-gray-100">
             {/* Course Thumbnail */}

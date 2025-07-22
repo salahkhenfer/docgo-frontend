@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next"; // Add this import
 const EditProfile = () => {
     const { user, updateUserProfile } = useAppContext();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [formData, setFormData] = useState({
@@ -25,7 +26,6 @@ const EditProfile = () => {
     });
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-    const { i18n } = useTranslation(); // Add this to get current language
     // Function to get country name based on current language
     const getCountryDisplayName = (countryString) => {
         const [french, arabic] = countryString.split(" / ");
@@ -33,7 +33,7 @@ const EditProfile = () => {
     };
     // Function to get placeholder text based on language
     const getSelectCountryText = () => {
-        return i18n.language === "ar" ? "اختر البلد" : "Choisissez le pays";
+        return t("editProfile.selectCountry") || "Select Country";
     };
     const getFields = (optionString) => {
         const [english_french, arabic] = optionString.split(" / ");
@@ -208,9 +208,7 @@ const EditProfile = () => {
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            {i18n.language === "ar"
-                                ? "تعديل الحساب الشخصي"
-                                : "Modifier le profil"}
+                            {t("editProfile.title") || "Edit Profile"}
                         </h1>
                         <button
                             onClick={() => navigate("/profile")}
@@ -267,12 +265,10 @@ const EditProfile = () => {
                                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 {uploadingImage
-                                    ? i18n.language === "ar"
-                                        ? "جاري تحميل الصورة..."
-                                        : "Téléchargement en cours..."
-                                    : i18n.language === "ar"
-                                    ? "تحميل صورة الملف الشخصي"
-                                    : "Télécharger la photo de profil"}
+                                    ? t("editProfile.uploadingImage") ||
+                                      "Uploading image..."
+                                    : t("editProfile.uploadProfileImage") ||
+                                      "Upload profile image"}
                             </button>
                         </div>
                         {/* Personal Information */}
@@ -282,9 +278,7 @@ const EditProfile = () => {
                                     htmlFor="firstName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    {i18n.language === "ar"
-                                        ? "الاسم الأول"
-                                        : "Nom"}{" "}
+                                    {t("editProfile.firstName") || "First Name"}{" "}
                                     *
                                 </label>
                                 <input
@@ -305,10 +299,7 @@ const EditProfile = () => {
                                     htmlFor="lastName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    {i18n.language === "ar"
-                                        ? "اسم العائلة"
-                                        : "Nom de famille"}{" "}
-                                    *
+                                    {t("editProfile.lastName") || "Last Name"} *
                                 </label>
                                 <input
                                     type="text"
@@ -328,10 +319,7 @@ const EditProfile = () => {
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {i18n.language === "ar"
-                                    ? "عنوان البريد الإلكتروني"
-                                    : "Adresse email"}{" "}
-                                *
+                                {t("editProfile.email") || "Email Address"} *
                             </label>
                             <input
                                 type="email"
@@ -348,9 +336,7 @@ const EditProfile = () => {
                                 htmlFor="phoneNumber"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {i18n.language === "ar"
-                                    ? "رقم الهاتف"
-                                    : "Numéro de téléphone"}
+                                {t("editProfile.phoneNumber") || "Phone Number"}
                             </label>
                             <input
                                 type="tel"
@@ -367,7 +353,7 @@ const EditProfile = () => {
                                 htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {i18n.language === "ar" ? "البلد" : "Pays"}
+                                {t("editProfile.country") || "Country"}
                             </label>
                             <select
                                 id="country"
@@ -397,9 +383,8 @@ const EditProfile = () => {
                         {/* Academic Information */}
                         <div className="border-t pt-6">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">
-                                {i18n.language === "ar"
-                                    ? "المعلومات الأكاديمية"
-                                    : "Informations académiques"}
+                                {t("editProfile.academicInformation") ||
+                                    "Academic Information"}
                             </h3>
 
                             <div className="space-y-4">
@@ -408,9 +393,8 @@ const EditProfile = () => {
                                         htmlFor="studyField"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        {i18n.language === "ar"
-                                            ? "التخصص الأكاديمي"
-                                            : "Domaine d'étude"}
+                                        {t("editProfile.studyField") ||
+                                            "Study Field"}
                                     </label>
                                     <select
                                         id="studyField"
@@ -430,9 +414,9 @@ const EditProfile = () => {
                                         }}
                                     >
                                         <option value="">
-                                            {i18n.language === "ar"
-                                                ? "اختر مجال الدراسة"
-                                                : "choisissez le domaine d'étude"}
+                                            {t(
+                                                "editProfile.selectStudyField"
+                                            ) || "Select Study Field"}
                                         </option>
                                         {StudyFields.map((field) => (
                                             <option key={field} value={field}>
@@ -447,9 +431,8 @@ const EditProfile = () => {
                                         htmlFor="studyDomain"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        {i18n.language === "ar"
-                                            ? "التخصص"
-                                            : "Spécialisation"}
+                                        {t("editProfile.studyDomain") ||
+                                            "Study Domain"}
                                     </label>
                                     <select
                                         id="studyDomain"
@@ -469,9 +452,9 @@ const EditProfile = () => {
                                         }}
                                     >
                                         <option value="">
-                                            {i18n.language === "ar"
-                                                ? "اختر التخصص"
-                                                : "choisissez la spécialisation"}
+                                            {t(
+                                                "editProfile.selectStudyDomain"
+                                            ) || "Select Study Domain"}
                                         </option>
                                         {StudyDomains.map((domain) => (
                                             <option key={domain} value={domain}>
@@ -511,9 +494,10 @@ const EditProfile = () => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             ></path>
                                         </svg>
-                                        Saving...
+                                        {t("editProfile.saving") || "Saving..."}
                                     </div>
                                 ) : (
+                                    t("editProfile.saveChanges") ||
                                     "Save Changes"
                                 )}
                             </button>
@@ -523,7 +507,7 @@ const EditProfile = () => {
                                 onClick={() => navigate("/profile")}
                                 className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                             >
-                                Cancel
+                                {t("editProfile.cancel") || "Cancel"}
                             </button>
                         </div>
                     </form>

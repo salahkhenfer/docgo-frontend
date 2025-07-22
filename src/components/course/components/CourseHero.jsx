@@ -1,9 +1,11 @@
 import { FaClock, FaUsers, FaVideo, FaStar } from "react-icons/fa";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 import { useFavorite } from "../../../hooks/useFavorite";
 import PropTypes from "prop-types";
 
 const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
+    const { t } = useTranslation();
     // Handle different ID field names
     const courseId = course?.id || course?.ID || course?.Id;
 
@@ -201,7 +203,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                                     : "0h 0m"}
                             </div>
                             <div className="text-blue-200 text-xs sm:text-sm">
-                                Duration
+                                {t("course_data.duration") || "Duration"}
                             </div>
                         </div>
 
@@ -213,7 +215,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                                 {courseStats?.enrolledCount || 0}
                             </div>
                             <div className="text-blue-200 text-xs sm:text-sm">
-                                Students
+                                {t("course_data.students") || "Students"}
                             </div>
                         </div>
 
@@ -226,7 +228,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                                     "0.0"}
                             </div>
                             <div className="text-blue-200 text-xs sm:text-sm">
-                                Rating
+                                {t("course_data.rating") || "Rating"}
                             </div>
                         </div>
                     </div>

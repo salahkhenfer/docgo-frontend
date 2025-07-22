@@ -18,7 +18,7 @@ const Register_Sterp_2 = ({
     backgroundImage = "../../src/assets/Login.png", // Default background image
     AnimatedSelect,
 }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     // Add local validation state
     const [phoneError, setPhoneError] = useState("");
@@ -53,9 +53,8 @@ const Register_Sterp_2 = ({
 
             if (!phoneRegex.test(phone)) {
                 const errorMessage =
-                    i18n.language === "ar"
-                        ? "تنسيق رقم الهاتف غير صالح."
-                        : "Le format du numéro de téléphone est invalide.";
+                    t("register.phoneValidationError") ||
+                    "Invalid phone format.";
                 setPhoneError(errorMessage);
                 return;
             }
@@ -65,21 +64,14 @@ const Register_Sterp_2 = ({
         handleSubmit(e);
     };
 
-    // Get localized text based on current language
-    const getText = (arabicText, frenchText) => {
-        return i18n.language === "ar" ? arabicText : frenchText;
-    };
-
     return (
         <div className="w-full transition-all duration-300 ease-in-out">
             <h2 className="text-2xl font-bold mb-2">
-                {getText("التسجيل", "S'inscrire")}
+                {t("register.title") || "Register"}
             </h2>
             <p className="text-gray-600 mb-6">
-                {getText(
-                    "مرحباً بك في DocGo، خطوتك الأولى نحو النجاح",
-                    "Bienvenue à Docgo, votre premier pas vers votre réussite"
-                )}
+                {t("register.welcome") ||
+                    "Welcome to DocGo, your first step towards success"}
             </p>
 
             {error && (
@@ -92,10 +84,8 @@ const Register_Sterp_2 = ({
                 {/* Country Selection */}
                 <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {getText(
-                            "في أي بلد تريد متابعة دراستك؟",
-                            "Dans quel pays souhaitez-vous poursuivre vos études ?"
-                        )}
+                        {t("register.countryQuestion") ||
+                            "In which country do you want to pursue your studies?"}
                     </label>
                     <select
                         name="country"
@@ -109,7 +99,7 @@ const Register_Sterp_2 = ({
                         }}
                     >
                         <option value="">
-                            {getText("اختر البلد", "Choisissez le pays")}
+                            {t("register.selectCountry") || "Select Country"}
                         </option>
                         {Countries.map((country) => (
                             <option key={country} value={country}>
@@ -122,10 +112,8 @@ const Register_Sterp_2 = ({
                 {/* Study Field Selection */}
                 <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {getText(
-                            "في أي مجال تريد متابعة دراستك؟",
-                            "Dans quel domaine souhaitez-vous poursuivre vos études ?"
-                        )}
+                        {t("register.fieldQuestion") ||
+                            "In which field do you want to pursue your studies?"}
                     </label>
                     <select
                         name="studyField"
@@ -139,10 +127,7 @@ const Register_Sterp_2 = ({
                         }}
                     >
                         <option value="">
-                            {getText(
-                                "اختر مجال الدراسة",
-                                "Choisissez le domaine d'étude"
-                            )}
+                            {t("register.selectField") || "Select Study Field"}
                         </option>
                         {StudyFields.map((field) => (
                             <option key={field} value={field}>
@@ -155,10 +140,8 @@ const Register_Sterp_2 = ({
                 {/* Study Domain Selection */}
                 <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {getText(
-                            "ما هو تخصصك؟",
-                            "Quelle est votre spécialisation ?"
-                        )}
+                        {t("register.domainQuestion") ||
+                            "What is your specialization?"}
                     </label>
                     <select
                         name="studyDomain"
@@ -172,10 +155,8 @@ const Register_Sterp_2 = ({
                         }}
                     >
                         <option value="">
-                            {getText(
-                                "اختر التخصص",
-                                "Choisissez la spécialisation"
-                            )}
+                            {t("register.selectDomain") ||
+                                "Select Specialization"}
                         </option>
                         {StudyDomains.map((domain) => (
                             <option key={domain} value={domain}>
@@ -188,18 +169,15 @@ const Register_Sterp_2 = ({
                 {/* Phone Number Input */}
                 <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {getText(
-                            "رقم الهاتف (اختياري)",
-                            "Numéro de téléphone (optionnel)"
-                        )}
+                        {t("register.phoneOptional") ||
+                            "Phone Number (optional)"}
                     </label>
                     <input
                         type="tel"
                         name="phoneNumber"
-                        placeholder={getText(
-                            "رقم الهاتف",
-                            "Votre numéro de téléphone"
-                        )}
+                        placeholder={
+                            t("register.phoneNumber") || "Phone Number"
+                        }
                         value={formData.phoneNumber || ""}
                         onChange={handlePhoneChange}
                         className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -235,7 +213,7 @@ const Register_Sterp_2 = ({
                             marginLeft: i18n.language === "ar" ? "0" : "1rem",
                         }}
                     >
-                        {getText("رجوع", "Retour")}
+                        {t("register.back") || "Back"}
                     </button>
                     <button
                         type="submit"
@@ -245,7 +223,7 @@ const Register_Sterp_2 = ({
                         {loading ? (
                             <InlineLoading borderColor="white" />
                         ) : (
-                            getText("إنهاء", "Finaliser")
+                            t("register.finish") || "Finish"
                         )}
                     </button>
                 </div>

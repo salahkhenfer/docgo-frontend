@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { IoMdRefresh } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useCourse } from "../../hooks/useCourse";
 import MainLoading from "../../MainLoading";
 
@@ -11,6 +12,7 @@ import CourseContent from "./components/CourseContent";
 import CourseReviews from "./components/CourseReviews";
 
 export const CourseDetails = () => {
+    const { t } = useTranslation();
     const { courseId } = useParams();
     const {
         courseData,
@@ -129,7 +131,9 @@ export const CourseDetails = () => {
                 <div className="fixed top-4 right-4 z-50">
                     <div className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg flex items-center text-sm sm:text-base">
                         <IoMdRefresh className="animate-spin mr-2 w-4 h-4" />
-                        <span className="hidden sm:inline">Refreshing...</span>
+                        <span className="hidden sm:inline">
+                            {t("course_data.refreshing") || "Refreshing..."}
+                        </span>
                         <span className="sm:hidden">...</span>
                     </div>
                 </div>
