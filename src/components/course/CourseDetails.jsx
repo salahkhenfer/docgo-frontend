@@ -1,63 +1,64 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { FaDollarSign, FaClock, FaStar, FaPlay, FaLock } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import {
+    FaDollarSign,
+    FaClock,
+    FaStar,
+    FaPlay,
+    FaLock,
+    FaRefresh,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { courseService } from "../../services/courseService";
-import { useAppContext } from "../../AppContext";
+import { useCourse } from "../../hooks/useCourse";
 import MainLoading from "../../MainLoading";
-import Swal from 'sweetalert2';
 
 export const CourseDetails = () => {
     const { courseId } = useParams();
-    const navigate = useNavigate();
-    const { isAuth, user } = useAppContext();
-    const [courseData, setCourseData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [enrolling, setEnrolling] = useState(false);
-
-    useEffect(() => {
-        const fetchCourseData = async () => {
-            try {
-                setLoading(true);
-                const response = await courseService.getCourse(courseId);
-                console.log("Fetched course data:", response);
-                setCourseData(response);
-                setError(null);
-            } catch (err) {
-                console.error("Error fetching course:", err);
-                setError("Failed to load course details. Please try again.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (courseId) {
-            fetchCourseData();
-        }
-    }, [courseId]);
+    const {
+        courseData,
+        loading,
+        enrolling,
+        refetching,
+        error,
+        hasError,
+        retry,
+        refresh,
+        handleEnrollClick,
+        isEnrolled,
+        isFree,
+        coursePrice,
+        currency,
+        hasData,
+    } = useCourse(courseId);
 
     if (loading) {
         return <MainLoading />;
     }
 
-    if (error) {
+    if (hasError) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="text-center">
                     <p className="text-red-500 mb-4">{error}</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Try Again
-                    </button>
+                    <div className="flex gap-2 justify-center">
+                        <button
+                            onClick={retry}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                        >
+                            Try Again
+                        </button>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                        >
+                            Reload Page
+                        </button>
+                    </div>
                 </div>
             </div>
         );
     }
 
-    if (!courseData) {
+    if (!hasData) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <p>Course not found</p>
@@ -66,7 +67,7 @@ export const CourseDetails = () => {
     }
 
     const handleVideoClick = (video) => {
-        if (!video.isPreview && !courseData.userStatus.isEnrolled) {
+        if (!video.isPreview && !isEnrolled) {
             console.log("Video is locked - user not enrolled");
             return;
         }
@@ -82,92 +83,21 @@ export const CourseDetails = () => {
         return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
     };
 
-    // Handle enrollment click with authentication check
-    const handleEnrollClick = async () => {
-        // Check if user is authenticated
-        if (!isAuth || !user) {
-            // User is not authenticated, show authentication required message
-            // Replace the confirm with SweetAlert2
-            const result = await Swal.fire({
-                title: 'Authentication Required',
-                text: 'You need to log in to enroll in this course.',
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Go to Login',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'rounded-lg',
-                    title: 'text-lg font-semibold',
-                    content: 'text-gray-600'
-                }
-            });
-
-            const confirmAuth = result.isConfirmed;
-
-            if (confirmAuth) {
-                // Navigate to login page with return URL
-                navigate(
-                    `/login?from=${encodeURIComponent(
-                        window.location.pathname
-                    )}`
-                );
-            }
-            return;
-        }
-
-        // User is authenticated, check if course is free or paid
-        const coursePrice = parseFloat(
-            courseData.course.discountPrice || courseData.course.Price
-        );
-
-        if (coursePrice === 0) {
-            // Free course - directly enroll
-            try {
-                setEnrolling(true);
-                console.log("Enrolling in free course...");
-
-                await courseService.enrollFreeCourse(courseId);
-
-                // Refresh course data to show enrolled status
-                const updatedCourse = await courseService.getCourse(courseId);
-                setCourseData(updatedCourse);
-
-                // Show success message
-                alert(
-                    "🎉 Successfully enrolled in the course! You can now access all content."
-                );
-
-                // Navigate to course videos
-                navigate(`/coursedetails/${courseId}/videos`);
-            } catch (error) {
-                console.error("Free enrollment error:", error);
-                let errorMessage =
-                    "Failed to enroll in the course. Please try again.";
-
-                if (error.response?.data?.error) {
-                    errorMessage = error.response.data.error;
-                }
-
-                alert(errorMessage);
-            } finally {
-                setEnrolling(false);
-            }
-        } else {
-            // Paid course - navigate to payment page
-            navigate(`/payment/course/${courseId}`, {
-                state: {
-                    course: courseData.course,
-                    enrollmentType: "course",
-                },
-            });
-        }
-    };
-
     return (
         <div className="flex flex-col max-w-full w-[797px] mx-auto px-4">
-            <header>
+            <header className="relative">
+                {/* Refresh button */}
+                <button
+                    onClick={refresh}
+                    disabled={refetching}
+                    className="absolute top-0 right-0 p-2 text-gray-500 hover:text-blue-500 transition-colors disabled:opacity-50"
+                    title="Refresh course data"
+                >
+                    <FaRefresh
+                        className={`${refetching ? "animate-spin" : ""}`}
+                    />
+                </button>
+
                 <h1 className="text-4xl font-bold text-zinc-800 max-md:text-3xl">
                     {courseData.course.Title}
                 </h1>
@@ -234,7 +164,7 @@ export const CourseDetails = () => {
 
                 {/* Enrollment Status and Actions */}
                 <div className="mt-5">
-                    {courseData.userStatus.isEnrolled ? (
+                    {isEnrolled ? (
                         <Link
                             to={`/coursedetails/${courseData.course.id}/videos`}
                             className="px-6 py-3 bg-green-500 text-white rounded-full text-sm hover:bg-green-600 transition"
@@ -249,9 +179,7 @@ export const CourseDetails = () => {
                     ) : (
                         <button
                             className="px-6 py-3 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
-                            onClick={() => {
-                                handleEnrollClick();
-                            }}
+                            onClick={handleEnrollClick}
                             disabled={enrolling}
                         >
                             {enrolling ? (
@@ -277,13 +205,10 @@ export const CourseDetails = () => {
                                     </svg>
                                     Enrolling...
                                 </span>
-                            ) : courseData.course.Price > 0 ? (
-                                `Enroll for ${
-                                    courseData.course.discountPrice ||
-                                    courseData.course.Price
-                                } ${courseData.course.Currency || "DZD"}`
-                            ) : (
+                            ) : isFree ? (
                                 "Enroll for Free"
+                            ) : (
+                                `Enroll for ${coursePrice} ${currency}`
                             )}
                         </button>
                     )}
@@ -298,9 +223,7 @@ export const CourseDetails = () => {
                 </h2>
                 <div className="space-y-3">
                     {courseData.course.videos?.map((video, index) => {
-                        const isLocked =
-                            !video.isPreview &&
-                            !courseData.userStatus.isEnrolled;
+                        const isLocked = !video.isPreview && !isEnrolled;
                         return (
                             <div
                                 key={video.id}
@@ -373,7 +296,7 @@ export const CourseDetails = () => {
                 </div>
 
                 {/* Info for locked content */}
-                {!courseData.userStatus.isEnrolled && (
+                {!isEnrolled && (
                     <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                         <p className="text-sm text-blue-800">
                             <FaLock className="inline mr-2" />
