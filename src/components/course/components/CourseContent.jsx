@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 import { TbTargetArrow } from "react-icons/tb";
 import { useTranslation } from "react-i18next";
 import CourseInfo from "./CourseInfo";
+import RichTextDisplay from "../../Common/RichTextEditor/RichTextDisplay";
+
 const CourseContent = ({
     course,
     userStatus,
@@ -24,27 +26,14 @@ const CourseContent = ({
     return (
         <div className="space-y-8">
             {/* Prerequisites */}
-            {course.prerequisites && course.prerequisites.length > 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <div className="flex items-center mb-4">
-                        <FaClipboardList className="text-orange-500 text-xl mr-3" />
-                        <h3 className="text-xl font-bold text-gray-900">
-                            {t("course_data.prerequisites") || "Prerequisites"}
-                        </h3>
-                    </div>
-                    <ul className="space-y-2">
-                        {course.prerequisites.map((prerequisite, index) => (
-                            <li key={index} className="flex items-start">
-                                <span className="text-orange-500 mr-3 mt-1">
-                                    •
-                                </span>
-                                <span className="text-gray-700">
-                                    {prerequisite}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            {course.prerequisites ? (
+                <RichTextDisplay
+                    content={course.prerequisites || course.prerequisites}
+                />
+            ) : (
+                <p className="text-gray-500">
+                    {t("course_data.no_prerequisites") || "No prerequisites"}
+                </p>
             )}
 
             {/* Learning Objectives */}

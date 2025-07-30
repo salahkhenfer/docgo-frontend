@@ -3,6 +3,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import { useFavorite } from "../../../hooks/useFavorite";
 import PropTypes from "prop-types";
+import RichTextDisplay from "../../Common/RichTextEditor/RichTextDisplay";
 
 const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
     const { t } = useTranslation();
@@ -158,7 +159,9 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
 
                     {/* Course Description */}
                     <p className="text-base sm:text-lg text-blue-50 mb-8 sm:mb-10 leading-relaxed max-w-3xl">
-                        {course.Description || course.description}
+                        <RichTextDisplay
+                            content={course.Description || course.description}
+                        />
                     </p>
 
                     {/* Course Tags */}
