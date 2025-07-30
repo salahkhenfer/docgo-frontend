@@ -27,6 +27,7 @@ import Certificate from "./Pages/Certificate";
 import Profile from "./Pages/Profile/Profile";
 import EditProfile from "./Pages/Profile/EditProfile";
 import NotificationsPage from "./Pages/NotificationsPage";
+import NotFound from "./pages/NotFound";
 
 // Case-insensitive loader
 const caseInsensitiveLoader = ({ request }) => {
@@ -172,6 +173,7 @@ const Routers = createBrowserRouter([
             </ProtectedRoute>
         ),
     },
+    { path: "*", element: <NotFound /> },
 ]);
 
 export default Routers;
