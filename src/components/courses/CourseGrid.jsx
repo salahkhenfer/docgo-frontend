@@ -3,7 +3,7 @@ import { CourseCard } from "./CourseCard";
 import { useCourses } from "../../hooks/useCourses";
 import { CourseCardSkeleton } from "../UI/LoadingSpinner";
 import { ErrorMessage } from "../UI/ErrorMessage";
-
+import { useEffect } from "react";
 export function CourseGrid({ filters }) {
     const { t } = useTranslation();
     const {
@@ -15,6 +15,9 @@ export function CourseGrid({ filters }) {
         isAuthenticated,
         changePage,
     } = useCourses(filters);
+    useEffect(() => {
+        console.log("Courses loaded:", courses);
+    }, [courses]);
 
     if (loading) {
         return (
@@ -95,7 +98,7 @@ export function CourseGrid({ filters }) {
                                 </div>
                             </div>
                         )}
-                        <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
+                        <div className="flex flex-wrap gap-8 items-center my-12 max-w-full w-[1280px] max-md:mt-10">
                             {courses.map((course) => (
                                 <CourseCard
                                     key={course.id}
@@ -105,8 +108,8 @@ export function CourseGrid({ filters }) {
                                     }
                                     title={course.Title}
                                     description={
-                                        course.shortDescription ||
-                                        course.Description
+                                        course.shortDescription || null
+                                        // course.Description
                                     }
                                     price={course.Price}
                                     discountPrice={course.discountPrice}

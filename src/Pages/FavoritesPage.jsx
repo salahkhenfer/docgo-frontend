@@ -145,27 +145,34 @@ const FavoriteCard = ({ item, type }) => {
         >
             {/* Image */}
             <div className="relative aspect-video bg-gradient-to-br from-blue-50 to-indigo-100">
-                {item.ThumbnailUrl || item.ImageUrl ? (
-                    <img
-                        src={item.ThumbnailUrl || item.ImageUrl}
-                        alt={item.Title}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <svg
-                            className="w-16 h-16"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            {isProgram ? (
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                            ) : (
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-                            )}
-                        </svg>
-                    </div>
-                )}
+                {
+                    // item.ThumbnailUrl ||
+
+                    item.ImageUrl ? (
+                        <img
+                            src={
+                                // item.ThumbnailUrl ||
+                                item.ImageUrl
+                            }
+                            alt={item.Title}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <svg
+                                className="w-16 h-16"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                {isProgram ? (
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                ) : (
+                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                                )}
+                            </svg>
+                        </div>
+                    )
+                }
 
                 {/* Favorite Button */}
                 {/* <div className="absolute top-3 right-3">

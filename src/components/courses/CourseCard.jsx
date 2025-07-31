@@ -22,6 +22,8 @@ export function CourseCard({
 }) {
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [hasImageError, setHasImageError] = useState(false);
+    const defaultThumbnail =
+        "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
 
     // Use the favorite hook
     const {
@@ -33,7 +35,8 @@ export function CourseCard({
     const handleToggleFavorite = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
+        const defaultThumbnail =
+            "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
         // Create item object for local storage
         const courseItem = {
             id,
@@ -43,7 +46,8 @@ export function CourseCard({
             discountPrice,
             currency,
             level,
-            imageUrl,
+            imageUrl: imageUrl || defaultThumbnail,
+
             hasImage,
         };
 
@@ -85,7 +89,7 @@ export function CourseCard({
                         {/* Actual Image */}
                         {!hasImageError && (
                             <img
-                                src={imageUrl}
+                                src={imageUrl || defaultThumbnail}
                                 alt={title}
                                 onLoad={() => setIsImageLoaded(true)}
                                 onError={() => setHasImageError(true)}
