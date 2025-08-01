@@ -153,14 +153,15 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                     </h1>
 
                     {/* Course Subtitle */}
-                    <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-6 sm:mb-8 leading-relaxed">
+                    <p className="text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 leading-relaxed">
                         {course.shortDescription || course.subtitle}
                     </p>
 
                     {/* Course Description */}
-                    <p className="text-base sm:text-lg text-blue-50 mb-8 sm:mb-10 leading-relaxed max-w-3xl">
+                    <p className="text-base sm:text-lg text-white mb-8 sm:mb-10 leading-relaxed max-w-3xl">
                         <RichTextDisplay
                             content={course.Description || course.description}
+                            className="text-white"
                         />
                     </p>
 
