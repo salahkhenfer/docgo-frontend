@@ -103,9 +103,7 @@ export function CourseGrid({ filters }) {
                                 <CourseCard
                                     key={course.id}
                                     id={course.id}
-                                    imageUrl={
-                                        course.ImageUrl || course.coverImage
-                                    }
+                                    Image={course.Image || course.coverImage}
                                     title={course.Title}
                                     description={
                                         course.shortDescription || null
@@ -123,7 +121,7 @@ export function CourseGrid({ filters }) {
                                     }
                                     progress={course.userStatus?.progress}
                                     hasImage={
-                                        !!course.ImageUrl || !!course.coverImage
+                                        !!course.Image || !!course.coverImage
                                     }
                                 />
                             ))}

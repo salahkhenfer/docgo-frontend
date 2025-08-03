@@ -70,6 +70,74 @@
         "whatYouLearn": "Ce que vous apprendrez",
         "content": "Contenu du cours"
     },
+    "programs": {
+        "title": "Programmes Éducatifs",
+        "subtitle": "Découvrez nos programmes d'excellence pour votre avenir académique",
+        "featuredBadge": "Vedette",
+        "video": "Vidéo",
+        "viewDetails": "Voir les détails",
+        "applyNow": "Postuler maintenant",
+        "share": "Partager",
+        "save": "Sauvegarder",
+        "views": "vues",
+        "applicants": "candidats",
+        "deadline": "Date limite",
+        "startDate": "Date de début",
+        "duration": "Durée",
+        "type": "Type",
+        "contact": "Contact",
+        "website": "Site web",
+        "visitWebsite": "Visiter le site web",
+        "attachments": "Pièces jointes",
+        "downloadFiles": "Télécharger les fichiers",
+        "description": "Description",
+        "requirements": "Exigences",
+        "benefits": "Avantages",
+        "programInfo": "Informations du programme",
+        "relatedPrograms": "Programmes similaires",
+        "backToPrograms": "Retour aux programmes",
+        "notFound": "Programme non trouvé",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "videoNotSupported": "Votre navigateur ne supporte pas les vidéos HTML5",
+        "notDefined": "Non défini",
+        "search": {
+            "placeholder": "Rechercher des programmes..."
+        },
+        "filters": {
+            "allCategories": "Toutes les catégories",
+            "allOrganizations": "Toutes les organisations",
+            "allPrograms": "Tous les programmes",
+            "featuredOnly": "Programmes vedettes uniquement"
+        },
+        "sort": {
+            "label": "Trier par",
+            "newest": "Plus récents",
+            "title": "Titre",
+            "deadline": "Date limite",
+            "rating": "Note"
+        },
+        "results": {
+            "count": "résultats trouvés"
+        },
+        "status": {
+            "open": "Ouvert",
+            "closed": "Fermé",
+            "comingSoon": "Bientôt disponible",
+            "unknown": "Statut inconnu"
+        },
+        "empty": {
+            "title": "Aucun programme trouvé",
+            "description": "Essayez de modifier vos critères de recherche ou de supprimer certains filtres."
+        },
+        "featured": {
+            "title": "Programmes Vedettes",
+            "subtitle": "Découvrez nos programmes les plus populaires et les mieux notés"
+        },
+        "viewAllFeatured": "Voir tous les programmes vedettes"
+    },
+    "common": {
+        "retry": "Réessayer"
+    },
     "Courses": "Cours",
     "Programs": "Programmes",
     "Favorites": "Favoris",

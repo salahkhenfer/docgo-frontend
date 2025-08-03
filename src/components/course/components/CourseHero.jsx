@@ -30,7 +30,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
             discountPrice: course.discountPrice,
             currency: course.Currency || course.currency,
             level: course.Level || course.level,
-            imageUrl: course.ImageUrl || course.imageUrl,
+            Image: course.Image || course.Image,
         };
 
         toggleFavorite(courseItem);

@@ -28,6 +28,8 @@ import Profile from "./Pages/Profile/Profile";
 import EditProfile from "./Pages/Profile/EditProfile";
 import NotificationsPage from "./Pages/NotificationsPage";
 import NotFound from "./pages/NotFound";
+import Programs from "./pages/Programs/Programs";
+import ProgramDetail from "./pages/Programs/ProgramDetail";
 
 // Case-insensitive loader
 const caseInsensitiveLoader = ({ request }) => {
@@ -85,12 +87,20 @@ const Routers = createBrowserRouter([
                 element: <ProgramDetails />,
             },
             {
+                path: "programs",
+                element: <Programs />,
+            },
+            {
+                path: "programs/:id",
+                element: <ProgramDetail />,
+            },
+            {
                 path: "myapplications",
                 loader: protectedCaseInsensitiveLoader,
                 element: <MyApplications />,
             },
             {
-                path: "allcourses",
+                path: "Courses",
                 element: <AllCourses />,
             },
             {

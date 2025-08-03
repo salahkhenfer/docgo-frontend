@@ -118,7 +118,7 @@ const Profile = () => {
         }`,
         progress: Math.round(progress.CurrentProgress || 0),
         duration: progress.Course?.Duration,
-        imageUrl: progress.Course?.ImageUrl,
+        Image: progress.Course?.Image,
         isCompleted: progress.IsCompleted,
         lastWatchedAt: progress.LastWatchedAt,
     }));
@@ -157,8 +157,8 @@ const Profile = () => {
             id: cert.id,
             title: `Certificate - ${cert.Course?.Title}`,
             issuer: "DocGo Platform",
-            imageUrl:
-                cert.Course?.ImageUrl ||
+            Image:
+                cert.Course?.Image ||
                 "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
             officialUrl: cert.certificateUrl || "#",
             issueDate: cert.createdAt,

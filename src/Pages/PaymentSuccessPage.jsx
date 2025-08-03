@@ -99,9 +99,9 @@ const PaymentSuccessPage = () => {
                             Course Enrolled
                         </h3>
                         <div className="flex items-center gap-3">
-                            {courseData.ImageUrl && (
+                            {courseData.Image && (
                                 <img
-                                    src={courseData.ImageUrl}
+                                    src={courseData.Image}
                                     alt={courseData.Title}
                                     className="w-12 h-12 object-cover rounded"
                                 />

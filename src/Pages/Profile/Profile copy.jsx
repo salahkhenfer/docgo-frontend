@@ -120,8 +120,7 @@ const Profile = () => {
                 id: 1,
                 title: "Certificat UI/UX Design",
                 issuer: "Adobe",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+                Image: "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
                 officialUrl:
                     "https://adobe.com/certificates/ux-design-cert-123",
                 issueDate: "2024-01-15",
@@ -130,8 +129,7 @@ const Profile = () => {
                 id: 2,
                 title: "Certificat React Developer",
                 issuer: "Meta",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+                Image: "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
                 officialUrl: "https://meta.com/certificates/react-dev-456",
                 issueDate: "2024-02-01",
             },
@@ -139,8 +137,7 @@ const Profile = () => {
                 id: 3,
                 title: "Certificat Digital Marketing",
                 issuer: "Google",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+                Image: "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
                 officialUrl:
                     "https://google.com/certificates/digital-marketing-789",
                 issueDate: "2024-01-28",
@@ -149,8 +146,7 @@ const Profile = () => {
                 id: 4,
                 title: "Certificat Project Management",
                 issuer: "PMI",
-                imageUrl:
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+                Image: "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
                 officialUrl: "https://pmi.org/certificates/project-mgmt-101",
                 issueDate: "2024-02-10",
             },

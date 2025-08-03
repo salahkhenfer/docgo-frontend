@@ -72,6 +72,74 @@
         "content": "محتوى الدورة",
         "whatYouLearn": "ما ستتعلمه"
     },
+    "programs": {
+        "title": "البرامج التعليمية",
+        "subtitle": "اكتشف برامجنا المتميزة لمستقبلك الأكاديمي",
+        "featuredBadge": "مميز",
+        "video": "فيديو",
+        "viewDetails": "عرض التفاصيل",
+        "applyNow": "تقدم الآن",
+        "share": "مشاركة",
+        "save": "حفظ",
+        "views": "مشاهدة",
+        "applicants": "متقدمين",
+        "deadline": "الموعد النهائي",
+        "startDate": "تاريخ البدء",
+        "duration": "المدة",
+        "type": "النوع",
+        "contact": "التواصل",
+        "website": "الموقع الإلكتروني",
+        "visitWebsite": "زيارة الموقع",
+        "attachments": "المرفقات",
+        "downloadFiles": "تحميل الملفات",
+        "description": "الوصف",
+        "requirements": "المتطلبات",
+        "benefits": "المزايا",
+        "programInfo": "معلومات البرنامج",
+        "relatedPrograms": "برامج مشابهة",
+        "backToPrograms": "العودة للبرامج",
+        "notFound": "البرنامج غير موجود",
+        "linkCopied": "تم نسخ الرابط",
+        "videoNotSupported": "متصفحك لا يدعم فيديو HTML5",
+        "notDefined": "غير محدد",
+        "search": {
+            "placeholder": "البحث في البرامج..."
+        },
+        "filters": {
+            "allCategories": "جميع الفئات",
+            "allOrganizations": "جميع المنظمات",
+            "allPrograms": "جميع البرامج",
+            "featuredOnly": "البرامج المميزة فقط"
+        },
+        "sort": {
+            "label": "ترتيب حسب",
+            "newest": "الأحدث",
+            "title": "العنوان",
+            "deadline": "الموعد النهائي",
+            "rating": "التقييم"
+        },
+        "results": {
+            "count": "نتيجة موجودة"
+        },
+        "status": {
+            "open": "مفتوح",
+            "closed": "مغلق",
+            "comingSoon": "قريباً",
+            "unknown": "حالة غير معروفة"
+        },
+        "empty": {
+            "title": "لم يتم العثور على برامج",
+            "description": "حاول تعديل معايير البحث أو إزالة بعض المرشحات."
+        },
+        "featured": {
+            "title": "البرامج المميزة",
+            "subtitle": "اكتشف برامجنا الأكثر شعبية والأعلى تقييماً"
+        },
+        "viewAllFeatured": "عرض جميع البرامج المميزة"
+    },
+    "common": {
+        "retry": "إعادة المحاولة"
+    },
     "Programs": "  البرامج المتاحة",
     "Courses": "الدورات",
     "Favorites": "المفضلة",

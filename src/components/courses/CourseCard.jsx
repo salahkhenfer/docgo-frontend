@@ -6,7 +6,7 @@ import { useFavorite } from "../../hooks/useFavorite";
 
 export function CourseCard({
     id,
-    imageUrl,
+    Image,
     title,
     description,
     price,
@@ -46,7 +46,7 @@ export function CourseCard({
             discountPrice,
             currency,
             level,
-            imageUrl: imageUrl || defaultThumbnail,
+            Image: Image || defaultThumbnail,
 
             hasImage,
         };
@@ -89,7 +89,7 @@ export function CourseCard({
                         {/* Actual Image */}
                         {!hasImageError && (
                             <img
-                                src={imageUrl || defaultThumbnail}
+                                src={Image || defaultThumbnail}
                                 alt={title}
                                 onLoad={() => setIsImageLoaded(true)}
                                 onError={() => setHasImageError(true)}

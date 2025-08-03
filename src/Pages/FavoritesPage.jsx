@@ -97,7 +97,7 @@ const FavoritesPage = () => {
                             your favorites!
                         </p>
                         <Link
-                            to="/allcourses"
+                            to="/Courses"
                             className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                         >
                             Browse Courses
@@ -148,11 +148,11 @@ const FavoriteCard = ({ item, type }) => {
                 {
                     // item.ThumbnailUrl ||
 
-                    item.ImageUrl ? (
+                    item.Image ? (
                         <img
                             src={
                                 // item.ThumbnailUrl ||
-                                item.ImageUrl
+                                item.Image
                             }
                             alt={item.Title}
                             className="w-full h-full object-cover"

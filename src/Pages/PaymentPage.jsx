@@ -163,9 +163,9 @@ const PaymentPage = () => {
                             {/* Course Info */}
                             <div className="mb-6">
                                 <div className="flex items-start gap-3">
-                                    {courseData.ImageUrl && (
+                                    {courseData.Image && (
                                         <img
-                                            src={courseData.ImageUrl}
+                                            src={courseData.Image}
                                             alt={courseData.Title}
                                             className="w-16 h-16 object-cover rounded-lg"
                                         />
