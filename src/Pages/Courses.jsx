@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CourseGrid } from "../components/courses/CourseGrid";
 import { SearchFilters } from "../components/courses/SearchFilters";
 
-export default function AllCourses() {
+export default function Courses() {
     const [filters, setFilters] = useState({
         page: 1,
         limit: 12,
