@@ -82,7 +82,7 @@ export function CourseCard({
             <div className="flex z-0 flex-col flex-1 shrink my-auto w-full bg-white basis-0 min-w-60 rounded-xl shadow-md p-4">
                 {hasImage ? (
                     <>
-                        {/* Skeleton shown while image loads or fails */}
+                        {/* Skeleton shown while Image loads or fails */}
                         {(!isImageLoaded || hasImageError) && (
                             <div className="w-full absolute aspect-[2.06] bg-gray-200 animate-pulse rounded-lg mb-4" />
                         )}

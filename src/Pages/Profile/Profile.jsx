@@ -159,7 +159,7 @@ const Profile = () => {
             issuer: "DocGo Platform",
             Image:
                 cert.Course?.Image ||
-                "https://cdn.builder.io/api/v1/image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
+                "https://cdn.builder.io/api/v1/Image/assets/TEMP/be9d9db59ed58e6e4a710e2dbe87bba966958ca6",
             officialUrl: cert.certificateUrl || "#",
             issueDate: cert.createdAt,
             course: cert.Course,

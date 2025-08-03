@@ -30,7 +30,7 @@ const ProfileInfoSection = ({ profile }) => {
                                 className="w-full h-full object-cover"
                                 alt="Profile avatar"
                                 onError={(e) => {
-                                    // Hide the broken image and show fallback
+                                    // Hide the broken Image and show fallback
                                     e.target.style.display = "none";
                                     const fallback =
                                         e.target.nextElementSibling;
@@ -40,7 +40,7 @@ const ProfileInfoSection = ({ profile }) => {
                                 }}
                             />
                         ) : null}
-                        {/* Fallback avatar - always rendered but hidden if image loads */}
+                        {/* Fallback avatar - always rendered but hidden if Image loads */}
                         <div
                             className={`w-full h-full flex items-center justify-center ${
                                 profile?.avatar ? "hidden" : "flex"

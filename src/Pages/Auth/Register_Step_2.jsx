@@ -15,7 +15,7 @@ const Register_Sterp_2 = ({
     error,
     setError,
     setLoading,
-    backgroundImage = "../../src/assets/Login.png", // Default background image
+    backgroundImage = "../../src/assets/Login.png", // Default background Image
     AnimatedSelect,
 }) => {
     const { t, i18n } = useTranslation();

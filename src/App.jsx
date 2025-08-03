@@ -32,25 +32,25 @@ function App() {
     useEffect(() => {
         setLoading(true);
 
-        const fetch_images = () => {
+        const fetch_Images = () => {
             return new Promise((resolve) => {
-                const images = [Logo];
+                const Images = [Logo];
                 let loadedCount = 0;
 
-                if (images.length === 0) {
+                if (Images.length === 0) {
                     resolve();
                     return;
                 }
 
-                images.forEach((imageSrc) => {
+                Images.forEach((ImageSrc) => {
                     const img = new Image();
                     img.onload = img.onerror = () => {
                         loadedCount++;
-                        if (loadedCount === images.length) {
+                        if (loadedCount === Images.length) {
                             resolve();
                         }
                     };
-                    img.src = imageSrc;
+                    img.src = ImageSrc;
                 });
             });
         };
@@ -83,7 +83,7 @@ function App() {
             });
         };
 
-        Promise.all([fetch_images(), fetch_fonts()]).finally(() => {
+        Promise.all([fetch_Images(), fetch_fonts()]).finally(() => {
             setLoading(false);
         });
     }, []);

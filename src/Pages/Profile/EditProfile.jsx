@@ -53,8 +53,8 @@ const EditProfile = () => {
         if (!ProfilePic) return;
 
         // Validate file type
-        if (!ProfilePic.type.startsWith("image/")) {
-            toast.error("Please select a valid image file");
+        if (!ProfilePic.type.startsWith("Image/")) {
+            toast.error("Please select a valid Image file");
             return;
         }
 
@@ -88,10 +88,10 @@ const EditProfile = () => {
                 }));
                 toast.success("Profile picture uploaded successfully!");
             } else {
-                toast.error(data.error || "Failed to upload image");
+                toast.error(data.error || "Failed to upload Image");
             }
         } catch (error) {
-            console.error("Error uploading image:", error);
+            console.error("Error uploading Image:", error);
             toast.error("Network error. Please try again.");
         } finally {
             setUploadingImage(false);
@@ -254,7 +254,7 @@ const EditProfile = () => {
                             <input
                                 type="file"
                                 id="profile-pic-input"
-                                accept="image/*"
+                                accept="Image/*"
                                 onChange={handleImageUpload}
                                 className="hidden"
                             />
@@ -266,9 +266,9 @@ const EditProfile = () => {
                             >
                                 {uploadingImage
                                     ? t("editProfile.uploadingImage") ||
-                                      "Uploading image..."
+                                      "Uploading Image..."
                                     : t("editProfile.uploadProfileImage") ||
-                                      "Upload profile image"}
+                                      "Upload profile Image"}
                             </button>
                         </div>
                         {/* Personal Information */}
