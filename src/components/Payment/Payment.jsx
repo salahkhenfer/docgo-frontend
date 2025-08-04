@@ -143,7 +143,7 @@
 //                         >
 //                             <div className="flex flex-col justify-center self-stretch p-1.5 my-auto bg-sky-50 rounded-2xl border border-solid w-[94px]">
 //                                 <img
-//                                     src="https://cdn.builder.io/api/v1/Image/assets/TEMP/ec4b9f8d9b703febf8b188631f45fd1e2677e01f746e06f68f6fea86a813530b?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
+//                                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec4b9f8d9b703febf8b188631f45fd1e2677e01f746e06f68f6fea86a813530b?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
 //                                     alt="Visa"
 //                                     className="object-contain w-full aspect-[1.78]"
 //                                 />
@@ -159,7 +159,7 @@
 //                         >
 //                             <div className="flex gap-1.5 justify-center items-center self-stretch p-1.5 my-auto rounded-2xl border border-solid w-[94px]">
 //                                 <img
-//                                     src="https://cdn.builder.io/api/v1/Image/assets/TEMP/7376212805dc227f9035e4c3490af46054730168a65f266c143884a1ab8bfe77?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
+//                                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/7376212805dc227f9035e4c3490af46054730168a65f266c143884a1ab8bfe77?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
 //                                     alt="Baridi Mob"
 //                                     className="object-contain self-stretch my-auto aspect-square w-[46px]"
 //                                 />

@@ -36,7 +36,7 @@ export default function Certificate() {
             const canvas = await generatePDFCertificate(certificateData);
 
             // Convert canvas to compressed JPEG
-            const imgData = canvas.toDataURL("Image/jpeg", 0.7); // 70% quality
+            const imgData = canvas.toDataURL("image/jpeg", 0.7); // 70% quality
 
             const pdf = new jsPDF({
                 orientation: "landscape",

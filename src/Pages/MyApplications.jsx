@@ -6,7 +6,7 @@ function MyApplications() {
         title: "France Programme",
         description:
             "Vel et sit sequi. Quos dolorem atque. Nisi autem ut eveniet qui molestiae nulla repellat. Repellendus nemo saepe. Laboriosam consequatur voluptas amet quibusdam. Et quaerat asperiores.",
-        Image: "https://cdn.builder.io/api/v1/Image/assets/TEMP/cb2e6150f885f74036279cc11919609f3df5cfb2abbbf503204358a5ad8169f6?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+        Image: "https://cdn.builder.io/api/v1/image/assets/TEMP/cb2e6150f885f74036279cc11919609f3df5cfb2abbbf503204358a5ad8169f6?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
     };
 
     return (

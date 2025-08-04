@@ -5,27 +5,27 @@ function DragDropQuestion() {
         {
             id: "A",
             text: "A) Réalisation de recherches utilisateurs",
-            icon: "https://cdn.builder.io/api/v1/Image/assets/TEMP/cc198fe37e7418fae30940e39cc5dedb85ede2a4?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/cc198fe37e7418fae30940e39cc5dedb85ede2a4?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
         },
         {
             id: "B",
             text: "B) Création de maquettes fil de fer",
-            icon: "https://cdn.builder.io/api/v1/Image/assets/TEMP/73ac27543cc0ce751ade9d9484efdd03153d8cdf?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/73ac27543cc0ce751ade9d9484efdd03153d8cdf?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
         },
         {
             id: "C",
             text: "C) Test et itération",
-            icon: "https://cdn.builder.io/api/v1/Image/assets/TEMP/15e6bd24c0f462f26f719140fb66eaa39b824835?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/15e6bd24c0f462f26f719140fb66eaa39b824835?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
         },
         {
             id: "D",
             text: "D) Prototypage",
-            icon: "https://cdn.builder.io/api/v1/Image/assets/TEMP/0541dd121f6be66c7062389c6f93ec114b7225dd?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/0541dd121f6be66c7062389c6f93ec114b7225dd?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
         },
         {
             id: "E",
             text: "E) Design visuel",
-            icon: "https://cdn.builder.io/api/v1/Image/assets/TEMP/2e8471ae651eadad14646515e96752cbc7c65067?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
+            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2e8471ae651eadad14646515e96752cbc7c65067?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3",
         },
     ]);
 

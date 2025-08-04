@@ -37,7 +37,7 @@ const BaridiMobForm = () => {
                     Télécharger le fichier
                 </h2>
                 <img
-                    src="https://cdn.builder.io/api/v1/Image/assets/TEMP/90d6207c9595f421b21f613a50561a7aa8316d57879a833387e2269fc2ae6a1d?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/90d6207c9595f421b21f613a50561a7aa8316d57879a833387e2269fc2ae6a1d?placeholderIfAbsent=true&apiKey=ce15f09aba8c461ea95db36c370d18d3"
                     alt="Upload icon"
                     className="object-contain mt-2 w-8 aspect-square"
                 />

@@ -45,9 +45,9 @@ const CCPPayment = ({
         if (file) {
             // Validate file type
             const allowedTypes = [
-                "Image/jpeg",
-                "Image/jpg",
-                "Image/png",
+                "image/jpeg",
+                "image/jpg",
+                "image/png",
                 "application/pdf",
             ];
             if (!allowedTypes.includes(file.type)) {

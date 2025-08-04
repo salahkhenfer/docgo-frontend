@@ -53,7 +53,7 @@ const EditProfile = () => {
         if (!ProfilePic) return;
 
         // Validate file type
-        if (!ProfilePic.type.startsWith("Image/")) {
+        if (!ProfilePic.type.startsWith("image/")) {
             toast.error("Please select a valid Image file");
             return;
         }
@@ -254,7 +254,7 @@ const EditProfile = () => {
                             <input
                                 type="file"
                                 id="profile-pic-input"
-                                accept="Image/*"
+                                accept="image/*"
                                 onChange={handleImageUpload}
                                 className="hidden"
                             />
