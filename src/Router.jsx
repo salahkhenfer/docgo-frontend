@@ -11,7 +11,7 @@ import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import LandingPage from "./LandingPage/LandingPage";
 import { SearchProgram } from "./Pages/SearchProgram";
-import { ProgramDetails } from "./Pages/ProgramDetailes";
+import { ProgramDetails } from "./Pages/ProgramDetails";
 import MyApplications from "./Pages/MyApplications";
 import Courses from "./Pages/Courses";
 import FavoritesPage from "./Pages/FavoritesPage";
