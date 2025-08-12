@@ -105,7 +105,7 @@ function NavigationMobile() {
                 <div className="bg-white shadow-md py-4 px-6 absolute w-full z-[9000]">
                     <div className="flex flex-col gap-4">
                         <Link
-                            to="/searchProgram"
+                            to="/Programs"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >

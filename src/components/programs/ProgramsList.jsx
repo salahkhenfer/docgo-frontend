@@ -81,15 +81,64 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                                 <div className="relative overflow-hidden rounded-xl">
                                     <img
                                         src={
-                                            import.meta.env.VITE_API_URL +
-                                                program.Image ||
-                                            import.meta.env.VITE_API_URL +
-                                                program.image ||
-                                            null
+                                            (program.Image &&
+                                                import.meta.env.VITE_API_URL +
+                                                    program.Image) ||
+                                            (program.image &&
+                                                import.meta.env.VITE_API_URL +
+                                                    program.image) ||
+                                            "/placeholder-program.jpg"
                                         }
                                         alt={title}
-                                        className="w-full lg:w-48 h-32 lg:h-32 object-cover"
+                                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                                        onError={(e) => {
+                                            const fallbackDiv =
+                                                e.target.nextElementSibling;
+                                            if (fallbackDiv) {
+                                                e.target.classList.add(
+                                                    "hidden"
+                                                );
+                                                fallbackDiv.classList.remove(
+                                                    "hidden"
+                                                );
+                                                fallbackDiv.classList.add(
+                                                    "flex"
+                                                );
+                                            }
+                                        }}
+                                        onLoad={(e) => {
+                                            const fallbackDiv =
+                                                e.target.nextElementSibling;
+                                            if (fallbackDiv) {
+                                                e.target.classList.remove(
+                                                    "hidden"
+                                                );
+                                                fallbackDiv.classList.add(
+                                                    "hidden"
+                                                );
+                                                fallbackDiv.classList.remove(
+                                                    "flex"
+                                                );
+                                            }
+                                        }}
                                     />
+                                    {/* Fallback icon when image fails to load */}
+                                    <div className="hidden w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 items-center justify-center text-blue-600">
+                                        <svg
+                                            className="w-48 h-16 opacity-60"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={1.5}
+                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                            />
+                                        </svg>
+                                    </div>
+
                                     {/* Status Badge */}
                                     <div
                                         className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
@@ -117,12 +166,50 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                                             <h3 className="text-xl font-bold text-gray-900 leading-tight line-clamp-2">
                                                 {title}
                                             </h3>
-                                            {program.scholarshipAmount && (
-                                                <div className="text-lg font-bold text-green-600 whitespace-nowrap">
-                                                    $
-                                                    {program.scholarshipAmount.toLocaleString()}
-                                                </div>
-                                            )}
+                                            {/* Pricing Information */}
+                                            <div className="flex-shrink-0">
+                                                {program.scholarshipAmount &&
+                                                program.scholarshipAmount >
+                                                    0 ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm text-green-600 font-medium">
+                                                            {t("Scholarship") ||
+                                                                "Scholarship"}
+                                                        </span>
+                                                        <div className="text-lg font-bold text-green-600 whitespace-nowrap">
+                                                            $
+                                                            {program.scholarshipAmount.toLocaleString()}
+                                                        </div>
+                                                    </div>
+                                                ) : program.Price &&
+                                                  program.Price > 0 ? (
+                                                    <div className="flex items-center gap-2">
+                                                        {program.discountPrice &&
+                                                        program.discountPrice >
+                                                            0 ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-sm text-gray-500 line-through">
+                                                                    $
+                                                                    {program.Price.toLocaleString()}
+                                                                </span>
+                                                                <div className="text-lg font-bold text-blue-600 whitespace-nowrap">
+                                                                    $
+                                                                    {program.discountPrice.toLocaleString()}
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-lg font-bold text-blue-600 whitespace-nowrap">
+                                                                $
+                                                                {program.Price.toLocaleString()}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                                                        {t("Free") || "Free"}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {/* Organization and Category */}
@@ -234,7 +321,7 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                                         </div>
 
                                         <Link
-                                            to={`/searchprogram/${program.id}`}
+                                            to={`/Programs/${program.id}`}
                                             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
                                             onClick={(e) => e.stopPropagation()}
                                         >

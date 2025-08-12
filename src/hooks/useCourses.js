@@ -27,7 +27,7 @@ export const useCourses = (externalFilters = {}) => {
         try {
             const response = await courseService.getCourses(params);
             console.log("Fetched courses:", response);
-            
+
             setCourses(response.courses || []);
             setPagination(response.pagination || {});
             setIsAuthenticated(response.isAuthenticated || false);
@@ -50,12 +50,13 @@ export const useCourses = (externalFilters = {}) => {
             page: 1,
             limit: 12,
             category: "",
+            specialty: "",
+            difficulty: "",
+            price: "",
+            certificate: "",
             search: "",
             sortBy: "createdAt",
             order: "DESC",
-            price: "free",
-            certificate: "with",
-            date: "latest",
             ...externalFilters,
         };
         fetchCourses(defaultFilters);

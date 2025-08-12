@@ -1,15 +1,28 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { FiSearch, FiLoader } from "react-icons/fi";
+import { FiSearch, FiLoader, FiFilter, FiX } from "react-icons/fi";
+import PropTypes from "prop-types";
 
 export function SearchFilters({ onFiltersChange }) {
     const { t } = useTranslation();
-    const { i18n } = useTranslation();
-    const [price, setPrice] = useState("free");
-    const [certificate, setCertificate] = useState("with");
-    const [date, setDate] = useState("latest");
-    const [query, setQuery] = useState("");
+
+    // Local state for filters before applying
+    const [localFilters, setLocalFilters] = useState({
+        search: "",
+        category: "",
+        specialty: "",
+        difficulty: "",
+        price: "",
+        certificate: "",
+        date: "latest",
+        sortBy: "createdAt",
+        order: "DESC",
+    });
+
+    // Applied filters that are actually sent to API
+    const [appliedFilters, setAppliedFilters] = useState({});
     const [isSearching, setIsSearching] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
 
     // Use ref to avoid dependency issues
     const onFiltersChangeRef = useRef(onFiltersChange);
@@ -20,223 +33,415 @@ export function SearchFilters({ onFiltersChange }) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setDebouncedQuery(query);
+            setDebouncedQuery(localFilters.search);
         }, 500); // 500ms delay
 
         return () => clearTimeout(timer);
-    }, [query]);
+    }, [localFilters.search]);
 
-    const handleSearch = useCallback(
-        (searchTerm = "") => {
+    // Auto-apply search changes (debounced)
+    useEffect(() => {
+        if (debouncedQuery !== appliedFilters.search) {
+            const newFilters = { ...localFilters, search: debouncedQuery };
+            applyFilters(newFilters);
+        }
+    }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const applyFilters = useCallback(
+        (filters = localFilters) => {
             setIsSearching(true);
-            const filters = {
-                search: searchTerm.trim(),
-                price,
-                certificate,
-                date,
-                sortBy: date === "latest" ? "createdAt" : "updatedAt",
-                order: "DESC",
-            };
+            setAppliedFilters(filters);
 
             if (onFiltersChangeRef.current) {
-                onFiltersChangeRef.current(filters);
+                onFiltersChangeRef.current({
+                    ...filters,
+                    page: 1, // Reset to first page when filters change
+                });
             }
 
             // Reset searching state after a delay
             setTimeout(() => setIsSearching(false), 1000);
         },
-        [price, certificate, date]
+        [localFilters]
     );
 
-    // Trigger search when debounced query changes
-    useEffect(() => {
-        if (debouncedQuery || debouncedQuery === "") {
-            handleSearch(debouncedQuery);
-        }
-    }, [debouncedQuery, handleSearch]);
-
-    const handleFilterChange = (filterType, value) => {
-        setIsSearching(true);
-
-        switch (filterType) {
-            case "price":
-                setPrice(value);
-                break;
-            case "certificate":
-                setCertificate(value);
-                break;
-            case "date":
-                setDate(value);
-                break;
-        }
-
-        const allFilters = {
-            search: query.trim(),
-            price: filterType === "price" ? value : price,
-            certificate: filterType === "certificate" ? value : certificate,
-            date: filterType === "date" ? value : date,
-            sortBy:
-                (filterType === "date" ? value : date) === "latest"
-                    ? "createdAt"
-                    : "updatedAt",
+    const clearFilters = () => {
+        const clearedFilters = {
+            search: "",
+            category: "",
+            specialty: "",
+            difficulty: "",
+            price: "",
+            certificate: "",
+            date: "latest",
+            sortBy: "createdAt",
             order: "DESC",
         };
-
-        if (onFiltersChangeRef.current) {
-            onFiltersChangeRef.current(allFilters);
-        }
-
-        // Reset searching state after a delay
-        setTimeout(() => setIsSearching(false), 1000);
+        setLocalFilters(clearedFilters);
+        applyFilters(clearedFilters);
     };
+
+    const handleLocalFilterChange = (key, value) => {
+        setLocalFilters((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
+    };
+
+    const categoryOptions = [
+        { value: "", label: t("Toutes les catégories") || "All Categories" },
+        { value: "Programming", label: t("Programming") || "Programming" },
+        { value: "Design", label: t("Design") || "Design" },
+        { value: "Business", label: t("Business") || "Business" },
+        { value: "Marketing", label: t("Marketing") || "Marketing" },
+        { value: "Data Science", label: t("Data Science") || "Data Science" },
+        { value: "Languages", label: t("Languages") || "Languages" },
+    ];
+
+    const specialtyOptions = [
+        { value: "", label: t("Toutes les spécialités") || "All Specialties" },
+        {
+            value: "Web Development",
+            label: t("Web Development") || "Web Development",
+        },
+        {
+            value: "Mobile Development",
+            label: t("Mobile Development") || "Mobile Development",
+        },
+        { value: "Data Science", label: t("Data Science") || "Data Science" },
+        {
+            value: "AI & Machine Learning",
+            label: t("AI & Machine Learning") || "AI & Machine Learning",
+        },
+        { value: "UI/UX Design", label: t("UI/UX Design") || "UI/UX Design" },
+        {
+            value: "Digital Marketing",
+            label: t("Digital Marketing") || "Digital Marketing",
+        },
+        {
+            value: "Cybersecurity",
+            label: t("Cybersecurity") || "Cybersecurity",
+        },
+        {
+            value: "Cloud Computing",
+            label: t("Cloud Computing") || "Cloud Computing",
+        },
+    ];
+
+    const difficultyOptions = [
+        { value: "", label: t("Tous les niveaux") || "All Levels" },
+        { value: "beginner", label: t("Débutant") || "Beginner" },
+        { value: "intermediate", label: t("Intermédiaire") || "Intermediate" },
+        { value: "advanced", label: t("Avancé") || "Advanced" },
+        { value: "expert", label: t("Expert") || "Expert" },
+    ];
+
+    const priceOptions = [
+        { value: "", label: t("Tous les prix") || "All Prices" },
+        { value: "free", label: t("Gratuit") || "Free" },
+        { value: "paid", label: t("Payant") || "Paid" },
+    ];
+
+    const certificateOptions = [
+        {
+            value: "",
+            label:
+                t("Avec ou sans certificat") || "With or without certificate",
+        },
+        { value: "with", label: t("Avec certificat") || "With certificate" },
+        {
+            value: "without",
+            label: t("Sans certificat") || "Without certificate",
+        },
+    ];
+
+    const sortOptions = [
+        {
+            value: "latest",
+            label: t("Plus récent") || "Latest",
+            sortBy: "createdAt",
+            order: "DESC",
+        },
+        {
+            value: "oldest",
+            label: t("Plus ancien") || "Oldest",
+            sortBy: "createdAt",
+            order: "ASC",
+        },
+        {
+            value: "popular",
+            label: t("Plus populaire") || "Most Popular",
+            sortBy: "enrollments",
+            order: "DESC",
+        },
+        {
+            value: "rating",
+            label: t("Mieux noté") || "Highest Rated",
+            sortBy: "rating",
+            order: "DESC",
+        },
+        {
+            value: "title_az",
+            label: t("Titre A-Z") || "Title A-Z",
+            sortBy: "title",
+            order: "ASC",
+        },
+        {
+            value: "title_za",
+            label: t("Titre Z-A") || "Title Z-A",
+            sortBy: "title",
+            order: "DESC",
+        },
+    ];
+
     const handleInputChange = (e) => {
-        setQuery(e.target.value);
+        handleLocalFilterChange("search", e.target.value);
     };
 
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-            handleSearch();
+            applyFilters();
+        }
+    };
+
+    const handleSortChange = (sortValue) => {
+        const sortOption = sortOptions.find((opt) => opt.value === sortValue);
+        if (sortOption) {
+            const newFilters = {
+                ...localFilters,
+                date: sortValue,
+                sortBy: sortOption.sortBy,
+                order: sortOption.order,
+            };
+            setLocalFilters(newFilters);
+            applyFilters(newFilters);
         }
     };
 
     return (
-        <section className="flex flex-wrap gap-4 items-center  mx-auto  text-lg  max-md:max-w-full">
-            {/* Search Input */}
-            <div className="self-stretch my-auto whitespace-nowrap min-w-60 text-neutral-600 w-[558px] max-md:max-w-full">
-                <div
-                    className={`relative flex items-center px-6 py-3 w-full bg-white rounded-3xl border border-solid shadow-xl max-md:px-5 max-md:max-w-full transition-all duration-200 ${
-                        isSearching
-                            ? "border-blue-300 shadow-lg"
-                            : "border-gray-200"
-                    }`}
+        <section className="flex flex-col gap-4 mx-auto max-w-7xl p-4">
+            {/* Search Bar */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+                <div className="flex-1 w-full sm:min-w-96">
+                    <div
+                        className={`relative flex items-center px-4 py-3 bg-white rounded-lg border border-solid shadow-md transition-all duration-200 ${
+                            isSearching
+                                ? "border-blue-300 shadow-lg"
+                                : "border-gray-200"
+                        }`}
+                    >
+                        {isSearching ? (
+                            <FiLoader className="w-5 h-5 text-blue-500 mr-3 animate-spin" />
+                        ) : (
+                            <FiSearch className="w-5 h-5 text-gray-500 mr-3" />
+                        )}
+                        <input
+                            type="text"
+                            placeholder={
+                                t("RechercherUnCours") ||
+                                "Search for courses..."
+                            }
+                            value={localFilters.search}
+                            onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                            className="flex-1 bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+                        />
+                    </div>
+                </div>
+
+                {/* Filter Toggle Button */}
+                <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                    {isSearching ? (
-                        <FiLoader className="w-6 h-6 text-blue-500 mr-3 animate-spin" />
-                    ) : (
-                        <FiSearch className="w-6 h-6 text-neutral-600 mr-3" />
-                    )}
-                    <input
-                        type="text"
-                        placeholder={t("RechercherUnCours")}
-                        value={query}
-                        onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
-                        className="flex-1 bg-transparent outline-none text-neutral-600 placeholder:text-neutral-400 pr-12"
-                    />
-                    {query.trim() && !isSearching && (
-                        <button
-                            onClick={() => handleSearch()}
-                            className={` ${
-                                i18n.language === "ar" ? "left-4" : "right-4"
-                            }absolute  p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition`}
-                        >
-                            <FiSearch className="w-4 h-4" />
-                        </button>
-                    )}
-                    {isSearching && (
-                        <div
-                            className={`${
-                                i18n.language === "ar" ? "left-4" : "right-4"
-                            } absolute p-2`}
-                        >
-                            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <FiFilter className="w-4 h-4" />
+                    {t("Filtres") || "Filters"}
+                </button>
+
+                {/* Apply/Clear Buttons */}
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => applyFilters()}
+                        disabled={isSearching}
+                        className="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        {t("Appliquer") || "Apply"}
+                    </button>
+                    <button
+                        onClick={clearFilters}
+                        disabled={isSearching}
+                        className="px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        <FiX className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Filter Panel */}
+            {showFilters && (
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {/* Category Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Catégorie") || "Category"}
+                            </label>
+                            <select
+                                value={localFilters.category}
+                                onChange={(e) =>
+                                    handleLocalFilterChange(
+                                        "category",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {categoryOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                    )}
-                </div>
-            </div>
 
-            {/* Filters */}
-            <div
-                className={`flex flex-wrap gap-4 items-center my-auto min-w-60 text-zinc-800 max-md:max-w-full transition-opacity duration-200 ${
-                    isSearching ? "opacity-70" : "opacity-100"
-                }`}
-            >
-                {/* Price Filter */}
-                <div className="flex gap-1 self-stretch px-4 py-2 my-auto whitespace-nowrap rounded-2xl bg-stone-100">
-                    <button
-                        onClick={() => handleFilterChange("price", "free")}
-                        disabled={isSearching}
-                        className={`px-2 py-1 rounded-lg transition-all ${
-                            price === "free"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        } ${
-                            isSearching
-                                ? "cursor-not-allowed"
-                                : "hover:bg-gray-50"
-                        }`}
-                    >
-                        {t("Gratuit")}
-                    </button>
-                    <button
-                        onClick={() => handleFilterChange("price", "paid")}
-                        disabled={isSearching}
-                        className={`px-2 py-1 rounded-lg transition-all ${
-                            price === "paid"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        } ${
-                            isSearching
-                                ? "cursor-not-allowed"
-                                : "hover:bg-gray-50"
-                        }`}
-                    >
-                        {t("Payant")}
-                    </button>
-                </div>
+                        {/* Specialty Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Spécialité") || "Specialty"}
+                            </label>
+                            <select
+                                value={localFilters.specialty}
+                                onChange={(e) =>
+                                    handleLocalFilterChange(
+                                        "specialty",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {specialtyOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                {/* Certificate Filter */}
-                <div className="flex gap-1 self-stretch px-4 py-2 my-auto rounded-2xl bg-stone-100">
-                    <button
-                        onClick={() =>
-                            handleFilterChange("certificate", "with")
-                        }
-                        className={`px-2 py-1 rounded-lg ${
-                            certificate === "with"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        }`}
-                    >
-                        {t("AvecCertificat")}
-                    </button>
-                    <button
-                        onClick={() =>
-                            handleFilterChange("certificate", "without")
-                        }
-                        className={`px-2 py-1 rounded-lg ${
-                            certificate === "without"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        }`}
-                    >
-                        {t("Sans")}
-                    </button>
-                </div>
+                        {/* Difficulty Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Niveau") || "Difficulty"}
+                            </label>
+                            <select
+                                value={localFilters.difficulty}
+                                onChange={(e) =>
+                                    handleLocalFilterChange(
+                                        "difficulty",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {difficultyOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                {/* Date Filter */}
-                <div className="flex gap-1 self-stretch px-4 py-2 my-auto rounded-2xl bg-stone-100">
-                    <button
-                        onClick={() => handleFilterChange("date", "latest")}
-                        className={`px-2 py-1 rounded-lg ${
-                            date === "latest"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        }`}
-                    >
-                        {t("Dernier")}
-                    </button>
-                    <button
-                        onClick={() => handleFilterChange("date", "newest")}
-                        className={`px-2 py-1 rounded-lg ${
-                            date === "newest"
-                                ? "bg-white text-zinc-800"
-                                : "text-gray-600"
-                        }`}
-                    >
-                        {t("LePlusRecent")}
-                    </button>
+                        {/* Price Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Prix") || "Price"}
+                            </label>
+                            <select
+                                value={localFilters.price}
+                                onChange={(e) =>
+                                    handleLocalFilterChange(
+                                        "price",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {priceOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Certificate Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Certificat") || "Certificate"}
+                            </label>
+                            <select
+                                value={localFilters.certificate}
+                                onChange={(e) =>
+                                    handleLocalFilterChange(
+                                        "certificate",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {certificateOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Sort Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                {t("Trier par") || "Sort by"}
+                            </label>
+                            <select
+                                value={localFilters.date}
+                                onChange={(e) =>
+                                    handleSortChange(e.target.value)
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {sortOptions.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            )}
+
+           
         </section>
     );
 }
+
+SearchFilters.propTypes = {
+    onFiltersChange: PropTypes.func.isRequired,
+};

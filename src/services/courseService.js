@@ -8,6 +8,10 @@ export const courseService = {
                 page = 1,
                 limit = 12,
                 category = "",
+                specialty = "",
+                difficulty = "",
+                price = "",
+                certificate = "",
                 search = "",
                 sortBy = "createdAt",
                 order = "DESC",
@@ -21,6 +25,10 @@ export const courseService = {
             });
 
             if (category) queryParams.append("category", category);
+            if (specialty) queryParams.append("specialty", specialty);
+            if (difficulty) queryParams.append("difficulty", difficulty);
+            if (price) queryParams.append("price", price);
+            if (certificate) queryParams.append("certificate", certificate);
             if (search) queryParams.append("search", search);
 
             // Use the unified courses endpoint that handles both authenticated and guest users

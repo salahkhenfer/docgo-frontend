@@ -8,25 +8,36 @@ import CCPPayment from "../components/Payment/CCPPayment";
 import MainLoading from "../MainLoading";
 
 const PaymentPage = () => {
-    const { courseId } = useParams();
+    const params = useParams();
+    const courseId = params.courseId;
+    const programId = params.programId;
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
 
     const [selectedMethod, setSelectedMethod] = useState("paypal");
     const [loading, setLoading] = useState(false);
-    const [courseData, setCourseData] = useState(null);
+    const [itemData, setItemData] = useState(null);
+    const [itemType, setItemType] = useState(null); // 'course' or 'program'
 
-    // Get course data from navigation state or fetch it
+    // Get item data from navigation state or determine type from URL
     useEffect(() => {
         if (location.state?.course) {
-            setCourseData(location.state.course);
+            setItemData(location.state.course);
+            setItemType("course");
+        } else if (location.state?.program) {
+            setItemData(location.state.program);
+            setItemType("program");
         } else if (courseId) {
-            // If no course data in state, we might need to fetch it
-            // For now, redirect back to course page
+            setItemType("course");
+            // If no course data in state, redirect back to course page
             navigate(`/course/${courseId}`);
+        } else if (programId) {
+            setItemType("program");
+            // If no program data in state, redirect back to program page
+            navigate(`/program/${programId}`);
         }
-    }, [location.state, courseId, navigate]);
+    }, [location.state, courseId, programId, navigate]);
 
     // Check authentication
     useEffect(() => {
@@ -37,15 +48,69 @@ const PaymentPage = () => {
         }
     }, [isAuth, user, navigate]);
 
-    if (!courseData) {
+    if (!itemData) {
         return <MainLoading />;
     }
 
-    const price = parseFloat(courseData.discountPrice || courseData.Price);
-    const originalPrice = parseFloat(courseData.Price);
-    const currency = courseData.Currency || "USD";
+    // Extract pricing information based on item type
+    const getItemPrice = () => {
+        if (itemType === "course") {
+            return parseFloat(itemData.discountPrice || itemData.Price);
+        } else if (itemType === "program") {
+            return parseFloat(
+                itemData.price || itemData.scholarshipAmount || 0
+            );
+        }
+        return 0;
+    };
+
+    const getOriginalPrice = () => {
+        if (itemType === "course") {
+            return parseFloat(itemData.Price);
+        } else if (itemType === "program") {
+            return parseFloat(
+                itemData.originalPrice ||
+                    itemData.price ||
+                    itemData.scholarshipAmount ||
+                    0
+            );
+        }
+        return 0;
+    };
+
+    const price = getItemPrice();
+    const originalPrice = getOriginalPrice();
+    const currency = itemData.Currency || itemData.currency || "USD";
     const hasDiscount =
-        courseData.discountPrice && courseData.discountPrice < courseData.Price;
+        itemType === "course"
+            ? itemData.discountPrice && itemData.discountPrice < itemData.Price
+            : itemData.originalPrice &&
+              itemData.price &&
+              itemData.originalPrice > itemData.price;
+
+    const getItemTitle = () => {
+        if (itemType === "course") {
+            return itemData.Title;
+        } else if (itemType === "program") {
+            return itemData.Title || itemData.title;
+        }
+        return "Unknown Item";
+    };
+
+    const getItemImage = () => {
+        return itemData.Image || itemData.image;
+    };
+
+    const getItemLevel = () => {
+        if (itemType === "course") {
+            return `${itemData.Level} • ${itemData.language}`;
+        } else if (itemType === "program") {
+            return `${itemData.Category || itemData.category || "Program"} • ${
+                itemData.language || "Multiple"
+            }`;
+        }
+        return "";
+    };
 
     const paymentMethods = [
         {
@@ -70,11 +135,17 @@ const PaymentPage = () => {
 
     const handlePaymentSuccess = (paymentData) => {
         console.log("Payment successful:", paymentData);
-        // Navigate to success page or course access
-        navigate(`/payment/success/${courseId}`, {
+        // Navigate to success page based on item type
+        const successRoute =
+            itemType === "course"
+                ? `/payment/success/course/${courseId || programId}`
+                : `/payment/success/program/${programId || courseId}`;
+
+        navigate(successRoute, {
             state: {
                 paymentData,
-                course: courseData,
+                item: itemData,
+                itemType,
             },
         });
     };
@@ -95,7 +166,10 @@ const PaymentPage = () => {
                         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-4"
                     >
                         <FaArrowLeft />
-                        <span>Back to Course</span>
+                        <span>
+                            Back to{" "}
+                            {itemType === "course" ? "Course" : "Program"}
+                        </span>
                     </button>
 
                     <div className="flex items-center gap-3">
@@ -128,7 +202,7 @@ const PaymentPage = () => {
                             <div className="mt-8">
                                 {selectedMethod === "paypal" && (
                                     <PayPalPayment
-                                        courseData={courseData}
+                                        courseData={itemData}
                                         amount={price}
                                         currency={currency}
                                         onSuccess={handlePaymentSuccess}
@@ -140,7 +214,7 @@ const PaymentPage = () => {
 
                                 {selectedMethod === "ccp" && (
                                     <CCPPayment
-                                        courseData={courseData}
+                                        courseData={itemData}
                                         amount={price}
                                         currency={currency}
                                         onSuccess={handlePaymentSuccess}
@@ -160,23 +234,25 @@ const PaymentPage = () => {
                                 Order Summary
                             </h3>
 
-                            {/* Course Info */}
+                            {/* Item Info */}
                             <div className="mb-6">
                                 <div className="flex items-start gap-3">
-                                    {courseData.Image && (
+                                    {getItemImage() && (
                                         <img
-                                            src={courseData.Image}
-                                            alt={courseData.Title}
+                                            src={getItemImage()}
+                                            alt={getItemTitle()}
                                             className="w-16 h-16 object-cover rounded-lg"
                                         />
                                     )}
                                     <div className="flex-1">
                                         <h4 className="font-medium text-gray-900 line-clamp-2">
-                                            {courseData.Title}
+                                            {getItemTitle()}
                                         </h4>
                                         <p className="text-sm text-gray-600 mt-1">
-                                            {courseData.Level} •{" "}
-                                            {courseData.language}
+                                            {getItemLevel()}
+                                        </p>
+                                        <p className="text-xs text-blue-600 mt-1 capitalize">
+                                            {itemType}
                                         </p>
                                     </div>
                                 </div>
@@ -186,7 +262,9 @@ const PaymentPage = () => {
                             <div className="space-y-3 mb-6">
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-600">
-                                        Course Price
+                                        {itemType === "course"
+                                            ? "Course Price"
+                                            : "Program Fee"}
                                     </span>
                                     <span
                                         className={

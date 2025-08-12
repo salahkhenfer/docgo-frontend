@@ -1,8 +1,6 @@
-import React from "react";
 import {
     ArrowRight,
     MapPin,
-    Calendar,
     Users,
     Star,
     Clock,
@@ -22,10 +20,6 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         language === "ar" && program.Title_ar
             ? program.Title_ar
             : program.Title;
-    const description =
-        language === "ar" && program.Description_ar
-            ? program.Description_ar
-            : program.Description;
     const shortDescription =
         language === "ar" && program.shortDescription_ar
             ? program.shortDescription_ar
@@ -94,13 +88,48 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                 <div className="relative overflow-hidden">
                     <img
                         src={
-                            import.meta.env.VITE_API_URL + program.Image ||
-                            import.meta.env.VITE_API_URL + program.image ||
-                            null
+                            (program.Image &&
+                                import.meta.env.VITE_API_URL + program.Image) ||
+                            (program.image &&
+                                import.meta.env.VITE_API_URL + program.image) ||
+                            "/placeholder-program.jpg"
                         }
                         alt={title}
                         className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                            const fallbackDiv = e.target.nextElementSibling;
+                            if (fallbackDiv) {
+                                e.target.classList.add("hidden");
+                                fallbackDiv.classList.remove("hidden");
+                                fallbackDiv.classList.add("flex");
+                            }
+                        }}
+                        onLoad={(e) => {
+                            const fallbackDiv = e.target.nextElementSibling;
+                            if (fallbackDiv) {
+                                e.target.classList.remove("hidden");
+                                fallbackDiv.classList.add("hidden");
+                                fallbackDiv.classList.remove("flex");
+                            }
+                        }}
                     />
+                    {/* Fallback icon when image fails to load */}
+                    <div className="hidden w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 items-center justify-center text-blue-600">
+                        <svg
+                            className="w-16 h-16 opacity-60"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            />
+                        </svg>
+                    </div>
+
                     {/* Image overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -122,9 +151,9 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                     )}
 
                     {/* Bookmark Button */}
-                    <button className="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {/* <button className="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <Bookmark className="w-5 h-5 text-gray-600" />
-                    </button>
+                    </button> */}
                 </div>
 
                 {/* Content Area */}
@@ -206,14 +235,38 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        {/* Scholarship Amount */}
+                        {/* Pricing Information */}
                         <div className="flex items-center gap-2">
-                            {program.scholarshipAmount && (
-                                <div className="text-lg font-bold text-green-600">
-                                    $
-                                    {program.scholarshipAmount.toLocaleString()}
+                            {/* Show scholarship amount or pricing */}
+                            {program.Price && program.Price > 0 ? (
+                                <div className="flex items-center gap-2">
+                                    {program.discountPrice &&
+                                    program.discountPrice > 0 ? (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm text-gray-500 line-through">
+                                                $
+                                                {program.Price.toLocaleString()}
+                                            </span>
+                                            <div className="text-lg font-bold text-blue-600">
+                                                $
+                                                {program.discountPrice.toLocaleString()}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="text-lg font-bold text-blue-600">
+                                            ${program.Price.toLocaleString()}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                                        {t("Free") || "Free"}
+                                    </span>
                                 </div>
                             )}
+
+                            {/* Application count if available */}
                             {program.maxApplications && (
                                 <div className="flex items-center gap-1 text-sm text-gray-500">
                                     <Users size={14} />
@@ -227,7 +280,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
                         {/* Apply Button */}
                         <Link
-                            to={`/searchprogram/${program.id}`}
+                            to={`/Programs/${program.id}`}
                             className="group/btn inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
                             onClick={(e) => e.stopPropagation()}
                         >

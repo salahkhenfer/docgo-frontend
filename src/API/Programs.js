@@ -52,7 +52,7 @@ export const clientProgramsAPI = {
     },
 
     // Search programs with filters
-    searchPrograms: async (params = {}) => {
+    Programss: async (params = {}) => {
         try {
             const response = await apiClient.get("/Programs/search", {
                 params,

@@ -51,7 +51,7 @@ function Navigation() {
         return (
             <div className="flex justify-center items-center gap-5 lg:max-3xl:gap-4 lg:text-base">
                 <Link
-                    to="/searchProgram"
+                    to="/Programs"
                     className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
                     {t("Programs")}

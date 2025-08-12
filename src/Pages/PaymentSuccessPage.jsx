@@ -8,18 +8,29 @@ import {
 } from "react-icons/fa";
 
 const PaymentSuccessPage = () => {
-    const { courseId } = useParams();
+    const params = useParams();
+    const courseId = params.courseId;
+    const programId = params.programId;
     const location = useLocation();
     const navigate = useNavigate();
     const [countdown, setCountdown] = useState(10);
 
     const paymentData = location.state?.paymentData;
-    const courseData = location.state?.course;
+    const itemData =
+        location.state?.item ||
+        location.state?.course ||
+        location.state?.program;
+    const itemType =
+        location.state?.itemType || (courseId ? "course" : "program");
 
     useEffect(() => {
-        // Redirect to course if no payment data
-        if (!paymentData || !courseData) {
-            navigate(`/course/${courseId}`);
+        // Redirect to item if no payment data
+        if (!paymentData || !itemData) {
+            const redirectPath =
+                itemType === "course"
+                    ? `/course/${courseId}`
+                    : `/program/${programId}`;
+            navigate(redirectPath);
             return;
         }
 
@@ -28,7 +39,12 @@ const PaymentSuccessPage = () => {
             setCountdown((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    navigate(`/course/${courseId}/content`);
+                    // Redirect based on item type
+                    const redirectPath =
+                        itemType === "course"
+                            ? `/coursedetails/${courseId}/videos`
+                            : `/program/${programId}`;
+                    navigate(redirectPath);
                     return 0;
                 }
                 return prev - 1;
@@ -36,9 +52,9 @@ const PaymentSuccessPage = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [paymentData, courseData, courseId, navigate]);
+    }, [paymentData, itemData, courseId, programId, itemType, navigate]);
 
-    if (!paymentData || !courseData) {
+    if (!paymentData || !itemData) {
         return null; // Will redirect
     }
 
@@ -93,22 +109,24 @@ const PaymentSuccessPage = () => {
                         )}
                     </div>
 
-                    {/* Course Info */}
+                    {/* Item Info */}
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                         <h3 className="font-medium text-gray-900 mb-2">
-                            Course Enrolled
+                            {itemType === "course"
+                                ? "Course Enrolled"
+                                : "Program Applied"}
                         </h3>
                         <div className="flex items-center gap-3">
-                            {courseData.Image && (
+                            {itemData.Image && (
                                 <img
-                                    src={courseData.Image}
-                                    alt={courseData.Title}
+                                    src={itemData.Image}
+                                    alt={itemData.Title || itemData.title}
                                     className="w-12 h-12 object-cover rounded"
                                 />
                             )}
                             <div className="flex-1 text-left">
                                 <h4 className="font-medium text-gray-900">
-                                    {courseData.Title}
+                                    {itemData.Title || itemData.title}
                                 </h4>
                                 <p className="text-sm text-gray-600">
                                     {paymentData.amount} {paymentData.currency}

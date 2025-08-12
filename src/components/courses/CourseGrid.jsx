@@ -1,164 +1,117 @@
 import { useTranslation } from "react-i18next";
 import { CourseCard } from "./CourseCard";
-import { useCourses } from "../../hooks/useCourses";
 import { CourseCardSkeleton } from "../UI/LoadingSpinner";
-import { ErrorMessage } from "../UI/ErrorMessage";
 import { useEffect } from "react";
-export function CourseGrid({ filters }) {
+import PropTypes from "prop-types";
+
+export function CourseGrid({
+    courses = [],
+    loading = false,
+    pagination,
+    onPageChange,
+    onCourseClick,
+}) {
     const { t } = useTranslation();
-    const {
-        courses,
-        loading,
-        searchLoading,
-        error,
-        pagination,
-        isAuthenticated,
-        changePage,
-    } = useCourses(filters);
+
     useEffect(() => {
         console.log("Courses loaded:", courses);
     }, [courses]);
 
     if (loading) {
         return (
-            <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
-                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
-                    {t("TousLesCours")}
-                </h2>
-                <div className="flex flex-wrap gap-8 items-center mt-12 max-w-full w-[1280px] max-md:mt-10">
-                    {/* Loading skeleton */}
-                    {Array.from({ length: 8 }).map((_, index) => (
-                        <CourseCardSkeleton key={index} />
-                    ))}
-                </div>
-            </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 9 }).map((_, index) => (
+                    <CourseCardSkeleton key={index} />
+                ))}
+            </div>
         );
     }
 
-    if (error) {
+    if (courses.length === 0 && !loading) {
         return (
-            <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
-                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
-                    {t("TousLesCours")}
-                </h2>
-                <ErrorMessage
-                    message={error}
-                    type="error"
-                    onRetry={() => window.location.reload()}
-                    className="mt-12"
-                />
-            </section>
+            <div className="flex flex-col items-center justify-center mt-12 p-12 bg-white rounded-2xl shadow-sm">
+                <div className="text-6xl mb-4">📚</div>
+                <p className="text-gray-600 text-xl font-medium mb-2">
+                    {t("NoCoursesFound") || "No courses found"}
+                </p>
+                <p className="text-gray-500 text-center max-w-md">
+                    {t("TryAdjustingFilters") ||
+                        "Try adjusting your search filters or browse different categories"}
+                </p>
+            </div>
         );
     }
 
     return (
-        <section className="self-end mt-12 w-full max-w-[1368px] max-md:mt-10 max-md:max-w-full">
-            <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-semibold text-zinc-800 max-md:max-w-full">
-                    {t("TousLesCours")}
-                </h2>
-
-                {/* Guest mode indicator */}
-                {/* {!isAuthenticated && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                        <span className="text-blue-600 text-sm">
-                            👋 {t("ViewingAsGuest") || "Viewing as guest"}
-                        </span>
-                        <span className="text-blue-500 text-xs">
-                            {t("LoginForFullAccess") || "Login for full access"}
-                        </span>
-                    </div>
-                )} */}
+        <div className="relative transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courses.map((course) => (
+                    <CourseCard
+                        key={course.id}
+                        course={course}
+                        onClick={() =>
+                            onCourseClick && onCourseClick(course.id)
+                        }
+                    />
+                ))}
             </div>
 
-            {courses.length === 0 ? (
-                <div className="flex flex-col items-center justify-center mt-12 p-8 bg-gray-50 rounded-lg">
-                    <p className="text-gray-600 text-lg">
-                        {t("NoCoursesFound") || "No courses found"}
-                    </p>
-                    <p className="text-gray-500 text-sm mt-2">
-                        {t("TryAdjustingFilters") ||
-                            "Try adjusting your search filters"}
-                    </p>
-                </div>
-            ) : (
-                <>
-                    <div
-                        className={`relative transition-all duration-300 ${
-                            searchLoading ? "opacity-60" : "opacity-100"
-                        }`}
+            {/* Pagination */}
+            {pagination && pagination.totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-12">
+                    <button
+                        onClick={() => onPageChange(pagination.currentPage - 1)}
+                        disabled={pagination.currentPage <= 1}
+                        className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {searchLoading && (
-                            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10 rounded-lg">
-                                <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-lg border">
-                                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                    <span className="text-gray-700 font-medium">
-                                        {t("Searching") || "Searching"}...
-                                    </span>
-                                </div>
-                            </div>
-                        )}
-                        <div className="flex flex-wrap gap-8 items-center my-12 max-w-full w-[1280px] max-md:mt-10">
-                            {courses.map((course) => (
-                                <CourseCard
-                                    key={course.id}
-                                    id={course.id}
-                                    Image={course.Image || course.coverImage}
-                                    title={course.Title}
-                                    description={
-                                        course.shortDescription || null
-                                        // course.Description
-                                    }
-                                    price={course.Price}
-                                    discountPrice={course.discountPrice}
-                                    currency={course.Currency}
-                                    level={course.Level}
-                                    averageRating={course.stats?.averageRating}
-                                    totalReviews={course.stats?.totalReviews}
-                                    isEnrolled={course.userStatus?.isEnrolled}
-                                    enrollmentStatus={
-                                        course.userStatus?.enrollmentStatus
-                                    }
-                                    progress={course.userStatus?.progress}
-                                    hasImage={
-                                        !!course.Image || !!course.coverImage
-                                    }
-                                />
-                            ))}
-                        </div>
-                    </div>
+                        {t("Previous") || "Previous"}
+                    </button>
 
-                    {/* Pagination */}
-                    {pagination.totalPages > 1 && (
-                        <div className="flex justify-center items-center mt-8 gap-4">
-                            <button
-                                onClick={() =>
-                                    changePage(pagination.currentPage - 1)
-                                }
-                                disabled={!pagination.hasPrevPage}
-                                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition"
-                            >
-                                {t("Previous") || "Previous"}
-                            </button>
-
-                            <span className="text-gray-600">
-                                {t("Page") || "Page"} {pagination.currentPage}{" "}
-                                {t("of") || "of"} {pagination.totalPages}
-                            </span>
-
-                            <button
-                                onClick={() =>
-                                    changePage(pagination.currentPage + 1)
-                                }
-                                disabled={!pagination.hasNextPage}
-                                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-600 transition"
-                            >
-                                {t("Next") || "Next"}
-                            </button>
-                        </div>
+                    {Array.from(
+                        { length: Math.min(5, pagination.totalPages) },
+                        (_, i) => {
+                            const page = i + 1;
+                            return (
+                                <button
+                                    key={page}
+                                    onClick={() => onPageChange(page)}
+                                    className={`px-4 py-2 rounded-xl ${
+                                        pagination.currentPage === page
+                                            ? "bg-blue-600 text-white"
+                                            : "border border-gray-200 hover:bg-gray-50"
+                                    }`}
+                                >
+                                    {page}
+                                </button>
+                            );
+                        }
                     )}
-                </>
+
+                    <button
+                        onClick={() => onPageChange(pagination.currentPage + 1)}
+                        disabled={
+                            pagination.currentPage >= pagination.totalPages
+                        }
+                        className="px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {t("Next") || "Next"}
+                    </button>
+                </div>
             )}
-        </section>
+        </div>
     );
 }
+
+CourseGrid.propTypes = {
+    courses: PropTypes.array,
+    loading: PropTypes.bool,
+    pagination: PropTypes.shape({
+        currentPage: PropTypes.number,
+        totalPages: PropTypes.number,
+        totalCourses: PropTypes.number,
+    }),
+    onPageChange: PropTypes.func,
+    onCourseClick: PropTypes.func,
+};
+
+export default CourseGrid;

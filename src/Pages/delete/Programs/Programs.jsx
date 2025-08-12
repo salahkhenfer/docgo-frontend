@@ -16,9 +16,9 @@ import {
     Award,
     Clock,
 } from "lucide-react";
-import { clientProgramsAPI } from "../../API/Programs";
+import { clientProgramsAPI } from "../../../API/Programs";
 import { useTranslation } from "react-i18next";
-import InlineLoading from "../../InlineLoading";
+import InlineLoading from "../../../InlineLoading";
 
 const Programs = () => {
     const { t, i18n } = useTranslation();

@@ -10,7 +10,7 @@ import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import LandingPage from "./LandingPage/LandingPage";
-import { SearchProgram } from "./Pages/SearchProgram";
+import { Programs } from "./Pages/Programs";
 import { ProgramDetails } from "./Pages/ProgramDetails";
 import MyApplications from "./Pages/MyApplications";
 import Courses from "./Pages/Courses";
@@ -77,11 +77,11 @@ const Routers = createBrowserRouter([
                 element: <LandingPage />,
             },
             {
-                path: "searchprogram",
-                element: <SearchProgram />,
+                path: "Programs",
+                element: <Programs />,
             },
             {
-                path: "searchprogram/:programId",
+                path: "Programs/:programId",
                 element: <ProgramDetails />,
             },
             {
@@ -151,7 +151,17 @@ const Routers = createBrowserRouter([
                 element: <PaymentPage />,
             },
             {
-                path: "payment/success/:courseId",
+                path: "payment/program/:programId",
+                loader: protectedCaseInsensitiveLoader,
+                element: <PaymentPage />,
+            },
+            {
+                path: "payment/success/course/:courseId",
+                loader: protectedCaseInsensitiveLoader,
+                element: <PaymentSuccessPage />,
+            },
+            {
+                path: "payment/success/program/:programId",
                 loader: protectedCaseInsensitiveLoader,
                 element: <PaymentSuccessPage />,
             },
