@@ -79,6 +79,16 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                             {/* Program Image */}
                             <div className="flex-shrink-0">
                                 <div className="relative overflow-hidden rounded-xl">
+                                    {program.isFeatured && (
+                                        <div className="absolute top-3 right-3">
+                                            <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
+                                                <Star className="w-3 h-3" />
+                                                <span className="text-xs font-semibold">
+                                                    Vedette
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
                                     <img
                                         src={
                                             (program.Image &&

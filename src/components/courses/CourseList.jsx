@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { Star } from "lucide-react";
 
 export function CourseList({
     courses = [],
@@ -53,16 +54,28 @@ export function CourseList({
 
     return (
         <div className="relative transition-all duration-300">
-            <div className="space-y-4">
+            <div className="space-y-4 relative">
                 {courses.map((course) => (
                     <div
                         key={course.id}
-                        className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer"
+                        className="bg-white rounded-2xl
+                         shadow-sm hover:shadow-md transition-all 
+                         duration-200 overflow-hidden cursor-pointer relative"
                         onClick={() =>
                             onCourseClick && onCourseClick(course.id)
                         }
                     >
-                        <div className="flex flex-col md:flex-row">
+                        <div className="flex flex-col md:flex-row relative">
+                            {course.isFeatured && (
+                                <div className="absolute top-3 right-3">
+                                    <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
+                                        <Star className="w-3 h-3" />
+                                        <span className="text-xs font-semibold">
+                                            Vedette
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
                             {/* Course Image */}
                             <div className="md:w-48 h-48 md:h-32 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                                 {course.image ||
@@ -97,25 +110,33 @@ export function CourseList({
                                                 course.shortDescription}
                                         </p>
                                     </div>
-                                    {(course.price || course.Price) && (
-                                        <div className="text-right ml-4">
-                                            <div className="text-2xl font-bold text-blue-600">
-                                                ${course.price || course.Price}
+                                    <div className="text-right ml-4">
+                                        {(course.price || course.Price) > 0 ? (
+                                            <>
+                                                <div className="text-2xl font-bold text-blue-600">
+                                                    $
+                                                    {course.price ||
+                                                        course.Price}
+                                                </div>
+                                                {(course.discountPrice ||
+                                                    course.originalPrice) &&
+                                                    (course.discountPrice ||
+                                                        course.originalPrice) >
+                                                        (course.price ||
+                                                            course.Price) && (
+                                                        <div className="text-sm text-gray-500 line-through">
+                                                            $
+                                                            {course.discountPrice ||
+                                                                course.originalPrice}
+                                                        </div>
+                                                    )}
+                                            </>
+                                        ) : (
+                                            <div className="text-2xl font-bold text-green-600">
+                                                {t("free") || "Free"}
                                             </div>
-                                            {(course.discountPrice ||
-                                                course.originalPrice) &&
-                                                (course.discountPrice ||
-                                                    course.originalPrice) >
-                                                    (course.price ||
-                                                        course.Price) && (
-                                                    <div className="text-sm text-gray-500 line-through">
-                                                        $
-                                                        {course.discountPrice ||
-                                                            course.originalPrice}
-                                                    </div>
-                                                )}
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 mb-4">

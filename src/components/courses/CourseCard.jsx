@@ -3,8 +3,9 @@ import { useState } from "react";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
-
+import { Star } from "lucide-react";
 export function CourseCard({
+    course,
     id,
     Image,
     title,
@@ -55,7 +56,7 @@ export function CourseCard({
     };
 
     const formatPrice = (price) => {
-        if (!price || price === 0) return t("Free") || "Free";
+        if (!price || price === 0) return t("free") || "Free";
         return `${price} ${currency}`;
     };
 
@@ -79,6 +80,14 @@ export function CourseCard({
 
     return (
         <article className="flex relative grow shrink gap-9 items-start self-stretch my-auto min-w-60 w-[325px]">
+            {course.isFeatured && (
+                <div className="absolute top-3 right-3">
+                    <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
+                        <Star className="w-3 h-3" />
+                        <span className="text-xs font-semibold">Vedette</span>
+                    </div>
+                </div>
+            )}
             <div className="flex z-0 flex-col flex-1 shrink my-auto w-full bg-white basis-0 min-w-60 rounded-xl shadow-md p-4">
                 {hasImage ? (
                     <>
@@ -153,7 +162,13 @@ export function CourseCard({
                     <div className="flex items-center gap-2 mt-3">
                         {discountPrice ? (
                             <>
-                                <span className="text-lg font-bold text-green-600">
+                                <span
+                                    className={`text-lg font-bold ${
+                                        discountPrice === 0
+                                            ? "text-green-600"
+                                            : "text-green-600"
+                                    }`}
+                                >
                                     {formatPrice(discountPrice)}
                                 </span>
                                 <span className="text-sm text-gray-500 line-through">
@@ -161,7 +176,13 @@ export function CourseCard({
                                 </span>
                             </>
                         ) : (
-                            <span className="text-lg font-bold text-gray-800">
+                            <span
+                                className={`text-lg font-bold ${
+                                    price === 0 || !price
+                                        ? "text-green-600"
+                                        : "text-gray-800"
+                                }`}
+                            >
                                 {formatPrice(price)}
                             </span>
                         )}
