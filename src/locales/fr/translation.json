@@ -19,6 +19,15 @@
     "no_data": "Aucune donnée disponible",
     "ImageNotFound": "Image non trouvée",
     "profile_data": {
+        "noCourses": "Aucun cours disponible",
+        "noCoursesDescription": "Explorez notre large gamme de cours disponibles.",
+        "noCertificates": "Aucun certificat disponible",
+        "noCertificatesDescription": "Explorez notre large gamme de certificats disponibles.",
+        "browseCourses": "Parcourir les cours",
+        "browsePrograms": "Parcourir les programmes",
+        "noApplications": "Aucune candidature disponible",
+        "applyCourses": "Postuler aux cours",
+        "noApplicationsDescription": "Explorez notre large gamme de candidatures disponibles.",
         "professional_member": "Membre Professionnel",
         "completed": "Terminé",
         "in_progress": "En cours",
@@ -396,7 +405,10 @@
         "back": "Retour",
         "finish": "Finaliser"
     },
-    "dashboard": {
+    "dashboard_data": {
+        "totalEnrollments": "Nombre total d'inscriptions",
+        "pendingApplications": "Demandes en attente",
+        "certificates": "Certificats",
         "welcome": "Bienvenue",
         "dashboardSubtitle": "Voici un aperçu de votre parcours d'apprentissage et de vos candidatures aux bourses",
         "enrolledCourses": "Cours d'apprentissage",

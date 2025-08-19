@@ -15,6 +15,18 @@
     "no_data": "لا توجد بيانات متاحة",
     "ImageNotFound": "لم يتم العثور على الصورة",
     "profile_data": {
+        "noCourses": "لا توجد دورات متاحة",
+        "noCoursesDescription": "استكشف مجموعة متنوعة من الدورات المتاحة لدينا.",
+
+        "noCertificates": "لا توجد شهادات متاحة",
+        "noCertificatesDescription": "استكشف مجموعة متنوعة من الشهادات المتاحة لدينا.",
+
+        "browseCourses": "استعرض الدورات",
+        "browsePrograms": "استعرض البرامج",
+        "applyCourses": "تقدم للدورات",
+
+        "noApplications": "لا توجد طلبات متاحة",
+        "noApplicationsDescription": "استكشف مجموعة متنوعة من الطلبات المتاحة لدينا.",
         "professional_member": "عضو محترف",
         "completed": "مكتمل",
         "in_progress": "قيد التقدم",
@@ -393,7 +405,10 @@
         "back": "رجوع",
         "finish": "إنهاء"
     },
-    "dashboard": {
+    "dashboard_data": {
+        "totalEnrollments": "إجمالي التسجيلات",
+        "pendingApplications": "طلبات قيد الانتظار",
+        "certificates": "الشهادات",
         "welcome": "مرحباً",
         "dashboardSubtitle": "إليك نظرة عامة على رحلتك التعليمية وطلبات المنح الدراسية",
         "enrolledCourses": "دورات التعلم",
