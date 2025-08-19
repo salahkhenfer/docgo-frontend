@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppContext } from "../../../AppContext";
 import apiClient from "../../../services/apiClient";
+import { RichTextDisplay } from "../../../components/Common/RichTextEditor";
 
 const UserMessages = () => {
     const { t, i18n } = useTranslation();
@@ -194,9 +195,15 @@ const UserMessages = () => {
                                             </span>
                                         </div>
 
-                                        <p className="mt-2 text-gray-600 line-clamp-2">
-                                            {message.message}
-                                        </p>
+                                        <div className="mt-2 text-gray-600 line-clamp-2">
+                                            <RichTextDisplay
+                                                content={
+                                                    message.messageHtml ||
+                                                    message.message
+                                                }
+                                                className="text-sm"
+                                            />
+                                        </div>
 
                                         <div className="mt-3 flex items-center space-x-4 text-sm text-gray-500">
                                             <span>
@@ -310,17 +317,13 @@ const UserMessages = () => {
                                         )}
                                     </label>
                                     <div className="mt-1 p-3 border border-gray-300 rounded-md bg-gray-50">
-                                        {selectedMessage.messageHtml ? (
-                                            <div
-                                                dangerouslySetInnerHTML={{
-                                                    __html: selectedMessage.messageHtml,
-                                                }}
-                                            />
-                                        ) : (
-                                            <p className="text-sm text-gray-900 whitespace-pre-wrap">
-                                                {selectedMessage.message}
-                                            </p>
-                                        )}
+                                        <RichTextDisplay
+                                            content={
+                                                selectedMessage.messageHtml ||
+                                                selectedMessage.message
+                                            }
+                                            className="text-sm text-gray-900"
+                                        />
                                     </div>
                                 </div>
 

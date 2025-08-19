@@ -83,9 +83,10 @@ export function CourseList({
                                 course.coverImage ? (
                                     <img
                                         src={
-                                            course.image ||
-                                            course.Image ||
-                                            course.coverImage
+                                            import.meta.env.VITE_API_URL +
+                                                course.Image ||
+                                            import.meta.env.VITE_API_URL +
+                                                course.coverImage
                                         }
                                         alt={course.title || course.Title}
                                         className="w-full h-full object-cover"
@@ -105,15 +106,15 @@ export function CourseList({
                                             {course.title || course.Title}
                                         </h3>
                                         <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                                            {course.description ||
-                                                course.Description ||
-                                                course.shortDescription}
+                                            {course.shortDescription
+                                                ? course.shortDescription
+                                                : null}
                                         </p>
                                     </div>
                                     <div className="text-right ml-4">
                                         {(course.price || course.Price) > 0 ? (
                                             <>
-                                                <div className="text-2xl font-bold text-blue-600">
+                                                <div className="text-2xl font-bold text-blue-600 mt-6">
                                                     $
                                                     {course.price ||
                                                         course.Price}
@@ -163,7 +164,8 @@ export function CourseList({
                                         </span>
                                     )}
                                     {course.isFeatured && (
-                                        <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs rounded-full">
+                                        <span className="px-3 py-1 bg-gradient-to-r from-yellow-400
+                                         to-orange-500 text-white text-xs rounded-full">
                                             ⭐ {t("Featured") || "Featured"}
                                         </span>
                                     )}

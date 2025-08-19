@@ -87,7 +87,12 @@ function NavigationMobile() {
 
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="text-2xl text-primary"
+                        className={`text-2xl transition-all duration-300 p-2 rounded-lg
+                            ${
+                                isOpen
+                                    ? "text-red-500 bg-red-50 rotate-180"
+                                    : "text-[#0086C9] hover:bg-blue-50 hover:text-blue-600"
+                            }`}
                     >
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>
@@ -95,88 +100,161 @@ function NavigationMobile() {
             </div>
 
             {isOpen && (
-                <div className="bg-white shadow-md py-4 px-6 absolute w-full z-[9000]">
-                    <div className="flex flex-col gap-4">
-                        {user && isAuth && (
+                <div
+                    className="bg-white/95 backdrop-blur-md shadow-xl border-t border-gray-100 
+                    absolute w-full z-[9000] animate-in slide-in-from-top-3 fade-in duration-300"
+                >
+                    <div className="py-4 px-6">
+                        <div className="flex flex-col space-y-2">
+                            {user && isAuth && (
+                                <Link
+                                    to="/Profile"
+                                    className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                        ${
+                                            location.pathname === "/Profile"
+                                                ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                                : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                        }`}
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <span className="relative z-10">
+                                        {t("Profile_nav")}
+                                    </span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                </Link>
+                            )}
+
                             <Link
-                                to="/Profile"
-                                className="text-customGray py-2 border-b border-gray-100"
+                                to="/"
+                                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                    ${
+                                        location.pathname === "/" ||
+                                        location.pathname === "/dashboard"
+                                            ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                            : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                    }`}
                                 onClick={() => setIsOpen(false)}
                             >
-                                {t("Profile_nav")}
-                            </Link>
-                        )}
-
-                        <Link
-                            to="/"
-                            className="text-customGray py-2 border-b border-gray-100"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {t("Home_nav")}
-                        </Link>
-
-                        <Link
-                            to="/Programs"
-                            className="text-customGray py-2 border-b border-gray-100"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {t("Programs_nav")}
-                        </Link>
-
-                        <Link
-                            to="/Courses"
-                            className="text-customGray py-2 border-b border-gray-100"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {t("Courses_nav")}
-                        </Link>
-
-                        <Link
-                            to="/favorites"
-                            className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2 relative"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {totalCount > 0 ? (
-                                <BsHeartFill className="w-4 h-4 text-red-500" />
-                            ) : (
-                                <BsHeart className="w-4 h-4" />
-                            )}
-                            {t("Favorites")}
-                            {totalCount > 0 && (
-                                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
-                                    {totalCount > 99 ? "99+" : totalCount}
+                                <span className="relative z-10">
+                                    {t("Home_nav")}
                                 </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                            </Link>
+
+                            <Link
+                                to="/Programs"
+                                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                    ${
+                                        location.pathname === "/Programs" ||
+                                        location.pathname.startsWith(
+                                            "/Programs/"
+                                        )
+                                            ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                            : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                    }`}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <span className="relative z-10">
+                                    {t("Programs_nav")}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                            </Link>
+
+                            <Link
+                                to="/Courses"
+                                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                    ${
+                                        location.pathname === "/Courses" ||
+                                        location.pathname.startsWith(
+                                            "/Courses/"
+                                        )
+                                            ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                            : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                    }`}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <span className="relative z-10">
+                                    {t("Courses_nav")}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                            </Link>
+
+                            <Link
+                                to="/favorites"
+                                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden flex items-center gap-2
+                                    ${
+                                        location.pathname === "/favorites" ||
+                                        location.pathname.startsWith(
+                                            "/favorites/"
+                                        )
+                                            ? "bg-red-50 text-red-600 border-l-4 border-red-500"
+                                            : "text-gray-700 hover:bg-red-50 hover:text-red-600"
+                                    }`}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <span className="relative z-10 flex items-center gap-2">
+                                    {totalCount > 0 ? (
+                                        <BsHeartFill className="w-4 h-4 text-red-500" />
+                                    ) : (
+                                        <BsHeart className="w-4 h-4" />
+                                    )}
+                                    {t("Favorites")}
+                                    {totalCount > 0 && (
+                                        <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
+                                            {totalCount > 99
+                                                ? "99+"
+                                                : totalCount}
+                                        </span>
+                                    )}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-pink-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                            </Link>
+
+                            <Link
+                                to="/faq"
+                                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                    ${
+                                        location.pathname === "/faq"
+                                            ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                            : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                    }`}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <span className="relative z-10">
+                                    {t("FAQ")}
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                            </Link>
+
+                            {!user && !isAuth && (
+                                <>
+                                    <button
+                                        onClick={() =>
+                                            handleScrollToSection("ourServices")
+                                        }
+                                        className="px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                            text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer bg-transparent border-none text-left w-full"
+                                    >
+                                        <span className="relative z-10">
+                                            {t("OurServicesLink")}
+                                        </span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleScrollToSection("aboutUs")
+                                        }
+                                        className="px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                            text-gray-700 hover:bg-green-50 hover:text-green-600 cursor-pointer bg-transparent border-none text-left w-full"
+                                    >
+                                        <span className="relative z-10">
+                                            {t("AboutUsLink")}
+                                        </span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                    </button>
+                                </>
                             )}
-                        </Link>
-
-                        <Link
-                            to="/faq"
-                            className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {t("FAQ")}
-                        </Link>
-
-                        {!user && !isAuth && (
-                            <>
-                                <button
-                                    onClick={() =>
-                                        handleScrollToSection("ourServices")
-                                    }
-                                    className="text-customGray py-2 border-b border-gray-100 cursor-pointer bg-transparent border-none text-left w-full"
-                                >
-                                    {t("OurServicesLink")}
-                                </button>
-                                <button
-                                    onClick={() =>
-                                        handleScrollToSection("aboutUs")
-                                    }
-                                    className="text-customGray py-2 cursor-pointer bg-transparent border-none text-left w-full"
-                                >
-                                    {t("AboutUsLink")}
-                                </button>
-                            </>
-                        )}
+                        </div>
                     </div>
                 </div>
             )}

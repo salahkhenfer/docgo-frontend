@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18n";
 import {
     MapPin,
     Calendar,
@@ -198,8 +198,15 @@ export function ProgramDetails() {
     const handleContactSubmit = async (e) => {
         e.preventDefault();
 
-        if (!contactForm.name || !contactForm.email || !contactForm.subject || !contactForm.message) {
-            toast.error(t("Please fill all fields") || "Please fill all fields");
+        if (
+            !contactForm.name ||
+            !contactForm.email ||
+            !contactForm.subject ||
+            !contactForm.message
+        ) {
+            toast.error(
+                t("Please fill all fields") || "Please fill all fields"
+            );
             return;
         }
 
@@ -248,7 +255,9 @@ export function ProgramDetails() {
                     </h2>
                     <p className="text-gray-600 mb-6">
                         {error ||
-                            t("The program you're looking for doesn't exist or has been removed.") ||
+                            t(
+                                "The program you're looking for doesn't exist or has been removed."
+                            ) ||
                             "The program you're looking for doesn't exist or has been removed."}
                     </p>
                     <button
@@ -321,7 +330,9 @@ export function ProgramDetails() {
                         </div>
                         <div className="flex items-center gap-3">
                             <button
-                                onClick={() => setShowContactForm(!showContactForm)}
+                                onClick={() =>
+                                    setShowContactForm(!showContactForm)
+                                }
                                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                             >
                                 <MessageSquare className="w-4 h-4" />
@@ -364,7 +375,9 @@ export function ProgramDetails() {
                                 {program.Image ? (
                                     <>
                                         <img
-                                            src={`${import.meta.env.VITE_API_URL}/${program.Image}`}
+                                            src={`${
+                                                import.meta.env.VITE_API_URL
+                                            }/${program.Image}`}
                                             alt={title}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
@@ -374,7 +387,9 @@ export function ProgramDetails() {
                                         {/* Video Play Button - will be functional when video field is added */}
                                         <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                                             <button
-                                                onClick={() => setShowVideo(true)}
+                                                onClick={() =>
+                                                    setShowVideo(true)
+                                                }
                                                 className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
                                             >
                                                 <Play className="w-12 h-12 text-purple-600" />
@@ -386,7 +401,8 @@ export function ProgramDetails() {
                                         <div className="text-center">
                                             <GraduationCap className="w-20 h-20 text-purple-300 mx-auto mb-4" />
                                             <p className="text-gray-500 text-lg">
-                                                {t("No image available") || "No image available"}
+                                                {t("No image available") ||
+                                                    "No image available"}
                                             </p>
                                         </div>
                                     </div>
@@ -399,7 +415,9 @@ export function ProgramDetails() {
                                     <div className="flex-1">
                                         <div className="flex flex-wrap items-center gap-3 mb-4">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor(program.status)}`}
+                                                className={`px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor(
+                                                    program.status
+                                                )}`}
                                             >
                                                 {getStatusText(program.status)}
                                             </span>
@@ -407,7 +425,8 @@ export function ProgramDetails() {
                                                 <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center gap-1">
                                                     <Star className="w-4 h-4" />
                                                     <span className="text-sm font-semibold">
-                                                        {t("Featured") || "Featured"}
+                                                        {t("Featured") ||
+                                                            "Featured"}
                                                     </span>
                                                 </div>
                                             )}
@@ -418,12 +437,28 @@ export function ProgramDetails() {
                                             )}
                                         </div>
 
-                                        <h1 className="text-4xl font-bold text-gray-900 mb-2" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
-                                            {title || t("Program Title") || "Program Title"}
+                                        <h1
+                                            className="text-4xl font-bold text-gray-900 mb-2"
+                                            dir={
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr"
+                                            }
+                                        >
+                                            {title ||
+                                                t("Program Title") ||
+                                                "Program Title"}
                                         </h1>
 
                                         {shortDescription && (
-                                            <p className="text-xl text-gray-600 mb-4" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
+                                            <p
+                                                className="text-xl text-gray-600 mb-4"
+                                                dir={
+                                                    i18n.language === "ar"
+                                                        ? "rtl"
+                                                        : "ltr"
+                                                }
+                                            >
                                                 {shortDescription}
                                             </p>
                                         )}
@@ -449,7 +484,10 @@ export function ProgramDetails() {
                                                     {t("Price") || "Price"}
                                                 </p>
                                                 <p className="text-lg font-bold text-green-800">
-                                                    {formatCurrency(program.price || program.Price)}
+                                                    {formatCurrency(
+                                                        program.price ||
+                                                            program.Price
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
@@ -461,10 +499,14 @@ export function ProgramDetails() {
                                             <Clock className="w-5 h-5 text-blue-600" />
                                             <div>
                                                 <p className="text-sm text-blue-700 font-medium">
-                                                    {t("Duration") || "Duration"}
+                                                    {t("Duration") ||
+                                                        "Duration"}
                                                 </p>
                                                 <p className="text-lg font-bold text-blue-800">
-                                                    {program.duration || program.Duration || t("Not defined") || "Not defined"}
+                                                    {program.duration ||
+                                                        program.Duration ||
+                                                        t("Not defined") ||
+                                                        "Not defined"}
                                                 </p>
                                             </div>
                                         </div>
@@ -476,10 +518,14 @@ export function ProgramDetails() {
                                             <Users className="w-5 h-5 text-purple-600" />
                                             <div>
                                                 <p className="text-sm text-purple-700 font-medium">
-                                                    {t("Capacity") || "Capacity"}
+                                                    {t("Capacity") ||
+                                                        "Capacity"}
                                                 </p>
                                                 <p className="text-lg font-bold text-purple-800">
-                                                    {program.capacity || program.Capacity || t("Unlimited") || "Unlimited"}
+                                                    {program.capacity ||
+                                                        program.Capacity ||
+                                                        t("Unlimited") ||
+                                                        "Unlimited"}
                                                 </p>
                                             </div>
                                         </div>
@@ -494,7 +540,10 @@ export function ProgramDetails() {
                                                     {t("Level") || "Level"}
                                                 </p>
                                                 <p className="text-lg font-bold text-orange-800">
-                                                    {program.level || program.Level || t("All levels") || "All levels"}
+                                                    {program.level ||
+                                                        program.Level ||
+                                                        t("All levels") ||
+                                                        "All levels"}
                                                 </p>
                                             </div>
                                         </div>
@@ -505,18 +554,29 @@ export function ProgramDetails() {
                                 <div className="mb-8">
                                     <button
                                         onClick={handleApply}
-                                        disabled={program.status?.toLowerCase() === "closed"}
+                                        disabled={
+                                            program.status?.toLowerCase() ===
+                                            "closed"
+                                        }
                                         className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all ${
-                                            program.status?.toLowerCase() === "closed"
+                                            program.status?.toLowerCase() ===
+                                            "closed"
                                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                                                 : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 shadow-lg hover:shadow-xl"
                                         }`}
                                     >
-                                        {program.status?.toLowerCase() === "closed"
-                                            ? t("Registration Closed") || "Registration Closed"
+                                        {program.status?.toLowerCase() ===
+                                        "closed"
+                                            ? t("Registration Closed") ||
+                                              "Registration Closed"
                                             : program.price || program.Price
-                                            ? `${t("Apply Now") || "Apply Now"} - ${formatCurrency(program.price || program.Price)}`
-                                            : t("Apply for Free") || "Apply for Free"}
+                                            ? `${
+                                                  t("Apply Now") || "Apply Now"
+                                              } - ${formatCurrency(
+                                                  program.price || program.Price
+                                              )}`
+                                            : t("Apply for Free") ||
+                                              "Apply for Free"}
                                     </button>
                                 </div>
 
@@ -525,13 +585,25 @@ export function ProgramDetails() {
                                     <div className="mb-8">
                                         <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                             <FileText className="w-5 h-5" />
-                                            {t("Detailed Description") || "Detailed Description"}
+                                            {t("Detailed Description") ||
+                                                "Detailed Description"}
                                         </h2>
-                                        <div className="prose prose-lg max-w-none text-gray-700" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
+                                        <div
+                                            className="prose prose-lg max-w-none text-gray-700"
+                                            dir={
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr"
+                                            }
+                                        >
                                             {typeof description === "string" ? (
                                                 <p>{description}</p>
                                             ) : (
-                                                <div dangerouslySetInnerHTML={{ __html: description }} />
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: description,
+                                                    }}
+                                                />
                                             )}
                                         </div>
                                     </div>
@@ -544,11 +616,22 @@ export function ProgramDetails() {
                                             <Target className="w-5 h-5" />
                                             {t("Benefits") || "Benefits"}
                                         </h2>
-                                        <div className="prose prose-lg max-w-none text-gray-700" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
+                                        <div
+                                            className="prose prose-lg max-w-none text-gray-700"
+                                            dir={
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr"
+                                            }
+                                        >
                                             {typeof benefits === "string" ? (
                                                 <p>{benefits}</p>
                                             ) : (
-                                                <div dangerouslySetInnerHTML={{ __html: benefits }} />
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: benefits,
+                                                    }}
+                                                />
                                             )}
                                         </div>
                                     </div>
@@ -559,13 +642,26 @@ export function ProgramDetails() {
                                     <div className="mb-8">
                                         <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                             <CheckCircle className="w-5 h-5" />
-                                            {t("Requirements") || "Requirements"}
+                                            {t("Requirements") ||
+                                                "Requirements"}
                                         </h2>
-                                        <div className="prose prose-lg max-w-none text-gray-700" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
-                                            {typeof requirements === "string" ? (
+                                        <div
+                                            className="prose prose-lg max-w-none text-gray-700"
+                                            dir={
+                                                i18n.language === "ar"
+                                                    ? "rtl"
+                                                    : "ltr"
+                                            }
+                                        >
+                                            {typeof requirements ===
+                                            "string" ? (
                                                 <p>{requirements}</p>
                                             ) : (
-                                                <div dangerouslySetInnerHTML={{ __html: requirements }} />
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: requirements,
+                                                    }}
+                                                />
                                             )}
                                         </div>
                                     </div>
@@ -584,9 +680,13 @@ export function ProgramDetails() {
                             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                     <Mail className="w-5 h-5" />
-                                    {t("Contact for this program") || "Contact for this program"}
+                                    {t("Contact for this program") ||
+                                        "Contact for this program"}
                                 </h3>
-                                <form onSubmit={handleContactSubmit} className="space-y-4">
+                                <form
+                                    onSubmit={handleContactSubmit}
+                                    className="space-y-4"
+                                >
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             {t("Name") || "Name"}
@@ -594,9 +694,16 @@ export function ProgramDetails() {
                                         <input
                                             type="text"
                                             value={contactForm.name}
-                                            onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
+                                            onChange={(e) =>
+                                                setContactForm({
+                                                    ...contactForm,
+                                                    name: e.target.value,
+                                                })
+                                            }
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder={t("Your name") || "Your name"}
+                                            placeholder={
+                                                t("Your name") || "Your name"
+                                            }
                                             required
                                         />
                                     </div>
@@ -607,9 +714,16 @@ export function ProgramDetails() {
                                         <input
                                             type="email"
                                             value={contactForm.email}
-                                            onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+                                            onChange={(e) =>
+                                                setContactForm({
+                                                    ...contactForm,
+                                                    email: e.target.value,
+                                                })
+                                            }
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder={t("Your email") || "Your email"}
+                                            placeholder={
+                                                t("Your email") || "Your email"
+                                            }
                                             required
                                         />
                                     </div>
@@ -620,9 +734,17 @@ export function ProgramDetails() {
                                         <input
                                             type="text"
                                             value={contactForm.subject}
-                                            onChange={(e) => setContactForm({...contactForm, subject: e.target.value})}
+                                            onChange={(e) =>
+                                                setContactForm({
+                                                    ...contactForm,
+                                                    subject: e.target.value,
+                                                })
+                                            }
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder={t("Message subject") || "Message subject"}
+                                            placeholder={
+                                                t("Message subject") ||
+                                                "Message subject"
+                                            }
                                             required
                                         />
                                     </div>
@@ -632,10 +754,20 @@ export function ProgramDetails() {
                                         </label>
                                         <textarea
                                             value={contactForm.message}
-                                            onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
+                                            onChange={(e) =>
+                                                setContactForm({
+                                                    ...contactForm,
+                                                    message: e.target.value,
+                                                })
+                                            }
                                             rows={4}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            placeholder={t("Your message about this program...") || "Your message about this program..."}
+                                            placeholder={
+                                                t(
+                                                    "Your message about this program..."
+                                                ) ||
+                                                "Your message about this program..."
+                                            }
                                             required
                                         />
                                     </div>
@@ -646,11 +778,16 @@ export function ProgramDetails() {
                                             className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2"
                                         >
                                             <Send className="w-4 h-4" />
-                                            {isSubmittingContact ? (t("Sending...") || "Sending...") : (t("Send") || "Send")}
+                                            {isSubmittingContact
+                                                ? t("Sending...") ||
+                                                  "Sending..."
+                                                : t("Send") || "Send"}
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => setShowContactForm(false)}
+                                            onClick={() =>
+                                                setShowContactForm(false)
+                                            }
                                             className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                                         >
                                             {t("Cancel") || "Cancel"}
@@ -671,12 +808,22 @@ export function ProgramDetails() {
                                 <div className="flex items-start gap-3">
                                     <Calendar className="w-5 h-5 text-gray-500 mt-0.5" />
                                     <div className="flex-1">
-                                        <p className="font-medium text-gray-900">{t("Dates") || "Dates"}</p>
-                                        <p className="text-sm text-gray-600">
-                                            {t("Start") || "Start"}: {formatDate(program.start_date || program.StartDate)}
+                                        <p className="font-medium text-gray-900">
+                                            {t("Dates") || "Dates"}
                                         </p>
                                         <p className="text-sm text-gray-600">
-                                            {t("End") || "End"}: {formatDate(program.end_date || program.EndDate)}
+                                            {t("Start") || "Start"}:{" "}
+                                            {formatDate(
+                                                program.start_date ||
+                                                    program.StartDate
+                                            )}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                            {t("End") || "End"}:{" "}
+                                            {formatDate(
+                                                program.end_date ||
+                                                    program.EndDate
+                                            )}
                                         </p>
                                     </div>
                                 </div>
@@ -686,8 +833,19 @@ export function ProgramDetails() {
                                     <div className="flex items-start gap-3">
                                         <MapPin className="w-5 h-5 text-gray-500 mt-0.5" />
                                         <div>
-                                            <p className="font-medium text-gray-900">{t("Location") || "Location"}</p>
-                                            <p className="text-sm text-gray-600" dir={i18n.language === "ar" ? "rtl" : "ltr"}>{location}</p>
+                                            <p className="font-medium text-gray-900">
+                                                {t("Location") || "Location"}
+                                            </p>
+                                            <p
+                                                className="text-sm text-gray-600"
+                                                dir={
+                                                    i18n.language === "ar"
+                                                        ? "rtl"
+                                                        : "ltr"
+                                                }
+                                            >
+                                                {location}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -697,8 +855,12 @@ export function ProgramDetails() {
                                     <div className="flex items-start gap-3">
                                         <Globe className="w-5 h-5 text-gray-500 mt-0.5" />
                                         <div>
-                                            <p className="font-medium text-gray-900">{t("Language") || "Language"}</p>
-                                            <p className="text-sm text-gray-600">{program.language}</p>
+                                            <p className="font-medium text-gray-900">
+                                                {t("Language") || "Language"}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {program.language}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -708,8 +870,13 @@ export function ProgramDetails() {
                                     <div className="flex items-start gap-3">
                                         <User className="w-5 h-5 text-gray-500 mt-0.5" />
                                         <div>
-                                            <p className="font-medium text-gray-900">{t("Instructor") || "Instructor"}</p>
-                                            <p className="text-sm text-gray-600">{program.instructor}</p>
+                                            <p className="font-medium text-gray-900">
+                                                {t("Instructor") ||
+                                                    "Instructor"}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                                {program.instructor}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -719,14 +886,18 @@ export function ProgramDetails() {
                                     <div className="flex items-start gap-3">
                                         <ExternalLink className="w-5 h-5 text-gray-500 mt-0.5" />
                                         <div>
-                                            <p className="font-medium text-gray-900">{t("External Link") || "External Link"}</p>
+                                            <p className="font-medium text-gray-900">
+                                                {t("External Link") ||
+                                                    "External Link"}
+                                            </p>
                                             <a
                                                 href={program.external_link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="text-sm text-blue-600 hover:text-blue-800 underline"
                                             >
-                                                {t("Visit site") || "Visit site"}
+                                                {t("Visit site") ||
+                                                    "Visit site"}
                                             </a>
                                         </div>
                                     </div>
@@ -742,7 +913,10 @@ export function ProgramDetails() {
                 <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-hidden">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold">{t("Program Presentation") || "Program Presentation"}</h3>
+                            <h3 className="text-lg font-semibold">
+                                {t("Program Presentation") ||
+                                    "Program Presentation"}
+                            </h3>
                             <button
                                 onClick={() => setShowVideo(false)}
                                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -753,10 +927,14 @@ export function ProgramDetails() {
                         <div className="bg-gray-100 rounded-lg p-8 text-center">
                             <Play className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                             <p className="text-gray-600">
-                                {t("Presentation video will be available soon.") || "Presentation video will be available soon."}
+                                {t(
+                                    "Presentation video will be available soon."
+                                ) ||
+                                    "Presentation video will be available soon."}
                             </p>
                             <p className="text-sm text-gray-500 mt-2">
-                                {t("Feature under development") || "Feature under development"}
+                                {t("Feature under development") ||
+                                    "Feature under development"}
                             </p>
                         </div>
                     </div>

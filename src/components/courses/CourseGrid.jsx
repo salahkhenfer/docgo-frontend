@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { CourseCard } from "./CourseCard";
-import { CourseCardSkeleton } from "../UI/LoadingSpinner";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
@@ -21,7 +20,29 @@ export function CourseGrid({
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array.from({ length: 9 }).map((_, index) => (
-                    <CourseCardSkeleton key={index} />
+                    <div
+                        key={index}
+                        className="bg-white rounded-2xl shadow-sm overflow-hidden animate-pulse max-w-sm mx-auto"
+                    >
+                        {/* Image skeleton */}
+                        <div className="h-48 bg-gray-200"></div>
+                        <div className="p-6">
+                            {/* Title skeleton */}
+                            <div className="h-6 bg-gray-200 rounded mb-3 w-3/4"></div>
+                            {/* Description skeleton */}
+                            <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                            <div className="h-4 bg-gray-200 rounded mb-4 w-2/3"></div>
+                            {/* Price skeleton */}
+                            <div className="h-8 bg-gray-200 rounded mb-4 w-24"></div>
+                            {/* Tags skeleton */}
+                            <div className="flex gap-2 mb-4">
+                                <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                                <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                            </div>
+                            {/* Button skeleton */}
+                            <div className="h-12 bg-gray-200 rounded-xl w-full"></div>
+                        </div>
+                    </div>
                 ))}
             </div>
         );
@@ -44,7 +65,7 @@ export function CourseGrid({
 
     return (
         <div className="relative transition-all duration-300">
-            <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
                     <CourseCard
                         key={course.id}
@@ -52,9 +73,7 @@ export function CourseGrid({
                         id={course.id}
                         Image={course.Image || course.coverImage}
                         title={course.Title}
-                        description={
-                            course.shortDescription || course.Description
-                        }
+                        description={course.shortDescription}
                         price={course.Price}
                         discountPrice={course.discountPrice}
                         currency={course.Currency || "USD"}

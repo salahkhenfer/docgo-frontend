@@ -87,7 +87,7 @@ const CertificateCard = ({ certificate }) => {
     return (
         <div className="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow">
             <img
-                src={certificate.Image}
+                src={import.meta.env.VITE_API_URL + certificate.Image}
                 className="w-full h-48 object-cover rounded-xl mb-4"
                 alt={certificate.title}
             />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -6,21 +6,57 @@ import { useAppContext } from "../../AppContext";
 import { useFavorites } from "../../hooks/useFavorite";
 import logo from "../../assets/Logo.png";
 import LanguageDropdown from "../../components/LanguageDropdown";
-// import LightColoredButton from "../../../components/UI/LightColoredButton";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import NavigationMobile from "./NavigationMobile";
-import NavBarDropDown from "./NavBarDropDown"; // Import the component directly
+import NavBarDropDown from "./NavBarDropDown";
 
 function Navigation() {
     const { t } = useTranslation();
     const { user, isAuth } = useAppContext();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState("");
+    const [isScrolled, setIsScrolled] = useState(false);
     const { i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
 
     // Add favorites hook
     const { totalCount } = useFavorites();
+
+    // Scroll detection for navbar background
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Active section detection
+    useEffect(() => {
+        if (location.pathname !== "/") {
+            setActiveSection(location.pathname);
+            return;
+        }
+
+        const sections = ["ourServices", "aboutUs"];
+        const handleScroll = () => {
+            const current = sections.find((section) => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    return rect.top <= 100 && rect.bottom >= 100;
+                }
+                return false;
+            });
+            setActiveSection(current || "");
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll(); // Initial check
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [location.pathname]);
 
     // Function to handle scrolling to sections
     const handleScrollToSection = (sectionId) => {
@@ -48,44 +84,87 @@ function Navigation() {
         }
     };
     const MainContent = () => {
+        const getNavLinkClass = (path, sectionId = null) => {
+            let isActive = false;
+
+            if (sectionId) {
+                // For section buttons (Our Services, About Us)
+                isActive = activeSection === sectionId;
+            } else {
+                // For regular navigation links
+                if (path === "/") {
+                    // Home is active for both "/" and "/dashboard"
+                    isActive =
+                        location.pathname === "/" ||
+                        location.pathname === "/dashboard";
+                } else {
+                    // For other pages, check exact path or if current path starts with the link path
+                    isActive =
+                        location.pathname === path ||
+                        location.pathname.startsWith(path + "/");
+                }
+            }
+
+            // Debug log to help troubleshoot
+            if (path) {
+                console.log(
+                    `Nav Link Debug: path=${path}, currentPath=${location.pathname}, isActive=${isActive}`
+                );
+            }
+
+            return `relative px-4 py-2 font-medium text-sm lg:text-base transition-all duration-300 group
+                ${
+                    isActive
+                        ? "text-[#0086C9]"
+                        : "text-gray-700 hover:text-[#0086C9]"
+                }
+                lg:max-3xl:text-sm md:max-lg:text-[12px]`;
+        };
+
+        const ActiveIndicator = ({ isActive }) => (
+            <span
+                className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#0086C9] to-[#00A6E6] 
+                transition-transform duration-300 origin-center
+                ${
+                    isActive
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                }`}
+            />
+        );
+
+        const isHomeActive =
+            location.pathname === "/" || location.pathname === "/dashboard";
+        const isProgramsActive =
+            location.pathname === "/programs" ||
+            location.pathname.startsWith("/programs/");
+        const isCoursesActive =
+            location.pathname === "/courses" ||
+            location.pathname.startsWith("/courses/");
+        const isFaqActive = location.pathname === "/faq";
+
         return (
-            <div className="flex justify-center items-center gap-5 lg:max-3xl:gap-4 lg:text-base">
-                <Link
-                    to="/"
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
-                >
+            <div className="flex justify-center items-center gap-2 lg:gap-4">
+                <Link to="/" className={getNavLinkClass("/")}>
                     {t("Home_nav")}
+                    <ActiveIndicator isActive={isHomeActive} />
                 </Link>
-                <Link
-                    to="/Programs"
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
-                >
+                <Link to="/programs" className={getNavLinkClass("/programs")}>
                     {t("Programs_nav")}
+                    <ActiveIndicator isActive={isProgramsActive} />
                 </Link>
-                <Link
-                    to="/Courses"
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
-                >
+                <Link to="/courses" className={getNavLinkClass("/courses")}>
                     {t("Courses_nav")}
+                    <ActiveIndicator isActive={isCoursesActive} />
                 </Link>
                 <Link
                     to="/faq"
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px] flex items-center gap-1"
+                    className={`${getNavLinkClass(
+                        "/faq"
+                    )} flex items-center gap-1`}
                 >
-                    {/* <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg> */}
                     {t("FAQ")}
+                    <ActiveIndicator isActive={isFaqActive} />
                 </Link>
                 {/* <Link
                     to="/favorites"
@@ -104,15 +183,27 @@ function Navigation() {
                     <>
                         <button
                             onClick={() => handleScrollToSection("ourServices")}
-                            className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
+                            className={`${getNavLinkClass(
+                                "",
+                                "ourServices"
+                            )} bg-transparent border-none cursor-pointer`}
                         >
                             {t("OurServicesLink")}
+                            <ActiveIndicator
+                                isActive={activeSection === "ourServices"}
+                            />
                         </button>
                         <button
                             onClick={() => handleScrollToSection("aboutUs")}
-                            className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
+                            className={`${getNavLinkClass(
+                                "",
+                                "aboutUs"
+                            )} bg-transparent border-none cursor-pointer`}
                         >
                             {t("AboutUsLink")}
+                            <ActiveIndicator
+                                isActive={activeSection === "aboutUs"}
+                            />
                         </button>
                     </>
                 )}
@@ -121,12 +212,43 @@ function Navigation() {
     };
 
     return (
-        <div className="sticky top-0 w-full z-50 bg-white">
-            <nav className="flex justify-between shadow-md z-50 items-center px-10 sm-sm:max-lg:hidden">
-                <Link to="/">
+        <div
+            className={`sticky top-0 w-full z-50 transition-all duration-300 
+            ${
+                isScrolled
+                    ? "bg-white/95 backdrop-blur-md shadow-lg"
+                    : "bg-white"
+            }`}
+        >
+            {/* Progress indicator */}
+            <div
+                className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0086C9] to-transparent opacity-0 animate-pulse"
+                style={{
+                    background: `linear-gradient(90deg, 
+                        transparent 0%, 
+                        #0086C9 ${
+                            (window.scrollY /
+                                (document.documentElement.scrollHeight -
+                                    window.innerHeight)) *
+                            100
+                        }%, 
+                        transparent 100%)`,
+                }}
+            />
+
+            <nav
+                className={`flex justify-between items-center px-10 transition-all duration-300
+                ${isScrolled ? "py-2" : "py-0"} 
+                sm-sm:max-lg:hidden`}
+            >
+                <Link to="/" className="flex items-center">
                     <img
-                        className="w-24 h-24 rounded-full md:w-16 md:h-16 lg:w-20 lg:h-20 
-                        transition-transform duration-300 hover:scale-105"
+                        className={`rounded-full transition-all duration-300 hover:scale-105
+                            ${
+                                isScrolled
+                                    ? "w-16 h-16 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                                    : "w-24 h-24 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                            }`}
                         src={logo}
                         alt="Docgo Agency logo"
                     />
@@ -163,19 +285,31 @@ function Navigation() {
                     {/* Favorites Button */}
                     <Link
                         to="/favorites"
-                        className="relative p-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
+                        className={`relative p-3 rounded-full transition-all duration-300 group
+                            ${
+                                location.pathname === "/favorites" ||
+                                location.pathname.startsWith("/favorites/")
+                                    ? "bg-red-100 text-red-600"
+                                    : "text-gray-600 hover:text-red-500 hover:bg-red-50"
+                            }`}
                         title={t("Favorites") || "Favorites"}
                     >
-                        {totalCount > 0 ? (
-                            <BsHeartFill className="w-6 h-6 text-red-500" />
-                        ) : (
-                            <BsHeart className="w-6 h-6" />
-                        )}
-                        {totalCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
-                                {totalCount > 99 ? "99+" : totalCount}
-                            </span>
-                        )}
+                        <div className="relative">
+                            {totalCount > 0 ? (
+                                <BsHeartFill className="w-6 h-6 text-red-500 animate-pulse" />
+                            ) : (
+                                <BsHeart className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
+                            )}
+                            {totalCount > 0 && (
+                                <span
+                                    className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full 
+                                    w-5 h-5 flex items-center justify-center min-w-[20px] font-bold shadow-lg animate-bounce
+                                    ring-2 ring-white"
+                                >
+                                    {totalCount > 99 ? "99+" : totalCount}
+                                </span>
+                            )}
+                        </div>
                     </Link>
 
                     {isAuth && user ? (

@@ -40,10 +40,21 @@ const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
             <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB457] to-[#FF705B]
-                flex items-center justify-center border-2 border-white hover:opacity-90
-                transition-all duration-300 transform hover:scale-105"
+                flex items-center justify-center border-2 border-white shadow-lg hover:shadow-xl
+                transition-all duration-300 transform hover:scale-110 relative overflow-hidden
+                before:absolute before:inset-0 before:bg-white/20 before:rounded-full
+                before:scale-0 hover:before:scale-100 before:transition-transform before:duration-300"
             >
-                <FaUser className="text-black/80 w-5 h-5" />
+                <FaUser className="text-white w-5 h-5 relative z-10" />
+                {/* Active indicator ring */}
+                <div
+                    className={`absolute inset-0 rounded-full border-2 transition-all duration-300
+                    ${
+                        isDropdownOpen
+                            ? "border-[#0086C9] scale-125"
+                            : "border-transparent scale-100"
+                    }`}
+                />
             </button>
 
             {isDropdownOpen && (
@@ -52,67 +63,91 @@ const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
                         i18n.language === "ar"
                             ? "md:left-[20px] left-4"
                             : "md:right-[20px] right-4"
-                    } md:top-[70px] top-20 w-56 bg-white rounded-lg shadow-xl py-2 z-[9999]`}
+                    } md:top-[70px] top-20 w-56 bg-white rounded-lg shadow-xl py-2 z-[9999]
+                    animate-in slide-in-from-top-2 fade-in duration-200`}
                     style={{
-                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                        boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                         border: "1px solid rgba(0,0,0,0.1)",
                     }}
                 >
-                    <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-600">
-                            {/* {t("accountName")} */}
-                        </p>
-                        <p className="text-sm font-semibold text-gray-800">
-                            {user?.firstName
-                                ? user.firstName.length > 10
-                                    ? user.firstName.slice(0, 10) + "..."
-                                    : user.firstName
-                                : t("guest")}
-                        </p>
+                    <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0086C9] to-[#00A6E6] flex items-center justify-center">
+                                <span className="text-white text-sm font-bold">
+                                    {user?.firstName
+                                        ?.charAt(0)
+                                        ?.toUpperCase() || "G"}
+                                </span>
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-gray-800">
+                                    {user?.firstName
+                                        ? user.firstName.length > 12
+                                            ? user.firstName.slice(0, 12) +
+                                              "..."
+                                            : user.firstName
+                                        : t("guest")}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    {t("welcomeBack")}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <Link
-                        to="/Profile"
-                        className="block w-full px-4 py-2 text-sm hover:bg-gray-50
-                        transition-colors duration-200"
-                        onClick={() => setIsDropdownOpen(false)}
-                    >
-                        <span>{t("Profile")}</span>
-                    </Link>
-                    <Link
-                        to="/"
-                        className="block w-full px-4 py-2 text-sm hover:bg-gray-50
-                        transition-colors duration-200"
-                        onClick={() => setIsDropdownOpen(false)}
-                    >
-                        <span>{t("home")}</span>
-                    </Link>
+                    <div className="py-1">
+                        <Link
+                            to="/Profile"
+                            className="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]
+                            transition-all duration-200 relative overflow-hidden"
+                            onClick={() => setIsDropdownOpen(false)}
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
+                            <span className="ml-2">{t("Profile")}</span>
+                        </Link>
+                        <Link
+                            to="/"
+                            className="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]
+                            transition-all duration-200 relative overflow-hidden"
+                            onClick={() => setIsDropdownOpen(false)}
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
+                            <span className="ml-2">{t("home")}</span>
+                        </Link>
 
-                    <Link
-                        to="/myApplications"
-                        className="block w-full px-4 py-2 text-sm hover:bg-gray-50
-                        transition-colors duration-200"
-                        onClick={() => setIsDropdownOpen(false)}
-                    >
-                        <span>{t("MyApplications")}</span>
-                    </Link>
+                        <Link
+                            to="/myApplications"
+                            className="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]
+                            transition-all duration-200 relative overflow-hidden"
+                            onClick={() => setIsDropdownOpen(false)}
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
+                            <span className="ml-2">{t("MyApplications")}</span>
+                        </Link>
 
-                    <Link
-                        to="/notifications"
-                        className="block w-full px-4 py-2 text-sm hover:bg-gray-50
-                        transition-colors duration-200"
-                        onClick={() => setIsDropdownOpen(false)}
-                    >
-                        <span>{t("notificationsWord")}</span>
-                    </Link>
+                        <Link
+                            to="/notifications"
+                            className="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]
+                            transition-all duration-200 relative overflow-hidden"
+                            onClick={() => setIsDropdownOpen(false)}
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
+                            <span className="ml-2">
+                                {t("notificationsWord")}
+                            </span>
+                        </Link>
+                    </div>
 
-                    <button
-                        className="w-full text-left px-4 py-2 text-sm text-red-600
-                        hover:bg-red-50 transition-colors duration-200"
-                        onClick={logout}
-                    >
-                        <span>{t("Logout")}</span>
-                    </button>
+                    <div className="border-t border-gray-100 pt-1">
+                        <button
+                            className="group flex items-center w-full px-4 py-2 text-sm text-red-600
+                            hover:bg-red-50 transition-all duration-200 relative overflow-hidden"
+                            onClick={logout}
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1 bg-red-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
+                            <span className="ml-2">{t("Logout")}</span>
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

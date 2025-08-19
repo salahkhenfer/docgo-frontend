@@ -24,7 +24,11 @@ const CourseSmallCard = ({
                 <div className="aspect-video bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center overflow-hidden">
                     {course.thumbnail ? (
                         <img
-                            src={course.thumbnail}
+                            src={
+                                import.meta.env.VITE_API_URL +
+                                    course.thumbnail ||
+                                import.meta.env.VITE_API_URL + course.Image
+                            }
                             alt={course.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />

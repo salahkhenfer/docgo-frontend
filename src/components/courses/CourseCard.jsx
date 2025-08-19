@@ -4,6 +4,7 @@ import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 import { Star, BookOpen } from "lucide-react";
+import PropTypes from "prop-types";
 export function CourseCard({
     course,
     id,
@@ -21,7 +22,6 @@ export function CourseCard({
     progress = 0,
     hasImage = true,
 }) {
-    const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [hasImageError, setHasImageError] = useState(false);
     const defaultThumbnail =
         "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
@@ -36,8 +36,7 @@ export function CourseCard({
     const handleToggleFavorite = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const defaultThumbnail =
-            "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
+
         // Create item object for local storage
         const courseItem = {
             id,
@@ -48,7 +47,6 @@ export function CourseCard({
             currency,
             level,
             Image: Image || defaultThumbnail,
-
             hasImage,
         };
 
@@ -79,163 +77,23 @@ export function CourseCard({
         isEnrolled && enrollmentStatus === "approved" && progress > 0;
 
     return (
-        <article className="flex relative grow shrink gap-9 items-start self-stretch my-auto min-w-60 w-[325px]">
+        <article className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden relative group max-w-sm mx-auto">
+            {/* Featured Badge */}
             {course.isFeatured && (
-                <div className="absolute top-3 right-3">
-                    <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
+                <div className="absolute top-4 right-4 z-20">
+                    <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                         <Star className="w-3 h-3" />
-                        <span className="text-xs font-semibold">Vedette</span>
+                        <span className="text-xs font-semibold">Featured</span>
                     </div>
                 </div>
             )}
-            <div className="flex z-0 flex-col flex-1 shrink my-auto w-full bg-white basis-0 min-w-60 rounded-xl shadow-md p-4">
-                {hasImage && !hasImageError ? (
-                    <img
-                        src={
-                            import.meta.env.VITE_API_URL + Image ||
-                            defaultThumbnail
-                        }
-                        alt={title}
-                        onLoad={() => setIsImageLoaded(true)}
-                        onError={() => setHasImageError(true)}
-                        className="object-contain w-full aspect-[2.06] rounded-lg mb-4"
-                    />
-                ) : (
-                    <div className="w-full aspect-[2.06] bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-gray-400" />
-                    </div>
-                )}
-
-                {/* Title & Description */}
-                <div className="w-full">
-                    <h3 className="text-2xl font-semibold text-zinc-800">
-                        {title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-5 text-neutral-600">
-                        {description}
-                    </p>
-
-                    <div className="flex items-center gap-4 mt-3">
-                        {/* {averageRating && (
-                            <div className="flex items-center gap-1">
-                                <div className="flex items-center">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <span
-                                            key={star}
-                                            className={`text-lg ${
-                                                star <=
-                                                Math.floor(averageRating)
-                                                    ? "text-yellow-500"
-                                                    : star ===
-                                                          Math.ceil(
-                                                              averageRating
-                                                          ) &&
-                                                      averageRating % 1 !== 0
-                                                    ? "text-yellow-300"
-                                                    : "text-gray-300"
-                                            }`}
-                                        >
-                                            ★
-                                        </span>
-                                    ))}
-                                </div>
-                                <span className="text-sm text-gray-600 ml-1">
-                                    {averageRating} ({totalReviews || 0})
-                                </span> 
-                            </div>
-                        )} */}
-
-                        {level && (
-                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-                                {level}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Price */}
-                    <div className="flex items-center gap-2 mt-3">
-                        {discountPrice ? (
-                            <>
-                                <span
-                                    className={`text-lg font-bold ${
-                                        discountPrice === 0
-                                            ? "text-green-600"
-                                            : "text-green-600"
-                                    }`}
-                                >
-                                    {formatPrice(discountPrice)}
-                                </span>
-                                <span className="text-sm text-gray-500 line-through">
-                                    {formatPrice(price)}
-                                </span>
-                            </>
-                        ) : (
-                            <span
-                                className={`text-lg font-bold ${
-                                    price === 0 || !price
-                                        ? "text-green-600"
-                                        : "text-gray-800"
-                                }`}
-                            >
-                                {formatPrice(price)}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Enrollment Status */}
-                    {getEnrollmentStatusText() && (
-                        <div className="mt-3">
-                            <span
-                                className={`text-xs px-2 py-1 rounded-full ${
-                                    enrollmentStatus === "approved"
-                                        ? "bg-green-100 text-green-600"
-                                        : enrollmentStatus === "pending"
-                                        ? "bg-yellow-100 text-yellow-600"
-                                        : "bg-red-100 text-red-600"
-                                }`}
-                            >
-                                {getEnrollmentStatusText()}
-                            </span>
-                        </div>
-                    )}
-
-                    {/* Progress Bar */}
-                    {shouldShowProgress && (
-                        <div className="mt-3">
-                            <div className="flex justify-between text-xs text-gray-600 mb-1">
-                                <span>{t("Progress") || "Progress"}</span>
-                                <span>{Math.round(progress)}%</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div
-                                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${progress}%` }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Button */}
-                <Link
-                    to={`/Courses/${id}`}
-                    onClick={() => window.scrollTo(0, 0)}
-                    aria-label={t("Detail")}
-                    data-testid="course-detail-link"
-                    className="gap-2 self-start px-8 py-3 mt-4 text-base leading-relaxed text-white bg-blue-500 rounded-full hover:bg-blue-600 transition w-full text-center"
-                >
-                    {isEnrolled && enrollmentStatus === "approved"
-                        ? t("ContinueCourse") || "Continue Course"
-                        : t("Detail") || "View Details"}
-                </Link>
-            </div>
 
             {/* Heart Icon */}
-            <div className="flex absolute z-10 gap-4 items-center self-start right-[21px] top-[21px]">
+            <div className="absolute top-4 left-4 z-20">
                 {isFavorited ? (
                     <BsHeartFill
                         onClick={handleToggleFavorite}
-                        className={`w-10 h-10 cursor-pointer transition-colors duration-300 text-red-600 ${
+                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-red-600 drop-shadow-sm ${
                             favoriteLoading ? "opacity-50" : "hover:scale-110"
                         }`}
                         title="Remove from favorites"
@@ -243,13 +101,205 @@ export function CourseCard({
                 ) : (
                     <BsHeart
                         onClick={handleToggleFavorite}
-                        className={`w-10 h-10 cursor-pointer transition-colors duration-300 text-gray-400 hover:text-red-500 ${
+                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-white drop-shadow-lg hover:text-red-500 ${
                             favoriteLoading ? "opacity-50" : "hover:scale-110"
                         }`}
                         title="Add to favorites"
                     />
                 )}
             </div>
+
+            {/* Course Image */}
+            <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                {hasImage && !hasImageError && Image ? (
+                    <img
+                        src={
+                            import.meta.env.VITE_API_URL + Image ||
+                            defaultThumbnail
+                        }
+                        alt={title}
+                        onError={() => setHasImageError(true)}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="text-white text-4xl">
+                        <BookOpen className="w-16 h-16" />
+                    </div>
+                )}
+            </div>
+
+            {/* Course Info */}
+            <div className="p-6">
+                {/* Title & Description */}
+                <div className="mb-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                        {title}
+                    </h3>
+                    {description && (
+                        <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+                            {description}
+                        </p>
+                    )}
+                </div>
+
+                {/* Price Section */}
+                <div className="mb-4">
+                    {discountPrice !== undefined && discountPrice !== null ? (
+                        <div className="flex items-center gap-2">
+                            <span
+                                className={`text-2xl font-bold ${
+                                    discountPrice === 0
+                                        ? "text-green-600"
+                                        : "text-blue-600"
+                                }`}
+                            >
+                                {formatPrice(discountPrice)}
+                            </span>
+                            {price > 0 && (
+                                <span className="text-lg text-gray-500 line-through">
+                                    {formatPrice(price)}
+                                </span>
+                            )}
+                        </div>
+                    ) : (
+                        <div
+                            className={`text-2xl font-bold ${
+                                price === 0 || !price
+                                    ? "text-green-600"
+                                    : "text-blue-600"
+                            }`}
+                        >
+                            {formatPrice(price)}
+                        </div>
+                    )}
+                </div>
+
+                {/* Tags/Badges */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {level && (
+                        <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
+                            📊 {level}
+                        </span>
+                    )}
+                    {course.Category && (
+                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                            {course.Category}
+                        </span>
+                    )}
+                    {course.Specialty && (
+                        <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">
+                            {course.Specialty}
+                        </span>
+                    )}
+                    {course.certificate && (
+                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-medium">
+                            🏆 {t("Certificate") || "Certificate"}
+                        </span>
+                    )}
+                    {course.Language && (
+                        <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">
+                            🌐 {course.Language}
+                        </span>
+                    )}
+                </div>
+
+                {/* Rating Section */}
+                {averageRating && (
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                    key={star}
+                                    className={`w-4 h-4 ${
+                                        star <= Math.floor(averageRating)
+                                            ? "text-yellow-500 fill-current"
+                                            : star ===
+                                                  Math.ceil(averageRating) &&
+                                              averageRating % 1 !== 0
+                                            ? "text-yellow-300 fill-current"
+                                            : "text-gray-300"
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                        <span className="text-sm text-gray-600">
+                            {averageRating} ({totalReviews || 0} reviews)
+                        </span>
+                    </div>
+                )}
+
+                {/* Enrollment Status */}
+                {getEnrollmentStatusText() && (
+                    <div className="mb-4">
+                        <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                enrollmentStatus === "approved"
+                                    ? "bg-green-100 text-green-700"
+                                    : enrollmentStatus === "pending"
+                                    ? "bg-yellow-100 text-yellow-700"
+                                    : "bg-red-100 text-red-700"
+                            }`}
+                        >
+                            {getEnrollmentStatusText()}
+                        </span>
+                    </div>
+                )}
+
+                {/* Progress Bar */}
+                {shouldShowProgress && (
+                    <div className="mb-4">
+                        <div className="flex justify-between text-xs text-gray-600 mb-2">
+                            <span className="font-medium">
+                                {t("Progress") || "Progress"}
+                            </span>
+                            <span className="font-semibold">
+                                {Math.round(progress)}%
+                            </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div
+                                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* Action Button */}
+                <Link
+                    to={`/Courses/${id}`}
+                    onClick={() => window.scrollTo(0, 0)}
+                    className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+                >
+                    {isEnrolled && enrollmentStatus === "approved"
+                        ? t("ContinueCourse") || "Continue Course"
+                        : t("View Details") || "View Details"}
+                </Link>
+            </div>
         </article>
     );
 }
+
+CourseCard.propTypes = {
+    course: PropTypes.shape({
+        isFeatured: PropTypes.bool,
+        Category: PropTypes.string,
+        Specialty: PropTypes.string,
+        certificate: PropTypes.bool,
+        Language: PropTypes.string,
+    }),
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    Image: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    price: PropTypes.number,
+    discountPrice: PropTypes.number,
+    currency: PropTypes.string,
+    level: PropTypes.string,
+    averageRating: PropTypes.number,
+    totalReviews: PropTypes.number,
+    isEnrolled: PropTypes.bool,
+    enrollmentStatus: PropTypes.string,
+    progress: PropTypes.number,
+    hasImage: PropTypes.bool,
+};

@@ -173,6 +173,7 @@ export default function Courses() {
                 });
 
                 const response = await getCourses(params);
+                console.log("Fetched courses:", response);
 
                 if (response.success) {
                     const coursesData = response.data.courses || [];

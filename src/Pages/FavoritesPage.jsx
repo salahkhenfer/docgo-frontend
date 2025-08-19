@@ -152,7 +152,7 @@ const FavoriteCard = ({ item, type }) => {
                         <img
                             src={
                                 // item.ThumbnailUrl ||
-                                item.Image
+                                import.meta.env.VITE_API_URL + item.Image
                             }
                             alt={item.Title}
                             className="w-full h-full object-cover"

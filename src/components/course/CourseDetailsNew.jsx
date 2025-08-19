@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoMdRefresh } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     ArrowLeft,
     Pause,
@@ -18,33 +18,32 @@ import {
     PlayCircle,
     GraduationCap,
 } from "lucide-react";
-import { useCourse } from "../hooks/useCourse";
-import { useAppContext } from "../AppContext"; // Add auth context
-import MainLoading from "../MainLoading";
+import { useCourse } from "../../hooks/useCourse";
+import MainLoading from "../../MainLoading";
 import toast from "react-hot-toast";
-import axios from "../utils/axios";
+import axios from "../../utils/axios";
 
 // Import component parts
-import CourseSmallCard from "../components/course/components/CourseSmallCard";
-import CourseContent from "../components/course/components/CourseContent";
-import CourseReviews from "../components/course/components/CourseReviews";
-import CourseFAQSection from "../components/course/components/CourseFAQSection";
+import CourseSmallCard from "./components/CourseSmallCard";
+import CourseContent from "./components/CourseContent";
+import CourseReviews from "./components/CourseReviews";
+import CourseFAQSection from "./components/CourseFAQSection";
 
-export const Course = () => {
+export const CourseDetails = () => {
     const { t, i18n } = useTranslation();
     const { courseId } = useParams();
     const navigate = useNavigate();
-    const { user } = useAppContext(); // Use context for auth
     const [showVideo, setShowVideo] = useState(false);
     const [showContactForm, setShowContactForm] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const [contactForm, setContactForm] = useState({
         subject: "",
         message: "",
-        name: user ? `${user.firstName} ${user.lastName}` : "",
-        email: user?.email || "",
+        name: "",
+        email: "",
     });
     const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+    const [user, setUser] = useState(null);
 
     const {
         courseData,
@@ -62,6 +61,26 @@ export const Course = () => {
         hasData,
     } = useCourse(courseId);
 
+    // Check if user is authenticated (you may need to adjust this based on your auth system)
+    useEffect(() => {
+        // Replace this with your actual auth check
+        const checkAuth = async () => {
+            try {
+                // This is a placeholder - adjust according to your auth system
+                const token = localStorage.getItem("token");
+                if (token) {
+                    const userData = JSON.parse(
+                        localStorage.getItem("user") || "{}"
+                    );
+                    setUser(userData);
+                }
+            } catch (error) {
+                console.error("Auth check failed:", error);
+            }
+        };
+        checkAuth();
+    }, []);
+
     const formatCurrency = (amount, currency = "USD") => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
@@ -77,16 +96,15 @@ export const Course = () => {
     const handleContactSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate required fields
-        if (!contactForm.subject || !contactForm.message) {
+        if (!user) {
             toast.error(
-                t("Please fill all fields") || "Please fill all fields"
+                t("Please log in to send a message") ||
+                    "Please log in to send a message"
             );
             return;
         }
 
-        // For non-authenticated users, validate name and email
-        if (!user && (!contactForm.name || !contactForm.email)) {
+        if (!contactForm.subject || !contactForm.message) {
             toast.error(
                 t("Please fill all fields") || "Please fill all fields"
             );
@@ -95,33 +113,18 @@ export const Course = () => {
 
         try {
             setIsSubmittingContact(true);
-
-            const requestData = {
+            await axios.post("/contact", {
                 subject: contactForm.subject,
                 message: contactForm.message,
                 relatedType: "course",
                 relatedId: courseId,
-            };
-
-            // For non-authenticated users, include name and email
-            if (!user) {
-                requestData.name = contactForm.name;
-                requestData.email = contactForm.email;
-            }
-
-            const endpoint = user ? "/contact" : "/contact";
-            await axios.post(endpoint, requestData);
+            });
 
             toast.success(
                 t("Message sent successfully") || "Message sent successfully"
             );
 
-            setContactForm({
-                subject: "",
-                message: "",
-                name: user ? `${user.firstName} ${user.lastName}` : "",
-                email: user?.email || "",
-            });
+            setContactForm({ subject: "", message: "" });
             setShowContactForm(false);
         } catch (error) {
             console.error("Error sending message:", error);
@@ -297,15 +300,17 @@ export const Course = () => {
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <button
-                                onClick={() =>
-                                    setShowContactForm(!showContactForm)
-                                }
-                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                            >
-                                <MessageSquare className="w-4 h-4" />
-                                {t("Contact") || "Contact"}
-                            </button>
+                            {user && (
+                                <button
+                                    onClick={() =>
+                                        setShowContactForm(!showContactForm)
+                                    }
+                                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                >
+                                    <MessageSquare className="w-4 h-4" />
+                                    {t("Contact") || "Contact"}
+                                </button>
+                            )}
                             <button
                                 onClick={handleShare}
                                 className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -504,8 +509,8 @@ export const Course = () => {
                     {/* Right Column - Sidebar */}
                     <div className="lg:col-span-1 space-y-4 lg:space-y-6 order-1 lg:order-2">
                         {/* Contact Form */}
-                        {showContactForm && (
-                            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                        {showContactForm && user && (
+                            <div className="bg-white rounded-xl shadow-sm p-6">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                     <Mail className="w-5 h-5" />
                                     {t("Contact for this course") ||
@@ -515,70 +520,9 @@ export const Course = () => {
                                     onSubmit={handleContactSubmit}
                                     className="space-y-4"
                                 >
-                                    {/* Name and Email fields for non-authenticated users */}
-                                    {!user && (
-                                        <div className="grid grid-cols-1 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    {t("Name") || "Name"}{" "}
-                                                    <span className="text-red-500">
-                                                        *
-                                                    </span>
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={contactForm.name}
-                                                    onChange={(e) =>
-                                                        setContactForm({
-                                                            ...contactForm,
-                                                            name: e.target
-                                                                .value,
-                                                        })
-                                                    }
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                    placeholder={
-                                                        t("Your full name") ||
-                                                        "Your full name"
-                                                    }
-                                                    required
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    {t("Email") || "Email"}{" "}
-                                                    <span className="text-red-500">
-                                                        *
-                                                    </span>
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    value={contactForm.email}
-                                                    onChange={(e) =>
-                                                        setContactForm({
-                                                            ...contactForm,
-                                                            email: e.target
-                                                                .value,
-                                                        })
-                                                    }
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                    placeholder={
-                                                        t(
-                                                            "Your email address"
-                                                        ) ||
-                                                        "Your email address"
-                                                    }
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            {t("Subject") || "Subject"}{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
+                                            {t("Subject") || "Subject"}
                                         </label>
                                         <input
                                             type="text"
@@ -599,10 +543,7 @@ export const Course = () => {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            {t("Message") || "Message"}{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
+                                            {t("Message") || "Message"}
                                         </label>
                                         <textarea
                                             value={contactForm.message}
@@ -613,7 +554,7 @@ export const Course = () => {
                                                 })
                                             }
                                             rows={4}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             placeholder={
                                                 t(
                                                     "Your message about this course..."
@@ -665,8 +606,8 @@ export const Course = () => {
                             />
                         </div>
 
-                        {/* Info Card */}
-                        {!showContactForm && (
+                        {/* Contact for non-authenticated users */}
+                        {!user && (
                             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
                                 <div className="text-center">
                                     <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
@@ -676,16 +617,16 @@ export const Course = () => {
                                     </h3>
                                     <p className="text-blue-700 text-sm mb-4">
                                         {t(
-                                            "Click the Contact button to get in touch with us"
+                                            "Log in to contact the instructors directly"
                                         ) ||
-                                            "Click the Contact button to get in touch with us"}
+                                            "Log in to contact the instructors directly"}
                                     </p>
-                                    <button
-                                        onClick={() => setShowContactForm(true)}
+                                    <Link
+                                        to="/Login"
                                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
                                     >
-                                        {t("Contact Us") || "Contact Us"}
-                                    </button>
+                                        {t("Log In") || "Log In"}
+                                    </Link>
                                 </div>
                             </div>
                         )}
@@ -728,4 +669,3 @@ export const Course = () => {
         </div>
     );
 };
-export default Course;

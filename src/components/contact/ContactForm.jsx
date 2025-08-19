@@ -22,6 +22,7 @@ const ContactForm = ({
         message: "",
         priority: "medium",
     });
+    const post_link = user ? `/contact/auth-user` : `/contact`;
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
@@ -63,7 +64,7 @@ const ContactForm = ({
             }
             console.log("Payload for contact form:", payload);
 
-            const response = await apiClient.post("/contact", payload);
+            const response = await apiClient.post(post_link, payload);
             console.log("Response from contact form:", response.data);
 
             setSuccess(true);

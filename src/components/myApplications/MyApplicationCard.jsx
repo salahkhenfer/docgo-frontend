@@ -55,7 +55,9 @@ const MyApplicationCard = ({ program, status }) => {
                     <div className="flex-shrink-0">
                         <div className="relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-2 shadow-sm">
                             <img
-                                src={program.Image}
+                                src={
+                                    import.meta.env.VITE_API_URL + program.Image
+                                }
                                 alt={program.title}
                                 className="w-24 h-20 lg:w-28 lg:h-24 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
                             />
