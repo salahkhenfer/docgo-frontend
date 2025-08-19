@@ -180,7 +180,10 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                                 <div className="flex items-center justify-between">
                                     <div className="text-lg font-medium text-gray-900 pr-4 flex-1">
                                         <RichTextDisplay
-                                            content={getLocalizedText(faq, "question")}
+                                            content={getLocalizedText(
+                                                faq,
+                                                "question"
+                                            )}
                                             className="text-gray-900"
                                         />
                                     </div>
@@ -196,7 +199,10 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                             {isOpen && (
                                 <div className="px-6 py-4 bg-white border-t border-gray-200">
                                     <RichTextDisplay
-                                        content={getLocalizedText(faq, "answer")}
+                                        content={getLocalizedText(
+                                            faq,
+                                            "answer"
+                                        )}
                                         className="text-gray-700 mb-4"
                                     />
 

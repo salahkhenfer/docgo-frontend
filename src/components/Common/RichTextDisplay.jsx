@@ -68,7 +68,9 @@ const RichTextDisplay = ({
     }
 
     return (
-        <div className={`rich-text-display prose prose-sm max-w-none ${className}`}>
+        <div
+            className={`rich-text-display prose prose-sm max-w-none ${className}`}
+        >
             <div className={textClassName}>{parse(sanitizedContent)}</div>
         </div>
     );

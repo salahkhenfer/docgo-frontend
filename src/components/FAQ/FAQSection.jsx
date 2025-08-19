@@ -6,11 +6,7 @@ import RichTextDisplay from "../Common/RichTextDisplay";
 import apiClient from "../../services/apiClient";
 import { useTranslation } from "react-i18next";
 
-const FAQSection = ({
-    type = "home",
-    courseId = null,
-    programId = null,
-}) => {
+const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
     const { t, i18n } = useTranslation();
 
     const { user, isAuth } = useAppContext();
@@ -328,7 +324,8 @@ const FAQSection = ({
                                 <div className="text-lg font-medium text-gray-900 pr-4 flex-1">
                                     <RichTextDisplay
                                         content={
-                                            i18n.language === "ar" && faq.question_ar
+                                            i18n.language === "ar" &&
+                                            faq.question_ar
                                                 ? faq.question_ar
                                                 : i18n.language === "fr" &&
                                                   faq.question_fr
@@ -358,7 +355,8 @@ const FAQSection = ({
                                 <div className="inline-block mt-2">
                                     <RichTextDisplay
                                         content={
-                                            i18n.language === "ar" && faq.category_ar
+                                            i18n.language === "ar" &&
+                                            faq.category_ar
                                                 ? faq.category_ar
                                                 : i18n.language === "fr" &&
                                                   faq.category_fr
