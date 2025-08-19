@@ -440,6 +440,11 @@
         "learningProgress": "تقدم التعلم"
     },
     "messages": {
+        "title": "رسائلي",
+        "subtitle": "إدارة رسائلك مع فريق الدعم",
+        "noMessages": "لا توجد رسائل",
+        "sendFirst": "إرسال رسالتك الأولى",
+        "noMessagesText": "لا توجد رسائل في صندوق الوارد الخاص بك.",
         "newMessage": "رسالة جديدة",
         "newMessageSubtitle": "إرسال رسالة إلى فريق الدعم",
         "contactSupport": "تواصل مع فريق الدعم للمساعدة",

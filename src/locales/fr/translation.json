@@ -441,6 +441,11 @@
         "learningProgress": "Progrès d'apprentissage"
     },
     "messages": {
+        "title": "Mes Messages",
+        "subtitle": "Gérer vos messages avec notre équipe de support",
+        "noMessages": "Aucun message",
+        "noMessagesText": "Vous n'avez aucun message dans votre boîte de réception.",
+        "sendFirst": "Envoyer votre premier message",
         "newMessage": "Nouveau Message",
         "newMessageSubtitle": "Envoyer un message à notre équipe de support",
         "contactSupport": "Contactez notre équipe de support pour assistance",

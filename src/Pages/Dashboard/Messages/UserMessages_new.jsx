@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppContext } from "../../../AppContext";
 import ContactForm from "../../../components/contact/ContactForm";
+import Swal from "sweetalert2";
 
 function UserMessages_new() {
     const { t, i18n } = useTranslation();
@@ -17,7 +18,19 @@ function UserMessages_new() {
 
     const handleSuccess = () => {
         // Navigate back to messages list after successful submission
-        navigate("/dashboard/messages");
+        Swal.fire({
+            title: t("messages.sent", "Message Sent"),
+            text: t(
+                "messages.sentText",
+                "Your message has been sent successfully."
+            ),
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+        }).then(() => {
+            navigate("/dashboard/messages");
+        });
     };
 
     const handleCancel = () => {

@@ -32,6 +32,7 @@ const UserMessages = () => {
                 const response = await apiClient.get(
                     `/contact/user/${user.id}/messages`
                 );
+                console.log("User messages response:", response);
                 if (response.data.success) {
                     setMessages(response.data.data.messages || []);
                 }
@@ -108,12 +109,12 @@ const UserMessages = () => {
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 flex items-center">
                             <ChatBubbleLeftRightIcon className="h-7 w-7 text-blue-600 mr-3" />
-                            {t("messages.title", "My Messages")}
+                            {t("messages.title", "Mes Messages")}
                         </h1>
                         <p className="mt-1 text-gray-600">
                             {t(
                                 "messages.subtitle",
-                                "View and manage your messages with our support team"
+                                "voir votre messagerie avec notre équipe de support"
                             )}
                         </p>
                     </div>
@@ -153,7 +154,10 @@ const UserMessages = () => {
                             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                         >
                             <PlusIcon className="h-4 w-4 mr-2" />
-                            {t("messages.sendFirst", "Send Your First Message")}
+                            {t(
+                                "messages.sendFirst",
+                                "Envoyer votre premier message"
+                            )}
                         </Link>
                     </div>
                 ) : (
