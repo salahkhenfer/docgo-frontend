@@ -5,8 +5,10 @@ import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import MainLoading from "../../MainLoading";
 import apiClient from "../../services/apiClient";
-import UserSidebar from "../../components/dashboard/Sidebar";
+import Sidebar from "../../components/dashboard/Sidebar";
 import DashboardOverview from "../../components/dashboard/DashboardOverview";
+import Navigation from "../../components/Navbar/Navigation";
+import Footer from "../../LandingPage/Layout/Footer";
 
 const UserDashboard = () => {
     const { user } = useAppContext();
@@ -114,15 +116,16 @@ const UserDashboard = () => {
     return (
         <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
             {/* Dashboard with Sidebar Layout */}
-            <div className="flex">
+            <div className="flex relative">
                 {/* Fixed Sidebar */}
-                <UserSidebar
+                <Sidebar
                     isOpen={sidebarOpen}
                     onClose={() => setSidebarOpen(false)}
                 />
 
                 {/* Main Content with proper spacing for fixed sidebar */}
-                <div className="flex-1 lg:pl-64">
+                <div className="flex-1 ">
+                    {/* <Navigation /> */}
                     {/* Mobile header with menu button */}
                     <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
                         <button
@@ -152,6 +155,7 @@ const UserDashboard = () => {
                             <Outlet />
                         )}
                     </div>
+                    {/* <Footer /> */}
                 </div>
             </div>
         </div>

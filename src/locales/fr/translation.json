@@ -159,7 +159,8 @@
         "viewAllFeatured": "Voir tous les programmes vedettes"
     },
     "common": {
-        "retry": "Réessayer"
+        "retry": "Réessayer",
+        "back": "Retour"
     },
     "Courses": "Cours",
     "Programs": "Programmes",
@@ -320,7 +321,9 @@
     "profile": {
         "professional_member": "Membre professionnel",
         "completed_courses": "cours terminés",
-        "in_progress_courses": "cours en cours"
+        "in_progress_courses": "cours en cours",
+        "name": "Nom",
+        "email": "Email"
     },
     "courses_data": {
         "title": "Vos cours",
@@ -436,6 +439,23 @@
         "rejected": "Rejeté",
         "scholarshipApplications": "Candidatures aux bourses",
         "learningProgress": "Progrès d'apprentissage"
+    },
+    "messages": {
+        "newMessage": "Nouveau Message",
+        "newMessageSubtitle": "Envoyer un message à notre équipe de support",
+        "contactSupport": "Contactez notre équipe de support pour assistance",
+        "yourInfo": "Vos Informations",
+        "helpTitle": "Comment pouvons-nous vous aider ?",
+        "technical": "Support Technique",
+        "technicalDesc": "Problèmes avec les cours, vidéos, ou fonctionnalités de la plateforme",
+        "billing": "Facturation et Paiements",
+        "billingDesc": "Questions sur les paiements, remboursements, ou abonnements",
+        "account": "Gestion de Compte",
+        "accountDesc": "Paramètres de profil, réinitialisation de mot de passe, ou problèmes de compte",
+        "general": "Demande Générale",
+        "generalDesc": "Autres questions ou commentaires sur nos services",
+        "responseTime": "Temps de Réponse",
+        "responseTimeDesc": "Nous répondons généralement dans les 24 heures pendant les jours ouvrables."
     },
     "faq": {
         "all": "Tous",

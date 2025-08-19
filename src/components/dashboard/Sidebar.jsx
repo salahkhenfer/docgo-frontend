@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 import {
     ChatBubbleLeftRightIcon,
     EnvelopeIcon,
     BellIcon,
     UserIcon,
-    CogIcon,
     HeartIcon,
     DocumentTextIcon,
     AcademicCapIcon,
@@ -27,13 +27,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
 
     const isRTL = i18n.language === "ar";
 
-    useEffect(() => {
-        if (user?.id) {
-            fetchContactStats();
-        }
-    }, [user?.id]);
-
-    const fetchContactStats = async () => {
+    const fetchContactStats = useCallback(async () => {
         try {
             // This would be a new endpoint to get user's contact message stats
             const response = await apiClient.get(
@@ -46,7 +40,13 @@ const UserSidebar = ({ isOpen, onClose }) => {
             console.log("Contact stats not available:", error);
             // Don't show error to user, just use default stats
         }
-    };
+    }, [user?.id]);
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchContactStats();
+        }
+    }, [user?.id, fetchContactStats]);
 
     const sidebarItems = [
         {
@@ -124,27 +124,39 @@ const UserSidebar = ({ isOpen, onClose }) => {
 
             {/* Sidebar */}
             <div
-                className={`fixed inset-y-0 ${
+                className={` sticky top-0 ${
                     isRTL ? "right-0" : "left-0"
-                } flex flex-col w-64 bg-white border-r border-gray-200 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-                    isOpen
-                        ? "translate-x-0"
-                        : isRTL
-                        ? "translate-x-full"
-                        : "-translate-x-full"
-                } lg:fixed lg:h-screen`}
+                } flex flex-col w-64 bg-white border-r border-gray-200
+            z-40 transform transition-transform duration-300 ease-in-out  overflow-auto
+            lg:translate-x-0   ${
+                isOpen
+                    ? "translate-x-0"
+                    : isRTL
+                    ? "translate-x-full"
+                    : "-translate-x-full"
+            }  max-h-[100vh] `}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                    <Link to={"/dashboard"} className="flex items-center  py-2">
+                    <Link
+                        to={"/dashboard"}
+                        className="flex items-center py-2"
+                        onClick={() => {
+                            // Close sidebar on mobile after navigation
+                            if (window.innerWidth < 1024) {
+                                onClose();
+                            }
+                        }}
+                    >
                         <UserIcon className="h-8 w-8 text-blue-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
                             {t("dashboard.sidebar.title", "Dashboard")}
                         </h2>
                     </Link>
+                    {/* Close button - only visible on mobile */}
                     <button
                         onClick={onClose}
-                        className=" text-gray-400 hover:text-gray-600"
+                        className="lg:hidden text-gray-400 hover:text-gray-600"
                     >
                         <svg
                             className="h-6 w-6"
@@ -164,7 +176,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
 
                 {/* User Info */}
                 <div className="p-4 border-b border-gray-200 bg-gray-50">
-                    <div className="flex items-center">
+                    <Link to={`/profile`} className="flex items-center">
                         {user?.profile_pic_link ? (
                             <img
                                 src={
@@ -194,7 +206,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
                                 {user?.email}
                             </p>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Navigation Items */}
@@ -260,6 +272,12 @@ const UserSidebar = ({ isOpen, onClose }) => {
                         </p>
                         <Link
                             to="/dashboard/messages/new"
+                            onClick={() => {
+                                // Close sidebar on mobile after navigation
+                                if (window.innerWidth < 1024) {
+                                    onClose();
+                                }
+                            }}
                             className="mt-2 inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-700"
                         >
                             {t("dashboard.sidebar.sendMessage", "Send Message")}
@@ -270,6 +288,11 @@ const UserSidebar = ({ isOpen, onClose }) => {
             </div>
         </>
     );
+};
+
+UserSidebar.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
 };
 
 export default UserSidebar;

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Logo from "../src/assets/Logo.png";
 import "./index.css";
 import { Outlet, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
 import Navigation from "./components/Navbar/Navigation";
@@ -12,12 +11,14 @@ import MainLoading from "./MainLoading";
 
 function App() {
     const [loading, setLoading] = useState(true);
-    const { i18n } = useTranslation();
-    const [selectedLanguage, setSelectedLanguage] = useState(
-        i18n.language || "fr"
-    );
     const location = useLocation();
     const { loading: authLoading } = useAppContext(); // Use auth loading from context
+
+    // Check if we're in dashboard routes or auth routes that shouldn't have navbar/footer
+    const isDashboardRoute = location.pathname.startsWith("/dashboard");
+    const isAuthRoute = ["/login", "/register"].includes(location.pathname);
+    // const shouldHideNavAndFooter = isDashboardRoute || isAuthRoute;
+    const shouldHideNavAndFooter = isAuthRoute;
 
     useEffect(() => {
         // Track page visit whenever location changes
@@ -94,12 +95,14 @@ function App() {
     }
 
     return (
-        <div className=" relative">
-            <Navigation />
+        <div className="relative">
+            {!shouldHideNavAndFooter && <Navigation />}
             <Outlet />
-            <Reveal>
-                <Footer />
-            </Reveal>
+            {!shouldHideNavAndFooter && (
+                <Reveal>
+                    <Footer />
+                </Reveal>
+            )}
         </div>
     );
 }

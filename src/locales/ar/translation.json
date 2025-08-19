@@ -321,7 +321,9 @@
     "Completezvotreeducation": "أكمل تعليمك",
 
     "profile": {
-        "professional_member": "عضو محترف"
+        "professional_member": "عضو محترف",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني"
     },
     "courses_data": {
         "title": "دوراتك",
@@ -436,6 +438,23 @@
         "rejected": "مرفوض",
         "scholarshipApplications": "طلبات المنح الدراسية",
         "learningProgress": "تقدم التعلم"
+    },
+    "messages": {
+        "newMessage": "رسالة جديدة",
+        "newMessageSubtitle": "إرسال رسالة إلى فريق الدعم",
+        "contactSupport": "تواصل مع فريق الدعم للمساعدة",
+        "yourInfo": "معلوماتك",
+        "helpTitle": "كيف يمكننا مساعدتك؟",
+        "technical": "الدعم الفني",
+        "technicalDesc": "مشاكل في الدورات والفيديوهات أو وظائف المنصة",
+        "billing": "الفواتير والمدفوعات",
+        "billingDesc": "أسئلة حول المدفوعات والاسترداد أو الاشتراكات",
+        "account": "إدارة الحساب",
+        "accountDesc": "إعدادات الملف الشخصي وإعادة تعيين كلمة المرور أو مشاكل الحساب",
+        "general": "استفسار عام",
+        "generalDesc": "أسئلة أخرى أو تعليقات حول خدماتنا",
+        "responseTime": "وقت الرد",
+        "responseTimeDesc": "نحن عادة ما نرد خلال 24 ساعة خلال أيام العمل."
     },
     "faq": {
         "all": "الكل",
