@@ -1,4 +1,16 @@
 {
+    "Home_nav": "Accueil",
+    "Programs_nav": "Programmes",
+    "Courses_nav": "Cours",
+    "Profile_nav": "Profil",
+    "faq_data": {
+        "title": "Questions Fréquemment Posées",
+        "intro": "Trouvez des réponses aux questions courantes sur nos cours et programmes."
+    },
+    "FAQ": "FAQ",
+    "faq_title": "Questions Fréquemment Posées",
+    "no_faq_now": "Aucune FAQ disponible pour le moment.",
+    "faq_description": "Ce sont les questions les plus fréquemment posées sur DOCGO. Vous ne trouvez pas ce que vous cherchez ?",
     "no_prerequisites": "Aucune condition préalable",
     "edit_profile": "Modifier le profil",
     "loading": "Chargement",
@@ -19,6 +31,8 @@
         "phone": "Téléphone"
     },
     "course_data": {
+        "no_prerequisites": "Aucune condition préalable",
+        "enroll": "S'inscrire",
         "title": "Fondements du design : Des bases à la maîtrise professionnelle",
         "subtitle": "Section",
         "readComments": "Lire les commentaires",
@@ -303,11 +317,18 @@
         "title": "Vos cours",
         "progress": "Progression",
         "continue": "Continuer",
+        "review": "Réviser",
+        "certificate": "Certificat",
+        "enrolled": "Inscrit",
+        "videos": "vidéos",
         "view_all": "Voir tous les cours"
     },
     "applications": {
         "title": "Mes candidatures",
         "submitted": "Soumise le:",
+        "lastUpdate": "Dernière mise à jour",
+        "access": "Accéder",
+        "pendingMessage": "Votre candidature est en cours d'examen",
         "deadline": "Deadline:",
         "view_all": "Voir toutes les candidatures",
         "status": {
@@ -374,5 +395,44 @@
         "phoneValidationError": "Format de numéro de téléphone invalide.",
         "back": "Retour",
         "finish": "Finaliser"
+    },
+    "dashboard": {
+        "welcome": "Bienvenue",
+        "dashboardSubtitle": "Voici un aperçu de votre parcours d'apprentissage et de vos candidatures aux bourses",
+        "enrolledCourses": "Cours d'apprentissage",
+        "applications": "Candidatures aux bourses",
+        "favorites": "Favoris",
+        "completedCourses": "Cours terminés",
+        "recentEnrollments": "Apprentissage récent",
+        "recentApplications": "Candidatures récentes aux bourses",
+        "quickActions": "Actions rapides",
+        "viewAll": "Voir tout",
+        "continue": "Continuer l'apprentissage",
+        "noEnrollments": "Aucun cours d'apprentissage pour le moment",
+        "browseCourses": "Explorer les cours d'apprentissage",
+        "noApplications": "Aucune candidature aux bourses pour le moment",
+        "browsePrograms": "Explorer les programmes de bourses",
+        "viewFavorites": "Voir les favoris",
+        "editProfile": "Modifier le profil",
+        "courseTitle": "Titre du cours",
+        "applicationTitle": "Titre de la candidature",
+        "course": "Cours d'apprentissage",
+        "program": "Programme de bourse",
+        "approved": "Approuvé",
+        "pending": "En attente",
+        "rejected": "Rejeté",
+        "scholarshipApplications": "Candidatures aux bourses",
+        "learningProgress": "Progrès d'apprentissage"
+    },
+    "faq": {
+        "all": "Tous",
+        "peopleFoundHelpful": "personnes ont trouvé cela utile",
+        "helpful": "Utile",
+        "voted": "Voté",
+        "voting": "Vote en cours...",
+        "loginToVote": "Connectez-vous pour voter",
+        "pleaseLoginToVote": "Veuillez vous connecter pour voter sur les FAQ.",
+        "alreadyVoted": "Vous avez déjà voté sur cette FAQ.",
+        "failedToVote": "Échec de l'envoi du vote. Veuillez réessayer."
     }
 }

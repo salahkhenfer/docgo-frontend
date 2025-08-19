@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { useAppContext } from "../../../AppContext";
-import { useFavorites } from "../../../hooks/useFavorite";
-import logo from "../../../assets/Logo.png";
-import LanguageDropdown from "../../../components/LanguageDropdown";
+import { useAppContext } from "../../AppContext";
+import { useFavorites } from "../../hooks/useFavorite";
+import logo from "../../assets/Logo.png";
+import LanguageDropdown from "../../components/LanguageDropdown";
 // import LightColoredButton from "../../../components/UI/LightColoredButton";
-import LightColoredButton from "../../../components/Buttons/LightColoredButton";
+import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import NavigationMobile from "./NavigationMobile";
-import CustomAvatar from "./Avatar"; // Import the component directly
+import NavBarDropDown from "./NavBarDropDown"; // Import the component directly
 
 function Navigation() {
     const { t } = useTranslation();
-    const { user } = useAppContext();
+    const { user, isAuth } = useAppContext();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { i18n } = useTranslation();
     const navigate = useNavigate();
@@ -51,16 +51,41 @@ function Navigation() {
         return (
             <div className="flex justify-center items-center gap-5 lg:max-3xl:gap-4 lg:text-base">
                 <Link
+                    to="/"
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
+                >
+                    {t("Home_nav")}
+                </Link>
+                <Link
                     to="/Programs"
                     className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
-                    {t("Programs")}
+                    {t("Programs_nav")}
                 </Link>
                 <Link
                     to="/Courses"
                     className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px]"
                 >
-                    {t("Courses")}
+                    {t("Courses_nav")}
+                </Link>
+                <Link
+                    to="/faq"
+                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 lg:max-3xl:text-sm md:max-lg:text-[12px] flex items-center gap-1"
+                >
+                    {/* <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg> */}
+                    {t("FAQ")}
                 </Link>
                 {/* <Link
                     to="/favorites"
@@ -75,18 +100,22 @@ function Navigation() {
                     </svg>
                     {t("Favorites")}
                 </Link> */}
-                <button
-                    onClick={() => handleScrollToSection("ourServices")}
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
-                >
-                    {t("OurServicesLink")}
-                </button>
-                <button
-                    onClick={() => handleScrollToSection("aboutUs")}
-                    className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
-                >
-                    {t("AboutUsLink")}
-                </button>
+                {!isAuth && (
+                    <>
+                        <button
+                            onClick={() => handleScrollToSection("ourServices")}
+                            className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
+                        >
+                            {t("OurServicesLink")}
+                        </button>
+                        <button
+                            onClick={() => handleScrollToSection("aboutUs")}
+                            className="hover:text-[#0086C9] hover:text-[16px] font-medium transition-all duration-300 hover:cursor-pointer lg:max-3xl:text-sm md:max-lg:text-[12px] bg-transparent border-none"
+                        >
+                            {t("AboutUsLink")}
+                        </button>
+                    </>
+                )}
             </div>
         );
     };
@@ -109,7 +138,7 @@ function Navigation() {
                 >
                     <LanguageDropdown />
                     {user ? (
-                        <CustomAvatar
+                        <NavBarDropDown
                             isDropdownOpen={isDropdownOpen}
                             setIsDropdownOpen={setIsDropdownOpen}
                         />
@@ -149,8 +178,8 @@ function Navigation() {
                         )}
                     </Link>
 
-                    {user ? (
-                        <CustomAvatar
+                    {isAuth && user ? (
+                        <NavBarDropDown
                             isDropdownOpen={isDropdownOpen}
                             setIsDropdownOpen={setIsDropdownOpen}
                         />

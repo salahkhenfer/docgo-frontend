@@ -42,7 +42,7 @@ const PaymentSuccessPage = () => {
                     // Redirect based on item type
                     const redirectPath =
                         itemType === "course"
-                            ? `/coursedetails/${courseId}/videos`
+                            ? `/Courses/${courseId}/videos`
                             : `/program/${programId}`;
                     navigate(redirectPath);
                     return 0;

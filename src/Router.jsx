@@ -9,7 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
-import LandingPage from "./LandingPage/LandingPage";
+import Home from "./Pages/Home";
 import { Programs } from "./Pages/Programs";
 import { ProgramDetails } from "./Pages/ProgramDetails";
 import MyApplications from "./Pages/MyApplications";
@@ -17,6 +17,7 @@ import Courses from "./Pages/Courses";
 import FavoritesPage from "./Pages/FavoritesPage";
 import PaymentPage from "./Pages/PaymentPage";
 import PaymentSuccessPage from "./Pages/PaymentSuccessPage";
+import FAQPage from "./Pages/FAQPage";
 
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
 import QuizContent from "./Pages/QuizContent";
@@ -74,7 +75,7 @@ const Routers = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <LandingPage />,
+                element: <Home />,
             },
             {
                 path: "Programs",
@@ -94,6 +95,10 @@ const Routers = createBrowserRouter([
                 element: <Courses />,
             },
             {
+                path: "faq",
+                element: <FAQPage />,
+            },
+            {
                 path: "favorites",
                 element: <FavoritesPage />,
             },
@@ -103,7 +108,7 @@ const Routers = createBrowserRouter([
                 element: <NotificationsPage />,
             },
             {
-                path: "coursedetails/:courseId",
+                path: "Courses/:courseId",
                 element: <Course />,
                 children: [
                     {

@@ -114,7 +114,7 @@ export default function Courses() {
         search: searchParams.get("search") || "",
         category: searchParams.get("category") || "",
         specialty: searchParams.get("specialty") || "",
-        status: searchParams.get("status") || "active",
+        status: searchParams.get("status") || "published",
         featured: searchParams.get("featured") || "",
         difficulty: searchParams.get("difficulty") || "",
         certificate: searchParams.get("certificate") || "",
@@ -182,9 +182,11 @@ export default function Courses() {
                     extractFiltersData(coursesData);
 
                     setPagination({
-                        currentPage: response.data.currentPage || page,
-                        totalPages: response.data.totalPages || 1,
-                        totalCourses: response.data.totalCourses || 0,
+                        currentPage:
+                            response.data.pagination?.currentPage || page,
+                        totalPages: response.data.pagination?.totalPages || 1,
+                        totalCourses:
+                            response.data.pagination?.totalCourses || 0,
                         limit: pagination.limit,
                     });
                     setError(null);
@@ -383,7 +385,7 @@ export default function Courses() {
             search: "",
             category: "",
             specialty: "",
-            status: "active",
+            status: "published",
             featured: "",
             difficulty: "",
             certificate: "",

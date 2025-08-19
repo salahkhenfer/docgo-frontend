@@ -3,7 +3,7 @@ import { useState } from "react";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
-import { Star } from "lucide-react";
+import { Star, BookOpen } from "lucide-react";
 export function CourseCard({
     course,
     id,
@@ -89,27 +89,21 @@ export function CourseCard({
                 </div>
             )}
             <div className="flex z-0 flex-col flex-1 shrink my-auto w-full bg-white basis-0 min-w-60 rounded-xl shadow-md p-4">
-                {hasImage ? (
-                    <>
-                        {/* Skeleton shown while Image loads or fails */}
-                        {(!isImageLoaded || hasImageError) && (
-                            <div className="w-full absolute aspect-[2.06] bg-gray-200 animate-pulse rounded-lg mb-4" />
-                        )}
-                        {/* Actual Image */}
-                        {!hasImageError && (
-                            <img
-                                src={Image || defaultThumbnail}
-                                alt={title}
-                                onLoad={() => setIsImageLoaded(true)}
-                                onError={() => setHasImageError(true)}
-                                className={`object-contain w-full aspect-[2.06] rounded-lg mb-4 transition-opacity duration-300 ${
-                                    isImageLoaded ? "opacity-100" : "opacity-0"
-                                }`}
-                            />
-                        )}
-                    </>
+                {hasImage && !hasImageError ? (
+                    <img
+                        src={
+                            import.meta.env.VITE_API_URL + Image ||
+                            defaultThumbnail
+                        }
+                        alt={title}
+                        onLoad={() => setIsImageLoaded(true)}
+                        onError={() => setHasImageError(true)}
+                        className="object-contain w-full aspect-[2.06] rounded-lg mb-4"
+                    />
                 ) : (
-                    <div className="w-full aspect-[2.06] bg-gray-200 animate-pulse rounded-lg mb-4" />
+                    <div className="w-full aspect-[2.06] bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-gray-400" />
+                    </div>
                 )}
 
                 {/* Title & Description */}
@@ -224,7 +218,7 @@ export function CourseCard({
 
                 {/* Button */}
                 <Link
-                    to={`/CourseDetails/${id}`}
+                    to={`/Courses/${id}`}
                     onClick={() => window.scrollTo(0, 0)}
                     aria-label={t("Detail")}
                     data-testid="course-detail-link"

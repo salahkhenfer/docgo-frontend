@@ -1,4 +1,12 @@
 {
+    "Home_nav": "الرئيسية",
+    "Programs_nav": "البرامج",
+    "Courses_nav": "الدورات",
+    "Profile_nav": "الملف الشخصي",
+    "FAQ": "الأسئلة الشائعة",
+    "faq_title": "الأسئلة الشائعة ",
+    "no_faq_now": "Aucune FAQ disponible pour le moment.",
+
     "no_prerequisites": "لا توجد متطلبات مسبقة",
     "edit_profile": "تعديل الحساب الشخصي",
     "loading": "جارٍ التحميل",
@@ -21,6 +29,8 @@
         "in_progress_courses": "دورات قيد التقدم"
     },
     "course_data": {
+        "no_prerequisites": "لا توجد متطلبات مسبقة",
+        "enroll": "التسجيل",
         "title": "أساسيات التصميم: من البداية إلى الاحتراف",
         "subtitle": "الفيديو التعليمي",
         "readComments": "قراءة التعليقات",
@@ -305,11 +315,18 @@
         "title": "دوراتك",
         "progress": "التقدم",
         "continue": "استمر",
+        "review": "مراجعة",
+        "certificate": "شهادة",
+        "enrolled": "مسجل",
+        "videos": "فيديوهات",
         "view_all": "عرض جميع الدورات"
     },
     "applications": {
         "title": "طلباتي",
         "submitted": "تم التقديم في:",
+        "lastUpdate": "آخر تحديث",
+        "access": "الوصول",
+        "pendingMessage": "طلبك قيد المراجعة",
         "deadline": "الموعد النهائي:",
         "view_all": "عرض جميع الطلبات",
         "status": {
@@ -375,5 +392,44 @@
         "phoneValidationError": "تنسيق رقم الهاتف غير صالح.",
         "back": "رجوع",
         "finish": "إنهاء"
+    },
+    "dashboard": {
+        "welcome": "مرحباً",
+        "dashboardSubtitle": "إليك نظرة عامة على رحلتك التعليمية وطلبات المنح الدراسية",
+        "enrolledCourses": "دورات التعلم",
+        "applications": "طلبات المنح الدراسية",
+        "favorites": "المفضلة",
+        "completedCourses": "الدورات المكتملة",
+        "recentEnrollments": "التعلم الحديث",
+        "recentApplications": "طلبات المنح الحديثة",
+        "quickActions": "إجراءات سريعة",
+        "viewAll": "عرض الكل",
+        "continue": "متابعة التعلم",
+        "noEnrollments": "لا توجد دورات تعليمية حتى الآن",
+        "browseCourses": "استكشاف دورات التعلم",
+        "noApplications": "لا توجد طلبات منح دراسية حتى الآن",
+        "browsePrograms": "استكشاف برامج المنح الدراسية",
+        "viewFavorites": "عرض المفضلة",
+        "editProfile": "تعديل الملف الشخصي",
+        "courseTitle": "عنوان الدورة",
+        "applicationTitle": "عنوان الطلب",
+        "course": "دورة تعليمية",
+        "program": "برنامج منحة دراسية",
+        "approved": "موافق عليه",
+        "pending": "قيد الانتظار",
+        "rejected": "مرفوض",
+        "scholarshipApplications": "طلبات المنح الدراسية",
+        "learningProgress": "تقدم التعلم"
+    },
+    "faq": {
+        "all": "الكل",
+        "peopleFoundHelpful": "أشخاص وجدوا هذا مفيداً",
+        "helpful": "مفيد",
+        "voted": "تم التصويت",
+        "voting": "جارٍ التصويت...",
+        "loginToVote": "قم بتسجيل الدخول للتصويت",
+        "pleaseLoginToVote": "يرجى تسجيل الدخول للتصويت على الأسئلة الشائعة.",
+        "alreadyVoted": "لقد قمت بالتصويت على هذا السؤال بالفعل.",
+        "failedToVote": "فشل في إرسال التصويت. يرجى المحاولة مرة أخرى."
     }
 }

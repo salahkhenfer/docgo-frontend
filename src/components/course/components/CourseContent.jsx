@@ -26,9 +26,10 @@ const CourseContent = ({
     return (
         <div className="space-y-8">
             {/* Prerequisites */}
-            {course.prerequisites ? (
+            {course.Prerequisites ? (
                 <RichTextDisplay
-                    content={course.prerequisites || course.prerequisites}
+                    textClassName=""
+                    content={course.Prerequisites || course.prerequisites}
                 />
             ) : (
                 <p className="text-gray-500">

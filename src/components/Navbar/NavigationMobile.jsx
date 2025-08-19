@@ -3,36 +3,30 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import logo from "../../../assets/Logo.png";
-import LanguageDropdown from "../../../components/LanguageDropdown";
-import { useAppContext } from "../../../AppContext";
-import { useFavorites } from "../../../hooks/useFavorite";
-import CustomAvatar from "./Avatar"; // Import directly
+import logo from "../../assets/Logo.png";
+import LanguageDropdown from "../../components/LanguageDropdown";
+import { useAppContext } from "../../AppContext";
+import { useFavorites } from "../../hooks/useFavorite";
+import NavBarDropDown from "./NavBarDropDown";
+
 function NavigationMobile() {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-    const { user } = useAppContext();
+    const { user, isAuth } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Add favorites hook
     const { totalCount } = useFavorites();
 
-    // Function to handle scrolling to sections
     const handleScrollToSection = (sectionId) => {
-        setIsOpen(false); // Close mobile menu
+        setIsOpen(false);
         if (location.pathname === "/") {
-            // If already on home page, just scroll
             const element = document.getElementById(sectionId);
             if (element) {
-                element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
+                element.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         } else {
-            // Navigate to home first, then scroll
             navigate("/");
             setTimeout(() => {
                 const element = document.getElementById(sectionId);
@@ -74,11 +68,11 @@ function NavigationMobile() {
                             </span>
                         )}
                     </Link>
+
                     <LanguageDropdown />
 
-                    {/* Use CustomAvatar directly with its own state */}
-                    {user ? (
-                        <CustomAvatar
+                    {user && isAuth ? (
+                        <NavBarDropDown
                             isDropdownOpen={isAvatarDropdownOpen}
                             setIsDropdownOpen={setIsAvatarDropdownOpen}
                         />
@@ -100,24 +94,43 @@ function NavigationMobile() {
                 </div>
             </div>
 
-            {/* Mobile menu dropdown */}
             {isOpen && (
                 <div className="bg-white shadow-md py-4 px-6 absolute w-full z-[9000]">
                     <div className="flex flex-col gap-4">
+                        {user && isAuth && (
+                            <Link
+                                to="/Profile"
+                                className="text-customGray py-2 border-b border-gray-100"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {t("Profile_nav")}
+                            </Link>
+                        )}
+
+                        <Link
+                            to="/"
+                            className="text-customGray py-2 border-b border-gray-100"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            {t("Home_nav")}
+                        </Link>
+
                         <Link
                             to="/Programs"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >
-                            {t("Programs")}
+                            {t("Programs_nav")}
                         </Link>
+
                         <Link
                             to="/Courses"
                             className="text-customGray py-2 border-b border-gray-100"
                             onClick={() => setIsOpen(false)}
                         >
-                            {t("Courses")}
+                            {t("Courses_nav")}
                         </Link>
+
                         <Link
                             to="/favorites"
                             className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2 relative"
@@ -135,18 +148,35 @@ function NavigationMobile() {
                                 </span>
                             )}
                         </Link>
-                        <button
-                            onClick={() => handleScrollToSection("ourServices")}
-                            className="text-customGray py-2 border-b border-gray-100 cursor-pointer bg-transparent border-none text-left w-full"
+
+                        <Link
+                            to="/faq"
+                            className="text-customGray py-2 border-b border-gray-100 flex items-center gap-2"
+                            onClick={() => setIsOpen(false)}
                         >
-                            {t("OurServicesLink")}
-                        </button>
-                        <button
-                            onClick={() => handleScrollToSection("aboutUs")}
-                            className="text-customGray py-2 cursor-pointer bg-transparent border-none text-left w-full"
-                        >
-                            {t("AboutUsLink")}
-                        </button>
+                            {t("FAQ")}
+                        </Link>
+
+                        {!user && !isAuth && (
+                            <>
+                                <button
+                                    onClick={() =>
+                                        handleScrollToSection("ourServices")
+                                    }
+                                    className="text-customGray py-2 border-b border-gray-100 cursor-pointer bg-transparent border-none text-left w-full"
+                                >
+                                    {t("OurServicesLink")}
+                                </button>
+                                <button
+                                    onClick={() =>
+                                        handleScrollToSection("aboutUs")
+                                    }
+                                    className="text-customGray py-2 cursor-pointer bg-transparent border-none text-left w-full"
+                                >
+                                    {t("AboutUsLink")}
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

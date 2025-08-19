@@ -289,9 +289,7 @@ const FavoriteCard = ({ item, type }) => {
                 {/* Action Button */}
                 <Link
                     to={
-                        isProgram
-                            ? `/programs/${itemId}`
-                            : `/coursedetails/${itemId}`
+                        isProgram ? `/programs/${itemId}` : `/Courses/${itemId}`
                     }
                     className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >

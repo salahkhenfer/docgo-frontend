@@ -27,6 +27,7 @@ import {
 import { clientProgramsAPI } from "../API/Programs";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
 import VideoPlayer from "../components/Common/VideoPlayer";
+import ProgramFAQSection from "../components/Program/ProgramFAQSection";
 import toast from "react-hot-toast";
 
 export function ProgramDetails() {
@@ -799,6 +800,9 @@ export function ProgramDetails() {
                         </div>
                     </div>
                 </div>
+
+                {/* FAQ Section */}
+                <ProgramFAQSection faqs={program.faqs || []} />
             </div>
         </div>
     );

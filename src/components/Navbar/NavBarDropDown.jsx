@@ -2,10 +2,10 @@ import React, { useRef, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAppContext } from "../../../AppContext";
-import handleLogout from "../../../API/Logout";
+import { useAppContext } from "../../AppContext";
+import handleLogout from "../../API/Logout";
 
-const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
+const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
     const { t } = useTranslation();
     const { user, set_Auth, set_user, store_logout } = useAppContext();
     const avatarDropdownRef = useRef(null);
@@ -119,4 +119,4 @@ const CustomAvatar = ({ isDropdownOpen, setIsDropdownOpen }) => {
     );
 };
 
-export default CustomAvatar;
+export default NavBarDropDown;

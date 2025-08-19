@@ -5,7 +5,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
-import Navigation from "./LandingPage/Layout/Navbar/Navigation";
+import Navigation from "./components/Navbar/Navigation";
 import visitService from "./services/VisitTrackerService";
 import { useAppContext } from "./AppContext";
 import MainLoading from "./MainLoading";

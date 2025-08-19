@@ -40,8 +40,37 @@ export const useCourse = (courseId) => {
                 const response = await courseService.getCourse(courseId, {
                     signal: abortControllerRef.current.signal,
                 });
+                console.log("Fetched course data:", response);
+                
 
                 console.log("Fetched course data:", response);
+
+                // Normaliser les données pour s'assurer que objectives est un tableau
+                if (response && response.course) {
+                    if (response.course.objectives) {
+                        if (typeof response.course.objectives === "string") {
+                            try {
+                                response.course.objectives = JSON.parse(
+                                    response.course.objectives
+                                );
+                            } catch {
+                                // Si le parsing JSON échoue, on traite comme un seul objectif
+                                response.course.objectives = [
+                                    response.course.objectives,
+                                ];
+                            }
+                        }
+                        // S'assurer que c'est un tableau
+                        if (!Array.isArray(response.course.objectives)) {
+                            response.course.objectives = [
+                                response.course.objectives,
+                            ];
+                        }
+                    } else {
+                        response.course.objectives = [];
+                    }
+                }
+
                 setCourseData(response);
             } catch (err) {
                 // Don't set error if request was aborted
@@ -124,7 +153,7 @@ export const useCourse = (courseId) => {
             });
 
             // Navigate to course videos
-            navigate(`/coursedetails/${courseId}/videos`);
+            navigate(`/Courses/${courseId}/videos`);
         } catch (error) {
             console.error("Free enrollment error:", error);
 
@@ -191,7 +220,7 @@ export const useCourse = (courseId) => {
 
         // Check if already enrolled
         if (courseData?.userStatus?.isEnrolled) {
-            navigate(`/coursedetails/${courseId}/videos`);
+            navigate(`/Courses/${courseId}/videos`);
             return;
         }
 

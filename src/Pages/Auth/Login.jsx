@@ -52,8 +52,9 @@ const Login = () => {
                 );
                 console.log("respose from the login  : ", response.data);
                 const data = response.data;
-
-                if (response.status !== 200 || response.status > 299) {
+                if (response.status === 404) {
+                    setError("email ou password est incorrect ou introuvable");
+                } else if (response.status !== 200 || response.status > 299) {
                     throw new Error(data.message || "Échec de la connexion");
                 }
 
@@ -70,7 +71,7 @@ const Login = () => {
                 });
 
                 // Redirect to dashboard or home page
-                navigate("/Profile");
+                window.location.href = "/";
             } catch (err) {
                 setError(
                     err.message ||
