@@ -94,7 +94,7 @@ function App() {
     }
 
     return (
-        <div>
+        <div className=" relative">
             <Navigation />
             <Outlet />
             <Reveal>

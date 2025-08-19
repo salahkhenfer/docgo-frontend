@@ -29,7 +29,17 @@ import Profile from "./Pages/Profile/Profile";
 import EditProfile from "./Pages/Profile/EditProfile";
 import NotificationsPage from "./Pages/NotificationsPage";
 import NotFound from "./pages/NotFound";
+import UserDashboard from "./Pages/Dashboard/UserDashboard";
 
+import UserMessages from "./Pages/Dashboard/Messages/UserMessages";
+import UserMessages_new from "./Pages/Dashboard/Messages/UserMessages_new";
+import UserMessages_Default from "./Pages/Dashboard/Messages/Default";
+
+import UserSettings from "./Pages/Dashboard/UserSettings";
+import UserFavorites from "./Pages/Dashboard/UserFavorites";
+import UserApplications from "./Pages/Dashboard/UserApplications";
+import UserCertificates from "./Pages/Dashboard/UserCertificates";
+import UserNotifications from "./Pages/Dashboard/UserNotifications";
 // Case-insensitive loader
 const caseInsensitiveLoader = ({ request }) => {
     const url = new URL(request.url);
@@ -169,6 +179,53 @@ const Routers = createBrowserRouter([
                 path: "payment/success/program/:programId",
                 loader: protectedCaseInsensitiveLoader,
                 element: <PaymentSuccessPage />,
+            },
+            {
+                path: "dashboard",
+                loader: protectedCaseInsensitiveLoader,
+                element: <UserDashboard />,
+                children: [
+                    {
+                        index: true,
+                        element: <div />, // This will be handled by the UserDashboard component
+                    },
+                    {
+                        path: "messages",
+                        element: <UserMessages_Default />,
+                        children: [
+                            {
+                                index: true,
+                                element: <UserMessages />,
+                            },
+                            {
+                                path: "new",
+                                element: <UserMessages_new />,
+                            },
+                        ],
+                    },
+
+                    {
+                        path: "notifications",
+                        element: <UserNotifications />,
+                    },
+
+                    {
+                        path: "settings",
+                        element: <UserSettings />,
+                    },
+                    {
+                        path: "favorites",
+                        element: <UserFavorites />,
+                    },
+                    {
+                        path: "applications",
+                        element: <UserApplications />,
+                    },
+                    {
+                        path: "certificates",
+                        element: <UserCertificates />,
+                    },
+                ],
             },
         ],
     },

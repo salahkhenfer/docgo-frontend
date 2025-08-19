@@ -16,20 +16,20 @@ const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
             }
 
             // Update authentication state
-            setAuth(true);
-            setUser(user);
-            Swal.fire({
-                title: "Login Successful",
-                text: "You have successfully logged in.",
-                icon: "success",
-                confirmButtonText: "OK",
-                // automatically redirect after 2 seconds
-                timer: 2000,
-                timerProgressBar: true,
-            }).then(() => {
-                // Redirect to profile page after successful login
-                window.location.href = "/Profile";
-            });
+            // setAuth(true);
+            // setUser(user);
+            // Swal.fire({
+            //     title: "Login Successful",
+            //     text: "You have successfully logged in.",
+            //     icon: "success",
+            //     confirmButtonText: "OK",
+            //     // automatically redirect after 2 seconds
+            //     timer: 2000,
+            //     timerProgressBar: true,
+            // }).then(() => {
+            //     // Redirect to profile page after successful login
+            //     window.location.href = "/Profile";
+            // });
             // window.location.href = "/Profile";
 
             return {
@@ -56,7 +56,6 @@ const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
             };
         }
     } catch (error) {
-
         const errorMessage =
             error.response?.data?.message || "Login failed. Please try again.";
 

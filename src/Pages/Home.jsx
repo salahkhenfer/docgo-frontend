@@ -1,6 +1,6 @@
 import { useAppContext } from "../AppContext";
 import LandingPage from "../LandingPage/LandingPage";
-import UserDashboard from "./UserDashboard";
+import UserDashboard from "./Dashboard/UserDashboard";
 
 const Home = () => {
     const { isAuth, user } = useAppContext();

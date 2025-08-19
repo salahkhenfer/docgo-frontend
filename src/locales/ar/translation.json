@@ -406,6 +406,7 @@
         "finish": "إنهاء"
     },
     "dashboard_data": {
+        "voir_profile": "عرض الملف الشخصي",
         "totalEnrollments": "إجمالي التسجيلات",
         "pendingApplications": "طلبات قيد الانتظار",
         "certificates": "الشهادات",

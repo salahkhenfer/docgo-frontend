@@ -59,19 +59,22 @@ const Login = () => {
                 }
 
                 // Success - update auth context
-                set_Auth(true);
-                set_user(data.user);
-                localStorage.setItem("user", JSON.stringify(data.user));
-                sessionStorage.setItem("user", JSON.stringify(data.user));
+                // set_Auth(true);
+                // set_user(data.user);
+                // localStorage.setItem("user", JSON.stringify(data.user));
+                // sessionStorage.setItem("user", JSON.stringify(data.user));
                 Swal.fire({
                     title: "Connexion réussie",
                     text: "Vous êtes maintenant connecté.",
                     icon: "success",
-                    confirmButtonText: "OK",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then(() => {
+                    window.location.href = "/";
                 });
-
-                // Redirect to dashboard or home page
-                window.location.href = "/";
             } catch (err) {
                 setError(
                     err.message ||

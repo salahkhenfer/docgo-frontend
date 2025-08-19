@@ -406,6 +406,7 @@
         "finish": "Finaliser"
     },
     "dashboard_data": {
+        "voir_profile": "Voir le profil",
         "totalEnrollments": "Nombre total d'inscriptions",
         "pendingApplications": "Demandes en attente",
         "certificates": "Certificats",

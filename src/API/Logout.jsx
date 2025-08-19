@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Swal from "sweetalert2";
 const handleLogout = async ({
     setAuth,
     setUser,
@@ -27,12 +27,22 @@ const handleLogout = async ({
         }
 
         // Clear user data and authentication state
-        storeLogout();
-        setAuth(false);
-        setUser(null);
+        // storeLogout();
+        // setAuth(false);
+        // setUser(null);
         localStorage.removeItem("user");
         sessionStorage.removeItem("user");
-        window.location.href = "/";
+        // Show success alert for 2 seconds then redirect
+        Swal.fire({
+            title: "Logged Out!",
+            text: "You have been successfully logged out.",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+        }).then(() => {
+            window.location.href = "/";
+        });
     }
 };
 
