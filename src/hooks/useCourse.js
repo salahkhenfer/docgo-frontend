@@ -116,16 +116,6 @@ export const useCourse = (courseId) => {
         };
     }, [fetchCourseData]);
 
-    // Separate function for paid course enrollment
-    const handlePaidCourseEnrollment = useCallback(() => {
-        navigate(`/payment/course/${courseId}`, {
-            state: {
-                course: courseData?.course,
-                enrollmentType: "course",
-            },
-        });
-    }, [navigate, courseId, courseData]);
-
     // Separate function for free course enrollment
     const handleFreeCourseEnrollment = useCallback(async () => {
         try {
@@ -231,8 +221,12 @@ export const useCourse = (courseId) => {
             // Handle free course enrollment
             await handleFreeCourseEnrollment();
         } else {
-            // Handle paid course - redirect to payment
-            handlePaidCourseEnrollment();
+            navigate(`/payment/course/${courseId}`, {
+                state: {
+                    course: courseData?.course,
+                    enrollmentType: "course",
+                },
+            });
         }
     }, [
         isAuth,
@@ -241,7 +235,6 @@ export const useCourse = (courseId) => {
         courseId,
         navigate,
         handleFreeCourseEnrollment,
-        handlePaidCourseEnrollment,
     ]);
 
     // Retry function for error states

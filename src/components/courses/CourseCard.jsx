@@ -13,7 +13,7 @@ export function CourseCard({
     description,
     price,
     discountPrice,
-    currency = "USD",
+    currency = "DZD",
     level,
     averageRating,
     totalReviews,

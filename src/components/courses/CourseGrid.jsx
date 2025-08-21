@@ -76,7 +76,7 @@ export function CourseGrid({
                         description={course.shortDescription}
                         price={course.Price}
                         discountPrice={course.discountPrice}
-                        currency={course.Currency || "USD"}
+                        currency={course.Currency || "DZD"}
                         level={course.Level || course.difficulty}
                         averageRating={
                             course.stats?.averageRating || course.Rate

@@ -100,7 +100,7 @@ export function ProgramDetails() {
         );
     };
 
-    const formatCurrency = (amount, currency = "USD") => {
+    const formatCurrency = (amount, currency = "DZD") => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(

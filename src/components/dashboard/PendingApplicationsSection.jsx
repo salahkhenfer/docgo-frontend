@@ -266,7 +266,7 @@ const PendingApplicationsSection = ({ applications }) => {
                                                     </span>
                                                     <span className="ml-2 text-green-600 font-bold">
                                                         {item.scholarshipAmount}{" "}
-                                                        {item.currency || "USD"}
+                                                        {item.currency || "DZD"}
                                                     </span>
                                                 </div>
                                             )}
@@ -283,7 +283,7 @@ const PendingApplicationsSection = ({ applications }) => {
                                                     </span>
                                                     <span className="ml-2 text-blue-600 font-bold">
                                                         {item.Price}{" "}
-                                                        {item.Currency || "USD"}
+                                                        {item.Currency || "DZD"}
                                                     </span>
                                                 </div>
                                             )}

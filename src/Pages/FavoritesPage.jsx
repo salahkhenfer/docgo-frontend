@@ -266,11 +266,11 @@ const FavoriteCard = ({ item, type }) => {
                             {item.discountPrice ? (
                                 <>
                                     <span className="text-xl font-bold text-green-600">
-                                        {item.Currency || "USD"}{" "}
+                                        {item.Currency || "DZD"}{" "}
                                         {item.discountPrice}
                                     </span>
                                     <span className="text-sm text-gray-500 line-through">
-                                        {item.Currency || "USD"} {item.Price}
+                                        {item.Currency || "DZD"} {item.Price}
                                     </span>
                                 </>
                             ) : item.Price === 0 ? (
@@ -279,7 +279,7 @@ const FavoriteCard = ({ item, type }) => {
                                 </span>
                             ) : (
                                 <span className="text-xl font-bold text-gray-900">
-                                    {item.Currency || "USD"} {item.Price}
+                                    {item.Currency || "DZD"} {item.Price}
                                 </span>
                             )}
                         </div>

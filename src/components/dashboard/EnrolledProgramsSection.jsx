@@ -271,7 +271,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                                                         enrollment.scholarshipAmount
                                                     }{" "}
                                                     {enrollment.Program
-                                                        ?.currency || "USD"}
+                                                        ?.currency || "DZD"}
                                                 </span>
                                             </div>
                                         </div>

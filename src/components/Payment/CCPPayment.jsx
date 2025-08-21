@@ -1,10 +1,15 @@
 import { useState, useRef } from "react";
+import PropTypes from "prop-types";
 import { FaUpload, FaSpinner, FaInfoCircle } from "react-icons/fa";
+import RichTextDisplay from "../Common/RichTextDisplay";
+import { PaymentAPI } from "../../API/Payment";
 
 const CCPPayment = ({
-    courseData,
+    itemData,
+    itemType,
     amount,
     currency,
+    paymentConfig,
     onSuccess,
     onError,
     loading,
@@ -21,11 +26,12 @@ const CCPPayment = ({
     const [fileName, setFileName] = useState("");
     const fileInputRef = useRef(null);
 
-    // CCP account details (you should replace these with actual details)
+    // CCP account details from configuration
     const ccpAccountDetails = {
-        accountNumber: "0020000123456789",
-        accountName: "DocGo Educational Platform",
-        rib: "002 123 0020000123456789 23",
+        accountNumber: paymentConfig?.accountNumber || "Not configured",
+        accountName: paymentConfig?.accountName || "Not configured",
+        rib: paymentConfig?.rib || "Not configured",
+        bankName: paymentConfig?.bankName || "Algeria Post CCP",
     };
 
     const handleInputChange = (e) => {
@@ -77,36 +83,51 @@ const CCPPayment = ({
         setLoading(true);
 
         try {
-            // Create FormData for file upload
-            const formData = new FormData();
-            formData.append("receipt", receiptFile);
-            formData.append("courseId", courseData.id);
-            formData.append("amount", amount);
-            formData.append("currency", currency);
-            formData.append("fullName", paymentForm.fullName);
-            formData.append("ccpNumber", paymentForm.ccpNumber);
-            formData.append("transferReference", paymentForm.transferReference);
-            formData.append("phoneNumber", paymentForm.phoneNumber);
-            formData.append("email", paymentForm.email);
+            // Prepare payment data
+            const paymentData = {
+                itemType,
+                itemId: itemData?.id,
+                itemName: itemData?.Title || itemData?.title,
+                description: `${
+                    itemType.charAt(0).toUpperCase() + itemType.slice(1)
+                }: ${itemData?.Title || itemData?.title}`,
+            };
 
-            console.log("Processing CCP payment...", {
-                formData: Object.fromEntries(formData.entries()),
-                file: receiptFile.name,
-            });
+            console.log("Creating CCP payment...", paymentData);
 
-            // Simulate successful submission
-            const paymentResult = {
-                paymentId: "CCP_" + Date.now(),
+            // Create CCP payment with screenshot
+            const paymentResult = await PaymentAPI.createCCPPayment(
+                paymentData,
+                {
+                    ccpNumber: paymentForm.ccpNumber,
+                    transferReference: paymentForm.transferReference,
+                    fullName: paymentForm.fullName,
+                    phoneNumber: paymentForm.phoneNumber,
+                    email: paymentForm.email,
+                },
+                receiptFile
+            );
+
+            if (!paymentResult.success) {
+                throw new Error(paymentResult.message);
+            }
+
+            console.log("CCP payment submitted:", paymentResult.data);
+
+            // Show success with the actual payment result
+            const successPayment = {
+                paymentId: paymentResult.data.paymentId,
                 method: "ccp",
-                amount,
-                currency,
-                status: "pending_verification",
-                courseId: courseData.id,
+                amount: paymentResult.data.amount,
+                currency: paymentResult.data.currency,
+                status: paymentResult.data.status || "pending_verification",
+                itemId: itemData?.id,
+                itemType,
                 reference: paymentForm.transferReference,
                 receiptFileName: receiptFile.name,
             };
 
-            onSuccess(paymentResult);
+            onSuccess(successPayment);
         } catch (error) {
             console.error("CCP payment error:", error);
             onError(error);
@@ -126,26 +147,39 @@ const CCPPayment = ({
                 </h3>
             </div>
 
-            {/* Payment Instructions */}
+            {/* Payment Instructions - Rich Text or Default */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                     <FaInfoCircle className="text-green-600 mt-1" />
-                    <div>
+                    <div className="flex-1">
                         <h4 className="font-medium text-green-900 mb-2">
                             Payment Instructions
                         </h4>
-                        <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
-                            <li>Transfer the amount to our CCP account</li>
-                            <li>Take a photo or scan your payment receipt</li>
-                            <li>
-                                Fill out the form below and upload your receipt
-                            </li>
-                            <li>We will verify your payment within 24 hours</li>
-                            <li>
-                                You will receive course access after
-                                verification
-                            </li>
-                        </ol>
+                        {paymentConfig?.instructions ? (
+                            <RichTextDisplay
+                                content={paymentConfig.instructions}
+                                className="text-sm"
+                                textClassName="text-green-800"
+                            />
+                        ) : (
+                            <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
+                                <li>Transfer the amount to our CCP account</li>
+                                <li>
+                                    Take a photo or scan your payment receipt
+                                </li>
+                                <li>
+                                    Fill out the form below and upload your
+                                    receipt
+                                </li>
+                                <li>
+                                    We will verify your payment within 24 hours
+                                </li>
+                                <li>
+                                    You will receive course access after
+                                    verification
+                                </li>
+                            </ol>
+                        )}
                     </div>
                 </div>
             </div>
@@ -172,6 +206,12 @@ const CCPPayment = ({
                         <span className="text-gray-600">RIB:</span>
                         <span className="font-mono font-medium">
                             {ccpAccountDetails.rib}
+                        </span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-gray-600">Bank:</span>
+                        <span className="font-medium">
+                            {ccpAccountDetails.bankName}
                         </span>
                     </div>
                     <div className="flex justify-between">
@@ -350,6 +390,27 @@ const CCPPayment = ({
             </div>
         </div>
     );
+};
+
+CCPPayment.propTypes = {
+    itemData: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+    itemType: PropTypes.string.isRequired,
+    amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+    currency: PropTypes.string.isRequired,
+    paymentConfig: PropTypes.shape({
+        accountNumber: PropTypes.string,
+        accountName: PropTypes.string,
+        rib: PropTypes.string,
+        bankName: PropTypes.string,
+        instructions: PropTypes.string,
+    }),
+    onSuccess: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    setLoading: PropTypes.func.isRequired,
 };
 
 export default CCPPayment;

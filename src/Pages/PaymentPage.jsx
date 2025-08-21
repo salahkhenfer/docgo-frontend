@@ -6,7 +6,13 @@ import PaymentMethodSelector from "../components/Payment/PaymentMethodSelector";
 import PayPalPayment from "../components/Payment/PayPalPayment";
 import CCPPayment from "../components/Payment/CCPPayment";
 import MainLoading from "../MainLoading";
-
+import PaymentAPI from "../API/PaymentInfo";
+import { PaymentAPI as ActualPaymentAPI } from "../API/Payment";
+import { clientCoursesAPI } from "../API/Courses";
+import { clientProgramsAPI } from "../API/Programs";
+import paypalIcon from "../assets/paypal.png";
+import ccpIcon from "../assets/ccp.png";
+import Swal from "sweetalert2";
 const PaymentPage = () => {
     const params = useParams();
     const courseId = params.courseId;
@@ -19,24 +25,114 @@ const PaymentPage = () => {
     const [loading, setLoading] = useState(false);
     const [itemData, setItemData] = useState(null);
     const [itemType, setItemType] = useState(null); // 'course' or 'program'
-
-    // Get item data from navigation state or determine type from URL
+    const [itemLoading, setItemLoading] = useState(false);
+    const [paymentConfig, setPaymentConfig] = useState(null);
+    const [configLoading, setConfigLoading] = useState(true);
+    const [error, setError] = useState(null);
+    // useEffect(() => {
+    //     console.log("itemdata", itemData);
+    // }, [itemData]);
+    // Fetch payment configuration
     useEffect(() => {
-        if (location.state?.course) {
-            setItemData(location.state.course);
-            setItemType("course");
-        } else if (location.state?.program) {
-            setItemData(location.state.program);
-            setItemType("program");
-        } else if (courseId) {
-            setItemType("course");
-            // If no course data in state, redirect back to course page
-            navigate(`/course/${courseId}`);
-        } else if (programId) {
-            setItemType("program");
-            // If no program data in state, redirect back to program page
-            navigate(`/program/${programId}`);
-        }
+        const fetchPaymentConfig = async () => {
+            try {
+                setConfigLoading(true);
+                const response = await PaymentAPI.getPaymentInfo();
+                console.log("Payment API Response:", response); // Debug log
+                if (response.success) {
+                    setPaymentConfig(response.data);
+                    console.log("Payment Config Data:", response.data); // Debug log
+
+                    // Set default payment method based on what's available
+                    if (response.data.paypal.available) {
+                        setSelectedMethod("paypal");
+                    } else if (response.data.ccp.available) {
+                        setSelectedMethod("ccp");
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching payment config:", error);
+                // Use fallback configuration
+                setPaymentConfig({
+                    paypal: { enabled: false, available: false },
+                    ccp: { enabled: false, available: false },
+                    general: {
+                        defaultCurrency: "DZD",
+                        supportedCurrencies: ["USD", "DZD", "EUR"],
+                    },
+                });
+                setError(
+                    "Failed to fetch payment configuration , please try later or contact the support team"
+                );
+            } finally {
+                setConfigLoading(false);
+            }
+        };
+
+        fetchPaymentConfig();
+    }, []);
+
+    // Get item data from navigation state or fetch from API
+    useEffect(() => {
+        const fetchItemData = async () => {
+            try {
+                setItemLoading(true);
+
+                if (courseId) {
+                    setItemType("course");
+                    console.log("Fetching course data for ID:", courseId);
+
+                    // Fetch course data from API
+                    const response = await clientCoursesAPI.getCourseDetails(
+                        courseId
+                    );
+                    if (response.success && response.data) {
+                        setItemData(response.data.course || response.data);
+                    } else {
+                        console.error("Failed to fetch course data:", response);
+                        navigate(`/course/${courseId}`);
+                        return;
+                    }
+                } else if (programId) {
+                    setItemType("program");
+
+                    // Fetch program data from API
+                    const response = await clientProgramsAPI.getProgramDetails(
+                        programId
+                    );
+                    if (response.success && response.data) {
+                        setItemData(response.data.program || response.data);
+                        console.log("Fetched program data:", response.data);
+                    } else {
+                        console.error(
+                            "Failed to fetch program data:",
+                            response
+                        );
+                        navigate(`/program/${programId}`);
+                        return;
+                    }
+                } else {
+                    // No valid data or ID, redirect to home
+                    navigate("/");
+                }
+            } catch (error) {
+                console.error("Error fetching item data:", error);
+                const currentItemType = courseId
+                    ? "course"
+                    : programId
+                    ? "program"
+                    : "item";
+                setError(
+                    `Failed to fetch ${currentItemType} data. Please try again.`
+                );
+            } finally {
+                setItemLoading(false);
+                console.log("Item data:", itemData);
+                console.log("Item type:", itemType);
+            }
+        };
+
+        fetchItemData();
     }, [location.state, courseId, programId, navigate]);
 
     // Check authentication
@@ -48,47 +144,86 @@ const PaymentPage = () => {
         }
     }, [isAuth, user, navigate]);
 
-    if (!itemData) {
-        return <MainLoading />;
-    }
-
     // Extract pricing information based on item type
     const getItemPrice = () => {
+        if (!itemData) return 0;
+
         if (itemType === "course") {
-            return parseFloat(itemData.discountPrice || itemData.Price);
+            const discountPrice = parseFloat(itemData.discountPrice || 0);
+            const regularPrice = parseFloat(itemData.Price || 0);
+            return discountPrice > 0 ? discountPrice : regularPrice;
         } else if (itemType === "program") {
-            return parseFloat(
-                itemData.price || itemData.scholarshipAmount || 0
+            const price = parseFloat(itemData.price || 0);
+            const scholarshipAmount = parseFloat(
+                itemData.scholarshipAmount || 0
             );
+            return price > 0 ? price : scholarshipAmount;
         }
         return 0;
     };
 
     const getOriginalPrice = () => {
+        if (!itemData) return 0;
+
         if (itemType === "course") {
-            return parseFloat(itemData.Price);
+            return parseFloat(itemData.Price || 0);
         } else if (itemType === "program") {
-            return parseFloat(
-                itemData.originalPrice ||
-                    itemData.price ||
-                    itemData.scholarshipAmount ||
-                    0
+            const originalPrice = parseFloat(itemData.originalPrice || 0);
+            const price = parseFloat(itemData.price || 0);
+            const scholarshipAmount = parseFloat(
+                itemData.scholarshipAmount || 0
             );
+            return originalPrice > 0
+                ? originalPrice
+                : price > 0
+                ? price
+                : scholarshipAmount;
         }
         return 0;
     };
 
+    // Early return if we don't have item data yet
+    if (!itemData || configLoading || itemLoading) {
+        return <MainLoading />;
+    }
+
     const price = getItemPrice();
     const originalPrice = getOriginalPrice();
-    const currency = itemData.Currency || itemData.currency || "USD";
-    const hasDiscount =
-        itemType === "course"
+
+    // Improved currency handling with proper fallbacks
+    const getCurrency = () => {
+        // Try to get currency from item data
+        if (itemData?.Currency) return itemData.Currency;
+        if (itemData?.currency) return itemData.currency;
+
+        // Try to get from payment config
+        if (paymentConfig?.general?.defaultCurrency) {
+            return paymentConfig.general.defaultCurrency;
+        }
+
+        // Default fallback based on item type and location
+        if (itemType === "course") {
+            return "USD"; // Most courses are in USD
+        } else if (itemType === "program") {
+            return "DZD"; // Most programs are in DZD (Algeria)
+        }
+
+        return "DZD"; // Final fallback
+    };
+
+    const currency = getCurrency();
+
+    const hasDiscount = itemData
+        ? itemType === "course"
             ? itemData.discountPrice && itemData.discountPrice < itemData.Price
             : itemData.originalPrice &&
               itemData.price &&
-              itemData.originalPrice > itemData.price;
+              itemData.originalPrice > itemData.price
+        : false;
 
     const getItemTitle = () => {
+        if (!itemData) return "Unknown Item";
+
         if (itemType === "course") {
             return itemData.Title;
         } else if (itemType === "program") {
@@ -98,12 +233,17 @@ const PaymentPage = () => {
     };
 
     const getItemImage = () => {
+        if (!itemData) return null;
         return itemData.Image || itemData.image;
     };
 
     const getItemLevel = () => {
+        if (!itemData) return "";
+
         if (itemType === "course") {
-            return `${itemData.Level} • ${itemData.language}`;
+            return `${itemData.Level || "Unknown"} • ${
+                itemData.language || "Unknown"
+            }`;
         } else if (itemType === "program") {
             return `${itemData.Category || itemData.category || "Program"} • ${
                 itemData.language || "Multiple"
@@ -112,22 +252,37 @@ const PaymentPage = () => {
         return "";
     };
 
-    const paymentMethods = [
-        {
-            id: "paypal",
-            name: "PayPal",
-            description: "Pay securely with PayPal",
-            icon: "/api/placeholder/40/40", // You can replace with actual PayPal icon
-            available: true,
-        },
-        {
-            id: "ccp",
-            name: "Algeria CCP",
-            description: "Pay with Algeria CCP transfer",
-            icon: "/api/placeholder/40/40", // You can replace with actual CCP icon
-            available: true,
-        },
-    ];
+    const paymentMethods = paymentConfig
+        ? [
+              {
+                  id: "paypal",
+                  name: "PayPal",
+                  description: "Pay securely with PayPal",
+                  detailedInstructions: paymentConfig.paypal?.instructions,
+                  icon: paypalIcon,
+                  available: paymentConfig.paypal?.available,
+                  enabled: paymentConfig.paypal?.enabled,
+                  isEnabled: paymentConfig.paypal?.isEnabled,
+              },
+              {
+                  id: "ccp",
+                  name: "Algeria CCP",
+                  description: "Pay with Algeria CCP transfer",
+                  detailedInstructions: paymentConfig.ccp?.instructions,
+                  icon: ccpIcon,
+                  available: paymentConfig.ccp?.available,
+                  enabled: paymentConfig.ccp?.enabled,
+                  isEnabled: paymentConfig.ccp?.isEnabled,
+              },
+          ]
+        : [];
+
+    // Filter available and enabled methods
+    const filteredMethods = paymentMethods.filter((method) => {
+        const isValid = method.enabled && method.available;
+
+        return isValid;
+    });
 
     const handleGoBack = () => {
         navigate(-1);
@@ -135,51 +290,158 @@ const PaymentPage = () => {
 
     const handlePaymentSuccess = (paymentData) => {
         console.log("Payment successful:", paymentData);
-        // Navigate to success page based on item type
-        const successRoute =
-            itemType === "course"
-                ? `/payment/success/course/${courseId || programId}`
-                : `/payment/success/program/${programId || courseId}`;
 
-        navigate(successRoute, {
-            state: {
-                paymentData,
-                item: itemData,
-                itemType,
-            },
+        let successMessage = "Payment Successful!";
+        let redirectMessage = "Redirecting to your dashboard...";
+
+        if (paymentData.method === "ccp") {
+            successMessage = "Payment Submitted!";
+            redirectMessage =
+                "Your CCP payment has been submitted for verification. You will be notified once it's approved.";
+        } else if (paymentData.method === "paypal") {
+            successMessage = "Payment Successful!";
+            redirectMessage =
+                "Your PayPal payment has been processed. Your application is pending admin approval.";
+        }
+
+        Swal.fire({
+            title: successMessage,
+            text: redirectMessage,
+            icon: "success",
+            timer: paymentData.method === "ccp" ? 5000 : 3000,
+            timerProgressBar: true,
+            showConfirmButton: true,
+            confirmButtonText: "Go to Dashboard",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        }).then((result) => {
+            // Navigate to dashboard
+            if (
+                result.isConfirmed ||
+                result.dismiss === Swal.DismissReason.timer
+            ) {
+                if (itemType === "course") {
+                    navigate("/dashboard/MyCourses");
+                } else {
+                    navigate("/dashboard/MyPrograms");
+                }
+            }
         });
     };
 
     const handlePaymentError = (error) => {
         console.error("Payment error:", error);
-        // Handle payment error with nice animation
-        const errorElement = document.createElement('div');
-        errorElement.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50';
-        errorElement.innerHTML = `
-            <div class="flex items-center gap-3">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-            <span class="font-medium">Payment failed. Please try again.</span>
-            </div>
-        `;
-        
-        document.body.appendChild(errorElement);
-        
-        // Animate in
-        setTimeout(() => {
-            errorElement.style.transform = 'translateX(0)';
-        }, 10);
-        
-        // Animate out after 5 seconds
-        setTimeout(() => {
-            errorElement.style.transform = 'translateX(full)';
-            setTimeout(() => {
-            document.body.removeChild(errorElement);
-            }, 300);
-        }, 5000);
+
+        let errorTitle = "Payment Failed!";
+        let errorMessage =
+            "Unable to process your payment. Please check your details and try again.";
+
+        if (error.message) {
+            errorMessage = error.message;
+        }
+
+        if (error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+        }
+
+        Swal.fire({
+            title: errorTitle,
+            text: errorMessage,
+            icon: "error",
+            showConfirmButton: true,
+            confirmButtonText: "Try Again",
+            confirmButtonColor: "#ef4444",
+            showCancelButton: true,
+            cancelButtonText: "Go Back",
+            cancelButtonColor: "#6b7280",
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User wants to try again - stay on the page
+                setLoading(false);
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // User wants to go back
+                navigate(-1);
+            }
+        });
     };
 
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+                <div className="max-w-lg mx-auto">
+                    <div className="bg-white rounded-xl shadow-lg p-8 text-center border border-red-100">
+                        {/* Error Icon */}
+                        <div className="w-20 h-20 bg-gradient-to-r from-red-100 to-red-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            <svg
+                                className="w-10 h-10 text-red-500"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                        </div>
+
+                        {/* Error Title */}
+                        <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                            Payment Page Unavailable
+                        </h2>
+
+                        {/* Error Description */}
+                        <p className="text-gray-600 mb-2 leading-relaxed">
+                            We&apos;re experiencing technical difficulties
+                            loading the payment page.
+                        </p>
+                        <p className="text-gray-600 mb-6 leading-relaxed">
+                            Please try again later or contact our support team
+                            for assistance.
+                        </p>
+
+                        {/* Error Details (if available) */}
+                        {error && (
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                                <p className="text-sm text-red-700 font-medium">
+                                    Error Details:
+                                </p>
+                                <p className="text-sm text-red-600 mt-1">
+                                    {error}
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="space-y-3">
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+                            >
+                                Try Again
+                            </button>
+                            <button
+                                onClick={handleGoBack}
+                                className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200 border border-gray-200"
+                            >
+                                Go Back
+                            </button>
+                        </div>
+
+                        {/* Support Contact */}
+                        <div className="mt-6 pt-6 border-t border-gray-100">
+                            <p className="text-sm text-gray-500">
+                                Need help? Contact our support team on the
+                                footer of this page
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
@@ -218,7 +480,7 @@ const PaymentPage = () => {
                             </h2>
 
                             <PaymentMethodSelector
-                                methods={paymentMethods}
+                                methods={filteredMethods}
                                 selectedMethod={selectedMethod}
                                 onMethodChange={setSelectedMethod}
                             />
@@ -230,6 +492,7 @@ const PaymentPage = () => {
                                         itemType={itemType}
                                         amount={price}
                                         currency={currency}
+                                        paymentConfig={paymentConfig?.paypal}
                                         onSuccess={handlePaymentSuccess}
                                         onError={handlePaymentError}
                                         loading={loading}
@@ -243,6 +506,7 @@ const PaymentPage = () => {
                                         itemType={itemType}
                                         amount={price}
                                         currency={currency}
+                                        paymentConfig={paymentConfig?.ccp}
                                         onSuccess={handlePaymentSuccess}
                                         onError={handlePaymentError}
                                         loading={loading}

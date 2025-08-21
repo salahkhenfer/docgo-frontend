@@ -105,13 +105,7 @@ function Navigation() {
                 }
             }
 
-            // Debug log to help troubleshoot
-            if (path) {
-                console.log(
-                    `Nav Link Debug: path=${path}, currentPath=${location.pathname}, isActive=${isActive}`
-                );
-            }
-
+            
             return `relative px-4 py-2 font-medium text-sm lg:text-base transition-all duration-300 group
                 ${
                     isActive

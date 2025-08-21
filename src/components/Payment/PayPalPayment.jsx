@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { FaCreditCard, FaSpinner } from "react-icons/fa";
+import PropTypes from "prop-types";
+import { FaCreditCard, FaSpinner, FaInfoCircle } from "react-icons/fa";
+import RichTextDisplay from "../Common/RichTextDisplay";
+import { PaymentAPI } from "../../API/Payment";
 
 const PayPalPayment = ({
-    courseData,
+    itemData,
+    itemType,
     amount,
     currency,
+    paymentConfig,
     onSuccess,
     onError,
     loading,
@@ -34,30 +39,50 @@ const PayPalPayment = ({
         setLoading(true);
 
         try {
-            // Simulate PayPal payment process
-            console.log("Processing PayPal payment...", {
-                courseId: courseData.id,
-                amount,
-                currency,
-                email: paymentForm.email,
-            });
-
-            // Here you would integrate with your backend PayPal API
-            // For now, we'll simulate the process
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            // Simulate successful payment
-            const paymentResult = {
-                paymentId: "PAYPAL_" + Date.now(),
-                method: "paypal",
-                amount,
-                currency,
-                status: "completed",
-                courseId: courseData.id,
-                email: paymentForm.email,
+            // Prepare payment data
+            const paymentData = {
+                itemType,
+                itemId: itemData?.id,
+                itemName: itemData?.Title || itemData?.title,
+                description: `${
+                    itemType.charAt(0).toUpperCase() + itemType.slice(1)
+                }: ${itemData?.Title || itemData?.title}`,
             };
 
-            onSuccess(paymentResult);
+            console.log("Creating PayPal payment...", paymentData);
+
+            // Create PayPal payment order
+            const paymentResult = await PaymentAPI.createPayPalPayment(
+                paymentData
+            );
+
+            if (!paymentResult.success) {
+                throw new Error(paymentResult.message);
+            }
+
+            console.log("PayPal order created:", paymentResult.data);
+
+            // Redirect to PayPal for approval
+            if (paymentResult.data.approveUrl) {
+                // Store payment details in localStorage for success page
+                localStorage.setItem(
+                    "pendingPayment",
+                    JSON.stringify({
+                        paymentId: paymentResult.data.paymentId,
+                        paypalOrderId: paymentResult.data.paypalOrderId,
+                        amount: paymentResult.data.amount,
+                        currency: paymentResult.data.currency,
+                        itemType,
+                        itemData,
+                        email: paymentForm.email,
+                    })
+                );
+
+                // Redirect to PayPal
+                window.location.href = paymentResult.data.approveUrl;
+            } else {
+                throw new Error("PayPal approval URL not received");
+            }
         } catch (error) {
             console.error("PayPal payment error:", error);
             onError(error);
@@ -74,6 +99,25 @@ const PayPalPayment = ({
                     PayPal Payment
                 </h3>
             </div>
+
+            {/* PayPal Instructions - Rich Text or Default */}
+            {paymentConfig?.instructions && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                        <FaInfoCircle className="text-blue-600 mt-1" />
+                        <div className="flex-1">
+                            <h4 className="font-medium text-blue-900 mb-2">
+                                PayPal Instructions
+                            </h4>
+                            <RichTextDisplay
+                                content={paymentConfig.instructions}
+                                className="text-sm"
+                                textClassName="text-blue-800"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <form onSubmit={handlePayPalPayment} className="space-y-4">
                 <div>
@@ -130,9 +174,12 @@ const PayPalPayment = ({
                             card
                         </li>
                         <li>
-                            • Access to the course will be granted immediately
-                            after payment
+                            • Access to the {itemType} will be granted
+                            immediately after payment
                         </li>
+                        {paymentConfig?.mode && (
+                            <li>• Environment: {paymentConfig.mode} mode</li>
+                        )}
                     </ul>
                 </div>
 
@@ -177,6 +224,24 @@ const PayPalPayment = ({
             </div>
         </div>
     );
+};
+
+PayPalPayment.propTypes = {
+    itemData: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+    itemType: PropTypes.string.isRequired,
+    amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+    currency: PropTypes.string.isRequired,
+    paymentConfig: PropTypes.shape({
+        mode: PropTypes.string,
+        instructions: PropTypes.string,
+    }),
+    onSuccess: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    setLoading: PropTypes.func.isRequired,
 };
 
 export default PayPalPayment;
