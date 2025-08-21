@@ -440,6 +440,11 @@
         "learningProgress": "تقدم التعلم"
     },
     "messages": {
+        "yourMessage": "رسالتك",
+        "sentOn": "تم الإرسال في",
+        "context": "السياق",
+        "ourResponse": "ردنا",
+        "another_one": "رسالة أخرى",
         "title": "رسائلي",
         "subtitle": "إدارة رسائلك مع فريق الدعم",
         "noMessages": "لا توجد رسائل",

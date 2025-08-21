@@ -55,7 +55,10 @@ export const courseService = {
     // Apply for a course
     applyCourse: async (courseData) => {
         try {
-            const response = await api.post(`/Users/Courses/apply`, courseData);
+            const response = await api.post(
+                `/enrollment/courses/apply`,
+                courseData
+            );
             return response.data;
         } catch (error) {
             console.error("Error applying for course:", error);
@@ -66,9 +69,10 @@ export const courseService = {
     // Enroll in a free course
     enrollFreeCourse: async (courseId) => {
         try {
-            const response = await api.post(`/Users/Courses/enroll-free`, {
+            const response = await api.post(`/enrollment/courses/enroll-free`, {
                 courseId: courseId,
             });
+            console.log("Enroll in free course response:", response);
             return response.data;
         } catch (error) {
             console.error("Error enrolling in free course:", error);

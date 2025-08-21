@@ -38,7 +38,7 @@
 
 -   **User Routes**: Added `/Courses/enroll-free` endpoint
 -   **Application Controller**: New `enrollFreeCourse` function with validation
--   **Database Models**: Uses existing Course_Applications and Course_Progress models
+-   **Database Models**: Uses existing Course_Applications and UserProgress models
 -   **Authentication**: Protected routes with User middleware
 -   **Error Handling**: Comprehensive error messages and validation
 
@@ -50,7 +50,7 @@
 2. System checks authentication (redirects to login if needed)
 3. Validates course is actually free
 4. Creates Course_Application with "approved" status
-5. Creates Course_Progress tracking
+5. Creates UserProgress tracking
 6. Updates UI to show enrollment status
 7. Redirects to course videos
 

@@ -358,7 +358,13 @@ const UserMessages = () => {
                                         </label>
                                         <div className="mt-1 p-3 border border-green-300 rounded-md bg-green-50">
                                             <p className="text-sm text-gray-900">
-                                                {selectedMessage.adminResponse}
+                                                {/* {selectedMessage.adminResponse} */}
+                                                <RichTextDisplay
+                                                    content={
+                                                        selectedMessage.adminResponse
+                                                    }
+                                                    className="text-sm text-gray-900"
+                                                />
                                             </p>
                                             {selectedMessage.respondedAt && (
                                                 <p className="text-xs text-gray-500 mt-2">
@@ -390,8 +396,8 @@ const UserMessages = () => {
                                         className="px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700"
                                     >
                                         {t(
-                                            "messages.followUp",
-                                            "Send Follow-up"
+                                            "messages.another_one",
+                                            "Send another one"
                                         )}
                                     </Link>
                                 )}

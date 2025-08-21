@@ -441,6 +441,12 @@
         "learningProgress": "Progrès d'apprentissage"
     },
     "messages": {
+        "another_one": "Envoyer un autre",
+        "yourMessage": "Votre message",
+        "context": "Contexte",
+        "ourResponse": "Notre réponse",
+        "sentOn": "Envoyé le",
+        
         "title": "Mes Messages",
         "subtitle": "Gérer vos messages avec notre équipe de support",
         "noMessages": "Aucun message",

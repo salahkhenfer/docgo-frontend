@@ -101,6 +101,11 @@ const Routers = createBrowserRouter([
                 element: <MyApplications />,
             },
             {
+                path: "my-applications",
+                loader: protectedCaseInsensitiveLoader,
+                element: <MyApplications />,
+            },
+            {
                 path: "Courses",
                 element: <Courses />,
             },

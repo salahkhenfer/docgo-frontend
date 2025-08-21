@@ -64,10 +64,15 @@ const handleRegister = async ({
                 onSuccess,
                 onError,
             });
+            console.log("login result ", loginResult);
 
             // If login is not successful, redirect to the login page
             if (!loginResult?.success) {
-                window.location.href = "/login";
+                return {
+                    status: 410,
+                    success: false,
+                    message: "Login failed after registration",
+                };
             }
             localStorage.setItem(
                 "user",

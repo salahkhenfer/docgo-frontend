@@ -152,8 +152,32 @@ const PaymentPage = () => {
 
     const handlePaymentError = (error) => {
         console.error("Payment error:", error);
-        // Handle payment error
-        alert("Payment failed. Please try again.");
+        // Handle payment error with nice animation
+        const errorElement = document.createElement('div');
+        errorElement.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50';
+        errorElement.innerHTML = `
+            <div class="flex items-center gap-3">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-medium">Payment failed. Please try again.</span>
+            </div>
+        `;
+        
+        document.body.appendChild(errorElement);
+        
+        // Animate in
+        setTimeout(() => {
+            errorElement.style.transform = 'translateX(0)';
+        }, 10);
+        
+        // Animate out after 5 seconds
+        setTimeout(() => {
+            errorElement.style.transform = 'translateX(full)';
+            setTimeout(() => {
+            document.body.removeChild(errorElement);
+            }, 300);
+        }, 5000);
     };
 
     return (
@@ -202,7 +226,8 @@ const PaymentPage = () => {
                             <div className="mt-8">
                                 {selectedMethod === "paypal" && (
                                     <PayPalPayment
-                                        courseData={itemData}
+                                        itemData={itemData}
+                                        itemType={itemType}
                                         amount={price}
                                         currency={currency}
                                         onSuccess={handlePaymentSuccess}
@@ -214,7 +239,8 @@ const PaymentPage = () => {
 
                                 {selectedMethod === "ccp" && (
                                     <CCPPayment
-                                        courseData={itemData}
+                                        itemData={itemData}
+                                        itemType={itemType}
                                         amount={price}
                                         currency={currency}
                                         onSuccess={handlePaymentSuccess}

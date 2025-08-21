@@ -94,10 +94,6 @@ const CCPPayment = ({
                 file: receiptFile.name,
             });
 
-            // Here you would send the data to your backend
-            // For now, we'll simulate the process
-            await new Promise((resolve) => setTimeout(resolve, 3000));
-
             // Simulate successful submission
             const paymentResult = {
                 paymentId: "CCP_" + Date.now(),

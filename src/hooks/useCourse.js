@@ -41,7 +41,6 @@ export const useCourse = (courseId) => {
                     signal: abortControllerRef.current.signal,
                 });
                 console.log("Fetched course data:", response);
-                
 
                 console.log("Fetched course data:", response);
 
@@ -131,7 +130,6 @@ export const useCourse = (courseId) => {
     const handleFreeCourseEnrollment = useCallback(async () => {
         try {
             setEnrolling(true);
-            console.log("Enrolling in free course...");
 
             await courseService.enrollFreeCourse(courseId);
 
@@ -153,7 +151,7 @@ export const useCourse = (courseId) => {
             });
 
             // Navigate to course videos
-            navigate(`/Courses/${courseId}/videos`);
+            navigate(`/MyCourses/${courseId}`);
         } catch (error) {
             console.error("Free enrollment error:", error);
 
@@ -220,7 +218,7 @@ export const useCourse = (courseId) => {
 
         // Check if already enrolled
         if (courseData?.userStatus?.isEnrolled) {
-            navigate(`/Courses/${courseId}/videos`);
+            navigate(`/MyCourses/${courseId}`);
             return;
         }
 

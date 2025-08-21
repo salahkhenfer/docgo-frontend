@@ -70,7 +70,7 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 2000,
                     timerProgressBar: true,
-                    allowOutsideClick: false,
+                    // allowOutsideClick: false,
                     allowEscapeKey: false,
                 }).then(() => {
                     window.location.href = "/";

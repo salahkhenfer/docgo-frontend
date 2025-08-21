@@ -84,23 +84,37 @@ const Register = () => {
             setLoading(true);
             setError("");
 
-            await handleRegister({
+            const r = await handleRegister({
                 userData: formData,
                 setAuth: set_Auth,
                 setUser: set_user,
-                onSuccess: (data) => {
-                    // Show success message
-                    Swal.fire({
-                        title: "Inscription réussie",
-                        text: "Vous êtes maintenant inscrit. Vous pouvez vous connecter.",
-                        icon: "success",
-                        confirmButtonText: "OK",
-                    });
-                },
-                onError: (err) => setError(err.message),
             });
+            console.log("response from the register is : ", r);
 
-            setLoading(false);
+            if (r.success) {
+                setLoading(false);
+                Swal.fire({
+                    title: "Inscription réussie",
+                    text: "Vous êtes maintenant inscrit. Vous pouvez vous connecter.",
+                    icon: "success",
+                    timerProgressBar: true,
+                    timer: 2000,
+                    allowEscapeKey: true,
+                }).then(() => {
+                    window.location.href = "/";
+                });
+            } else if (r.status === 410) {
+                Swal.fire({
+                    title: "Inscriptions réussies, mais vous devez vous connecter",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timerProgressBar: true,
+                    timer: 2000,
+                    allowEscapeKey: true,
+                }).then(() => {
+                    window.location.href = "/login";
+                });
+            } else setError(r.message || "Registration failed");
         },
         [formData, set_Auth, set_user, navigate]
     );
