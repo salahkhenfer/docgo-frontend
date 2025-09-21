@@ -43,7 +43,6 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
             }
 
             const response = await apiClient.get(url);
-            console.log(response.data);
             if (response.data.success) {
                 setFaqs(response.data.faqs);
             }

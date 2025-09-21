@@ -104,7 +104,6 @@ export const AppProvider = ({ children }) => {
                 validateStatus: () => true, // Don't throw on any status
             });
 
-            console.log("Auth check response:", response);
 
             if (response.status === 200 && response.data.user) {
                 set_user(response.data.user);
@@ -124,7 +123,6 @@ export const AppProvider = ({ children }) => {
                 return false;
             }
         } catch (error) {
-            console.log("Auth check failed:", error);
             set_user(null);
             localStorage.removeItem("user");
             sessionStorage.removeItem("user");

@@ -11,7 +11,6 @@ const BaridiMobForm = () => {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            console.log("Selected file:", file.name);
             setFileName(file.name); // Update the file name state
             // You can handle the file upload logic here
         }

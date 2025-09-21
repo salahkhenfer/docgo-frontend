@@ -173,7 +173,6 @@ export default function Courses() {
                 });
 
                 const response = await getCourses(params);
-                console.log("Fetched courses:", response);
 
                 if (response.success) {
                     const coursesData = response.data.courses || [];
@@ -240,8 +239,6 @@ export default function Courses() {
         setCategories(uniqueCategories);
         setSpecialties(uniqueSpecialties);
 
-        console.log("Extracted categories:", uniqueCategories);
-        console.log("Extracted specialties:", uniqueSpecialties);
     };
 
     // Update URL params when filters change

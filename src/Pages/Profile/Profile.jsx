@@ -40,7 +40,6 @@ const Profile = () => {
                     withCredentials: true,
                 }
             );
-            console.log(response.data);
 
             // Backend returns the data in response.data.data structure
             if (response.data.success) {

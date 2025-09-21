@@ -37,8 +37,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
                 setContactStats(response.data.data);
             }
         } catch (error) {
-            console.log("Contact stats not available:", error);
-            // Don't show error to user, just use default stats
+            console.error("Error fetching contact stats:", error);
         }
     }, [user?.id]);
 

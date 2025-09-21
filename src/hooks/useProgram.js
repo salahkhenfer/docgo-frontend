@@ -41,7 +41,6 @@ export const useProgram = (programId) => {
                 const response = await clientProgramsAPI.getProgramDetails(
                     programId
                 );
-                console.log("Fetched program data:", response);
 
                 // Normalize program data structure
                 if (response && response.program) {
@@ -116,7 +115,6 @@ export const useProgram = (programId) => {
             } catch (err) {
                 // Don't set error if request was aborted
                 if (err.name === "AbortError") {
-                    console.log("Request was aborted");
                     return;
                 }
 
@@ -172,7 +170,6 @@ export const useProgram = (programId) => {
     const handleFreeProgramApplication = useCallback(async () => {
         try {
             setApplying(true);
-            console.log("Applying to free program...");
 
             await axios.post("/enrollment/program/apply", {
                 programId: programId,

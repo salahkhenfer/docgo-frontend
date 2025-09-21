@@ -68,7 +68,6 @@ const Programs = () => {
             };
 
             const response = await clientProgramsAPI.getPrograms(params);
-            console.log("Programs response:", response);
             if (response.success) {
                 setPrograms(response.data.programs || []);
                 setPagination((prev) => ({

@@ -81,7 +81,7 @@ export const CourseDetails = () => {
         checkAuth();
     }, []);
 
-    const formatCurrency = (amount, currency = "DZD") => {
+    const formatCurrency = (amount, currency = "USD") => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(
@@ -150,9 +150,7 @@ export const CourseDetails = () => {
                     text: course.Description || course.shortDescription,
                     url: window.location.href,
                 });
-            } catch (error) {
-                console.log("Share cancelled");
-            }
+            } 
         } else {
             navigator.clipboard.writeText(window.location.href);
             toast.success(
@@ -246,7 +244,6 @@ export const CourseDetails = () => {
     } = courseData;
 
     const handleVideoClick = (video) => {
-        console.log("Playing video:", video);
         setShowVideo(true);
     };
 

@@ -6,7 +6,6 @@ export const clientCoursesAPI = {
     getCourses: async (params = {}) => {
         try {
             const response = await apiClient.get("/Courses", { params });
-            console.log("Fetched courses:", response);
 
             // Return with success wrapper to match frontend expectations
             return {
@@ -101,7 +100,6 @@ export const clientCoursesAPI = {
             const response = await apiClient.get("/Courses/search", {
                 params,
             });
-            console.log("Search courses response:", response);
             return {
                 success: true,
                 data: response.data,

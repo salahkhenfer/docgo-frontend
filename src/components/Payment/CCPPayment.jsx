@@ -93,7 +93,6 @@ const CCPPayment = ({
                 }: ${itemData?.Title || itemData?.title}`,
             };
 
-            console.log("Creating CCP payment...", paymentData);
 
             // Create CCP payment with screenshot
             const paymentResult = await PaymentAPI.createCCPPayment(
@@ -112,8 +111,6 @@ const CCPPayment = ({
                 throw new Error(paymentResult.message);
             }
 
-            console.log("CCP payment submitted:", paymentResult.data);
-
             // Show success with the actual payment result
             const successPayment = {
                 paymentId: paymentResult.data.paymentId,
@@ -130,6 +127,22 @@ const CCPPayment = ({
             onSuccess(successPayment);
         } catch (error) {
             console.error("CCP payment error:", error);
+
+            // If payment upload failed, attempt cleanup to remove any uploaded file
+            if (itemData?.id) {
+                try {
+                    await PaymentAPI.cleanupCCPPayment({
+                        itemType,
+                        itemId: itemData.id,
+                    });
+                } catch (cleanupError) {
+                    console.warn(
+                        "Payment cleanup failed (may be normal if file wasn't uploaded):",
+                        cleanupError.message
+                    );
+                }
+            }
+
             onError(error);
         } finally {
             setLoading(false);

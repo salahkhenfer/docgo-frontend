@@ -102,8 +102,7 @@ export const CourseDetails = () => {
     } = courseData;
 
     const handleVideoClick = (video) => {
-        console.log("Playing video:", video);
-        // TODO: Implement video player logic
+        //setShowVideo(true);
     };
 
     // Helper function to format duration from seconds to MM:SS

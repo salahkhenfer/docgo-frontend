@@ -64,7 +64,6 @@ const handleRegister = async ({
                 onSuccess,
                 onError,
             });
-            console.log("login result ", loginResult);
 
             // If login is not successful, redirect to the login page
             if (!loginResult?.success) {

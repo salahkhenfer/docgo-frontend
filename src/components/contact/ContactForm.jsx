@@ -62,10 +62,8 @@ const ContactForm = ({
             if (context === "program" && programId) {
                 payload.programId = programId;
             }
-            console.log("Payload for contact form:", payload);
 
             const response = await apiClient.post(post_link, payload);
-            console.log("Response from contact form:", response.data);
 
             setSuccess(true);
             setFormData({

@@ -110,9 +110,7 @@ export function Programs() {
                     filters.location ||
                     filters.isRemote;
 
-                console.log("Filters state:", filters);
-                console.log("hasSearch:", hasSearch);
-                console.log("hasFilters:", hasFilters);
+              
 
                 let response;
 
@@ -144,7 +142,6 @@ export function Programs() {
                         }
                     });
 
-                    console.log("Search params being sent:", searchParams);
                     response = await clientProgramsAPI.Programss(searchParams);
                 } else {
                     // Use regular getPrograms endpoint for all programs
@@ -164,7 +161,6 @@ export function Programs() {
                         location: filters.location || "",
                         isRemote: filters.isRemote || "",
                     };
-                    console.log("GetPrograms params being sent:", getParams);
                     response = await clientProgramsAPI.getPrograms(getParams);
                 }
 
@@ -231,7 +227,6 @@ export function Programs() {
     const fetchFiltersData = async () => {
         try {
             const response = await clientProgramsAPI.getProgramCategories();
-            console.log("Filter data response:", response);
 
             // Ensure we always have arrays, even if the response is empty or malformed
             const categories = Array.isArray(response.categories)

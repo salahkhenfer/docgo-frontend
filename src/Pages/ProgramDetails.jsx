@@ -57,7 +57,7 @@ export const ProgramDetails = () => {
         hasData,
     } = useProgram(programId);
 
-    const formatCurrency = (amount, currency = "DZD") => {
+    const formatCurrency = (amount, currency = "USD") => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(
@@ -433,7 +433,7 @@ export const ProgramDetails = () => {
                                                     currency
                                                 )}
                                             </div>
-                                            {program.originalPrice &&
+                                            {/* {program?.originalPrice &&
                                                 program.originalPrice >
                                                     programPrice && (
                                                     <div className="text-lg text-gray-500 line-through">
@@ -442,7 +442,7 @@ export const ProgramDetails = () => {
                                                             currency
                                                         )}
                                                     </div>
-                                                )}
+                                                )} */}
                                         </div>
                                     )}
                                 </div>

@@ -12,9 +12,7 @@ export function CourseGrid({
 }) {
     const { t } = useTranslation();
 
-    useEffect(() => {
-        console.log("Courses loaded:", courses);
-    }, [courses]);
+    
 
     if (loading) {
         return (
@@ -76,7 +74,7 @@ export function CourseGrid({
                         description={course.shortDescription}
                         price={course.Price}
                         discountPrice={course.discountPrice}
-                        currency={course.Currency || "DZD"}
+                        currency={course.Currency || "USD"}
                         level={course.Level || course.difficulty}
                         averageRating={
                             course.stats?.averageRating || course.Rate

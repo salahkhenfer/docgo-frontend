@@ -69,58 +69,59 @@ export const PaymentAPI = {
         try {
             const formData = new FormData();
 
-            // Add form fields
-            formData.append("itemType", itemData.itemType);
-            formData.append("itemId", itemData.itemId);
-            formData.append("ccpNumber", paymentForm.ccpNumber);
-            formData.append(
-                "description",
-                itemData.description ||
-                    `${itemData.itemType}: ${itemData.itemName}`
-            );
+            // Backend expects these exact field names:
+            // - CCP_number (not ccpNumber)
+            // - Image (not screenshot)
 
-            // Add additional form fields
-            if (paymentForm.fullName) {
-                formData.append("fullName", paymentForm.fullName);
-            }
-            if (paymentForm.transferReference) {
-                formData.append(
-                    "transferReference",
-                    paymentForm.transferReference
-                );
-            }
-            if (paymentForm.phoneNumber) {
-                formData.append("phoneNumber", paymentForm.phoneNumber);
-            }
-            if (paymentForm.email) {
-                formData.append("email", paymentForm.email);
-            }
+            formData.append("CCP_number", paymentForm.ccpNumber);
 
-            // Add screenshot file
+            // Add screenshot file with correct field name
             if (screenshotFile) {
-                formData.append("screenshot", screenshotFile);
+                formData.append("Image", screenshotFile);
             } else {
                 throw new Error("Screenshot is required");
             }
 
+            // Validation
             if (!paymentForm.ccpNumber) {
                 throw new Error("CCP number is required");
             }
+            if (!screenshotFile) {
+                throw new Error("Screenshot is required");
+            }
 
-            const response = await apiClient.post(
-                "/upload/Payment/CCP",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
+            let response;
+            if (itemData.itemType === "course") {
+                response = await apiClient.post(
+                    "/upload/Payment/Courses/" + itemData.itemId,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            } else if (itemData.itemType === "program") {
+                response = await apiClient.post(
+                    "/upload/Payment/Programs/" + itemData.itemId,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            } else {
+                throw new Error("Invalid item type");
+            }
+
 
             return {
                 success: true,
-                data: response.data.data,
-                message: "CCP payment submitted successfully",
+                data: response.data.data || response.data,
+                message:
+                    response.data.message ||
+                    "CCP payment submitted successfully",
             };
         } catch (error) {
             console.error("Create CCP payment error:", error);
@@ -130,6 +131,44 @@ export const PaymentAPI = {
                     error.response?.data?.message ||
                     error.message ||
                     "Failed to create CCP payment",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
+
+    // =================================================================
+    // CCP PAYMENT CLEANUP (Error/Cancellation Handling)
+    // =================================================================
+
+    // Clean up CCP payment screenshot after error or cancellation
+    cleanupCCPPayment: async (itemData) => {
+        try {
+            let response;
+            if (itemData.itemType === "course") {
+                response = await apiClient.delete(
+                    "/upload/Payment/Courses/" + itemData.itemId
+                );
+            } else if (itemData.itemType === "program") {
+                response = await apiClient.delete(
+                    "/upload/Payment/Programs/" + itemData.itemId
+                );
+            } else {
+                throw new Error("Invalid item type");
+            }
+
+            return {
+                success: true,
+                data: response.data.data || response.data,
+                message: response.data.message || "Payment cleanup successful",
+            };
+        } catch (error) {
+            console.error("CCP payment cleanup error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Failed to cleanup payment",
                 error: error.response?.data?.error || error.message,
             };
         }

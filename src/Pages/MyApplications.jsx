@@ -100,9 +100,9 @@ const MyApplications = () => {
 
     const handleViewItem = (application) => {
         if (application.Course) {
-            navigate(`/course/${application.CourseId}`);
+            navigate(`/Courses/${application.CourseId}`);
         } else if (application.Program) {
-            navigate(`/program/${application.ProgramId}`);
+            navigate(`/Programs/${application.ProgramId}`);
         }
     };
 

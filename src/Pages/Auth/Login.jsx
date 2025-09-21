@@ -50,7 +50,6 @@ const Login = () => {
                         withCredentials: true,
                     }
                 );
-                console.log("respose from the login  : ", response.data);
                 const data = response.data;
                 if (response.status === 404) {
                     setError("email ou password est incorrect ou introuvable");

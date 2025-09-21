@@ -16,8 +16,7 @@ import MyApplications from "./Pages/MyApplications";
 import Courses from "./Pages/Courses";
 import FavoritesPage from "./Pages/FavoritesPage";
 import PaymentPage from "./Pages/PaymentPage";
-import PaymentSuccessPage from "./Pages/Payment/PaymentSuccessPage";
-import PaymentCancelPage from "./Pages/Payment/PaymentCancelPage";
+import PaymentSuccessPage from "./Pages/PaymentSuccessPage";
 import FAQPage from "./Pages/FAQPage";
 
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
@@ -185,16 +184,6 @@ const Routers = createBrowserRouter([
                 path: "payment/success/program/:programId",
                 loader: protectedCaseInsensitiveLoader,
                 element: <PaymentSuccessPage />,
-            },
-            {
-                path: "payment/success",
-                loader: protectedCaseInsensitiveLoader,
-                element: <PaymentSuccessPage />,
-            },
-            {
-                path: "payment/cancel",
-                loader: protectedCaseInsensitiveLoader,
-                element: <PaymentCancelPage />,
             },
             {
                 path: "dashboard",

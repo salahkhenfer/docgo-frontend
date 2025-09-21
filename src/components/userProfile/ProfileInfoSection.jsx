@@ -5,9 +5,7 @@ import { useEffect } from "react";
 const ProfileInfoSection = ({ profile }) => {
     const { t } = useTranslation();
     const API_URL = import.meta.env.VITE_API_URL;
-    useEffect(() => {
-        console.log("profile pictire link", profile?.avatar);
-    }, [profile?.avatar]);
+    
     if (!profile) {
         return (
             <div className="bg-white rounded-3xl p-8 shadow-sm">

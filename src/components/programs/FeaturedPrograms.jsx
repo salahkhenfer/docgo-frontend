@@ -28,10 +28,7 @@ const FeaturedPrograms = ({ limit = 6, showViewAll = true }) => {
             const response = await clientProgramsAPI.getFeaturedPrograms({
                 limit,
             });
-            console.log(
-                "response from clientProgramsAPI.getFeaturedPrograms:",
-                response
-            );
+            
 
             if (response.success) {
                 setPrograms(response.data.programs || []);

@@ -89,7 +89,6 @@ const Register = () => {
                 setAuth: set_Auth,
                 setUser: set_user,
             });
-            console.log("response from the register is : ", r);
 
             if (r.success) {
                 setLoading(false);

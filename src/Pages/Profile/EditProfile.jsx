@@ -77,7 +77,6 @@ const EditProfile = () => {
                     withCredentials: true,
                 }
             );
-            console.log("Image upload response:", response);
 
             const data = response.data;
 
@@ -131,7 +130,6 @@ const EditProfile = () => {
             );
 
             const data = response;
-            console.log("Response data:", data);
 
             if (
                 response.status === 200 ||
@@ -185,7 +183,6 @@ const EditProfile = () => {
             fetch_data();
         }
         if (user) {
-            console.log("User data:", user);
 
             setFormData({
                 firstName: user.firstName || "",

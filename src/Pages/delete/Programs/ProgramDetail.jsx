@@ -140,7 +140,6 @@ const ProgramDetail = () => {
                     url: window.location.href,
                 });
             } catch (err) {
-                console.log("Error sharing:", err);
                 handleCopyLink();
             }
         } else {

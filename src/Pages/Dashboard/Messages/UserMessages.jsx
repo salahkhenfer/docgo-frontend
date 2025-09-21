@@ -33,7 +33,6 @@ const UserMessages = () => {
                 const response = await apiClient.get(
                     `/contact/user/${user.id}/messages`
                 );
-                console.log("User messages response:", response);
                 if (response.data.success) {
                     setMessages(response.data.data.messages || []);
                 }

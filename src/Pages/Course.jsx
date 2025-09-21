@@ -62,7 +62,7 @@ export const Course = () => {
         hasData,
     } = useCourse(courseId);
 
-    const formatCurrency = (amount, currency = "DZD") => {
+    const formatCurrency = (amount, currency = "USD") => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(
@@ -148,7 +148,6 @@ export const Course = () => {
                     url: window.location.href,
                 });
             } catch (error) {
-                console.log("Share cancelled");
             }
         } else {
             navigator.clipboard.writeText(window.location.href);
@@ -243,7 +242,6 @@ export const Course = () => {
     } = courseData;
 
     const handleVideoClick = (video) => {
-        console.log("Playing video:", video);
         setShowVideo(true);
     };
 

@@ -40,9 +40,7 @@ export const useCourse = (courseId) => {
                 const response = await courseService.getCourse(courseId, {
                     signal: abortControllerRef.current.signal,
                 });
-                console.log("Fetched course data:", response);
 
-                console.log("Fetched course data:", response);
 
                 // Normaliser les données pour s'assurer que objectives est un tableau
                 if (response && response.course) {
@@ -74,7 +72,6 @@ export const useCourse = (courseId) => {
             } catch (err) {
                 // Don't set error if request was aborted
                 if (err.name === "AbortError") {
-                    console.log("Request was aborted");
                     return;
                 }
 

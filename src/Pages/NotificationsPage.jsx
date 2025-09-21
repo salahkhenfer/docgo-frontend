@@ -125,7 +125,6 @@ const NotificationsPage = () => {
 
   const handleAction = (id) => {
     // Handle action required notifications
-    console.log(`Taking action for notification ${id}`);
     handleMarkAsRead(id);
   };
 

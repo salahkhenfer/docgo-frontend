@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../AppContext";
 import { FaArrowLeft, FaLock, FaCheckCircle } from "react-icons/fa";
@@ -21,27 +21,25 @@ const PaymentPage = () => {
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
 
-    const [selectedMethod, setSelectedMethod] = useState("paypal");
+    const [selectedMethod, setSelectedMethod] = useState("ccp");
     const [loading, setLoading] = useState(false);
     const [itemData, setItemData] = useState(null);
     const [itemType, setItemType] = useState(null); // 'course' or 'program'
     const [itemLoading, setItemLoading] = useState(false);
     const [paymentConfig, setPaymentConfig] = useState(null);
     const [configLoading, setConfigLoading] = useState(true);
-    const [error, setError] = useState(null);
-    // useEffect(() => {
-    //     console.log("itemdata", itemData);
-    // }, [itemData]);
+    const [error, setError] = useState(false);
+    const [filteredMethods, setFilteredMethods] = useState([]);
+    
+
     // Fetch payment configuration
     useEffect(() => {
         const fetchPaymentConfig = async () => {
             try {
                 setConfigLoading(true);
                 const response = await PaymentAPI.getPaymentInfo();
-                console.log("Payment API Response:", response); // Debug log
                 if (response.success) {
                     setPaymentConfig(response.data);
-                    console.log("Payment Config Data:", response.data); // Debug log
 
                     // Set default payment method based on what's available
                     if (response.data.paypal.available) {
@@ -80,17 +78,17 @@ const PaymentPage = () => {
 
                 if (courseId) {
                     setItemType("course");
-                    console.log("Fetching course data for ID:", courseId);
 
                     // Fetch course data from API
                     const response = await clientCoursesAPI.getCourseDetails(
                         courseId
                     );
+
                     if (response.success && response.data) {
                         setItemData(response.data.course || response.data);
                     } else {
                         console.error("Failed to fetch course data:", response);
-                        navigate(`/course/${courseId}`);
+                        navigate(`/Courses/${courseId}`);
                         return;
                     }
                 } else if (programId) {
@@ -102,13 +100,12 @@ const PaymentPage = () => {
                     );
                     if (response.success && response.data) {
                         setItemData(response.data.program || response.data);
-                        console.log("Fetched program data:", response.data);
                     } else {
                         console.error(
                             "Failed to fetch program data:",
                             response
                         );
-                        navigate(`/program/${programId}`);
+                        navigate(`/Programs/${programId}`);
                         return;
                     }
                 } else {
@@ -127,8 +124,6 @@ const PaymentPage = () => {
                 );
             } finally {
                 setItemLoading(false);
-                console.log("Item data:", itemData);
-                console.log("Item type:", itemType);
             }
         };
 
@@ -143,6 +138,34 @@ const PaymentPage = () => {
             );
         }
     }, [isAuth, user, navigate]);
+
+    // Cleanup payment on page unload (when user navigates away or refreshes)
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            // Only cleanup if we're in the middle of a CCP payment process
+            if (loading && selectedMethod === "ccp" && itemData?.id) {
+                try {
+                    // Send cleanup request - this will be sent even if page is closing
+                    navigator.sendBeacon(
+                        `/api/upload/Payment/${
+                            itemType === "course" ? "Courses" : "Programs"
+                        }/${itemData.id}`,
+                        JSON.stringify({ method: "DELETE" })
+                    );
+                } catch (error) {
+                    console.warn("Cleanup on unload failed:", error);
+                }
+            }
+        };
+
+        // Add event listener for page unload
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        // Cleanup function to remove event listener
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [loading, selectedMethod, itemData, itemType]);
 
     // Extract pricing information based on item type
     const getItemPrice = () => {
@@ -165,27 +188,22 @@ const PaymentPage = () => {
     const getOriginalPrice = () => {
         if (!itemData) return 0;
 
-        if (itemType === "course") {
-            return parseFloat(itemData.Price || 0);
-        } else if (itemType === "program") {
-            const originalPrice = parseFloat(itemData.originalPrice || 0);
-            const price = parseFloat(itemData.price || 0);
-            const scholarshipAmount = parseFloat(
-                itemData.scholarshipAmount || 0
-            );
-            return originalPrice > 0
-                ? originalPrice
-                : price > 0
-                ? price
-                : scholarshipAmount;
-        }
-        return 0;
+        // if (itemType === "course") {
+        return parseFloat(itemData.Price || 0);
+        // } else if (itemType === "program") {
+        //     const originalPrice = parseFloat(itemData.originalPrice || 0);
+        //     const price = parseFloat(itemData.price || 0);
+        //     const scholarshipAmount = parseFloat(
+        //         itemData.scholarshipAmount || 0
+        //     );
+        //     return originalPrice > 0
+        //         ? originalPrice
+        //         : price > 0
+        //         ? price
+        //         : scholarshipAmount;
+        // }
+        //     return 0;
     };
-
-    // Early return if we don't have item data yet
-    if (!itemData || configLoading || itemLoading) {
-        return <MainLoading />;
-    }
 
     const price = getItemPrice();
     const originalPrice = getOriginalPrice();
@@ -213,17 +231,15 @@ const PaymentPage = () => {
 
     const currency = getCurrency();
 
-    const hasDiscount = itemData
-        ? itemType === "course"
-            ? itemData.discountPrice && itemData.discountPrice < itemData.Price
-            : itemData.originalPrice &&
-              itemData.price &&
-              itemData.originalPrice > itemData.price
-        : false;
+    const hasDiscount = null;
+    // itemData.discountPrice && itemData.discountPrice < itemData.Price;
+    // itemType === "course"
+    //     ? itemData.discountPrice && itemData.discountPrice < itemData.Price
+    //     : itemData.originalPrice &&
+    //       itemData.price &&
+    //       itemData.originalPrice > itemData.price;
 
     const getItemTitle = () => {
-        if (!itemData) return "Unknown Item";
-
         if (itemType === "course") {
             return itemData.Title;
         } else if (itemType === "program") {
@@ -233,17 +249,12 @@ const PaymentPage = () => {
     };
 
     const getItemImage = () => {
-        if (!itemData) return null;
         return itemData.Image || itemData.image;
     };
 
     const getItemLevel = () => {
-        if (!itemData) return "";
-
         if (itemType === "course") {
-            return `${itemData.Level || "Unknown"} • ${
-                itemData.language || "Unknown"
-            }`;
+            return `${itemData.Level} • ${itemData.language}`;
         } else if (itemType === "program") {
             return `${itemData.Category || itemData.category || "Program"} • ${
                 itemData.language || "Multiple"
@@ -252,44 +263,68 @@ const PaymentPage = () => {
         return "";
     };
 
-    const paymentMethods = paymentConfig
-        ? [
-              {
-                  id: "paypal",
-                  name: "PayPal",
-                  description: "Pay securely with PayPal",
-                  detailedInstructions: paymentConfig.paypal?.instructions,
-                  icon: paypalIcon,
-                  available: paymentConfig.paypal?.available,
-                  enabled: paymentConfig.paypal?.enabled,
-                  isEnabled: paymentConfig.paypal?.isEnabled,
-              },
-              {
-                  id: "ccp",
-                  name: "Algeria CCP",
-                  description: "Pay with Algeria CCP transfer",
-                  detailedInstructions: paymentConfig.ccp?.instructions,
-                  icon: ccpIcon,
-                  available: paymentConfig.ccp?.available,
-                  enabled: paymentConfig.ccp?.enabled,
-                  isEnabled: paymentConfig.ccp?.isEnabled,
-              },
-          ]
-        : [];
+    const paymentMethods = useMemo(() => {
+        if (!paymentConfig) return [];
 
-    // Filter available and enabled methods
-    const filteredMethods = paymentMethods.filter((method) => {
-        const isValid = method.enabled && method.available;
+        return [
+            {
+                id: "paypal",
+                name: "PayPal",
+                description: "Pay securely with PayPal",
+                detailedInstructions: paymentConfig.paypal?.instructions,
+                icon: paypalIcon,
+                available: paymentConfig.paypal?.available,
+                enabled: paymentConfig.paypal?.enabled,
+                isEnabled: paymentConfig.paypal?.isEnabled,
+            },
+            {
+                id: "ccp",
+                name: "Algeria CCP",
+                description: "Pay with Algeria CCP transfer",
+                detailedInstructions: paymentConfig.ccp?.instructions,
+                icon: ccpIcon,
+                available: paymentConfig.ccp?.available,
+                enabled: paymentConfig.ccp?.enabled,
+                isEnabled: paymentConfig.ccp?.isEnabled,
+            },
+        ];
+    }, [paymentConfig]);
 
-        return isValid;
-    });
+    // Filter and update available payment methods when config changes
+    useEffect(() => {
+        if (!paymentConfig) {
+            setFilteredMethods([]);
+            return;
+        }
+
+        const availableMethods = paymentMethods.filter((method) => {
+            // Check if method is both enabled and available
+            const isEnabled = method.enabled && method.isEnabled !== false;
+            const isAvailable = method.available;
+
+            return isEnabled && isAvailable;
+        });
+
+        setFilteredMethods(availableMethods);
+
+        // Set default payment method if none selected or current selection is not available
+        if (availableMethods.length > 0) {
+            const currentMethodAvailable = availableMethods.some(
+                (method) => method.id === selectedMethod
+            );
+
+            if (!currentMethodAvailable) {
+                // Set to first available method
+                setSelectedMethod(availableMethods[0].id);
+            }
+        }
+    }, [paymentConfig, paymentMethods, selectedMethod]);
 
     const handleGoBack = () => {
         navigate(-1);
     };
 
     const handlePaymentSuccess = (paymentData) => {
-        console.log("Payment successful:", paymentData);
 
         let successMessage = "Payment Successful!";
         let redirectMessage = "Redirecting to your dashboard...";
@@ -329,8 +364,24 @@ const PaymentPage = () => {
         });
     };
 
-    const handlePaymentError = (error) => {
+    const handlePaymentError = async (error) => {
         console.error("Payment error:", error);
+
+        // If this was a CCP payment error, try to cleanup any uploaded file
+        if (selectedMethod === "ccp" && itemData?.id) {
+            try {
+                const { PaymentAPI } = await import("../API/Payment");
+                await PaymentAPI.cleanupCCPPayment({
+                    itemType,
+                    itemId: itemData.id,
+                });
+            } catch (cleanupError) {
+                console.warn(
+                    "Payment cleanup failed (may be normal):",
+                    cleanupError.message
+                );
+            }
+        }
 
         let errorTitle = "Payment Failed!";
         let errorMessage =
@@ -367,7 +418,9 @@ const PaymentPage = () => {
         });
     };
 
-    if (error) {
+    if (!itemData || configLoading || itemLoading) {
+        return <MainLoading />;
+    } else if (error) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
                 <div className="max-w-lg mx-auto">
@@ -441,122 +494,124 @@ const PaymentPage = () => {
                 </div>
             </div>
         );
-    }
-    return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <div className="bg-white shadow-sm">
-                <div className="max-w-4xl mx-auto px-4 py-6">
-                    <button
-                        onClick={handleGoBack}
-                        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-4"
-                    >
-                        <FaArrowLeft />
-                        <span>
-                            Back to{" "}
-                            {itemType === "course" ? "Course" : "Program"}
-                        </span>
-                    </button>
+    } else {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                {/* Header */}
+                <div className="bg-white shadow-sm">
+                    <div className="max-w-4xl mx-auto px-4 py-6">
+                        <button
+                            onClick={handleGoBack}
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-4"
+                        >
+                            <FaArrowLeft />
+                            <span>
+                                Back to{" "}
+                                {itemType === "course" ? "Course" : "Program"}
+                            </span>
+                        </button>
 
-                    <div className="flex items-center gap-3">
-                        <FaLock className="text-blue-600" />
-                        <h1 className="text-2xl font-bold text-gray-900">
-                            Secure Payment
-                        </h1>
-                    </div>
-                    <p className="text-gray-600 mt-2">
-                        Complete your enrollment for this course
-                    </p>
-                </div>
-            </div>
-
-            <div className="max-w-6xl mx-auto px-4 py-8">
-                <div className="grid lg:grid-cols-3 gap-8">
-                    {/* Payment Form */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-white rounded-lg shadow-sm p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                                Choose Payment Method
-                            </h2>
-
-                            <PaymentMethodSelector
-                                methods={filteredMethods}
-                                selectedMethod={selectedMethod}
-                                onMethodChange={setSelectedMethod}
-                            />
-
-                            <div className="mt-8">
-                                {selectedMethod === "paypal" && (
-                                    <PayPalPayment
-                                        itemData={itemData}
-                                        itemType={itemType}
-                                        amount={price}
-                                        currency={currency}
-                                        paymentConfig={paymentConfig?.paypal}
-                                        onSuccess={handlePaymentSuccess}
-                                        onError={handlePaymentError}
-                                        loading={loading}
-                                        setLoading={setLoading}
-                                    />
-                                )}
-
-                                {selectedMethod === "ccp" && (
-                                    <CCPPayment
-                                        itemData={itemData}
-                                        itemType={itemType}
-                                        amount={price}
-                                        currency={currency}
-                                        paymentConfig={paymentConfig?.ccp}
-                                        onSuccess={handlePaymentSuccess}
-                                        onError={handlePaymentError}
-                                        loading={loading}
-                                        setLoading={setLoading}
-                                    />
-                                )}
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <FaLock className="text-blue-600" />
+                            <h1 className="text-2xl font-bold text-gray-900">
+                                Secure Payment
+                            </h1>
                         </div>
+                        <p className="text-gray-600 mt-2">
+                            Complete your enrollment for this course
+                        </p>
                     </div>
+                </div>
 
-                    {/* Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                Order Summary
-                            </h3>
+                <div className="max-w-6xl mx-auto px-4 py-8">
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {/* Payment Form */}
+                        <div className="lg:col-span-2">
+                            <div className="bg-white rounded-lg shadow-sm p-6">
+                                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                                    Choose Payment Method
+                                </h2>
 
-                            {/* Item Info */}
-                            <div className="mb-6">
-                                <div className="flex items-start gap-3">
-                                    {getItemImage() && (
-                                        <img
-                                            src={getItemImage()}
-                                            alt={getItemTitle()}
-                                            className="w-16 h-16 object-cover rounded-lg"
+                                <PaymentMethodSelector
+                                    methods={filteredMethods}
+                                    selectedMethod={selectedMethod}
+                                    onMethodChange={setSelectedMethod}
+                                />
+
+                                <div className="mt-8">
+                                    {selectedMethod === "paypal" && (
+                                        <PayPalPayment
+                                            itemData={itemData}
+                                            itemType={itemType}
+                                            amount={price}
+                                            currency={currency}
+                                            paymentConfig={
+                                                paymentConfig?.paypal
+                                            }
+                                            onSuccess={handlePaymentSuccess}
+                                            onError={handlePaymentError}
+                                            loading={loading}
+                                            setLoading={setLoading}
                                         />
                                     )}
-                                    <div className="flex-1">
-                                        <h4 className="font-medium text-gray-900 line-clamp-2">
-                                            {getItemTitle()}
-                                        </h4>
-                                        <p className="text-sm text-gray-600 mt-1">
-                                            {getItemLevel()}
-                                        </p>
-                                        <p className="text-xs text-blue-600 mt-1 capitalize">
-                                            {itemType}
-                                        </p>
-                                    </div>
+
+                                    {selectedMethod === "ccp" && (
+                                        <CCPPayment
+                                            itemData={itemData}
+                                            itemType={itemType}
+                                            amount={price}
+                                            currency={currency}
+                                            paymentConfig={paymentConfig?.ccp}
+                                            onSuccess={handlePaymentSuccess}
+                                            onError={handlePaymentError}
+                                            loading={loading}
+                                            setLoading={setLoading}
+                                        />
+                                    )}
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Pricing */}
-                            <div className="space-y-3 mb-6">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-gray-600">
-                                        {itemType === "course"
-                                            ? "Course Price"
-                                            : "Program Fee"}
-                                    </span>
-                                    <span
+                        {/* Order Summary */}
+                        <div className="lg:col-span-1">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                                    Order Summary
+                                </h3>
+
+                                {/* Item Info */}
+                                <div className="mb-6">
+                                    <div className="flex items-start gap-3">
+                                        {getItemImage() && (
+                                            <img
+                                                src={getItemImage()}
+                                                alt={getItemTitle()}
+                                                className="w-16 h-16 object-cover rounded-lg"
+                                            />
+                                        )}
+                                        <div className="flex-1">
+                                            <h4 className="font-medium text-gray-900 line-clamp-2">
+                                                {getItemTitle()}
+                                            </h4>
+                                            <p className="text-sm text-gray-600 mt-1">
+                                                {getItemLevel()}
+                                            </p>
+                                            <p className="text-xs text-blue-600 mt-1 capitalize">
+                                                {itemType}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Pricing */}
+                                <div className="space-y-3 mb-6">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-600">
+                                            {itemType === "course"
+                                                ? "Course Price"
+                                                : "Program Fee"}
+                                        </span>
+                                        {/* <span
                                         className={
                                             hasDiscount
                                                 ? "line-through text-gray-400"
@@ -564,53 +619,58 @@ const PaymentPage = () => {
                                         }
                                     >
                                         {originalPrice} {currency}
-                                    </span>
+                                    </span> */}
+                                    </div>
+
+                                    {hasDiscount && (
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-green-600">
+                                                Discounted Price
+                                            </span>
+                                            <span className="font-medium text-green-600">
+                                                {price} {currency}
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    <div className="border-t pt-3">
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-semibold text-gray-900">
+                                                Total
+                                            </span>
+                                            <span className="font-bold text-xl text-blue-600">
+                                                {price} {currency}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {hasDiscount && (
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-green-600">
-                                            Discounted Price
-                                        </span>
-                                        <span className="font-medium text-green-600">
-                                            {price} {currency}
+                                {/* Security Features */}
+                                <div className="space-y-2 text-sm text-gray-600">
+                                    <div className="flex items-center gap-2">
+                                        <FaCheckCircle className="text-green-500" />
+                                        <span>
+                                            Secure SSL encrypted payment
                                         </span>
                                     </div>
-                                )}
-
-                                <div className="border-t pt-3">
-                                    <div className="flex justify-between items-center">
-                                        <span className="font-semibold text-gray-900">
-                                            Total
-                                        </span>
-                                        <span className="font-bold text-xl text-blue-600">
-                                            {price} {currency}
+                                    <div className="flex items-center gap-2">
+                                        <FaCheckCircle className="text-green-500" />
+                                        <span>
+                                            Instant access after payment
                                         </span>
                                     </div>
-                                </div>
-                            </div>
-
-                            {/* Security Features */}
-                            <div className="space-y-2 text-sm text-gray-600">
-                                <div className="flex items-center gap-2">
-                                    <FaCheckCircle className="text-green-500" />
-                                    <span>Secure SSL encrypted payment</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <FaCheckCircle className="text-green-500" />
-                                    <span>Instant access after payment</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <FaCheckCircle className="text-green-500" />
-                                    <span>30-day money-back guarantee</span>
+                                    <div className="flex items-center gap-2">
+                                        <FaCheckCircle className="text-green-500" />
+                                        <span>30-day money-back guarantee</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 };
 
 export default PaymentPage;

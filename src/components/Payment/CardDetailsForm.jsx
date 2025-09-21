@@ -119,7 +119,6 @@ const CardDetailsForm = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log("Form submitted:", values);
           setTimeout(() => {
             alert(t("paymentSuccess"));
             setSubmitting(false);

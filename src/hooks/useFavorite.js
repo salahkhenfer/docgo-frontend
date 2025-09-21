@@ -45,14 +45,7 @@ export const useFavorite = (itemId, itemType = "course") => {
         async (item = null) => {
             if (loading) return;
 
-            // Add debugging for item structure
-            console.log("toggleFavorite called with:", {
-                item,
-                itemId,
-                itemType,
-                isAuth,
-                userId: user?.id,
-            });
+            
 
             setLoading(true);
             setError(null);
@@ -119,7 +112,6 @@ export const useFavorites = () => {
             if (isAuth && user?.id) {
                 // For authenticated users, fetch from API
                 const response = await favoritesService.getFavorites();
-                console.log("API Favorites Response:", response.data);
 
                 const processedFavorites = {
                     courses: response.data.favorites.filter(
@@ -130,12 +122,10 @@ export const useFavorites = () => {
                     ),
                 };
 
-                console.log("Processed Favorites:", processedFavorites);
                 setFavorites(processedFavorites);
             } else {
                 // For guests, get from local storage
                 const localFavorites = getFavoritesFromStorage();
-                console.log("Local Favorites:", localFavorites);
                 setFavorites(localFavorites);
             }
         } catch (err) {

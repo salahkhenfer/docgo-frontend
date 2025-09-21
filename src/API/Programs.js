@@ -6,7 +6,6 @@ export const clientProgramsAPI = {
     getPrograms: async (params = {}) => {
         try {
             const response = await apiClient.get("/Programs", { params });
-            console.log("Fetched programs:", response);
 
             // Server now returns programs directly
             return response.data;
@@ -57,7 +56,6 @@ export const clientProgramsAPI = {
             const response = await apiClient.get("/Programs/search", {
                 params,
             });
-            console.log("Search programs response:", response);
             return response.data;
         } catch (error) {
             console.error("Error searching programs:", error);
