@@ -178,18 +178,19 @@ const CCPPayment = ({
                             <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
                                 <li>Transfer the amount to our CCP account</li>
                                 <li>
-                                    Take a photo or scan your payment receipt
+                                    Prenez une photo ou scannez votre reçu de
+                                    paiement
                                 </li>
                                 <li>
-                                    Fill out the form below and upload your
-                                    receipt
+                                    Remplissez le formulaire ci-dessous et téléchargez votre
+                                    reçu
                                 </li>
                                 <li>
-                                    We will verify your payment within 24 hours
+                                    Nous vérifierons votre paiement dans les 24 heures
                                 </li>
                                 <li>
-                                    You will receive course access after
-                                    verification
+                                    Vous recevrez l'accès au cours après
+                                    vérification
                                 </li>
                             </ol>
                         )}
