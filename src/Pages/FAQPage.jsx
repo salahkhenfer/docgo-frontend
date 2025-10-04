@@ -3,7 +3,7 @@ import Container from "../components/Container";
 import { useTranslation } from "react-i18next";
 
 const FAQPage = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <div className="min-h-screen bg-gray-50 py-12">

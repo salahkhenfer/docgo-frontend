@@ -8,7 +8,6 @@ import {
     List,
     Star,
     BookOpen,
-    Clock,
     Award,
 } from "lucide-react";
 import { CourseGrid } from "../components/courses/CourseGrid";
@@ -19,7 +18,7 @@ import { getCourses } from "../API/Courses";
 import PropTypes from "prop-types";
 
 // Stats Overview Component
-function StatsOverview({ totalCourses }) {
+function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
     const { t } = useTranslation();
 
     return (
@@ -38,27 +37,15 @@ function StatsOverview({ totalCourses }) {
                 </div>
             </div>
 
-            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-green-100 text-sm font-medium">
-                            {t("Available Courses") || "Available Courses"}
-                        </p>
-                        <p className="text-3xl font-bold">
-                            {totalCourses || 0}
-                        </p>
-                    </div>
-                    <Clock className="w-12 h-12 text-green-200" />
-                </div>
-            </div>
-
             <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-6 text-white">
                 <div className="flex items-center justify-between">
                     <div>
                         <p className="text-yellow-100 text-sm font-medium">
                             {t("Featured") || "Featured"}
                         </p>
-                        <p className="text-3xl font-bold">0</p>
+                        <p className="text-3xl font-bold">
+                            {featuredCourses || 0}
+                        </p>
                     </div>
                     <Star className="w-12 h-12 text-yellow-200" />
                 </div>
@@ -70,7 +57,9 @@ function StatsOverview({ totalCourses }) {
                         <p className="text-purple-100 text-sm font-medium">
                             {t("Categories") || "Categories"}
                         </p>
-                        <p className="text-3xl font-bold">0</p>
+                        <p className="text-3xl font-bold">
+                            {totalCategories || 0}
+                        </p>
                     </div>
                     <Award className="w-12 h-12 text-purple-200" />
                 </div>
@@ -81,6 +70,8 @@ function StatsOverview({ totalCourses }) {
 
 StatsOverview.propTypes = {
     totalCourses: PropTypes.number,
+    featuredCourses: PropTypes.number,
+    totalCategories: PropTypes.number,
 };
 
 export default function Courses() {
@@ -96,7 +87,11 @@ export default function Courses() {
     const [specialties, setSpecialties] = useState([]);
     const [viewMode, setViewMode] = useState("grid"); // grid or list
     const [searchLoading, setSearchLoading] = useState(false);
-    const [showingFeatured, setShowingFeatured] = useState(true);
+    const [stats, setStats] = useState({
+        total: 0,
+        featured: 0,
+        categories: 0,
+    });
 
     // Debouncing state
     const [searchQuery, setSearchQuery] = useState(
@@ -178,7 +173,7 @@ export default function Courses() {
                     const coursesData = response.data.courses || [];
                     setCourses(coursesData);
 
-                    // Extract filter data from courses
+                    // Extract filter data and stats from courses
                     extractFiltersData(coursesData);
 
                     setPagination({
@@ -189,6 +184,17 @@ export default function Courses() {
                             response.data.pagination?.totalCourses || 0,
                         limit: pagination.limit,
                     });
+
+                    // Update stats - count featured courses from current data
+                    const featuredCount = coursesData.filter(
+                        (course) => course.isFeatured
+                    ).length;
+                    setStats((prevStats) => ({
+                        ...prevStats,
+                        total: response.data.pagination?.totalCourses || 0,
+                        featured: featuredCount,
+                    }));
+
                     setError(null);
                 } else {
                     throw new Error(
@@ -239,6 +245,11 @@ export default function Courses() {
         setCategories(uniqueCategories);
         setSpecialties(uniqueSpecialties);
 
+        // Update stats with categories count
+        setStats((prevStats) => ({
+            ...prevStats,
+            categories: uniqueCategories.length,
+        }));
     };
 
     // Update URL params when filters change
@@ -494,7 +505,9 @@ export default function Courses() {
 
                     {/* Stats Overview */}
                     <StatsOverview
-                        totalCourses={pagination?.totalCourses || 0}
+                        totalCourses={stats.total}
+                        featuredCourses={stats.featured}
+                        totalCategories={stats.categories}
                     />
 
                     {/* Search Bar */}

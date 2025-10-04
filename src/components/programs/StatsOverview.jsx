@@ -18,13 +18,13 @@ const StatsOverview = ({
             color: "text-blue-600",
             bgColor: "bg-blue-100",
         },
-        {
-            icon: Users,
-            label: t("Open Programs") || "Open Programs",
-            value: openPrograms || 0,
-            color: "text-green-600",
-            bgColor: "bg-green-100",
-        },
+        // {
+        //     icon: Users,
+        //     label: t("Open Programs") || "Open Programs",
+        //     value: openPrograms || 0,
+        //     color: "text-green-600",
+        //     bgColor: "bg-green-100",
+        // },
         {
             icon: Star,
             label: t("Featured") || "Featured",
@@ -44,24 +44,26 @@ const StatsOverview = ({
     return (
         <div className="bg-white border-b border-gray-100 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {stats.map((stat, index) => (
-                        <div key={index} className="text-center">
-                            <div
-                                className={`inline-flex items-center justify-center w-16 h-16 ${stat.bgColor} rounded-full mb-4 mx-auto`}
-                            >
-                                <stat.icon
-                                    className={`w-8 h-8 ${stat.color}`}
-                                />
+                <div className="flex justify-center">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-20 max-w-3xl">
+                        {stats.map((stat, index) => (
+                            <div key={index} className="text-center">
+                                <div
+                                    className={`inline-flex items-center justify-center w-16 h-16 ${stat.bgColor} rounded-full mb-4 mx-auto`}
+                                >
+                                    <stat.icon
+                                        className={`w-8 h-8 ${stat.color}`}
+                                    />
+                                </div>
+                                <div className="text-3xl font-bold text-gray-900 mb-2">
+                                    {stat.value.toLocaleString()}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                    {stat.label}
+                                </div>
                             </div>
-                            <div className="text-3xl font-bold text-gray-900 mb-2">
-                                {stat.value.toLocaleString()}
-                            </div>
-                            <div className="text-sm text-gray-600">
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
     const { t, i18n } = useTranslation();
 
-    const { user, isAuth } = useAppContext();
+    const { isAuth } = useAppContext();
     const [faqs, setFaqs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -18,8 +18,59 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
     const [voteStates, setVoteStates] = useState({}); // Track vote states for each FAQ
     const [votingInProgress, setVotingInProgress] = useState({}); // Track voting progress
 
+    /**
+     * Smart language fallback logic for FAQ text
+     * Priority:
+     * 1. Try selected language (ar, fr, en)
+     * 2. If not available, try English as default
+     * 3. If not available, try French
+     * 4. If not available, try Arabic
+     * 5. Finally, try the base field without suffix
+     */
+    const getLocalizedText = (faq, field) => {
+        const currentLanguage = i18n.language || "en";
+
+        // Define language priority based on current selection
+        let languagePriority = [];
+
+        if (currentLanguage === "ar") {
+            languagePriority = [
+                `${field}_ar`,
+                field,
+                `${field}_fr`,
+                `${field}_en`,
+            ];
+        } else if (currentLanguage === "fr") {
+            languagePriority = [
+                `${field}_fr`,
+                field,
+                `${field}_en`,
+                `${field}_ar`,
+            ];
+        } else {
+            // Default to English
+            languagePriority = [
+                field,
+                `${field}_en`,
+                `${field}_fr`,
+                `${field}_ar`,
+            ];
+        }
+
+        // Find first available translation
+        for (const langField of languagePriority) {
+            if (faq[langField] && faq[langField].trim() !== "") {
+                return faq[langField];
+            }
+        }
+
+        // Final fallback - return empty string
+        return "";
+    };
+
     useEffect(() => {
         fetchFAQs();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type, courseId, programId]);
 
     // Fetch vote statuses for authenticated users
@@ -27,6 +78,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
         if (isAuth && faqs.length > 0) {
             checkVoteStatuses();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuth, faqs]);
 
     const fetchFAQs = useCallback(async () => {
@@ -191,12 +243,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
     // Filter FAQs by selected category
     const filteredFaqs = selectedCategory
         ? faqs.filter((faq) => {
-              const faqCategory =
-                  i18n.language === "ar" && faq.category_ar
-                      ? faq.category_ar
-                      : i18n.language === "fr" && faq.category_fr
-                      ? faq.category_fr
-                      : faq.category;
+              const faqCategory = getLocalizedText(faq, "category");
               return faqCategory === selectedCategory;
           })
         : faqs;
@@ -322,15 +369,10 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                             <div className="flex justify-between items-center">
                                 <div className="text-lg font-medium text-gray-900 pr-4 flex-1">
                                     <RichTextDisplay
-                                        content={
-                                            i18n.language === "ar" &&
-                                            faq.question_ar
-                                                ? faq.question_ar
-                                                : i18n.language === "fr" &&
-                                                  faq.question_fr
-                                                ? faq.question_fr
-                                                : faq.question
-                                        }
+                                        content={getLocalizedText(
+                                            faq,
+                                            "question"
+                                        )}
                                         className="text-gray-900"
                                     />
                                 </div>
@@ -353,15 +395,10 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                             {faq.category && (
                                 <div className="inline-block mt-2">
                                     <RichTextDisplay
-                                        content={
-                                            i18n.language === "ar" &&
-                                            faq.category_ar
-                                                ? faq.category_ar
-                                                : i18n.language === "fr" &&
-                                                  faq.category_fr
-                                                ? faq.category_fr
-                                                : faq.category
-                                        }
+                                        content={getLocalizedText(
+                                            faq,
+                                            "category"
+                                        )}
                                         className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded inline-block"
                                     />
                                 </div>
@@ -371,14 +408,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                         {openItems[faq.id] && (
                             <div className="px-4 pb-4">
                                 <RichTextDisplay
-                                    content={
-                                        i18n.language === "ar" && faq.answer_ar
-                                            ? faq.answer_ar
-                                            : i18n.language === "fr" &&
-                                              faq.answer_fr
-                                            ? faq.answer_fr
-                                            : faq.answer
-                                    }
+                                    content={getLocalizedText(faq, "answer")}
                                     className="text-gray-700 mb-4"
                                 />
 

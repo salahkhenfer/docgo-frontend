@@ -25,6 +25,12 @@ export function Programs() {
     const [viewMode, setViewMode] = useState("grid"); // grid or list
     const [searchLoading, setSearchLoading] = useState(false);
     const [showingFeatured, setShowingFeatured] = useState(true);
+    const [stats, setStats] = useState({
+        total: 0,
+        published: 0,
+        featured: 0,
+        organizations: 0,
+    });
 
     // Debouncing state
     const [searchQuery, setSearchQuery] = useState(
@@ -109,8 +115,6 @@ export function Programs() {
                     filters.country ||
                     filters.location ||
                     filters.isRemote;
-
-              
 
                 let response;
 
@@ -209,6 +213,16 @@ export function Programs() {
                     currentPage: page,
                 }));
 
+                // Update stats if provided in response
+                if (response.stats) {
+                    setStats((prevStats) => ({
+                        total: response.stats.total || 0,
+                        published: response.stats.published || 0,
+                        featured: response.stats.featured || 0,
+                        organizations: prevStats.organizations || 0,
+                    }));
+                }
+
                 setError(null);
             } catch (error) {
                 console.error("Error fetching programs:", error);
@@ -238,6 +252,12 @@ export function Programs() {
 
             setCategories(categories);
             setOrganizations(organizations);
+
+            // Update organizations count in stats
+            setStats((prevStats) => ({
+                ...prevStats,
+                organizations: organizations.length || 0,
+            }));
         } catch (error) {
             console.error("Error fetching filter data:", error);
             // Set empty arrays on error to prevent crashes
@@ -485,7 +505,12 @@ export function Programs() {
                         </p>
                     </div>
                     {/* Stats Overview */}
-                    <StatsOverview totalPrograms={pagination.totalPrograms} />
+                    <StatsOverview
+                        totalPrograms={stats.total}
+                        openPrograms={stats.published}
+                        featuredPrograms={stats.featured}
+                        totalOrganizations={stats.organizations}
+                    />
 
                     {/* Search Bar */}
                     <div className="max-w-2xl mt-3 mx-auto relative">
@@ -614,8 +639,6 @@ export function Programs() {
                                             </>
                                         )}
                                     </p>
-
-                                    
                                 </div>
 
                                 {/* View and Sort Controls */}
@@ -742,8 +765,6 @@ export function Programs() {
                                                     </span>
                                                 </p>
                                             )}
-
-                                            
 
                                             <p className="text-gray-600">
                                                 {t(

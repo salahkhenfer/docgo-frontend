@@ -6,18 +6,18 @@ import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
 import Navigation from "./components/Navbar/Navigation";
 import visitService from "./services/VisitTrackerService";
+import homeService from "./services/homeService";
 import { useAppContext } from "./AppContext";
 import MainLoading from "./MainLoading";
 
 function App() {
     const [loading, setLoading] = useState(true);
+    const [contactInfo, setContactInfo] = useState(null);
     const location = useLocation();
     const { loading: authLoading } = useAppContext(); // Use auth loading from context
 
-    // Check if we're in dashboard routes or auth routes that shouldn't have navbar/footer
-    const isDashboardRoute = location.pathname.startsWith("/dashboard");
+    // Check if we're in auth routes that shouldn't have navbar/footer
     const isAuthRoute = ["/login", "/register"].includes(location.pathname);
-    // const shouldHideNavAndFooter = isDashboardRoute || isAuthRoute;
     const shouldHideNavAndFooter = isAuthRoute;
 
     useEffect(() => {
@@ -29,6 +29,22 @@ function App() {
             visitService.updateDuration();
         };
     }, [location.pathname]);
+
+    useEffect(() => {
+        // Fetch contact info for footer
+        const fetchContactInfo = async () => {
+            try {
+                const response = await homeService.getHomePageData();
+                if (response.success) {
+                    setContactInfo(response.data.contactInfo);
+                }
+            } catch (error) {
+                console.error("Error fetching contact info:", error);
+            }
+        };
+
+        fetchContactInfo();
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -100,7 +116,7 @@ function App() {
             <Outlet />
             {!shouldHideNavAndFooter && (
                 <Reveal>
-                    <Footer />
+                    <Footer contactInfo={contactInfo} />
                 </Reveal>
             )}
         </div>

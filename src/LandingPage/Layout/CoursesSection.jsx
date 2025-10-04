@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 import CardCourse from "../../components/CardCourse";
 import Container from "../../components/Container";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import img from "../../../src/assets/Image.png"; // Adjust the path as necessary
 
-function CoursesSection() {
+function CoursesSection({ featuredCourses, latestCourses }) {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.dir() === "rtl";
     const [isDragging, setIsDragging] = useState(false);
@@ -15,16 +16,22 @@ function CoursesSection() {
     const [maxScroll, setMaxScroll] = useState(0);
     const carouselRef = useRef(null);
 
-    const cards = Array(6).fill({
-        url: img,
-        title: "UI UX Design Course",
-        description:
-            "The UI/UX design specialization adopts a design-centered approach...",
-        price: "1356",
-        hours: 10,
-        lessonNumber: 5,
-        starsNumber: 5,
-    });
+    // Use featured courses or fallback to latest courses or placeholder
+    const coursesToDisplay =
+        featuredCourses && featuredCourses.length > 0
+            ? featuredCourses
+            : latestCourses && latestCourses.length > 0
+            ? latestCourses
+            : Array(6).fill({
+                  url: img,
+                  title: "UI UX Design Course",
+                  description:
+                      "The UI/UX design specialization adopts a design-centered approach...",
+                  price: "1356",
+                  hours: 10,
+                  lessonNumber: 5,
+                  starsNumber: 5,
+              });
 
     useEffect(() => {
         const updateMaxScroll = () => {
@@ -115,9 +122,27 @@ function CoursesSection() {
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseLeave}
                 >
-                    {cards.map((card, index) => (
-                        <div key={index} className="flex-shrink-0">
-                            <CardCourse {...card} ProfessorName="Amine" />
+                    {coursesToDisplay.map((course, index) => (
+                        <div key={course.id || index} className="flex-shrink-0">
+                            <CardCourse
+                                id={course.id}
+                                url={course.Image || course.url || img}
+                                title={course.Title || course.title}
+                                description={
+                                    course.Description || course.description
+                                }
+                                price={course.Price || course.price}
+                                hours={course.Duration || course.hours}
+                                lessonNumber={
+                                    course.Lessons_count ||
+                                    course.lessonNumber ||
+                                    0
+                                }
+                                starsNumber={
+                                    course.Rating || course.starsNumber || 5
+                                }
+                                ProfessorName={course.ProfessorName || ""}
+                            />
                         </div>
                     ))}
                 </div>
@@ -145,5 +170,10 @@ function CoursesSection() {
         </Container>
     );
 }
+
+CoursesSection.propTypes = {
+    featuredCourses: PropTypes.arrayOf(PropTypes.object),
+    latestCourses: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default CoursesSection;

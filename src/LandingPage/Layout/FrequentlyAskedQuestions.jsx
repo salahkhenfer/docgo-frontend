@@ -1,16 +1,74 @@
 import { useTranslation } from "react-i18next";
-import AnswerQuestion from "../../components/AnswerQuestion";
-import DarkColorButton from "../../components/Buttons/DarkColorButton";
-import Switch from "../../components/Switch";
+import PropTypes from "prop-types";
+import FaqElement from "../../components/FaqElement";
 import BackgroundImage from "../../../src/assets/three monochrome plastic spheres.png";
-import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import Container from "../../components/Container";
 import GeometricShapes from "../../../src/assets/geometric shapes.png";
-import phoneIcon from "../../../src/assets/phone.png"; // Adjust the path as necessary
 
-function FrequentlyAskedQuestions() {
+function FrequentlyAskedQuestions({ faqs }) {
     const { t, i18n } = useTranslation();
-    const isRTL = i18n.dir() === "rtl";
+    const currentLanguage = i18n.language;
+
+    // Use dynamic FAQs or fallback to static translations
+    const displayFAQs =
+        faqs && faqs.length > 0
+            ? faqs.slice(0, 3) // Display first 3 FAQs
+            : [
+                  { question: t("faqQuestion1"), answer: t("faqAnswer1") },
+                  { question: t("faqQuestion2"), answer: t("faqAnswer2") },
+                  { question: t("faqQuestion3"), answer: t("faqAnswer3") },
+              ];
+
+    /**
+     * Smart language fallback logic for FAQ text
+     * Priority:
+     * 1. Try selected language (ar, fr, en)
+     * 2. If not available, try English as default
+     * 3. If not available, try French
+     * 4. If not available, try Arabic
+     * 5. Finally, try the base field without suffix
+     */
+    const getFAQText = (faq, field) => {
+        // Handle static translations (strings)
+        if (typeof faq[field] === "string") return faq[field];
+
+        // Define language priority based on current selection
+        let languagePriority = [];
+
+        if (currentLanguage === "ar") {
+            languagePriority = [
+                `${field}_ar`,
+                field,
+                `${field}_fr`,
+                `${field}_en`,
+            ];
+        } else if (currentLanguage === "fr") {
+            languagePriority = [
+                `${field}_fr`,
+                field,
+                `${field}_en`,
+                `${field}_ar`,
+            ];
+        } else {
+            // Default to English
+            languagePriority = [
+                field,
+                `${field}_en`,
+                `${field}_fr`,
+                `${field}_ar`,
+            ];
+        }
+
+        // Find first available translation
+        for (const langField of languagePriority) {
+            if (faq[langField] && faq[langField].trim() !== "") {
+                return faq[langField];
+            }
+        }
+
+        // Final fallback - return empty string
+        return "";
+    };
 
     return (
         <div
@@ -39,68 +97,22 @@ function FrequentlyAskedQuestions() {
                     {t("faqDescription")}
                 </p>
 
-                <DarkColorButton
-                    style="flex gap-2 items-center justify-center text-center self-center sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2"
-                    icon={
-                        <img
-                            src={phoneIcon}
-                            alt={t("phoneIcon")}
-                            className="w-5 h-5"
-                        />
-                    }
-                    text={t("contactUs")}
-                />
-
-                <Switch />
-
                 <div className="flex flex-col gap-3 md:gap-6">
-                    <AnswerQuestion
-                        question={t("faqQuestion1")}
-                        answer={t("faqAnswer1")}
-                    />
-                    <AnswerQuestion
-                        question={t("faqQuestion2")}
-                        answer={t("faqAnswer2")}
-                    />
-                    <AnswerQuestion
-                        question={t("faqQuestion3")}
-                        answer={t("faqAnswer3")}
-                    />
+                    {displayFAQs.map((faq, index) => (
+                        <FaqElement
+                            key={faq.id || index}
+                            question={getFAQText(faq, "question")}
+                            answer={getFAQText(faq, "answer")}
+                        />
+                    ))}
                 </div>
-
-                {/* <div className="flex flex-col sm:flex-row gap-4 items-center justify-end w-full sm:w-[80%] md:w-[60%] lg:w-[50%] ml-auto">
-          <LightColoredButton
-            style="sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2 flex justify-center items-center gap-2 text-center"
-            text={t("previous")}
-            icon={
-              isRTL ? (
-                ""
-              ) : (
-                <img
-                  src="../../../src/assets/arrow-left.png"
-                  alt={t("previousIcon")}
-                />
-              )
-            }
-          />
-          <DarkColorButton
-            style="sm-sm:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-sm  px-8sm-sm:max-sm:p-2 sm-sm:max-sm:text-[12px] sm-sm:max-sm:p-2 flex-row-reverse flex justify-center items-center gap-2 text-center"
-            text={t("next")}
-            icon={
-              isRTL ? (
-                ""
-              ) : (
-                <img
-                  src="../../../src/assets/arrow-right.png"
-                  alt={t("nextIcon")}
-                />
-              )
-            }
-          />
-        </div> */}
             </Container>
         </div>
     );
 }
+
+FrequentlyAskedQuestions.propTypes = {
+    faqs: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default FrequentlyAskedQuestions;
