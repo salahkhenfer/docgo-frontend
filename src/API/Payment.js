@@ -3,6 +3,51 @@ import apiClient from "../services/apiClient";
 // Payment API for handling PayPal and CCP payments
 export const PaymentAPI = {
     // =================================================================
+    // CHECK PAYMENT APPLICATION
+    // =================================================================
+
+    // Check if user has an existing payment application for an item
+    checkPaymentApplication: async (itemType, itemId) => {
+        try {
+            const response = await apiClient.get(
+                `/user-payments/check-application/${itemType}/${itemId}`
+            );
+
+            return {
+                success: true,
+                data: response.data,
+            };
+        } catch (error) {
+            console.error("Check payment application error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    "Failed to check payment application",
+            };
+        }
+    },
+
+    // Get all user's payments
+    getMyPayments: async () => {
+        try {
+            const response = await apiClient.get("/user-payments/my-payments");
+
+            return {
+                success: true,
+                data: response.data.data,
+            };
+        } catch (error) {
+            console.error("Get my payments error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message || "Failed to fetch payments",
+            };
+        }
+    },
+
+    // =================================================================
     // PAYPAL PAYMENT METHODS
     // =================================================================
 
@@ -114,7 +159,6 @@ export const PaymentAPI = {
             } else {
                 throw new Error("Invalid item type");
             }
-
 
             return {
                 success: true,

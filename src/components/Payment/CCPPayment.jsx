@@ -1,8 +1,17 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import { FaUpload, FaSpinner, FaInfoCircle } from "react-icons/fa";
+import {
+    FaUpload,
+    FaSpinner,
+    FaInfoCircle,
+    FaCheckCircle,
+    FaTimesCircle,
+    FaClock,
+    FaExclamationTriangle,
+} from "react-icons/fa";
 import RichTextDisplay from "../Common/RichTextDisplay";
 import { PaymentAPI } from "../../API/Payment";
+import { useAppContext } from "../../AppContext";
 
 const CCPPayment = ({
     itemData,
@@ -15,16 +24,47 @@ const CCPPayment = ({
     loading,
     setLoading,
 }) => {
+    const { user } = useAppContext();
+    const [existingApplication, setExistingApplication] = useState(null);
+    const [checkingApplication, setCheckingApplication] = useState(true);
     const [paymentForm, setPaymentForm] = useState({
-        fullName: "",
+        fullName: user
+            ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+            : "",
         ccpNumber: "",
         transferReference: "",
-        phoneNumber: "",
-        email: "",
+        phoneNumber: user?.phoneNumber || "",
+        email: user?.email || "",
     });
     const [receiptFile, setReceiptFile] = useState(null);
     const [fileName, setFileName] = useState("");
+    const [errors, setErrors] = useState({});
     const fileInputRef = useRef(null);
+
+    // Check for existing payment application
+    useEffect(() => {
+        const checkExistingApplication = async () => {
+            if (!itemData?.id) return;
+
+            try {
+                setCheckingApplication(true);
+                const response = await PaymentAPI.checkPaymentApplication(
+                    itemType,
+                    itemData.id
+                );
+
+                if (response.success && response.data.hasApplication) {
+                    setExistingApplication(response.data);
+                }
+            } catch (error) {
+                console.error("Error checking application:", error);
+            } finally {
+                setCheckingApplication(false);
+            }
+        };
+
+        checkExistingApplication();
+    }, [itemData?.id, itemType]);
 
     // CCP account details from configuration
     const ccpAccountDetails = {
@@ -34,12 +74,53 @@ const CCPPayment = ({
         bankName: paymentConfig?.bankName || "Algeria Post CCP",
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!paymentForm.fullName.trim()) {
+            newErrors.fullName = "Full name is required";
+        }
+
+        if (!paymentForm.ccpNumber.trim()) {
+            newErrors.ccpNumber = "CCP number is required";
+        } else if (!/^\d+$/.test(paymentForm.ccpNumber)) {
+            newErrors.ccpNumber = "CCP number must contain only digits";
+        }
+
+        if (!paymentForm.transferReference.trim()) {
+            newErrors.transferReference = "Transfer reference is required";
+        }
+
+        if (!paymentForm.phoneNumber.trim()) {
+            newErrors.phoneNumber = "Phone number is required";
+        } else if (!/^[\d\s\-+()]+$/.test(paymentForm.phoneNumber)) {
+            newErrors.phoneNumber = "Invalid phone number format";
+        }
+
+        if (!paymentForm.email.trim()) {
+            newErrors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paymentForm.email)) {
+            newErrors.email = "Invalid email format";
+        }
+
+        if (!receiptFile) {
+            newErrors.receiptFile = "Payment receipt is required";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setPaymentForm((prev) => ({
             ...prev,
             [name]: value,
         }));
+        // Clear error for this field
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
     };
 
     const handleFileSelect = () => {
@@ -57,26 +138,33 @@ const CCPPayment = ({
                 "application/pdf",
             ];
             if (!allowedTypes.includes(file.type)) {
-                alert("Please upload a valid file (JPG, PNG, or PDF)");
+                setErrors((prev) => ({
+                    ...prev,
+                    receiptFile:
+                        "Please upload a valid file (JPG, PNG, or PDF)",
+                }));
                 return;
             }
 
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                alert("File size must be less than 5MB");
+                setErrors((prev) => ({
+                    ...prev,
+                    receiptFile: "File size must be less than 5MB",
+                }));
                 return;
             }
 
             setReceiptFile(file);
             setFileName(file.name);
+            setErrors((prev) => ({ ...prev, receiptFile: "" }));
         }
     };
 
     const handleCCPPayment = async (e) => {
         e.preventDefault();
 
-        if (!receiptFile) {
-            alert("Please upload your payment receipt");
+        if (!validateForm()) {
             return;
         }
 
@@ -92,7 +180,6 @@ const CCPPayment = ({
                     itemType.charAt(0).toUpperCase() + itemType.slice(1)
                 }: ${itemData?.Title || itemData?.title}`,
             };
-
 
             // Create CCP payment with screenshot
             const paymentResult = await PaymentAPI.createCCPPayment(
@@ -149,6 +236,185 @@ const CCPPayment = ({
         }
     };
 
+    const getStatusBadge = (status) => {
+        const statusConfig = {
+            pending: {
+                icon: FaClock,
+                text: "Pending Verification",
+                bgColor: "bg-yellow-100",
+                textColor: "text-yellow-800",
+                borderColor: "border-yellow-200",
+            },
+            approved: {
+                icon: FaCheckCircle,
+                text: "Approved",
+                bgColor: "bg-green-100",
+                textColor: "text-green-800",
+                borderColor: "border-green-200",
+            },
+            rejected: {
+                icon: FaTimesCircle,
+                text: "Rejected",
+                bgColor: "bg-red-100",
+                textColor: "text-red-800",
+                borderColor: "border-red-200",
+            },
+            cancelled: {
+                icon: FaTimesCircle,
+                text: "Cancelled",
+                bgColor: "bg-gray-100",
+                textColor: "text-gray-800",
+                borderColor: "border-gray-200",
+            },
+        };
+
+        const config = statusConfig[status] || statusConfig.pending;
+        const Icon = config.icon;
+
+        return (
+            <div
+                className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border ${config.bgColor} ${config.textColor} ${config.borderColor}`}
+            >
+                <Icon className="text-sm" />
+                <span className="text-sm font-medium">{config.text}</span>
+            </div>
+        );
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
+    // Show loading state while checking for existing application
+    if (checkingApplication) {
+        return (
+            <div className="flex items-center justify-center py-8">
+                <FaSpinner className="animate-spin text-3xl text-green-600" />
+                <span className="ml-3 text-gray-600">
+                    Checking payment status...
+                </span>
+            </div>
+        );
+    }
+
+    // Show existing application if found and not rejected/cancelled
+    if (
+        existingApplication?.hasApplication &&
+        !existingApplication?.canSubmitNew
+    ) {
+        const app = existingApplication.application;
+
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">C</span>
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900">
+                        Algeria CCP Payment
+                    </h3>
+                </div>
+
+                {/* Existing Application Status */}
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                    <div className="flex items-start gap-4">
+                        <FaInfoCircle className="text-blue-600 text-2xl mt-1" />
+                        <div className="flex-1">
+                            <h4 className="font-semibold text-blue-900 text-lg mb-3">
+                                Payment Application Already Submitted
+                            </h4>
+                            <p className="text-blue-800 mb-4">
+                                You have already submitted a payment application
+                                for this item. You cannot submit another payment
+                                until the current one is processed.
+                            </p>
+
+                            <div className="bg-white rounded-lg p-4 space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600 font-medium">
+                                        Status:
+                                    </span>
+                                    {getStatusBadge(app.status)}
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600 font-medium">
+                                        Amount:
+                                    </span>
+                                    <span className="font-bold text-gray-900">
+                                        {app.amount} {app.currency}
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600 font-medium">
+                                        CCP Number:
+                                    </span>
+                                    <span className="font-mono text-gray-900">
+                                        {app.ccpNumber}
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600 font-medium">
+                                        Transaction ID:
+                                    </span>
+                                    <span className="font-mono text-gray-900">
+                                        {app.transactionId}
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600 font-medium">
+                                        Submitted:
+                                    </span>
+                                    <span className="text-gray-900">
+                                        {formatDate(app.createdAt)}
+                                    </span>
+                                </div>
+
+                                {app.status === "pending" && (
+                                    <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                        <div className="flex items-center gap-2">
+                                            <FaClock className="text-yellow-600" />
+                                            <span className="text-yellow-800 text-sm">
+                                                Your payment is being verified
+                                                by our team. This usually takes
+                                                24-48 hours.
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {app.rejectionReason && (
+                                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                        <div className="flex items-start gap-2">
+                                            <FaExclamationTriangle className="text-red-600 mt-0.5" />
+                                            <div>
+                                                <p className="text-red-800 font-medium text-sm mb-1">
+                                                    Rejection Reason:
+                                                </p>
+                                                <p className="text-red-700 text-sm">
+                                                    {app.rejectionReason}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-3 mb-6">
@@ -178,19 +444,17 @@ const CCPPayment = ({
                             <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
                                 <li>Transfer the amount to our CCP account</li>
                                 <li>
-                                    Prenez une photo ou scannez votre reçu de
-                                    paiement
+                                    Take a photo or scan your payment receipt
                                 </li>
                                 <li>
-                                    Remplissez le formulaire ci-dessous et téléchargez votre
-                                    reçu
+                                    Fill the form below and upload your receipt
                                 </li>
                                 <li>
-                                    Nous vérifierons votre paiement dans les 24 heures
+                                    We will verify your payment within 24 hours
                                 </li>
                                 <li>
-                                    Vous recevrez l'accès au cours après
-                                    vérification
+                                    You will receive access to the course after
+                                    verification
                                 </li>
                             </ol>
                         )}
@@ -199,38 +463,45 @@ const CCPPayment = ({
             </div>
 
             {/* CCP Account Details */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-3">
-                    Transfer Details
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-300 rounded-lg p-5 shadow-sm">
+                <h4 className="font-semibold text-gray-900 mb-4 text-lg flex items-center gap-2">
+                    <FaInfoCircle className="text-green-600" />
+                    Transfer To This Account
                 </h4>
-                <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">Account Number:</span>
-                        <span className="font-mono font-medium">
+                <div className="bg-white rounded-lg p-4 space-y-3 shadow-sm">
+                    <div className="flex justify-between items-center py-2 border-b">
+                        <span className="text-gray-600 font-medium">
+                            Account Number:
+                        </span>
+                        <span className="font-mono font-bold text-gray-900 text-lg">
                             {ccpAccountDetails.accountNumber}
                         </span>
                     </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">Account Name:</span>
-                        <span className="font-medium">
+                    <div className="flex justify-between items-center py-2 border-b">
+                        <span className="text-gray-600 font-medium">
+                            Account Name:
+                        </span>
+                        <span className="font-semibold text-gray-900">
                             {ccpAccountDetails.accountName}
                         </span>
                     </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">RIB:</span>
-                        <span className="font-mono font-medium">
+                    <div className="flex justify-between items-center py-2 border-b">
+                        <span className="text-gray-600 font-medium">RIB:</span>
+                        <span className="font-mono font-medium text-gray-900">
                             {ccpAccountDetails.rib}
                         </span>
                     </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">Bank:</span>
-                        <span className="font-medium">
+                    <div className="flex justify-between items-center py-2 border-b">
+                        <span className="text-gray-600 font-medium">Bank:</span>
+                        <span className="font-medium text-gray-900">
                             {ccpAccountDetails.bankName}
                         </span>
                     </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">Amount:</span>
-                        <span className="font-bold text-lg text-green-600">
+                    <div className="flex justify-between items-center py-3 bg-green-50 -mx-4 px-4 rounded-b-lg">
+                        <span className="text-gray-700 font-semibold text-lg">
+                            Amount to Transfer:
+                        </span>
+                        <span className="font-bold text-2xl text-green-600">
                             {amount} {currency}
                         </span>
                     </div>
@@ -238,189 +509,272 @@ const CCPPayment = ({
             </div>
 
             {/* Payment Form */}
-            <form onSubmit={handleCCPPayment} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label
-                            htmlFor="fullName"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Full Name *
-                        </label>
-                        <input
-                            type="text"
-                            id="fullName"
-                            name="fullName"
-                            value={paymentForm.fullName}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                            placeholder="Enter your full name"
-                        />
-                    </div>
+            <form onSubmit={handleCCPPayment} className="space-y-5">
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-6 shadow-sm">
+                    <h4 className="font-semibold text-gray-900 mb-4 text-lg">
+                        Your Payment Information
+                    </h4>
 
-                    <div>
-                        <label
-                            htmlFor="ccpNumber"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Your CCP Account Number *
-                        </label>
-                        <input
-                            type="text"
-                            id="ccpNumber"
-                            name="ccpNumber"
-                            value={paymentForm.ccpNumber}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                            placeholder="Your CCP account number"
-                        />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label
-                            htmlFor="transferReference"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Transfer Reference Number *
-                        </label>
-                        <input
-                            type="text"
-                            id="transferReference"
-                            name="transferReference"
-                            value={paymentForm.transferReference}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                            placeholder="Transfer reference from receipt"
-                        />
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="phoneNumber"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Phone Number *
-                        </label>
-                        <input
-                            type="tel"
-                            id="phoneNumber"
-                            name="phoneNumber"
-                            value={paymentForm.phoneNumber}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                            placeholder="Your phone number"
-                        />
-                    </div>
-                </div>
-
-                <div>
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                        Email Address *
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={paymentForm.email}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Your email address"
-                    />
-                </div>
-
-                {/* File Upload */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Payment Receipt * (JPG, PNG, or PDF, max 5MB)
-                    </label>
-                    <div
-                        onClick={handleFileSelect}
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-green-400 transition-colors"
-                    >
-                        <FaUpload className="mx-auto text-gray-400 text-2xl mb-2" />
-                        <p className="text-gray-600">
-                            {fileName ? (
-                                <span className="text-green-600 font-medium">
-                                    {fileName}
-                                </span>
-                            ) : (
-                                "Click to upload your payment receipt"
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Full Name */}
+                        <div>
+                            <label
+                                htmlFor="fullName"
+                                className="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Full Name{" "}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                value={paymentForm.fullName}
+                                onChange={handleInputChange}
+                                required
+                                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all ${
+                                    errors.fullName
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                placeholder="Enter your full name"
+                            />
+                            {errors.fullName && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.fullName}
+                                </p>
                             )}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                            Supported formats: JPG, PNG, PDF (max 5MB)
-                        </p>
+                        </div>
+
+                        {/* CCP Number */}
+                        <div>
+                            <label
+                                htmlFor="ccpNumber"
+                                className="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Your CCP Account Number{" "}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="ccpNumber"
+                                name="ccpNumber"
+                                value={paymentForm.ccpNumber}
+                                onChange={handleInputChange}
+                                required
+                                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all font-mono ${
+                                    errors.ccpNumber
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                placeholder="123456789..."
+                            />
+                            {errors.ccpNumber && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.ccpNumber}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Transfer Reference */}
+                        <div>
+                            <label
+                                htmlFor="transferReference"
+                                className="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Transfer Reference Number{" "}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="transferReference"
+                                name="transferReference"
+                                value={paymentForm.transferReference}
+                                onChange={handleInputChange}
+                                required
+                                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all font-mono ${
+                                    errors.transferReference
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                placeholder="Transaction reference..."
+                            />
+                            {errors.transferReference && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.transferReference}
+                                </p>
+                            )}
+                            <p className="mt-1 text-xs text-gray-500">
+                                Enter the reference number from your CCP
+                                transfer receipt
+                            </p>
+                        </div>
+
+                        {/* Phone Number */}
+                        <div>
+                            <label
+                                htmlFor="phoneNumber"
+                                className="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Phone Number{" "}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="tel"
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                value={paymentForm.phoneNumber}
+                                onChange={handleInputChange}
+                                required
+                                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all ${
+                                    errors.phoneNumber
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                placeholder="+213 555 123 456"
+                            />
+                            {errors.phoneNumber && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.phoneNumber}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Email */}
+                        <div className="md:col-span-2">
+                            <label
+                                htmlFor="email"
+                                className="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Email Address{" "}
+                                <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={paymentForm.email}
+                                onChange={handleInputChange}
+                                required
+                                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all ${
+                                    errors.email
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                placeholder="your.email@example.com"
+                            />
+                            {errors.email && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.email}
+                                </p>
+                            )}
+                        </div>
                     </div>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept=".jpg,.jpeg,.png,.pdf"
-                        className="hidden"
-                    />
+                </div>
+
+                {/* File Upload Section */}
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-6 shadow-sm">
+                    <h4 className="font-semibold text-gray-900 mb-4 text-lg">
+                        Upload Payment Receipt{" "}
+                        <span className="text-red-500">*</span>
+                    </h4>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center w-full">
+                            <label
+                                htmlFor="receipt-upload"
+                                className={`flex flex-col items-center justify-center w-full h-48 border-3 border-dashed rounded-lg cursor-pointer transition-all ${
+                                    errors.receiptFile
+                                        ? "border-red-500 bg-red-50 hover:bg-red-100"
+                                        : "border-green-500 bg-green-50 hover:bg-green-100"
+                                } ${
+                                    fileName ? "border-solid bg-green-100" : ""
+                                }`}
+                                onClick={handleFileSelect}
+                            >
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                                    {fileName ? (
+                                        <>
+                                            <FaCheckCircle className="w-12 h-12 mb-3 text-green-600" />
+                                            <p className="mb-2 text-sm font-semibold text-green-700">
+                                                File Selected:
+                                            </p>
+                                            <p className="text-sm text-green-600 break-all">
+                                                {fileName}
+                                            </p>
+                                            <p className="text-xs text-green-500 mt-2">
+                                                Click to change file
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaUpload className="w-12 h-12 mb-3 text-green-600" />
+                                            <p className="mb-2 text-sm text-gray-700">
+                                                <span className="font-semibold">
+                                                    Click to upload
+                                                </span>{" "}
+                                                your receipt
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                                JPG, PNG or PDF (MAX. 5MB)
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                                <input
+                                    id="receipt-upload"
+                                    ref={fileInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/jpeg,image/jpg,image/png,application/pdf"
+                                    onChange={handleFileChange}
+                                />
+                            </label>
+                        </div>
+                        {errors.receiptFile && (
+                            <p className="text-sm text-red-600 text-center">
+                                {errors.receiptFile}
+                            </p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    disabled={
-                        loading ||
-                        !receiptFile ||
-                        !paymentForm.fullName ||
-                        !paymentForm.ccpNumber ||
-                        !paymentForm.transferReference
-                    }
-                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                 >
                     {loading ? (
                         <>
-                            <FaSpinner className="animate-spin" />
+                            <FaSpinner className="animate-spin text-xl" />
                             <span>Submitting Payment...</span>
                         </>
                     ) : (
                         <>
+                            <FaCheckCircle className="text-xl" />
                             <span>Submit Payment for Verification</span>
                         </>
                     )}
                 </button>
-            </form>
 
-            {/* Security Notice */}
-            <div className="text-xs text-gray-500 text-center">
-                <p>
-                    🔒 Your payment information is secure and will be verified
-                    within 24 hours
+                <p className="text-sm text-gray-600 text-center">
+                    By submitting this form, you confirm that you have completed
+                    the CCP transfer and uploaded a valid payment receipt for
+                    verification.
                 </p>
-            </div>
+            </form>
         </div>
     );
 };
 
 CCPPayment.propTypes = {
-    itemData: PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
+    itemData: PropTypes.object.isRequired,
     itemType: PropTypes.string.isRequired,
     amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
     currency: PropTypes.string.isRequired,
-    paymentConfig: PropTypes.shape({
-        accountNumber: PropTypes.string,
-        accountName: PropTypes.string,
-        rib: PropTypes.string,
-        bankName: PropTypes.string,
-        instructions: PropTypes.string,
-    }),
+    paymentConfig: PropTypes.object,
     onSuccess: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,

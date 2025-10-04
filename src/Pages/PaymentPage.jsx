@@ -30,7 +30,6 @@ const PaymentPage = () => {
     const [configLoading, setConfigLoading] = useState(true);
     const [error, setError] = useState(false);
     const [filteredMethods, setFilteredMethods] = useState([]);
-    
 
     // Fetch payment configuration
     useEffect(() => {
@@ -325,7 +324,6 @@ const PaymentPage = () => {
     };
 
     const handlePaymentSuccess = (paymentData) => {
-
         let successMessage = "Payment Successful!";
         let redirectMessage = "Redirecting to your dashboard...";
 
@@ -355,11 +353,7 @@ const PaymentPage = () => {
                 result.isConfirmed ||
                 result.dismiss === Swal.DismissReason.timer
             ) {
-                if (itemType === "course") {
-                    navigate("/dashboard/MyCourses");
-                } else {
-                    navigate("/dashboard/MyPrograms");
-                }
+                navigate("/dashboard/applications");
             }
         });
     };
