@@ -267,16 +267,16 @@ const PaymentPage = () => {
         if (!paymentConfig) return [];
 
         return [
-            {
-                id: "paypal",
-                name: "PayPal",
-                description: "Pay securely with PayPal",
-                detailedInstructions: paymentConfig.paypal?.instructions,
-                icon: paypalIcon,
-                available: paymentConfig.paypal?.available,
-                enabled: paymentConfig.paypal?.enabled,
-                isEnabled: paymentConfig.paypal?.isEnabled,
-            },
+            // {
+            //     id: "paypal",
+            //     name: "PayPal",
+            //     description: "Pay securely with PayPal",
+            //     detailedInstructions: paymentConfig.paypal?.instructions,
+            //     icon: paypalIcon,
+            //     available: paymentConfig.paypal?.available,
+            //     enabled: paymentConfig.paypal?.enabled,
+            //     isEnabled: paymentConfig.paypal?.isEnabled,
+            // },
             {
                 id: "ccp",
                 name: "Algeria CCP",
