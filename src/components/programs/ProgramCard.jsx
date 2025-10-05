@@ -1,38 +1,64 @@
-import {
-    ArrowRight,
-    MapPin,
-    Users,
-    Star,
-    Clock,
-    Tag,
-    Bookmark,
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { Star, MapPin, Clock, Users, Tag, BookOpen } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useFavorite } from "../../hooks/useFavorite";
+import PropTypes from "prop-types";
 
 export function ProgramCard({ program, onClick, language = "en" }) {
     const { t } = useTranslation();
+    const [hasImageError, setHasImageError] = useState(false);
 
     if (!program) return null;
 
+    const defaultThumbnail = "/placeholder-program.jpg";
+
+    // Use the favorite hook
+    const {
+        isFavorited,
+        loading: favoriteLoading,
+        toggleFavorite,
+    } = useFavorite(program.id, "program");
+
+    const handleToggleFavorite = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Create item object for local storage
+        const programItem = {
+            id: program.id,
+            title: title,
+            short_description: shortDescription,
+            Price: program.Price,
+            discountPrice: program.discountPrice,
+            currency: program.currency,
+            organization: organizationText,
+            location: locationText,
+            Image: program.Image || defaultThumbnail,
+        };
+
+        toggleFavorite(programItem);
+    };
+
     // Multi-language content handling
     const title =
-        language === "ar" && program.Title_ar
-            ? program.Title_ar
-            : program.Title;
+        language === "ar" && program.title_ar
+            ? program.title_ar
+            : program.title;
     const shortDescription =
-        language === "ar" && program.shortDescription_ar
-            ? program.shortDescription_ar
-            : program.shortDescription;
-    const organization =
+        language === "ar" && program.short_description_ar
+            ? program.short_description_ar
+            : program.short_description;
+    const organizationText =
         language === "ar" && program.organization_ar
             ? program.organization_ar
             : program.organization;
-    const category =
-        language === "ar" && program.Category_ar
-            ? program.Category_ar
-            : program.Category;
-    const location =
+    const categoryText =
+        language === "ar" && program.category_ar
+            ? program.category_ar
+            : program.category;
+    const locationText =
         language === "ar" && program.location_ar
             ? program.location_ar
             : program.location;
@@ -49,16 +75,21 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         );
     };
 
+    const formatPrice = (price) => {
+        if (!price || price === 0) return t("free") || "Free";
+        return `${price} ${program.currency || "USD"}`;
+    };
+
     const getStatusColor = (status) => {
         switch (status?.toLowerCase()) {
             case "open":
-                return "bg-green-100 text-green-800 border-green-200";
+                return "bg-green-100 text-green-700";
             case "closed":
-                return "bg-red-100 text-red-800 border-red-200";
+                return "bg-red-100 text-red-700";
             case "upcoming":
-                return "bg-blue-100 text-blue-800 border-blue-200";
+                return "bg-blue-100 text-blue-700";
             default:
-                return "bg-gray-100 text-gray-800 border-gray-200";
+                return "bg-gray-100 text-gray-700";
         }
     };
 
@@ -70,244 +101,285 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                 return "bg-blue-100 text-blue-800";
             case "grant":
                 return "bg-green-100 text-green-800";
+            case "training":
+                return "bg-orange-100 text-orange-800";
+            case "internship":
+                return "bg-teal-100 text-teal-800";
             default:
                 return "bg-gray-100 text-gray-800";
         }
     };
 
+    const getProgramTypeIcon = (type) => {
+        switch (type?.toLowerCase()) {
+            case "scholarship":
+                return "🎓";
+            case "exchange":
+                return "🌍";
+            case "grant":
+                return "💰";
+            case "training":
+                return "📚";
+            case "internship":
+                return "💼";
+            default:
+                return "📋";
+        }
+    };
+
     return (
-        <article className="group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:border-gray-300 hover:-translate-y-1 cursor-pointer">
-            {/* Background gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-indigo-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <article className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden relative group max-w-sm mx-auto">
+            {/* Featured Badge */}
+            {program.isFeatured && (
+                <div className="absolute top-4 right-4 z-20">
+                    <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                        <Star className="w-3 h-3" />
+                        <span className="text-xs font-semibold">
+                            {t("Featured") || "Featured"}
+                        </span>
+                    </div>
+                </div>
+            )}
 
-            <div
-                className="relative"
-                onClick={() => onClick && onClick(program.id)}
-            >
-                {/* Program Image */}
-                <div className="relative overflow-hidden">
-                    {program.isFeatured && (
-                        <div className="absolute top-3 right-3">
-                            <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
-                                <Star className="w-3 h-3" />
-                                <span className="text-xs font-semibold">
-                                    Vedette
-                                </span>
-                            </div>
-                        </div>
-                    )}
-                    <img
-                        src={
-                            (program.Image &&
-                                import.meta.env.VITE_API_URL + program.Image) ||
-                            (program.image &&
-                                import.meta.env.VITE_API_URL + program.image) ||
-                            "/placeholder-program.jpg"
-                        }
-                        alt={title}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                        onError={(e) => {
-                            const fallbackDiv = e.target.nextElementSibling;
-                            if (fallbackDiv) {
-                                e.target.classList.add("hidden");
-                                fallbackDiv.classList.remove("hidden");
-                                fallbackDiv.classList.add("flex");
-                            }
-                        }}
-                        onLoad={(e) => {
-                            const fallbackDiv = e.target.nextElementSibling;
-                            if (fallbackDiv) {
-                                e.target.classList.remove("hidden");
-                                fallbackDiv.classList.add("hidden");
-                                fallbackDiv.classList.remove("flex");
-                            }
-                        }}
+            {/* Heart Icon */}
+            <div className="absolute top-4 left-4 z-20">
+                {isFavorited ? (
+                    <BsHeartFill
+                        onClick={handleToggleFavorite}
+                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-red-600 drop-shadow-sm ${
+                            favoriteLoading ? "opacity-50" : "hover:scale-110"
+                        }`}
+                        title="Remove from favorites"
                     />
-                    {/* Fallback icon when image fails to load */}
-                    <div className="hidden w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 items-center justify-center text-blue-600">
-                        <svg
-                            className="w-16 h-16 opacity-60"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
-                            />
-                        </svg>
-                    </div>
-
-                    {/* Image overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    {/* Status Badge */}
-                    <div
-                        className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                            program.status
-                        )}`}
-                    >
-                        {t(program.status) || program.status}
-                    </div>
-
-                    {/* Featured Badge */}
-                    {program.featured && (
-                        <div className="absolute top-4 right-4 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium border border-yellow-200 flex items-center gap-1">
-                            <Star className="w-3 h-3" />
-                            {t("Featured")}
-                        </div>
-                    )}
-
-                    {/* Bookmark Button */}
-                    {/* <button className="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Bookmark className="w-5 h-5 text-gray-600" />
-                    </button> */}
-                </div>
-
-                {/* Content Area */}
-                <div className="p-6">
-                    {/* Header */}
-                    <div className="mb-4">
-                        <div className="flex items-start justify-between gap-4 mb-3">
-                            <h2 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-700 transition-colors duration-200 line-clamp-2">
-                                {title}
-                            </h2>
-                        </div>
-
-                        {/* Organization and Category */}
-                        <div className="flex items-center gap-2 mb-3">
-                            {organization && (
-                                <span className="text-sm text-gray-600 font-medium">
-                                    {organization}
-                                </span>
-                            )}
-                            {organization && category && (
-                                <span className="text-gray-300">•</span>
-                            )}
-                            {category && (
-                                <span
-                                    className={`text-xs px-2 py-1 rounded-full ${getProgramTypeColor(
-                                        program.programType
-                                    )}`}
-                                >
-                                    {category}
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Location and Date */}
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                            {location && (
-                                <div className="flex items-center gap-1">
-                                    <MapPin size={14} />
-                                    <span>{location}</span>
-                                </div>
-                            )}
-                            {program.deadline && (
-                                <div className="flex items-center gap-1">
-                                    <Clock size={14} />
-                                    <span>{formatDate(program.deadline)}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Description */}
-                    <div className="mb-4">
-                        <p className="text-gray-700 leading-relaxed line-clamp-3 text-sm">
-                            {shortDescription}
-                        </p>
-                    </div>
-
-                    {/* Tags */}
-                    {program.tags && program.tags.length > 0 && (
-                        <div className="mb-4">
-                            <div className="flex flex-wrap gap-2">
-                                {program.tags.slice(0, 3).map((tag, index) => (
-                                    <span
-                                        key={index}
-                                        className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                                    >
-                                        <Tag size={10} />
-                                        {tag}
-                                    </span>
-                                ))}
-                                {program.tags.length > 3 && (
-                                    <span className="text-xs text-gray-500 px-2 py-1">
-                                        +{program.tags.length - 3} more
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        {/* Pricing Information */}
-                        <div className="flex items-center gap-2">
-                            {/* Show scholarship amount or pricing */}
-                            {program.Price && program.Price > 0 ? (
-                                <div className="flex items-center gap-2">
-                                    {program.discountPrice &&
-                                    program.discountPrice > 0 ? (
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-sm text-gray-500 line-through">
-                                                $
-                                                {program.Price.toLocaleString()}
-                                            </span>
-                                            <div className="text-lg font-bold text-blue-600">
-                                                $
-                                                {program.discountPrice.toLocaleString()}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="text-lg font-bold text-blue-600">
-                                            ${program.Price.toLocaleString()}
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-2">
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
-                                        {t("Free") || "Free"}
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* Application count if available */}
-                            {program.maxApplications && (
-                                <div className="flex items-center gap-1 text-sm text-gray-500">
-                                    <Users size={14} />
-                                    <span>
-                                        {program.currentApplications || 0}/
-                                        {program.maxApplications}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Apply Button */}
-                        <Link
-                            to={`/Programs/${program.id}`}
-                            className="group/btn inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <span>{t("Apply") || "Apply"}</span>
-                            <ArrowRight
-                                size={16}
-                                className="transition-transform duration-200 group-hover/btn:translate-x-1"
-                            />
-                        </Link>
-                    </div>
-                </div>
+                ) : (
+                    <BsHeart
+                        onClick={handleToggleFavorite}
+                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-white drop-shadow-lg hover:text-red-500 ${
+                            favoriteLoading ? "opacity-50" : "hover:scale-110"
+                        }`}
+                        title="Add to favorites"
+                    />
+                )}
             </div>
 
-            {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Program Image */}
+            <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                {!hasImageError && program.Image ? (
+                    <img
+                        src={import.meta.env.VITE_API_URL + program.Image}
+                        alt={title}
+                        onError={() => setHasImageError(true)}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="text-white text-4xl">
+                        <BookOpen className="w-16 h-16" />
+                    </div>
+                )}
+            </div>
+
+            {/* Program Info */}
+            <div className="p-6">
+                {/* Title & Description */}
+                <div className="mb-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                        {title}
+                    </h3>
+                    {organizationText && (
+                        <p className="text-blue-600 text-sm font-medium mb-2">
+                            {organizationText}
+                        </p>
+                    )}
+                    {shortDescription && (
+                        <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+                            {shortDescription}
+                        </p>
+                    )}
+                </div>
+
+                {/* Price Section */}
+                <div className="mb-4">
+                    {program.discountPrice !== undefined &&
+                    program.discountPrice !== null ? (
+                        <div className="flex items-center gap-2">
+                            <span
+                                className={`text-2xl font-bold ${
+                                    program.discountPrice === 0
+                                        ? "text-green-600"
+                                        : "text-blue-600"
+                                }`}
+                            >
+                                {formatPrice(program.discountPrice)}
+                            </span>
+                            {program.Price > 0 && (
+                                <span className="text-lg text-gray-500 line-through">
+                                    {formatPrice(program.Price)}
+                                </span>
+                            )}
+                        </div>
+                    ) : (
+                        <div
+                            className={`text-2xl font-bold ${
+                                program.Price === 0 || !program.Price
+                                    ? "text-green-600"
+                                    : "text-blue-600"
+                            }`}
+                        >
+                            {formatPrice(program.Price)}
+                        </div>
+                    )}
+                </div>
+
+                {/* Tags/Badges */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {program.status && (
+                        <span
+                            className={`px-3 py-1 text-xs rounded-full font-medium ${getStatusColor(
+                                program.status
+                            )}`}
+                        >
+                            {t(program.status) || program.status}
+                        </span>
+                    )}
+                    {program.programType && (
+                        <span
+                            className={`px-3 py-1 text-xs rounded-full font-medium ${getProgramTypeColor(
+                                program.programType
+                            )}`}
+                        >
+                            {getProgramTypeIcon(program.programType)}{" "}
+                            {program.programType}
+                        </span>
+                    )}
+                    {categoryText && (
+                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                            {categoryText}
+                        </span>
+                    )}
+                    {locationText && (
+                        <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">
+                            <MapPin className="w-3 h-3 inline mr-1" />
+                            {locationText}
+                        </span>
+                    )}
+                    {program.isRemote && (
+                        <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">
+                            🌐 {t("Remote") || "Remote"}
+                        </span>
+                    )}
+                </div>
+
+                {/* Additional Info */}
+                <div className="space-y-2 mb-4">
+                    {/* Deadline */}
+                    {program.applicationDeadline && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Clock className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-500">
+                                {t("Deadline") || "Deadline"}:
+                            </span>
+                            <span className="font-medium">
+                                {formatDate(program.applicationDeadline)}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Scholarship Amount */}
+                    {program.scholarshipAmount && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <span className="text-gray-500">
+                                {t("Amount") || "Amount"}:
+                            </span>
+                            <span className="font-medium text-green-600">
+                                {program.scholarshipAmount} {program.currency}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Available Slots */}
+                    {program.totalSlots && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Users className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-500">
+                                {t("Slots") || "Slots"}:
+                            </span>
+                            <span className="font-medium">
+                                {program.availableSlots || 0}/
+                                {program.totalSlots}
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Tags */}
+                {program.tags && program.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {program.tags.slice(0, 3).map((tag, index) => (
+                            <span
+                                key={index}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                            >
+                                <Tag className="w-3 h-3" />
+                                {tag}
+                            </span>
+                        ))}
+                        {program.tags.length > 3 && (
+                            <span className="text-xs text-gray-500 px-2 py-1">
+                                +{program.tags.length - 3} more
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {/* Action Button */}
+                <Link
+                    to={`/Programs/${program.id}`}
+                    onClick={() => {
+                        window.scrollTo(0, 0);
+                        if (onClick) {
+                            onClick(program.id);
+                        }
+                    }}
+                    className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+                >
+                    {t("View Details") || "View Details"}
+                </Link>
+            </div>
         </article>
     );
 }
+
+ProgramCard.propTypes = {
+    program: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        title_ar: PropTypes.string,
+        short_description: PropTypes.string,
+        short_description_ar: PropTypes.string,
+        description: PropTypes.string,
+        description_ar: PropTypes.string,
+        organization: PropTypes.string,
+        organization_ar: PropTypes.string,
+        category: PropTypes.string,
+        category_ar: PropTypes.string,
+        location: PropTypes.string,
+        location_ar: PropTypes.string,
+        Price: PropTypes.number,
+        discountPrice: PropTypes.number,
+        currency: PropTypes.string,
+        programType: PropTypes.string,
+        status: PropTypes.string,
+        isFeatured: PropTypes.bool,
+        isRemote: PropTypes.bool,
+        Image: PropTypes.string,
+        applicationDeadline: PropTypes.string,
+        scholarshipAmount: PropTypes.number,
+        totalSlots: PropTypes.number,
+        availableSlots: PropTypes.number,
+        tags: PropTypes.array,
+    }).isRequired,
+    onClick: PropTypes.func,
+    language: PropTypes.string,
+};
 
 export default ProgramCard;

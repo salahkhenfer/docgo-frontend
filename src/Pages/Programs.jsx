@@ -18,6 +18,9 @@ export function Programs() {
 
     // State management
     const [programs, setPrograms] = useState([]);
+    useEffect(() => {
+        console.log("Programs ", programs);
+    }, [programs]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState([]);

@@ -63,33 +63,34 @@ export function CourseGrid({
 
     return (
         <div className="relative transition-all duration-300">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 space-y-0">
                 {courses.map((course) => (
-                    <CourseCard
-                        key={course.id}
-                        course={course}
-                        id={course.id}
-                        Image={course.Image || course.coverImage}
-                        title={course.Title}
-                        description={course.shortDescription}
-                        price={course.Price}
-                        discountPrice={course.discountPrice}
-                        currency={course.Currency || "USD"}
-                        level={course.Level || course.difficulty}
-                        averageRating={
-                            course.stats?.averageRating || course.Rate
-                        }
-                        totalReviews={
-                            course.stats?.totalcourse_reviews ||
-                            course.totalRatings
-                        }
-                        isEnrolled={course.userStatus?.isEnrolled || false}
-                        enrollmentStatus={course.userStatus?.enrollmentStatus}
-                        progress={course.userStatus?.progress || 0}
-                        onClick={() =>
-                            onCourseClick && onCourseClick(course.id)
-                        }
-                    />
+                    <div key={course.id} className="mb-6">
+                        <CourseCard
+                            course={course}
+                            id={course.id}
+                            Image={course.Image || course.coverImage}
+                            title={course.Title}
+                            description={course.shortDescription}
+                            price={course.Price}
+                            discountPrice={course.discountPrice}
+                            currency={course.Currency || "USD"}
+                            level={course.Level || course.difficulty}
+                            averageRating={
+                                course.stats?.averageRating || course.Rate
+                            }
+                            totalReviews={
+                                course.stats?.totalcourse_reviews ||
+                                course.totalRatings
+                            }
+                            isEnrolled={course.userStatus?.isEnrolled || false}
+                            enrollmentStatus={course.userStatus?.enrollmentStatus}
+                            progress={course.userStatus?.progress || 0}
+                            onClick={() =>
+                                onCourseClick && onCourseClick(course.id)
+                            }
+                        />
+                    </div>
                 ))}
             </div>
 

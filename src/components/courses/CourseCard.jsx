@@ -204,26 +204,34 @@ export function CourseCard({
                 </div>
 
                 {/* Rating Section */}
-                {averageRating && (
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="flex items-center">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                    key={star}
-                                    className={`w-4 h-4 ${
-                                        star <= Math.floor(averageRating)
-                                            ? "text-yellow-500 fill-current"
-                                            : star ===
-                                                  Math.ceil(averageRating) &&
-                                              averageRating % 1 !== 0
-                                            ? "text-yellow-300 fill-current"
-                                            : "text-gray-300"
-                                    }`}
-                                />
-                            ))}
+                {(averageRating !== undefined && averageRating !== null) && (
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center">
+                                {[1, 2, 3, 4, 5].map((star) => {
+                                    const isFullStar = star <= Math.floor(averageRating);
+                                    const isHalfStar = star === Math.ceil(averageRating) && averageRating % 1 !== 0;
+                                    
+                                    return (
+                                        <Star
+                                            key={star}
+                                            className={`w-4 h-4 ${
+                                                isFullStar
+                                                    ? "text-yellow-400 fill-yellow-400"
+                                                    : isHalfStar
+                                                    ? "text-yellow-400 fill-yellow-200"
+                                                    : "text-gray-300 fill-gray-200"
+                                            } transition-colors`}
+                                        />
+                                    );
+                                })}
+                            </div>
+                            <span className="text-sm font-semibold text-gray-700">
+                                {averageRating.toFixed(1)}
+                            </span>
                         </div>
-                        <span className="text-sm text-gray-600">
-                            {averageRating} ({totalReviews || 0} reviews)
+                        <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                            {totalReviews || 0} {totalReviews === 1 ? 'review' : 'reviews'}
                         </span>
                     </div>
                 )}

@@ -22,7 +22,7 @@ function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
     const { t } = useTranslation();
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-8 justify-center max-w-4xl mx-auto">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
                 <div className="flex items-center justify-between">
                     <div>
@@ -81,6 +81,11 @@ export default function Courses() {
 
     // State management
     const [courses, setCourses] = useState([]);
+    useEffect(() => {
+        console.log("Courses ", courses);
+
+    }, [courses]);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState([]);
