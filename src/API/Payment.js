@@ -114,10 +114,6 @@ export const PaymentAPI = {
         try {
             const formData = new FormData();
 
-            // Backend expects these exact field names:
-            // - CCP_number (not ccpNumber)
-            // - Image (not screenshot)
-
             formData.append("CCP_number", paymentForm.ccpNumber);
 
             // Add screenshot file with correct field name
@@ -135,6 +131,22 @@ export const PaymentAPI = {
                 throw new Error("Screenshot is required");
             }
 
+            // Debug logging
+            console.log("=== CCP Payment Debug ===");
+            console.log("Item Type:", itemData.itemType);
+            console.log("Item ID:", itemData.itemId);
+            console.log("CCP Number:", paymentForm.ccpNumber);
+            console.log(
+                "File:",
+                screenshotFile ? screenshotFile.name : "No file"
+            );
+            console.log(
+                "URL:",
+                itemData.itemType === "course"
+                    ? "/upload/Payment/Courses/" + itemData.itemId
+                    : "/upload/Payment/Programs/" + itemData.itemId
+            );
+
             let response;
             if (itemData.itemType === "course") {
                 response = await apiClient.post(
@@ -147,6 +159,7 @@ export const PaymentAPI = {
                     }
                 );
             } else if (itemData.itemType === "program") {
+                console.log("Posting to program payment endpoint...");
                 response = await apiClient.post(
                     "/upload/Payment/Programs/" + itemData.itemId,
                     formData,
@@ -156,6 +169,7 @@ export const PaymentAPI = {
                         },
                     }
                 );
+                console.log("Program payment response:", response.data);
             } else {
                 throw new Error("Invalid item type");
             }

@@ -1,7 +1,7 @@
 import { FaDollarSign, FaPlay, FaCheckCircle } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
-import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const CourseSmallCard = ({
     course,
@@ -14,8 +14,10 @@ const CourseSmallCard = ({
     currency,
     enrolling,
     handleEnrollClick,
+    paymentStatus, // Add payment status prop
 }) => {
-    const { t } = useTranslation();
+    const navigate = useNavigate();
+    // const { t } = useTranslation(); // Translation removed as not used in this component
 
     return (
         <div className="bg-white rounded-2xl shadow-2xl p-8 sticky top-6 border border-gray-100">
@@ -127,12 +129,105 @@ const CourseSmallCard = ({
                         )}
 
                         {/* Continue Learning Button */}
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center">
+                        <button
+                            onClick={() => navigate(`/MyCourses/${course.id}`)}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
+                        >
                             <FaPlay className="mr-2" />
                             Continue Learning
                         </button>
                     </div>
+                ) : paymentStatus && paymentStatus.status === "pending" ? (
+                    // Payment Pending State
+                    <div className="space-y-4">
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                            <div className="flex items-center text-yellow-700 mb-2">
+                                <span className="mr-2">⏳</span>
+                                <span className="font-semibold">
+                                    Payment Under Review
+                                </span>
+                            </div>
+                            <div className="text-sm text-yellow-600 mb-2">
+                                Your payment is being verified by our admin
+                                team.
+                            </div>
+                            <div className="text-xs text-yellow-500 bg-yellow-100 rounded p-2 mt-2">
+                                <strong>Transaction ID:</strong>{" "}
+                                {paymentStatus.transactionId}
+                            </div>
+                            <div className="text-xs text-yellow-600 mt-2">
+                                Estimated time: 24-48 hours
+                            </div>
+                        </div>
+                        <button
+                            disabled
+                            className="w-full bg-gray-300 text-gray-600 font-semibold py-4 px-6 rounded-xl cursor-not-allowed"
+                        >
+                            Enrollment Pending Approval
+                        </button>
+                    </div>
+                ) : paymentStatus && paymentStatus.status === "rejected" ? (
+                    // Payment Rejected State
+                    <div className="space-y-4">
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                            <div className="flex items-center text-red-700 mb-2">
+                                <span className="mr-2">❌</span>
+                                <span className="font-semibold">
+                                    Payment Rejected
+                                </span>
+                            </div>
+                            <div className="text-sm text-red-600 mb-2">
+                                <strong>Reason:</strong>{" "}
+                                {paymentStatus.rejectionReason}
+                            </div>
+                            <div className="text-xs text-red-500">
+                                You can resubmit a new payment screenshot.
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleEnrollClick}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
+                        >
+                            <span className="mr-2">🔄</span>
+                            Resubmit Payment
+                        </button>
+                    </div>
+                ) : paymentStatus && paymentStatus.status === "deleted" ? (
+                    // Payment Deleted State
+                    <div className="space-y-4">
+                        <div className="bg-gray-50 border border-gray-300 rounded-xl p-4">
+                            <div className="flex items-center text-gray-700 mb-2">
+                                <span className="mr-2">🗑️</span>
+                                <span className="font-semibold">
+                                    Payment Deleted
+                                </span>
+                            </div>
+                            <div className="text-sm text-gray-600 mb-2">
+                                Your payment has been removed by the
+                                administrator.
+                            </div>
+                            {paymentStatus.rejectionReason && (
+                                <div className="text-xs text-gray-500 bg-gray-100 rounded p-2 mt-2">
+                                    <strong>Reason:</strong>{" "}
+                                    {paymentStatus.rejectionReason}
+                                </div>
+                            )}
+                            <div className="text-xs text-gray-600 mt-2">
+                                You can submit a new payment application.
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleEnrollClick}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
+                        >
+                            <span className="mr-2">💳</span>
+                            {isFree
+                                ? "Enroll for Free"
+                                : `Enroll for ${coursePrice} ${currency}`}
+                        </button>
+                    </div>
                 ) : (
+                    // Normal Enroll Button
                     <button
                         onClick={handleEnrollClick}
                         disabled={enrolling}
@@ -206,6 +301,11 @@ CourseSmallCard.propTypes = {
     currency: PropTypes.string,
     enrolling: PropTypes.bool.isRequired,
     handleEnrollClick: PropTypes.func.isRequired,
+    paymentStatus: PropTypes.shape({
+        status: PropTypes.string,
+        transactionId: PropTypes.string,
+        rejectionReason: PropTypes.string,
+    }),
 };
 
 export default CourseSmallCard;

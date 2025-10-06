@@ -11,10 +11,36 @@ export const useProgram = (programId) => {
     const [applying, setApplying] = useState(false);
     const [error, setError] = useState(null);
     const [refetching, setRefetching] = useState(false);
+    const [paymentStatus, setPaymentStatus] = useState(null); // pending, approved, rejected, null
 
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
     const abortControllerRef = useRef(null);
+
+    // Check payment application status
+    const checkPaymentStatus = useCallback(async () => {
+        if (!isAuth || !programId) return;
+
+        try {
+            const response = await axios.get(
+                `/user-payments/check-application/program/${programId}`
+            );
+
+            if (response.data.success && response.data.hasApplication) {
+                setPaymentStatus({
+                    status: response.data.application.status,
+                    rejectionReason: response.data.application.rejectionReason,
+                    transactionId: response.data.application.transactionId,
+                    createdAt: response.data.application.createdAt,
+                });
+            } else {
+                setPaymentStatus(null);
+            }
+        } catch (error) {
+            console.error("Error checking payment status:", error);
+            setPaymentStatus(null);
+        }
+    }, [isAuth, programId]);
 
     // Memoized fetch function to prevent unnecessary re-renders
     const fetchProgramData = useCallback(
@@ -112,6 +138,9 @@ export const useProgram = (programId) => {
                 }
 
                 setProgramData(response);
+
+                // Check payment status after loading program data
+                await checkPaymentStatus();
             } catch (err) {
                 // Don't set error if request was aborted
                 if (err.name === "AbortError") {
@@ -141,7 +170,7 @@ export const useProgram = (programId) => {
                 abortControllerRef.current = null;
             }
         },
-        [programId]
+        [programId, checkPaymentStatus]
     );
 
     // Initial fetch effect
@@ -265,6 +294,77 @@ export const useProgram = (programId) => {
             return;
         }
 
+        // Check payment status
+        if (paymentStatus) {
+            if (paymentStatus.status === "pending") {
+                await Swal.fire({
+                    title: "Payment Pending",
+                    html: `Your payment is currently under review by our admin team.<br/><br/>
+                           <strong>Transaction ID:</strong> ${paymentStatus.transactionId}<br/><br/>
+                           You will be notified once it's approved.`,
+                    icon: "info",
+                    confirmButtonColor: "#3b82f6",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            if (paymentStatus.status === "rejected") {
+                const result = await Swal.fire({
+                    title: "Payment Rejected",
+                    html: `Your previous payment was rejected.<br/><br/>
+                           <strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>
+                           Would you like to resubmit your payment?`,
+                    icon: "error",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3b82f6",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: "Resubmit Payment",
+                    cancelButtonText: "Cancel",
+                });
+
+                if (result.isConfirmed) {
+                    navigate(`/payment/program/${programId}`, {
+                        state: {
+                            program: programData?.program,
+                            enrollmentType: "program",
+                            isResubmission: true,
+                        },
+                    });
+                }
+                return;
+            }
+
+            if (paymentStatus.status === "deleted") {
+                const result = await Swal.fire({
+                    title: "Payment Deleted",
+                    html: `Your payment has been removed by the administrator.<br/><br/>
+                           ${
+                               paymentStatus.rejectionReason
+                                   ? `<strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>`
+                                   : ""
+                           }
+                           Would you like to submit a new payment?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3b82f6",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: "Submit New Payment",
+                    cancelButtonText: "Cancel",
+                });
+
+                if (result.isConfirmed) {
+                    navigate(`/payment/program/${programId}`, {
+                        state: {
+                            program: programData?.program,
+                            enrollmentType: "program",
+                        },
+                    });
+                }
+                return;
+            }
+        }
+
         // Get program price
         const programPrice = parseFloat(
             programData?.program?.discountPrice ||
@@ -287,6 +387,8 @@ export const useProgram = (programId) => {
         navigate,
         handleFreeProgramApplication,
         handlePaidProgramApplication,
+        paymentStatus,
+        programId,
     ]);
 
     // Retry function for error states
@@ -347,6 +449,9 @@ export const useProgram = (programId) => {
         programPrice,
         currency,
         hasData,
+
+        // Payment status
+        paymentStatus,
 
         // User status
         user,

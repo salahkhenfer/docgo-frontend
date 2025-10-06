@@ -7,10 +7,9 @@ import PayPalPayment from "../components/Payment/PayPalPayment";
 import CCPPayment from "../components/Payment/CCPPayment";
 import MainLoading from "../MainLoading";
 import PaymentAPI from "../API/PaymentInfo";
-import { PaymentAPI as ActualPaymentAPI } from "../API/Payment";
 import { clientCoursesAPI } from "../API/Courses";
 import { clientProgramsAPI } from "../API/Programs";
-import paypalIcon from "../assets/paypal.png";
+import axios from "../utils/axios";
 import ccpIcon from "../assets/ccp.png";
 import Swal from "sweetalert2";
 const PaymentPage = () => {
@@ -30,6 +29,97 @@ const PaymentPage = () => {
     const [configLoading, setConfigLoading] = useState(true);
     const [error, setError] = useState(false);
     const [filteredMethods, setFilteredMethods] = useState([]);
+    const [existingPayment, setExistingPayment] = useState(null);
+    const [checkingPayment, setCheckingPayment] = useState(true);
+
+    // Check if user already has a payment application for this item
+    useEffect(() => {
+        const checkExistingPayment = async () => {
+            if (!isAuth || !user) return;
+
+            try {
+                setCheckingPayment(true);
+                const itemId = courseId || programId;
+                const itemType = courseId ? "course" : "program";
+
+                const response = await axios.get(
+                    `/user-payments/check-application/${itemType}/${itemId}`
+                );
+
+                if (response.data.success && response.data.hasApplication) {
+                    const application = response.data.application;
+                    setExistingPayment(application);
+
+                    // If payment is pending, redirect back to course/program page
+                    if (application.status === "pending") {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Payment Already Submitted",
+                            html: `You have already submitted a payment for this ${itemType}.<br/><br/>
+                                   <strong>Status:</strong> Pending Verification<br/>
+                                   <strong>Transaction ID:</strong> ${application.transactionId}<br/><br/>
+                                   Please wait for admin approval. You will be notified once verified.`,
+                            confirmButtonText: "Go Back",
+                            allowOutsideClick: false,
+                        }).then(() => {
+                            navigate(
+                                `/${
+                                    itemType === "course"
+                                        ? "Courses"
+                                        : "Programs"
+                                }/${itemId}`
+                            );
+                        });
+                        return;
+                    }
+
+                    // If payment is approved, redirect to my courses/programs
+                    if (application.status === "approved") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Already Enrolled!",
+                            text: `You are already enrolled in this ${itemType}. Redirecting to your dashboard...`,
+                            timer: 2000,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            navigate(
+                                `/dashboard/${
+                                    itemType === "course"
+                                        ? "courses"
+                                        : "programs"
+                                }`
+                            );
+                        });
+                        return;
+                    }
+
+                    // If payment is rejected, allow resubmission (show the form)
+                    if (application.status === "rejected") {
+                        // Show the form but with rejection info
+                        setCheckingPayment(false);
+                        return;
+                    }
+
+                    // If payment is deleted, allow new submission (show the form)
+                    if (application.status === "deleted") {
+                        // Show the form but with deletion info
+                        setCheckingPayment(false);
+                        return;
+                    }
+                } else {
+                    // No existing payment, allow new submission
+                    setExistingPayment(null);
+                }
+            } catch (error) {
+                console.error("Error checking existing payment:", error);
+                // If error, allow user to proceed (fail gracefully)
+            } finally {
+                setCheckingPayment(false);
+            }
+        };
+
+        checkExistingPayment();
+    }, [isAuth, user, courseId, programId, navigate]);
 
     // Fetch payment configuration
     useEffect(() => {
@@ -97,13 +187,32 @@ const PaymentPage = () => {
                     const response = await clientProgramsAPI.getProgramDetails(
                         programId
                     );
-                    if (response.success && response.data) {
-                        setItemData(response.data.program || response.data);
+
+                    // Handle both response formats
+                    if (response) {
+                        // Check if it's the new format with success field
+                        if (response.success && response.data) {
+                            setItemData(response.data.program || response.data);
+                        }
+                        // Or the direct format where program is directly in response
+                        else if (response.program || response.data?.program) {
+                            setItemData(
+                                response.program || response.data.program
+                            );
+                        }
+                        // Or if response itself is the program object
+                        else if (response.Title || response.title) {
+                            setItemData(response);
+                        } else {
+                            console.error(
+                                "Failed to fetch program data:",
+                                response
+                            );
+                            navigate(`/Programs/${programId}`);
+                            return;
+                        }
                     } else {
-                        console.error(
-                            "Failed to fetch program data:",
-                            response
-                        );
+                        console.error("No program data received");
                         navigate(`/Programs/${programId}`);
                         return;
                     }
@@ -118,9 +227,20 @@ const PaymentPage = () => {
                     : programId
                     ? "program"
                     : "item";
+
+                // Don't redirect, show error message instead
                 setError(
-                    `Failed to fetch ${currentItemType} data. Please try again.`
+                    `Failed to fetch ${currentItemType} data. Please try again later.`
                 );
+
+                // Set basic item data from URL params if available
+                if (programId) {
+                    setItemData({ id: programId, Title: "Loading..." });
+                    setItemType("program");
+                } else if (courseId) {
+                    setItemData({ id: courseId, title: "Loading..." });
+                    setItemType("course");
+                }
             } finally {
                 setItemLoading(false);
             }
@@ -175,37 +295,45 @@ const PaymentPage = () => {
             const regularPrice = parseFloat(itemData.Price || 0);
             return discountPrice > 0 ? discountPrice : regularPrice;
         } else if (itemType === "program") {
-            const price = parseFloat(itemData.price || 0);
+            // Check for both uppercase and lowercase price fields
+            const discountPrice = parseFloat(itemData.discountPrice || 0);
+            const regularPrice = parseFloat(
+                itemData.Price || itemData.price || 0
+            );
             const scholarshipAmount = parseFloat(
                 itemData.scholarshipAmount || 0
             );
-            return price > 0 ? price : scholarshipAmount;
+
+            // Priority: discountPrice > regularPrice > scholarshipAmount
+            if (discountPrice > 0) return discountPrice;
+            if (regularPrice > 0) return regularPrice;
+            return scholarshipAmount;
         }
         return 0;
     };
 
-    const getOriginalPrice = () => {
-        if (!itemData) return 0;
-
-        // if (itemType === "course") {
-        return parseFloat(itemData.Price || 0);
-        // } else if (itemType === "program") {
-        //     const originalPrice = parseFloat(itemData.originalPrice || 0);
-        //     const price = parseFloat(itemData.price || 0);
-        //     const scholarshipAmount = parseFloat(
-        //         itemData.scholarshipAmount || 0
-        //     );
-        //     return originalPrice > 0
-        //         ? originalPrice
-        //         : price > 0
-        //         ? price
-        //         : scholarshipAmount;
-        // }
-        //     return 0;
-    };
+    // Kept for future use if discount display is needed
+    // const getOriginalPrice = () => {
+    //     if (!itemData) return 0;
+    //     return parseFloat(itemData.Price || 0);
+    // };
 
     const price = getItemPrice();
-    const originalPrice = getOriginalPrice();
+    // const originalPrice = getOriginalPrice(); // Commented out - not currently used
+
+    // Debug logging for program pricing
+    if (itemType === "program" && itemData) {
+        console.log("Program Payment Debug:", {
+            itemData,
+            Price: itemData.Price,
+            price: itemData.price,
+            discountPrice: itemData.discountPrice,
+            scholarshipAmount: itemData.scholarshipAmount,
+            calculatedPrice: price,
+            Currency: itemData.Currency,
+            currency: itemData.currency,
+        });
+    }
 
     // Improved currency handling with proper fallbacks
     const getCurrency = () => {
@@ -412,7 +540,8 @@ const PaymentPage = () => {
         });
     };
 
-    if (!itemData || configLoading || itemLoading) {
+    // Show loading while checking payment status or loading data
+    if (!itemData || configLoading || itemLoading || checkingPayment) {
         return <MainLoading />;
     } else if (error) {
         return (
@@ -521,9 +650,164 @@ const PaymentPage = () => {
                     <div className="grid lg:grid-cols-3 gap-8">
                         {/* Payment Form */}
                         <div className="lg:col-span-2">
+                            {/* Rejection Notice */}
+                            {existingPayment &&
+                                existingPayment.status === "rejected" && (
+                                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-6">
+                                        <div className="flex items-start gap-4">
+                                            <div className="flex-shrink-0">
+                                                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                                    <span className="text-2xl">
+                                                        ❌
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-red-900 mb-2">
+                                                    Previous Payment Rejected
+                                                </h3>
+                                                <div className="space-y-2 text-sm">
+                                                    <p className="text-red-700">
+                                                        <strong>
+                                                            Rejection Reason:
+                                                        </strong>{" "}
+                                                        {existingPayment.rejectionReason ||
+                                                            "No reason provided"}
+                                                    </p>
+                                                    <p className="text-red-600">
+                                                        <strong>
+                                                            Transaction ID:
+                                                        </strong>{" "}
+                                                        {
+                                                            existingPayment.transactionId
+                                                        }
+                                                    </p>
+                                                    <p className="text-red-600">
+                                                        <strong>Amount:</strong>{" "}
+                                                        {existingPayment.amount}{" "}
+                                                        {
+                                                            existingPayment.currency
+                                                        }
+                                                    </p>
+                                                    <p className="text-red-600">
+                                                        <strong>
+                                                            Submitted:
+                                                        </strong>{" "}
+                                                        {new Date(
+                                                            existingPayment.createdAt
+                                                        ).toLocaleDateString(
+                                                            "en-US",
+                                                            {
+                                                                year: "numeric",
+                                                                month: "long",
+                                                                day: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <div className="mt-4 p-3 bg-red-100 rounded-lg">
+                                                    <p className="text-sm text-red-800">
+                                                        💡 <strong>Tip:</strong>{" "}
+                                                        Please make sure to
+                                                        upload a clear
+                                                        screenshot of your
+                                                        payment receipt with the
+                                                        correct transaction
+                                                        details.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                            {/* Deletion Notice */}
+                            {existingPayment &&
+                                existingPayment.status === "deleted" && (
+                                    <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6 mb-6">
+                                        <div className="flex items-start gap-4">
+                                            <div className="flex-shrink-0">
+                                                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                                                    <span className="text-2xl">
+                                                        🗑️
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                                    Previous Payment Deleted
+                                                </h3>
+                                                <div className="space-y-2 text-sm">
+                                                    {existingPayment.rejectionReason && (
+                                                        <p className="text-gray-700">
+                                                            <strong>
+                                                                Reason:
+                                                            </strong>{" "}
+                                                            {
+                                                                existingPayment.rejectionReason
+                                                            }
+                                                        </p>
+                                                    )}
+                                                    <p className="text-gray-600">
+                                                        <strong>
+                                                            Transaction ID:
+                                                        </strong>{" "}
+                                                        {
+                                                            existingPayment.transactionId
+                                                        }
+                                                    </p>
+                                                    <p className="text-gray-600">
+                                                        <strong>Amount:</strong>{" "}
+                                                        {existingPayment.amount}{" "}
+                                                        {
+                                                            existingPayment.currency
+                                                        }
+                                                    </p>
+                                                    <p className="text-gray-600">
+                                                        <strong>
+                                                            Submitted:
+                                                        </strong>{" "}
+                                                        {new Date(
+                                                            existingPayment.createdAt
+                                                        ).toLocaleDateString(
+                                                            "en-US",
+                                                            {
+                                                                year: "numeric",
+                                                                month: "long",
+                                                                day: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <div className="mt-4 p-3 bg-gray-100 rounded-lg">
+                                                    <p className="text-sm text-gray-800">
+                                                        ℹ️{" "}
+                                                        <strong>Note:</strong>{" "}
+                                                        Your previous payment
+                                                        was removed by the
+                                                        administrator. You can
+                                                        submit a new payment
+                                                        below.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                             <div className="bg-white rounded-lg shadow-sm p-6">
                                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                                    Choose Payment Method
+                                    {existingPayment &&
+                                    existingPayment.status === "rejected"
+                                        ? "Resubmit Payment"
+                                        : existingPayment &&
+                                          existingPayment.status === "deleted"
+                                        ? "Submit New Payment"
+                                        : "Choose Payment Method"}
                                 </h2>
 
                                 <PaymentMethodSelector

@@ -90,9 +90,9 @@
         "anonymousStudent": "طالب مجهول",
         "freePreview": "معاينة مجانية",
         "refreshing": "جاري التحديث...",
-        "applicationPending": "الطلب قيد الانتظار",
-        "enrolled": "مسجل",
-        "applicationRejected": "الطلب مرفوض",
+        "ApplicationPending": "الطلب قيد الانتظار",
+        "Enrolled": "مسجل",
+        "ApplicationRejected": "الطلب مرفوض",
         "free": "مجاني",
         "content": "محتوى الدورة",
         "whatYouLearn": "ما ستتعلمه"

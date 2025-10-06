@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import courseService from "../services/courseService";
 import { useAppContext } from "../AppContext";
+import axios from "../utils/axios";
 
 export const useCourse = (courseId) => {
     const [courseData, setCourseData] = useState(null);
@@ -10,10 +11,36 @@ export const useCourse = (courseId) => {
     const [enrolling, setEnrolling] = useState(false);
     const [error, setError] = useState(null);
     const [refetching, setRefetching] = useState(false);
+    const [paymentStatus, setPaymentStatus] = useState(null); // pending, approved, rejected, null
 
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
     const abortControllerRef = useRef(null);
+
+    // Check payment application status
+    const checkPaymentStatus = useCallback(async () => {
+        if (!isAuth || !courseId) return;
+
+        try {
+            const response = await axios.get(
+                `/user-payments/check-application/course/${courseId}`
+            );
+
+            if (response.data.success && response.data.hasApplication) {
+                setPaymentStatus({
+                    status: response.data.application.status,
+                    rejectionReason: response.data.application.rejectionReason,
+                    transactionId: response.data.application.transactionId,
+                    createdAt: response.data.application.createdAt,
+                });
+            } else {
+                setPaymentStatus(null);
+            }
+        } catch (error) {
+            console.error("Error checking payment status:", error);
+            setPaymentStatus(null);
+        }
+    }, [isAuth, courseId]);
 
     // Memoized fetch function to prevent unnecessary re-renders
     const fetchCourseData = useCallback(
@@ -40,7 +67,6 @@ export const useCourse = (courseId) => {
                 const response = await courseService.getCourse(courseId, {
                     signal: abortControllerRef.current.signal,
                 });
-
 
                 // Normaliser les données pour s'assurer que objectives est un tableau
                 if (response && response.course) {
@@ -69,6 +95,9 @@ export const useCourse = (courseId) => {
                 }
 
                 setCourseData(response);
+
+                // Check payment status after loading course data
+                await checkPaymentStatus();
             } catch (err) {
                 // Don't set error if request was aborted
                 if (err.name === "AbortError") {
@@ -98,7 +127,7 @@ export const useCourse = (courseId) => {
                 abortControllerRef.current = null;
             }
         },
-        [courseId]
+        [courseId, checkPaymentStatus]
     );
 
     // Initial fetch effect
@@ -209,6 +238,77 @@ export const useCourse = (courseId) => {
             return;
         }
 
+        // Check payment status
+        if (paymentStatus) {
+            if (paymentStatus.status === "pending") {
+                await Swal.fire({
+                    title: "Payment Pending",
+                    html: `Your payment is currently under review by our admin team.<br/><br/>
+                           <strong>Transaction ID:</strong> ${paymentStatus.transactionId}<br/><br/>
+                           You will be notified once it's approved.`,
+                    icon: "info",
+                    confirmButtonColor: "#3b82f6",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            if (paymentStatus.status === "rejected") {
+                const result = await Swal.fire({
+                    title: "Payment Rejected",
+                    html: `Your previous payment was rejected.<br/><br/>
+                           <strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>
+                           Would you like to resubmit your payment?`,
+                    icon: "error",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3b82f6",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: "Resubmit Payment",
+                    cancelButtonText: "Cancel",
+                });
+
+                if (result.isConfirmed) {
+                    navigate(`/payment/course/${courseId}`, {
+                        state: {
+                            course: courseData?.course,
+                            enrollmentType: "course",
+                            isResubmission: true,
+                        },
+                    });
+                }
+                return;
+            }
+
+            if (paymentStatus.status === "deleted") {
+                const result = await Swal.fire({
+                    title: "Payment Deleted",
+                    html: `Your payment has been removed by the administrator.<br/><br/>
+                           ${
+                               paymentStatus.rejectionReason
+                                   ? `<strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>`
+                                   : ""
+                           }
+                           Would you like to submit a new payment?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3b82f6",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: "Submit New Payment",
+                    cancelButtonText: "Cancel",
+                });
+
+                if (result.isConfirmed) {
+                    navigate(`/payment/course/${courseId}`, {
+                        state: {
+                            course: courseData?.course,
+                            enrollmentType: "course",
+                        },
+                    });
+                }
+                return;
+            }
+        }
+
         // Get course price
         const coursePrice = parseFloat(
             courseData?.course?.discountPrice || courseData?.course?.Price || 0
@@ -232,6 +332,7 @@ export const useCourse = (courseId) => {
         courseId,
         navigate,
         handleFreeCourseEnrollment,
+        paymentStatus,
     ]);
 
     // Retry function for error states
@@ -282,6 +383,9 @@ export const useCourse = (courseId) => {
         coursePrice,
         currency,
         hasData,
+
+        // Payment status
+        paymentStatus,
 
         // User status
         user,

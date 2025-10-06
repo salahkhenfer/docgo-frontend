@@ -60,6 +60,7 @@ export const Course = () => {
         coursePrice,
         currency,
         hasData,
+        paymentStatus, // Add payment status
     } = useCourse(courseId);
 
     const formatCurrency = (amount, currency = "USD") => {
@@ -148,6 +149,7 @@ export const Course = () => {
                     url: window.location.href,
                 });
             } catch (error) {
+                console.log("Error sharing:", error);
             }
         } else {
             navigator.clipboard.writeText(window.location.href);
@@ -660,6 +662,7 @@ export const Course = () => {
                                 currency={currency}
                                 enrolling={enrolling}
                                 handleEnrollClick={handleEnrollClick}
+                                paymentStatus={paymentStatus}
                             />
                         </div>
 
