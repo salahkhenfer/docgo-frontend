@@ -12,7 +12,7 @@ export const useCourse = (courseId) => {
     const [error, setError] = useState(null);
     const [refetching, setRefetching] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState(null); // pending, approved, rejected, null
-
+    const [redirecting, setRedirecting] = useState(false);
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
     const abortControllerRef = useRef(null);
@@ -147,8 +147,12 @@ export const useCourse = (courseId) => {
         try {
             setEnrolling(true);
 
-            await courseService.enrollFreeCourse(courseId);
-
+            const resp = await courseService.enrollFreeCourse(courseId);
+            // if (!resp.success) {
+            //     throw new Error(
+            //         resp.message || "Failed to enroll in the course."
+            //     );
+            // }
             // Refresh course data to show enrolled status
             await fetchCourseData(true);
 
@@ -175,7 +179,11 @@ export const useCourse = (courseId) => {
                 "Failed to enroll in the course. Please try again.";
 
             // Handle specific error cases
-            if (error.response?.status === 409) {
+            if (error.response?.status === 400) {
+                errorMessage = "You are already enrolled in this course.";
+                setRedirecting(true);
+            }
+            else if (error.response?.status === 409) {
                 errorMessage = "You are already enrolled in this course.";
             } else if (error.response?.status === 403) {
                 errorMessage =
@@ -184,17 +192,39 @@ export const useCourse = (courseId) => {
                 errorMessage = error.response.data.error;
             }
 
-            await Swal.fire({
-                title: "Enrollment Failed",
-                text: errorMessage,
-                icon: "error",
-                confirmButtonColor: "#ef4444",
-                customClass: {
-                    popup: "rounded-lg shadow-xl",
-                    title: "text-lg font-semibold text-gray-900",
-                    content: "text-gray-600",
-                },
-            });
+            if (error.response?.status === 400 && redirecting) {
+                const result = await Swal.fire({
+                    title: "Already Enrolled",
+                    text: errorMessage,
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#10b981",
+                    cancelButtonColor: "#6b7280",
+                    confirmButtonText: "Go to Course",
+                    cancelButtonText: "Cancel",
+                    customClass: {
+                        popup: "rounded-lg shadow-xl",
+                        title: "text-lg font-semibold text-gray-900",
+                        content: "text-gray-600",
+                    },
+                });
+
+                if (result.isConfirmed) {
+                    navigate(`/MyCourses/${courseId}`);
+                }
+            } else {
+                await Swal.fire({
+                    title: "Enrollment Failed",
+                    text: errorMessage,
+                    icon: "error",
+                    confirmButtonColor: "#ef4444",
+                    customClass: {
+                        popup: "rounded-lg shadow-xl",
+                        title: "text-lg font-semibold text-gray-900",
+                        content: "text-gray-600",
+                    },
+                });
+            }
         } finally {
             setEnrolling(false);
         }
