@@ -55,7 +55,12 @@ export function CourseCard({
 
     const formatPrice = (price) => {
         if (!price || price === 0) return t("free") || "Free";
-        return `${price} ${currency}`;
+        // Format the price with proper number formatting
+        const formattedNumber = Number(price).toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+        });
+        return `${formattedNumber} ${currency}`;
     };
 
     const getEnrollmentStatusText = () => {
@@ -204,14 +209,17 @@ export function CourseCard({
                 </div>
 
                 {/* Rating Section */}
-                {(averageRating !== undefined && averageRating !== null) && (
+                {averageRating !== undefined && averageRating !== null && (
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <div className="flex items-center">
                                 {[1, 2, 3, 4, 5].map((star) => {
-                                    const isFullStar = star <= Math.floor(averageRating);
-                                    const isHalfStar = star === Math.ceil(averageRating) && averageRating % 1 !== 0;
-                                    
+                                    const isFullStar =
+                                        star <= Math.floor(averageRating);
+                                    const isHalfStar =
+                                        star === Math.ceil(averageRating) &&
+                                        averageRating % 1 !== 0;
+
                                     return (
                                         <Star
                                             key={star}
@@ -231,7 +239,8 @@ export function CourseCard({
                             </span>
                         </div>
                         <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
-                            {totalReviews || 0} {totalReviews === 1 ? 'review' : 'reviews'}
+                            {totalReviews || 0}{" "}
+                            {totalReviews === 1 ? "review" : "reviews"}
                         </span>
                     </div>
                 )}

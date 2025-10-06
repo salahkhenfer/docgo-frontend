@@ -116,6 +116,11 @@ export const PaymentAPI = {
 
             formData.append("CCP_number", paymentForm.ccpNumber);
 
+            // Add phone number if provided
+            if (paymentForm.phoneNumber) {
+                formData.append("phoneNumber", paymentForm.phoneNumber);
+            }
+
             // Add screenshot file with correct field name
             if (screenshotFile) {
                 formData.append("Image", screenshotFile);

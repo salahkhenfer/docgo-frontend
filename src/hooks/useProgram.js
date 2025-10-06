@@ -200,10 +200,16 @@ export const useProgram = (programId) => {
         try {
             setApplying(true);
 
-            await axios.post("/enrollment/program/apply", {
-                programId: programId,
-                paymentType: "free",
-            });
+            const response = await axios.post(
+                "/enrollment/programs/enroll-free",
+                {
+                    programId: programId,
+                }
+            );
+
+            if (!response.data.success) {
+                throw new Error(response.data.message || "Failed to enroll");
+            }
 
             // Refresh program data if needed
             await fetchProgramData(true);

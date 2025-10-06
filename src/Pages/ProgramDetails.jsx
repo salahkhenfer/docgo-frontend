@@ -22,6 +22,8 @@ import axios from "../utils/axios";
 
 // Import component parts
 import ProgramFAQSection from "../components/Program/ProgramFAQSection";
+import ProgramContent from "../components/Program/ProgramContent";
+import ProgramReviews from "../components/Program/ProgramReviews";
 
 export const ProgramDetails = () => {
     const { t, i18n } = useTranslation();
@@ -581,85 +583,18 @@ export const ProgramDetails = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content Column */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-                            <div className="p-6">
-                                <nav className="border-b border-gray-200 mb-6">
-                                    <div className="flex space-x-8">
-                                        <button className="py-2 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm">
-                                            {t("Overview") || "Overview"}
-                                        </button>
-                                    </div>
-                                </nav>
+                        {/* Program Content Component */}
+                        <ProgramContent program={program} />
 
-                                {/* Program Content */}
-                                <div className="space-y-6">
-                                    {programDescription && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                                {t("About this program") ||
-                                                    "About this program"}
-                                            </h3>
-                                            <div
-                                                className="prose max-w-none text-gray-700"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: programDescription,
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-
-                                    {program.requirements && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                                {t("Requirements") ||
-                                                    "Requirements"}
-                                            </h3>
-                                            <div
-                                                className="prose max-w-none text-gray-700"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: program.requirements,
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-
-                                    {program.benefits && (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                                {t("What you'll learn") ||
-                                                    "What you'll learn"}
-                                            </h3>
-                                            <div
-                                                className="prose max-w-none text-gray-700"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: program.benefits,
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Reviews Section */}
-                        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                {t("Reviews") || "Reviews"}
-                            </h3>
-                            <div className="text-center py-8">
-                                <Star className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                <p className="text-gray-500">
-                                    {t("No reviews yet") || "No reviews yet"}
-                                </p>
-                                <p className="text-sm text-gray-400 mt-1">
-                                    {t("Be the first to review this program") ||
-                                        "Be the first to review this program"}
-                                </p>
-                            </div>
+                        {/* Reviews Section Component */}
+                        <div className="mt-8">
+                            <ProgramReviews programId={programId} />
                         </div>
 
                         {/* FAQ Section */}
-                        <ProgramFAQSection programId={programId} />
+                        <div className="mt-8">
+                            <ProgramFAQSection programId={programId} />
+                        </div>
                     </div>
 
                     {/* Sidebar */}

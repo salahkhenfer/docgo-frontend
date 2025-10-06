@@ -77,7 +77,12 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
     const formatPrice = (price) => {
         if (!price || price === 0) return t("free") || "Free";
-        return `${price} ${program.currency || "USD"}`;
+        // Format the price with proper number formatting
+        const formattedNumber = Number(price).toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+        });
+        return `${formattedNumber} ${program.currency || "USD"}`;
     };
 
     const getStatusColor = (status) => {
