@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { IoMdRefresh } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     ArrowLeft,
     MessageSquare,
@@ -59,9 +59,26 @@ export const ProgramDetails = () => {
         hasData,
     } = useProgram(programId);
 
+    // If the user already applied to this program, show the status and
+    // redirect them back to the previous page (or to /my-applications if no history).
+    useEffect(() => {
+        if (!hasApplied) return;
+
+        // Give the user a short moment to read the status, then redirect.
+        const timer = setTimeout(() => {
+                // Prefer navigating back, fall back to applications page
+                if (window.history.length > 1) {
+                    navigate(-1);
+                } else {
+                    navigate("/my-applications");
+                }
+        }, 2500); // 2.5s delay
+
+        return () => clearTimeout(timer);
+    }, [hasApplied, navigate]);
+
     const formatCurrency = (amount, currency = "USD") => {
         if (!amount) return t("Free") || "Free";
-        // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(
             i18n.language === "ar" ? "ar-DZ" : "en-US",
             {

@@ -10,16 +10,17 @@ export function ProgramCard({ program, onClick, language = "en" }) {
     const { t } = useTranslation();
     const [hasImageError, setHasImageError] = useState(false);
 
-    if (!program) return null;
-
-    const defaultThumbnail = "/placeholder-program.jpg";
-
-    // Use the favorite hook
+    // Use the favorite hook - call with optional chaining so the hook
+    // is invoked in the same order regardless of `program` being present.
     const {
         isFavorited,
         loading: favoriteLoading,
         toggleFavorite,
-    } = useFavorite(program.id, "program");
+    } = useFavorite(program?.id, "program");
+
+    if (!program) return null;
+
+    const defaultThumbnail = "/placeholder-program.jpg";
 
     const handleToggleFavorite = (e) => {
         e.preventDefault();
@@ -62,6 +63,29 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         language === "ar" && program.location_ar
             ? program.location_ar
             : program.location;
+
+    // Normalize tags: backend may return an array, a comma-separated string,
+    // or even a JSON-stringified array. Ensure we always work with an array.
+    const tags = (() => {
+        if (!program.tags) return [];
+        if (Array.isArray(program.tags)) return program.tags;
+        if (typeof program.tags === "string") {
+            // Try parsing JSON first (in case it's a stringified array)
+            try {
+                const parsed = JSON.parse(program.tags);
+                if (Array.isArray(parsed)) return parsed;
+            } catch {
+                // not JSON, continue
+            }
+            // Fallback: split comma-separated string
+            return program.tags
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+        }
+        // Unknown shape -> return empty array to be safe
+        return [];
+    })();
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -317,9 +341,9 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                 </div>
 
                 {/* Tags */}
-                {program.tags && program.tags.length > 0 && (
+                {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">
-                        {program.tags.slice(0, 3).map((tag, index) => (
+                        {tags.slice(0, 3).map((tag, index) => (
                             <span
                                 key={index}
                                 className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
@@ -328,9 +352,9 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                                 {tag}
                             </span>
                         ))}
-                        {program.tags.length > 3 && (
+                        {tags.length > 3 && (
                             <span className="text-xs text-gray-500 px-2 py-1">
-                                +{program.tags.length - 3} more
+                                +{tags.length - 3} more
                             </span>
                         )}
                     </div>

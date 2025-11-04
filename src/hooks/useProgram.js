@@ -42,6 +42,46 @@ export const useProgram = (programId) => {
         }
     }, [isAuth, programId]);
 
+    // Check enrollment/application status for this program (if backend didn't include it)
+    const checkEnrollmentStatus = useCallback(
+        async (currentProgramData) => {
+            if (!isAuth || !programId) return;
+
+            try {
+                // If programData already includes userStatus, respect it
+                if (currentProgramData?.userStatus) return;
+
+                const resp = await axios.get("/enrollment/my-applications");
+                if (resp?.data?.data?.applications) {
+                    const apps = resp.data.data.applications;
+
+                    // Find program application by ProgramId or nested Program id
+                    const app = apps.find((a) => {
+                        if (a.ProgramId && String(a.ProgramId) === String(programId)) return true;
+                        if (a.Program && a.Program.id && String(a.Program.id) === String(programId)) return true;
+                        if (a.applicationProgram && a.applicationProgram.id && String(a.applicationProgram.id) === String(programId)) return true;
+                        return false;
+                    });
+
+                    if (app) {
+                        // Mutate a shallow copy of programData to include userStatus
+                        setProgramData((prev) => ({
+                            ...prev,
+                            userStatus: {
+                                hasApplied: true,
+                                applicationStatus: app.status || app.applicationStatus || "pending",
+                                application: app,
+                            },
+                        }));
+                    }
+                }
+            } catch (err) {
+                console.error("Error checking enrollment status:", err);
+            }
+        },
+        [isAuth, programId]
+    );
+
     // Memoized fetch function to prevent unnecessary re-renders
     const fetchProgramData = useCallback(
         async (showRefetching = false) => {
@@ -141,6 +181,9 @@ export const useProgram = (programId) => {
 
                 // Check payment status after loading program data
                 await checkPaymentStatus();
+
+                // If backend didn't return userStatus, try fetching user's applications
+                await checkEnrollmentStatus(response);
             } catch (err) {
                 // Don't set error if request was aborted
                 if (err.name === "AbortError") {
@@ -170,7 +213,7 @@ export const useProgram = (programId) => {
                 abortControllerRef.current = null;
             }
         },
-        [programId, checkPaymentStatus]
+        [programId, checkPaymentStatus, checkEnrollmentStatus]
     );
 
     // Initial fetch effect

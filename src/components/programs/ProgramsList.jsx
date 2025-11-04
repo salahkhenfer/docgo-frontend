@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import {
     MapPin,
@@ -67,6 +67,33 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                         ? program.location_ar
                         : program.location;
 
+                // Normalize tags into a local array to avoid runtime errors when
+                // tags can be a string (comma-separated or JSON-stringified) or an array.
+                const tags = (() => {
+                    let _tags = [];
+                    if (program.tags) {
+                        if (Array.isArray(program.tags)) {
+                            _tags = program.tags;
+                        } else if (typeof program.tags === "string") {
+                            try {
+                                const parsed = JSON.parse(program.tags);
+                                if (Array.isArray(parsed)) _tags = parsed;
+                                else
+                                    _tags = program.tags
+                                        .split(",")
+                                        .map((s) => s.trim())
+                                        .filter(Boolean);
+                            } catch {
+                                _tags = program.tags
+                                    .split(",")
+                                    .map((s) => s.trim())
+                                    .filter(Boolean);
+                            }
+                        }
+                    }
+                    return _tags;
+                })();
+
                 return (
                     <div
                         key={program.id}
@@ -75,6 +102,7 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                         }
                         className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 hover:border-gray-300 cursor-pointer p-6"
                     >
+                        {/* tags normalized via local `tags` const above */}
                         <div className="flex flex-col lg:flex-row gap-6">
                             {/* Program Image */}
                             <div className="flex-shrink-0">
@@ -283,11 +311,10 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                                     </div>
 
                                     {/* Tags */}
-                                    {program.tags &&
-                                        program.tags.length > 0 && (
+                                    {tags && tags.length > 0 && (
                                             <div className="mb-4">
                                                 <div className="flex flex-wrap gap-2">
-                                                    {program.tags
+                                                    {tags
                                                         .slice(0, 4)
                                                         .map((tag, index) => (
                                                             <span
@@ -300,13 +327,9 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
                                                                 {tag}
                                                             </span>
                                                         ))}
-                                                    {program.tags.length >
-                                                        4 && (
+                                                    {tags.length > 4 && (
                                                         <span className="text-xs text-gray-500 px-2 py-1">
-                                                            +
-                                                            {program.tags
-                                                                .length -
-                                                                4}{" "}
+                                                            +{tags.length - 4}{" "}
                                                             more
                                                         </span>
                                                     )}
@@ -350,3 +373,9 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
 };
 
 export default ProgramsList;
+
+ProgramsList.propTypes = {
+    programs: PropTypes.array.isRequired,
+    onProgramClick: PropTypes.func,
+    language: PropTypes.string,
+};
