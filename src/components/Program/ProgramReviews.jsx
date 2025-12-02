@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "../../utils/axios";
 
 const ProgramReviews = ({ programId }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation("", { keyPrefix: "programs" });
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({

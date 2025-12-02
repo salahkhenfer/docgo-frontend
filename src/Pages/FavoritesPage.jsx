@@ -5,6 +5,8 @@ import { useFavorites } from "../hooks/useFavorite";
 import { useAppContext } from "../AppContext";
 import FavoriteButton from "../components/FavoriteButton";
 import MainLoading from "../MainLoading";
+import { clientProgramsAPI } from "../API/Programs";
+import { clientCoursesAPI } from "../API/Courses";
 
 const FavoritesPage = () => {
     const { favorites, loading, totalCount } = useFavorites();
@@ -111,11 +113,7 @@ const FavoritesPage = () => {
                             return (
                                 <FavoriteCard
                                     key={`${item.type || "course"}-${itemId}`}
-                                    item={
-                                        item.type === "course"
-                                            ? item.Course
-                                            : item.Program
-                                    }
+                                    item={item}
                                     type={item.type || "course"}
                                 />
                             );
@@ -129,13 +127,74 @@ const FavoritesPage = () => {
 
 const FavoriteCard = ({ item, type }) => {
     const isProgram = type === "program";
+    const [fullData, setFullData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     // Handle different ID field names
     const itemId = item?.id || item?.ID || item?.Id;
 
+    // Fetch full program/course data
+    useEffect(() => {
+        const fetchFullData = async () => {
+            if (!itemId) return;
+            
+            try {
+                setLoading(true);
+                
+                let data;
+                if (isProgram) {
+                    const response = await clientProgramsAPI.getProgramDetails(itemId);
+                    // Program returns {success: true, program: {...}}
+                    data = response.program || response.data || response;
+                } else {
+                    const response = await clientCoursesAPI.getCourseDetails(itemId);
+                    // Course returns {success: true, data: {course: {...}, userStatus: {...}, ...}}
+                    data = response.data?.course || response.course || response.data || response;
+                }
+                
+                setFullData(data);
+            } catch (error) {
+                console.error(`Error fetching ${type} details:`, error);
+                // Fallback to original item data if fetch fails
+                setFullData(item);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFullData();
+    }, [itemId, isProgram, type, item]);
+
+    // Use fullData if available, otherwise fallback to item
+    const dataToUse = fullData || item;
+    
+    // Handle different field name variations
+    const title = dataToUse?.Title || dataToUse?.title || dataToUse?.name || dataToUse?.Name;
+    const shortDescription = dataToUse?.shortDescription || dataToUse?.short_description || dataToUse?.description || dataToUse?.Description;
+    const category = dataToUse?.Category || dataToUse?.category;
+    const level = dataToUse?.Level || dataToUse?.level;
+    const price = dataToUse?.Price ?? dataToUse?.price;
+    const discountPrice = dataToUse?.discountPrice ?? dataToUse?.discount_price ?? dataToUse?.DiscountPrice;
+    const currency = dataToUse?.Currency || dataToUse?.currency || "DZD";
+    const image = dataToUse?.Image || dataToUse?.image || dataToUse?.thumbnail || dataToUse?.Thumbnail;
+
     // Don't render if no valid item or ID
     if (!item || !itemId) {
         return null;
+    }
+
+    // Show loading skeleton while fetching
+    if (loading) {
+        return (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-pulse">
+                <div className="aspect-video bg-gray-200"></div>
+                <div className="p-5 space-y-3">
+                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -146,15 +205,12 @@ const FavoriteCard = ({ item, type }) => {
             {/* Image */}
             <div className="relative aspect-video bg-gradient-to-br from-blue-50 to-indigo-100">
                 {
-                    // item.ThumbnailUrl ||
-
-                    item.Image ? (
+                    image ? (
                         <img
                             src={
-                                // item.ThumbnailUrl ||
-                                import.meta.env.VITE_API_URL + item.Image
+                                import.meta.env.VITE_API_URL + image
                             }
-                            alt={item.Title}
+                            alt={title}
                             className="w-full h-full object-cover"
                         />
                     ) : (
@@ -211,25 +267,25 @@ const FavoriteCard = ({ item, type }) => {
             <div className="p-5">
                 <div className="mb-3">
                     <h3 className="font-bold text-gray-900 text-lg line-clamp-2 mb-2 leading-tight">
-                        {item.Title}
+                        {title}
                     </h3>
-                    {item.shortDescription && (
+                    {shortDescription && (
                         <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                            {item.shortDescription}
+                            {shortDescription}
                         </p>
                     )}
                 </div>
 
                 {/* Meta Info */}
                 <div className="flex items-center justify-between text-sm mb-3">
-                    {item.Category && (
+                    {category && (
                         <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
-                            {item.Category}
+                            {category}
                         </span>
                     )}
-                    {item.Level && (
+                    {level && (
                         <span className="capitalize text-gray-500 font-medium">
-                            {item.Level}
+                            {level}
                         </span>
                     )}
                 </div>
@@ -260,26 +316,26 @@ const FavoriteCard = ({ item, type }) => {
                 )}
 
                 {/* Price */}
-                {item.Price !== undefined && (
+                {price !== undefined && (
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-2">
-                            {item.discountPrice ? (
+                            {discountPrice ? (
                                 <>
                                     <span className="text-xl font-bold text-green-600">
-                                        {item.Currency || "DZD"}{" "}
-                                        {item.discountPrice}
+                                        {currency}{" "}
+                                        {discountPrice}
                                     </span>
                                     <span className="text-sm text-gray-500 line-through">
-                                        {item.Currency || "DZD"} {item.Price}
+                                        {currency} {price}
                                     </span>
                                 </>
-                            ) : item.Price === 0 ? (
+                            ) : price === 0 ? (
                                 <span className="text-xl font-bold text-green-600">
                                     Free
                                 </span>
                             ) : (
                                 <span className="text-xl font-bold text-gray-900">
-                                    {item.Currency || "DZD"} {item.Price}
+                                    {currency} {price}
                                 </span>
                             )}
                         </div>

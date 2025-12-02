@@ -86,7 +86,7 @@ const notificationsData = [
 ];
 
 const NotificationsPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("", { keyPrefix: "notifications" });
   const [notifications, setNotifications] = useState(notificationsData);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -137,22 +137,22 @@ const NotificationsPage = () => {
   const filterOptions = [
     {
       value: "all",
-      label: t("notifications.filter.all"),
+      label: t("filter.all"),
       count: notifications.length,
     },
     {
       value: "unread",
-      label: t("notifications.filter.unread"),
+      label: t("filter.unread"),
       count: unreadCount,
     },
     {
       value: "read",
-      label: t("notifications.filter.read"),
+      label: t("filter.read"),
       count: notifications.length - unreadCount,
     },
     {
       value: "application",
-      label: t("notifications.filter.applications"),
+      label: t("filter.applications"),
       count: notifications.filter((n) => n.type === "application").length,
     },
   ];
@@ -173,9 +173,9 @@ const NotificationsPage = () => {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {t("notifications.title")}
+                {t("title")}
               </h1>
-              <p className="text-gray-600">{t("notifications.description")}</p>
+              <p className="text-gray-600">{t("description")}</p>
             </div>
           </div>
 
@@ -188,11 +188,11 @@ const NotificationsPage = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Check size={16} />
-                  {t("notifications.markAllAsRead")}
+                  {t("markAllAsRead")}
                 </button>
               )}
               <span className="text-sm text-gray-600">
-                {t("notifications.unreadCount", {
+                {t("unreadCount", {
                   unread: unreadCount,
                   total: notifications.length,
                 })}
@@ -206,7 +206,7 @@ const NotificationsPage = () => {
           <div className="flex items-center gap-2 mb-4">
             <Filter size={16} className="text-gray-500" />
             <span className="text-sm font-medium text-gray-700">
-              {t("notifications.filterBy")}
+              {t("filterBy")}
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -235,12 +235,12 @@ const NotificationsPage = () => {
             <div className="text-center py-12">
               <Bell size={48} className="text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {t("notifications.noNotificationsFound")}
+                {t("noNotificationsFound")}
               </h3>
               <p className="text-gray-600">
                 {searchTerm
-                  ? t("notifications.tryAdjustingSearch")
-                  : t("notifications.allCaughtUp")}
+                  ? t("tryAdjustingSearch")
+                  : t("allCaughtUp")}
               </p>
             </div>
           ) : (

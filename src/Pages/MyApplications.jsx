@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
     FaClock,
     FaCheckCircle,
@@ -15,6 +16,7 @@ import axios from "../utils/axios";
 import toast from "react-hot-toast";
 
 const MyApplications = () => {
+    const { t } = useTranslation("", { keyPrefix: "myApplications" });
     const navigate = useNavigate();
     const { isAuth, user } = useAppContext();
 

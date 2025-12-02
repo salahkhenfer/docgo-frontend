@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../AppContext";
+import { useTranslation } from "react-i18next";
 import { FaArrowLeft, FaLock, FaCheckCircle } from "react-icons/fa";
 import PaymentMethodSelector from "../components/Payment/PaymentMethodSelector";
 import PayPalPayment from "../components/Payment/PayPalPayment";
@@ -13,6 +14,7 @@ import axios from "../utils/axios";
 import ccpIcon from "../assets/ccp.png";
 import Swal from "sweetalert2";
 const PaymentPage = () => {
+    const { t } = useTranslation();
     const params = useParams();
     const courseId = params.courseId;
     const programId = params.programId;
@@ -376,7 +378,12 @@ const PaymentPage = () => {
     };
 
     const getItemImage = () => {
-        return itemData.Image || itemData.image;
+        const imagePath = itemData?.Image || itemData?.image;
+        if (!imagePath) return null;
+        // If it's already a full URL, return as is
+        if (imagePath.startsWith('http')) return imagePath;
+        // Otherwise prepend the API URL
+        return import.meta.env.VITE_API_URL + imagePath;
     };
 
     const getItemLevel = () => {
@@ -629,19 +636,19 @@ const PaymentPage = () => {
                         >
                             <FaArrowLeft />
                             <span>
-                                Back to{" "}
-                                {itemType === "course" ? "Course" : "Program"}
+                                {t("paymentPage.backToItem")}{" "}
+                                {t(`paymentPage.${itemType}`)}
                             </span>
                         </button>
 
                         <div className="flex items-center gap-3">
                             <FaLock className="text-blue-600" />
                             <h1 className="text-2xl font-bold text-gray-900">
-                                Secure Payment
+                                {t("paymentPage.title")}
                             </h1>
                         </div>
                         <p className="text-gray-600 mt-2">
-                            Complete your enrollment for this course
+                            {t("paymentPage.enrollmentMessage")}
                         </p>
                     </div>
                 </div>
@@ -664,15 +671,15 @@ const PaymentPage = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <h3 className="text-lg font-semibold text-red-900 mb-2">
-                                                    Previous Payment Rejected
+                                                    {t("paymentPage.rejectionNotice.title")}
                                                 </h3>
                                                 <div className="space-y-2 text-sm">
                                                     <p className="text-red-700">
                                                         <strong>
-                                                            Rejection Reason:
+                                                            {t("paymentPage.rejectionNotice.reason")}:
                                                         </strong>{" "}
                                                         {existingPayment.rejectionReason ||
-                                                            "No reason provided"}
+                                                            t("paymentPage.rejectionNotice.noReason")}
                                                     </p>
                                                     <p className="text-red-600">
                                                         <strong>
@@ -853,93 +860,80 @@ const PaymentPage = () => {
                         {/* Order Summary */}
                         <div className="lg:col-span-1">
                             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                    Order Summary
+                                <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">
+                                    {t("paymentPage.orderSummary")}
                                 </h3>
 
                                 {/* Item Info */}
-                                <div className="mb-6">
-                                    <div className="flex items-start gap-3">
+                                <div className="mb-6 pb-6 border-b border-gray-200">
+                                    <div className="flex flex-col items-center text-center gap-3">
                                         {getItemImage() && (
                                             <img
                                                 src={getItemImage()}
                                                 alt={getItemTitle()}
-                                                className="w-16 h-16 object-cover rounded-lg"
+                                                className="w-20 h-20 object-cover rounded-lg shadow-sm"
                                             />
                                         )}
-                                        <div className="flex-1">
-                                            <h4 className="font-medium text-gray-900 line-clamp-2">
+                                        <div className="w-full">
+                                            <h4 className="font-semibold text-gray-900 text-base mb-2">
                                                 {getItemTitle()}
                                             </h4>
-                                            <p className="text-sm text-gray-600 mt-1">
+                                            <p className="text-sm text-gray-600 mb-1">
                                                 {getItemLevel()}
                                             </p>
-                                            <p className="text-xs text-blue-600 mt-1 capitalize">
-                                                {itemType}
+                                            <p className="text-xs text-blue-600 font-medium capitalize">
+                                                {t(`paymentPage.${itemType}`)}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Pricing */}
-                                <div className="space-y-3 mb-6">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-600">
-                                            {itemType === "course"
-                                                ? "Course Price"
-                                                : "Program Fee"}
-                                        </span>
-                                        {/* <span
-                                        className={
-                                            hasDiscount
-                                                ? "line-through text-gray-400"
-                                                : "font-medium"
-                                        }
-                                    >
-                                        {originalPrice} {currency}
-                                    </span> */}
-                                    </div>
-
-                                    {hasDiscount && (
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-green-600">
-                                                Discounted Price
+                                <div className="space-y-4 mb-6">
+                                    <div className="bg-gray-50 rounded-lg p-4">
+                                        <div className="flex justify-between items-center mb-3">
+                                            <span className="text-gray-700 font-medium">
+                                                {t(itemType === "course"
+                                                    ? "paymentPage.coursePrice"
+                                                    : "paymentPage.programFee")}
                                             </span>
-                                            <span className="font-medium text-green-600">
+                                            <span className="font-semibold text-gray-900 text-lg">
                                                 {price} {currency}
                                             </span>
                                         </div>
-                                    )}
-
-                                    <div className="border-t pt-3">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-semibold text-gray-900">
-                                                Total
-                                            </span>
-                                            <span className="font-bold text-xl text-blue-600">
-                                                {price} {currency}
-                                            </span>
+                                        
+                                        <div className="border-t border-gray-300 pt-3">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-bold text-gray-900 text-lg">
+                                                    {t("paymentPage.total")}
+                                                </span>
+                                                <span className="font-bold text-2xl text-blue-600">
+                                                    {price} {currency}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Security Features */}
-                                <div className="space-y-2 text-sm text-gray-600">
-                                    <div className="flex items-center gap-2">
-                                        <FaCheckCircle className="text-green-500" />
-                                        <span>
-                                            Secure SSL encrypted payment
+                                <div className="space-y-3 text-sm">
+                                    <div className="flex items-start gap-3">
+                                        <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
+                                        <span className="text-gray-700 leading-relaxed">
+                                            {t("paymentPage.securePayment")}
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaCheckCircle className="text-green-500" />
-                                        <span>
-                                            Instant access after payment
+                                    <div className="flex items-start gap-3">
+                                        <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
+                                        <span className="text-gray-700 leading-relaxed">
+                                            {t("paymentPage.instantAccess")}
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaCheckCircle className="text-green-500" />
-                                        <span>30-day money-back guarantee</span>
+                                    <div className="flex items-start gap-3">
+                                        <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
+                                        <span className="text-gray-700 leading-relaxed">
+                                            {t("paymentPage.moneyBackGuarantee")}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

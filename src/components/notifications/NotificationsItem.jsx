@@ -1,5 +1,6 @@
 import { AlertCircle, Check, Mail, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NotificationItem = ({
   notification,
@@ -7,6 +8,7 @@ const NotificationItem = ({
   onDelete,
   onAction,
 }) => {
+  const { t } = useTranslation("", { keyPrefix: "notifications" });
   const [showActions, setShowActions] = useState(false);
 
   const getTimeAgo = (timestamp) => {
@@ -14,10 +16,11 @@ const NotificationItem = ({
     const notificationTime = new Date(timestamp);
     const diffInHours = Math.floor((now - notificationTime) / (1000 * 60 * 60));
 
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 48) return "Yesterday";
-    return `${Math.floor(diffInHours / 24)}d ago`;
+    if (diffInHours < 1) return t("timeAgo.justNow", "Just now");
+    if (diffInHours < 24) return t("timeAgo.hoursAgo", `${diffInHours}h ago`, { hours: diffInHours });
+    if (diffInHours < 48) return t("timeAgo.yesterday", "Yesterday");
+    const days = Math.floor(diffInHours / 24);
+    return t("timeAgo.daysAgo", `${days}d ago`, { days });
   };
 
   const colorClasses = {
@@ -82,7 +85,7 @@ const NotificationItem = ({
                 {notification.actionRequired && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
                     <AlertCircle size={12} />
-                    Action Required
+                    {t("actionRequired", "Action Required")}
                   </span>
                 )}
               </div>
@@ -108,7 +111,7 @@ const NotificationItem = ({
                       className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
                     >
                       <Check size={14} />
-                      Mark as read
+                      {t("markAsRead", "Mark as read")}
                     </button>
                   )}
                   {notification.read && (
@@ -120,7 +123,7 @@ const NotificationItem = ({
                       className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
                     >
                       <Mail size={14} />
-                      Mark as unread
+                      {t("markAsUnread", "Mark as unread")}
                     </button>
                   )}
                   <button
@@ -131,7 +134,7 @@ const NotificationItem = ({
                     className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600"
                   >
                     <Trash2 size={14} />
-                    Delete
+                    {t("delete", "Delete")}
                   </button>
                 </div>
               )}
@@ -145,13 +148,13 @@ const NotificationItem = ({
                 onClick={() => onAction(notification.id)}
                 className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Take Action
+                {t("takeAction", "Take Action")}
               </button>
               <button
                 onClick={() => onMarkAsRead(notification.id)}
                 className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Dismiss
+                {t("dismiss", "Dismiss")}
               </button>
             </div>
           )}

@@ -50,6 +50,8 @@ const UserApplications = () => {
     };
 
     const getStatusIcon = (status) => {
+        if (!status) return <ClockIcon className="h-5 w-5 text-gray-400" />;
+        
         switch (status.toLowerCase()) {
             case "approved":
             case "accepted":
@@ -68,6 +70,8 @@ const UserApplications = () => {
     };
 
     const getStatusColor = (status) => {
+        if (!status) return "bg-gray-100 text-gray-800";
+        
         switch (status.toLowerCase()) {
             case "approved":
             case "accepted":
@@ -98,33 +102,28 @@ const UserApplications = () => {
         },
     ];
 
-    const ApplicationCard = ({ application, type }) => (
+    const ApplicationCard = ({ application, type }) => {
+        // Get the item using the same pattern as PendingApplicationsSection
+        const item = type === "program" 
+            ? application.applicationProgram || application.Program
+            : application.applicationCourse || application.Course;
+        
+        const title = item?.Title || item?.title || item?.Name || item?.name || 'Untitled';
+        const description = item?.Description || item?.description || item?.short_description || '';
+        const imageUrl = item?.Image || item?.image || item?.thumbnail;
+        
+        return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex items-start space-x-4 flex-1">
                         <img
                             src={
-                                application[
-                                    type === "program" ? "Program" : "Course"
-                                ]?.Image
-                                    ? `${import.meta.env.VITE_API_URL}${
-                                          application[
-                                              type === "program"
-                                                  ? "Program"
-                                                  : "Course"
-                                          ].Image
-                                      }`
+                                imageUrl
+                                    ? `${import.meta.env.VITE_API_URL}${imageUrl}`
                                     : `/placeholder-${type}.png`
                             }
-                            alt={
-                                application[
-                                    type === "program" ? "Program" : "Course"
-                                ]?.Title ||
-                                application[
-                                    type === "program" ? "Program" : "Course"
-                                ]?.Name
-                            }
+                            alt={title}
                             className="w-16 h-16 rounded-lg object-cover"
                             onError={(e) => {
                                 e.target.src = `/placeholder-${type}.png`;
@@ -132,23 +131,10 @@ const UserApplications = () => {
                         />
                         <div className="flex-1">
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                {application[
-                                    type === "program" ? "Program" : "Course"
-                                ]?.Title ||
-                                    application[
-                                        type === "program"
-                                            ? "Program"
-                                            : "Course"
-                                    ]?.Name}
+                                {title}
                             </h3>
                             <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                {
-                                    application[
-                                        type === "program"
-                                            ? "Program"
-                                            : "Course"
-                                    ]?.Description
-                                }
+                                {description}
                             </p>
                         </div>
                     </div>
@@ -160,7 +146,7 @@ const UserApplications = () => {
                                 application.Status
                             )}`}
                         >
-                            {application.Status}
+                            {application.Status || 'Pending'}
                         </span>
                     </div>
                 </div>
@@ -217,13 +203,15 @@ const UserApplications = () => {
                 {application.AdminResponse && (
                     <div
                         className={`mb-4 p-3 rounded-lg border-l-4 ${
-                            application.Status.toLowerCase() === "approved" ||
-                            application.Status.toLowerCase() === "accepted"
+                            application.Status && (
+                                application.Status.toLowerCase() === "approved" ||
+                                application.Status.toLowerCase() === "accepted"
+                            )
                                 ? "bg-green-50 border-l-green-400"
-                                : application.Status.toLowerCase() ===
-                                      "rejected" ||
-                                  application.Status.toLowerCase() ===
-                                      "declined"
+                                : application.Status && (
+                                    application.Status.toLowerCase() === "rejected" ||
+                                    application.Status.toLowerCase() === "declined"
+                                  )
                                 ? "bg-red-50 border-l-red-400"
                                 : "bg-yellow-50 border-l-yellow-400"
                         }`}
@@ -263,7 +251,8 @@ const UserApplications = () => {
                             {t("applications.view", "View Details")}
                         </Link>
 
-                        {(application.Status.toLowerCase() === "approved" ||
+                        {application.Status && 
+                            (application.Status.toLowerCase() === "approved" ||
                             application.Status.toLowerCase() ===
                                 "accepted") && (
                             <Link
@@ -289,7 +278,8 @@ const UserApplications = () => {
                 </div>
             </div>
         </div>
-    );
+        );
+    };
 
     return (
         <div className={`max-w-6xl mx-auto p-6 ${isRTL ? "rtl" : "ltr"}`}>

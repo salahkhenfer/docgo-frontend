@@ -12,7 +12,7 @@ import Pagination from "../components/programs/Pagination";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
 
 export function Programs() {
-    const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 

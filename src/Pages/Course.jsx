@@ -17,6 +17,7 @@ import {
     Heart,
     PlayCircle,
     GraduationCap,
+    X,
 } from "lucide-react";
 import { useCourse } from "../hooks/useCourse";
 import { useAppContext } from "../AppContext"; // Add auth context
@@ -29,6 +30,7 @@ import CourseSmallCard from "../components/course/components/CourseSmallCard";
 import CourseContent from "../components/course/components/CourseContent";
 import CourseReviews from "../components/course/components/CourseReviews";
 import CourseFAQSection from "../components/course/components/CourseFAQSection";
+import VideoPlayer from "../components/Common/VideoPlayer";
 
 export const Course = () => {
     const { t, i18n } = useTranslation();
@@ -36,6 +38,7 @@ export const Course = () => {
     const navigate = useNavigate();
     const { user } = useAppContext(); // Use context for auth
     const [showVideo, setShowVideo] = useState(false);
+    const [currentVideo, setCurrentVideo] = useState(null);
     const [showContactForm, setShowContactForm] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const [contactForm, setContactForm] = useState({
@@ -244,7 +247,31 @@ export const Course = () => {
     } = courseData;
 
     const handleVideoClick = (video) => {
+        console.log('Video clicked:', video);
+        setCurrentVideo(video);
         setShowVideo(true);
+    };
+
+    const handleCloseVideo = () => {
+        setShowVideo(false);
+        setCurrentVideo(null);
+    };
+
+    // Get video URL with API base - check multiple possible field names
+    const getVideoUrl = (video) => {
+        if (!video) return null;
+        
+        // Check various possible field names for video URL
+        const videoPath = video.videoUrl || video.video_url || video.url || 
+                         video.VideoUrl || video.path || video.videoPath || 
+                         video.Video || video.video;
+        
+        console.log('Video object:', video);
+        console.log('Extracted video path:', videoPath);
+        
+        if (!videoPath) return null;
+        if (videoPath.startsWith('http')) return videoPath;
+        return import.meta.env.VITE_API_URL + videoPath;
     };
 
     // Helper function to format duration from seconds to MM:SS
@@ -694,35 +721,46 @@ export const Course = () => {
                 </div>
             </div>
 
-            {/* Video Modal - Placeholder for future video feature */}
-            {showVideo && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-hidden">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold">
-                                {t("Course Presentation") ||
-                                    "Course Presentation"}
+            {/* Video Modal */}
+            {showVideo && currentVideo && (
+                <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
+                    <div className="bg-black rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden">
+                        <div className="flex items-center justify-between p-4 bg-gray-900">
+                            <h3 className="text-lg font-semibold text-white">
+                                {currentVideo.title || t("Course Video")}
                             </h3>
                             <button
-                                onClick={() => setShowVideo(false)}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                onClick={handleCloseVideo}
+                                className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-white"
                             >
-                                <Pause className="w-5 h-5" />
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
-                        <div className="bg-gray-100 rounded-lg p-8 text-center">
-                            <PlayCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                            <p className="text-gray-600">
-                                {t(
-                                    "Presentation video will be available soon."
-                                ) ||
-                                    "Presentation video will be available soon."}
-                            </p>
-                            <p className="text-sm text-gray-500 mt-2">
-                                {t("Feature under development") ||
-                                    "Feature under development"}
-                            </p>
+                        <div className="bg-black">
+                            {getVideoUrl(currentVideo) ? (
+                                <VideoPlayer
+                                    src={getVideoUrl(currentVideo)}
+                                    title={currentVideo.title}
+                                    autoPlay={true}
+                                    className="w-full"
+                                />
+                            ) : (
+                                <div className="bg-gray-900 p-8 text-center min-h-[400px] flex flex-col items-center justify-center">
+                                    <PlayCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-400">
+                                        {t("Video not available") || "Video not available"}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        Check console for video data structure
+                                    </p>
+                                </div>
+                            )}
                         </div>
+                        {currentVideo.description && (
+                            <div className="p-4 bg-gray-900 text-white">
+                                <p className="text-sm text-gray-300">{currentVideo.description}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
