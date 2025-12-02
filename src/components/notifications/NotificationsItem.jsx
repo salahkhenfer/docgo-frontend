@@ -17,7 +17,10 @@ const NotificationItem = ({
     const diffInHours = Math.floor((now - notificationTime) / (1000 * 60 * 60));
 
     if (diffInHours < 1) return t("timeAgo.justNow", "Just now");
-    if (diffInHours < 24) return t("timeAgo.hoursAgo", `${diffInHours}h ago`, { hours: diffInHours });
+    if (diffInHours < 24)
+      return t("timeAgo.hoursAgo", `${diffInHours}h ago`, {
+        hours: diffInHours,
+      });
     if (diffInHours < 48) return t("timeAgo.yesterday", "Yesterday");
     const days = Math.floor(diffInHours / 24);
     return t("timeAgo.daysAgo", `${days}d ago`, { days });

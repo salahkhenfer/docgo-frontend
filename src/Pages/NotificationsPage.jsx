@@ -1,23 +1,15 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
-  Bell,
-  CheckCircle,
-  XCircle,
   AlertCircle,
-  Info,
-  Calendar,
-  User,
-  FileText,
-  Settings,
+  Bell,
   Check,
-  X,
+  CheckCircle,
   Filter,
-  Search,
-  MoreVertical,
-  Trash2,
-  Mail,
+  Info,
+  Settings,
+  XCircle,
 } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import NotificationItem from "../components/notifications/NotificationsItem";
 
 // Mock notifications data
@@ -172,9 +164,7 @@ const NotificationsPage = () => {
               )}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {t("title")}
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900">{t("title")}</h1>
               <p className="text-gray-600">{t("description")}</p>
             </div>
           </div>
@@ -238,9 +228,7 @@ const NotificationsPage = () => {
                 {t("noNotificationsFound")}
               </h3>
               <p className="text-gray-600">
-                {searchTerm
-                  ? t("tryAdjustingSearch")
-                  : t("allCaughtUp")}
+                {searchTerm ? t("tryAdjustingSearch") : t("allCaughtUp")}
               </p>
             </div>
           ) : (

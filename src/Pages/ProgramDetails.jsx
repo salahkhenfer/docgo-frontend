@@ -23,7 +23,6 @@ import axios from "../utils/axios";
 // Import component parts
 import ProgramContent from "../components/Program/ProgramContent";
 import ProgramFAQSection from "../components/Program/ProgramFAQSection";
-import ProgramReviews from "../components/Program/ProgramReviews";
 
 export const ProgramDetails = () => {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
@@ -258,12 +257,14 @@ export const ProgramDetails = () => {
   console.log("program.videos:", program.videos);
   console.log("program.videos[0]?.videoUrl:", program.videos?.[0]?.videoUrl);
   console.log("program.Image:", program.Image);
-  
+
   // Check what video URL we'll use
   const videoUrl = program.videoUrl || program.videos?.[0]?.videoUrl;
-  const fullVideoUrl = videoUrl && (videoUrl.startsWith('http') 
-    ? videoUrl 
-    : `${import.meta.env.VITE_API_URL}${videoUrl}`);
+  const fullVideoUrl =
+    videoUrl &&
+    (videoUrl.startsWith("http")
+      ? videoUrl
+      : `${import.meta.env.VITE_API_URL}${videoUrl}`);
   console.log("Final video URL to use:", fullVideoUrl);
   console.log("===================");
 
@@ -346,46 +347,55 @@ export const ProgramDetails = () => {
           {/* Program Image/Video */}
           <div className="h-96 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden relative rounded-xl mb-8 group">
             {(() => {
-              const videoUrl = program.videoUrl || program.videos?.[0]?.videoUrl;
-              
+              const videoUrl =
+                program.videoUrl || program.videos?.[0]?.videoUrl;
+
               if (videoUrl) {
                 // Add base URL if the video path is relative
-                const fullVideoUrl = videoUrl.startsWith('http') 
-                  ? videoUrl 
+                const fullVideoUrl = videoUrl.startsWith("http")
+                  ? videoUrl
                   : `${import.meta.env.VITE_API_URL}${videoUrl}`;
-                
+
                 return (
                   <div className="relative w-full h-full">
                     {!showVideo ? (
                       // Video Thumbnail with Play Button
-                      <div className="relative w-full h-full cursor-pointer" onClick={() => setShowVideo(true)}>
+                      <div
+                        className="relative w-full h-full cursor-pointer"
+                        onClick={() => setShowVideo(true)}
+                      >
                         {/* Poster Image */}
                         {program.Image ? (
                           <img
-                            src={`${import.meta.env.VITE_API_URL}${program.Image}`}
+                            src={`${import.meta.env.VITE_API_URL}${
+                              program.Image
+                            }`}
                             alt={programTitle}
                             className="w-full h-full object-cover"
                           />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900" />
                         )}
-                        
+
                         {/* Dark Overlay */}
                         <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300" />
-                        
+
                         {/* Play Button */}
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="relative">
                             {/* Pulsing Ring */}
                             <div className="absolute inset-0 rounded-full bg-white opacity-30 animate-ping" />
-                            
+
                             {/* Play Button */}
                             <button className="relative bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full p-6 shadow-2xl transform group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
-                              <PlayCircle className="w-16 h-16" strokeWidth={1.5} />
+                              <PlayCircle
+                                className="w-16 h-16"
+                                strokeWidth={1.5}
+                              />
                             </button>
                           </div>
                         </div>
-                        
+
                         {/* Video Label */}
                         <div className="absolute bottom-6 left-6 bg-black bg-opacity-70 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
                           <PlayCircle className="w-5 h-5 text-white" />
@@ -402,7 +412,13 @@ export const ProgramDetails = () => {
                           controls
                           autoPlay
                           controlsList="nodownload"
-                          poster={program.Image ? `${import.meta.env.VITE_API_URL}${program.Image}` : undefined}
+                          poster={
+                            program.Image
+                              ? `${import.meta.env.VITE_API_URL}${
+                                  program.Image
+                                }`
+                              : undefined
+                          }
                           className="w-full h-full object-contain"
                           onError={(e) => {
                             console.error("Video load error:", e);
@@ -411,17 +427,29 @@ export const ProgramDetails = () => {
                         >
                           <source src={fullVideoUrl} type="video/mp4" />
                           <p className="text-white p-4">
-                            {t("Your browser does not support the video tag.") || "Your browser does not support the video tag."}
+                            {t(
+                              "Your browser does not support the video tag."
+                            ) || "Your browser does not support the video tag."}
                           </p>
                         </video>
-                        
+
                         {/* Close Button */}
                         <button
                           onClick={() => setShowVideo(false)}
                           className="absolute top-4 right-4 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-2 transition-all duration-200 z-10"
                         >
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
                           </svg>
                         </button>
                       </div>
