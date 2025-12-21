@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { CourseSidebar } from "./CourseSidebar";
-import { useState } from "react";
 
 function AllContentVideosCourse() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

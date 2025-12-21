@@ -36,26 +36,26 @@ const UserApplications = () => {
 
   const fetchApplications = async () => {
     if (!user?.id) return;
-    
+
     try {
       setLoading(true);
-      
+
       // Fetch user profile - same as dashboard overview
       const response = await apiClient.get(`/Users/${user.id}/Profile`);
-      
+
       if (response.data.success && response.data.data) {
         const data = response.data.data;
-        
+
         // For courses: show both applications and enrollments
         const courseApps = data.applications?.courses || [];
         const courseEnrollments = data.enrollments?.courses || [];
         const allCourses = [...courseEnrollments, ...courseApps];
-        
+
         // For programs: show both applications and enrollments
         const programApps = data.applications?.programs || [];
         const programEnrollments = data.enrollments?.programs || [];
         const allPrograms = [...programEnrollments, ...programApps];
-        
+
         setApplications({
           programs: allPrograms,
           courses: allCourses,
@@ -116,20 +116,22 @@ const UserApplications = () => {
   };
 
   // Only show tabs if not coming from a specific route
-  const tabs = type ? [] : [
-    {
-      id: "programs",
-      name: t("applications.programs", "Program Applications"),
-      icon: AcademicCapIcon,
-      count: applications.programs.length,
-    },
-    {
-      id: "courses",
-      name: t("applications.courses", "Course Applications"),
-      icon: DocumentTextIcon,
-      count: applications.courses.length,
-    },
-  ];
+  const tabs = type
+    ? []
+    : [
+        {
+          id: "programs",
+          name: t("applications.programs", "Program Applications"),
+          icon: AcademicCapIcon,
+          count: applications.programs.length,
+        },
+        {
+          id: "courses",
+          name: t("applications.courses", "Course Applications"),
+          icon: DocumentTextIcon,
+          count: applications.courses.length,
+        },
+      ];
 
   const ApplicationCard = ({ application, type }) => {
     // Get the item using the same pattern as PendingApplicationsSection
@@ -149,7 +151,9 @@ const UserApplications = () => {
     let displayStatus = application.Status || "Pending";
     if (
       isEnrollment ||
-      ["approved", "accepted", "active"].includes((application.Status || "").toLowerCase())
+      ["approved", "accepted", "active"].includes(
+        (application.Status || "").toLowerCase()
+      )
     ) {
       displayStatus = "Active";
     }
@@ -200,8 +204,11 @@ const UserApplications = () => {
               <span>
                 {isEnrollment
                   ? t("applications.enrolledOn", "Enrolled")
-                  : t("applications.appliedOn", "Applied")}:{" "}
-                {new Date(application.createdAt || application.EnrolledAt).toLocaleDateString()}
+                  : t("applications.appliedOn", "Applied")}
+                :{" "}
+                {new Date(
+                  application.createdAt || application.EnrolledAt
+                ).toLocaleDateString()}
               </span>
             </div>
             {application.ReviewedAt && (
@@ -347,35 +354,35 @@ const UserApplications = () => {
           <div className="mt-6 border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
               {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
-                  <Icon
-                    className={`${isRTL ? "ml-2" : "mr-2"} h-5 w-5 ${
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
                       activeTab === tab.id
-                        ? "text-blue-500"
-                        : "text-gray-400 group-hover:text-gray-500"
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                     }`}
-                  />
-                  {tab.name}
-                  {tab.count > 0 && (
-                    <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
-                      {tab.count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+                  >
+                    <Icon
+                      className={`${isRTL ? "ml-2" : "mr-2"} h-5 w-5 ${
+                        activeTab === tab.id
+                          ? "text-blue-500"
+                          : "text-gray-400 group-hover:text-gray-500"
+                      }`}
+                    />
+                    {tab.name}
+                    {tab.count > 0 && (
+                      <span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         )}
       </div>
 

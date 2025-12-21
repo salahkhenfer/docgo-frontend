@@ -1,107 +1,117 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { CheckCircle, XCircle } from "lucide-react";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useParams, useNavigate } from "react-router-dom";
 import EnrollmentAPI from "../API/Enrollment";
 
 // Question Components
 
-const MultipleChoiceQuestion = ({ question, selectedAnswer, onAnswerChange }) => (
-    <div className="mt-6">
-        <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-        <div className="mt-4 space-y-3">
-            {question.options.map((option) => (
-                <label key={option.id} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <input
-                        type="radio"
-                        name={question.id}
-                        value={option.id}
-                        checked={selectedAnswer === option.id}
-                        onChange={(e) => onAnswerChange(question.id, e.target.value)}
-                        className="form-radio h-5 w-5 text-blue-600"
-                    />
-                    <span className="ml-3 text-gray-700">{option.label}</span>
-                </label>
-            ))}
-        </div>
+const MultipleChoiceQuestion = ({
+  question,
+  selectedAnswer,
+  onAnswerChange,
+}) => (
+  <div className="mt-6">
+    <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
+    <div className="mt-4 space-y-3">
+      {question.options.map((option) => (
+        <label
+          key={option.id}
+          className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+        >
+          <input
+            type="radio"
+            name={question.id}
+            value={option.id}
+            checked={selectedAnswer === option.id}
+            onChange={(e) => onAnswerChange(question.id, e.target.value)}
+            className="form-radio h-5 w-5 text-blue-600"
+          />
+          <span className="ml-3 text-gray-700">{option.label}</span>
+        </label>
+      ))}
     </div>
+  </div>
 );
 
 const TrueFalseQuestion = ({ question, selectedAnswer, onAnswerChange }) => (
-    <div className="mt-6">
-        <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-        <div className="mt-4 flex space-x-4">
-            <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
-                <input
-                    type="radio"
-                    name={question.id}
-                    value="True"
-                    checked={selectedAnswer === "True"}
-                    onChange={(e) => onAnswerChange(question.id, e.target.value)}
-                    className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-gray-700">Vrai</span>
-            </label>
-            <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
-                <input
-                    type="radio"
-                    name={question.id}
-                    value="False"
-                    checked={selectedAnswer === "False"}
-                    onChange={(e) => onAnswerChange(question.id, e.target.value)}
-                    className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-gray-700">Faux</span>
-            </label>
-        </div>
+  <div className="mt-6">
+    <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
+    <div className="mt-4 flex space-x-4">
+      <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
+        <input
+          type="radio"
+          name={question.id}
+          value="True"
+          checked={selectedAnswer === "True"}
+          onChange={(e) => onAnswerChange(question.id, e.target.value)}
+          className="form-radio h-5 w-5 text-blue-600"
+        />
+        <span className="ml-3 text-gray-700">Vrai</span>
+      </label>
+      <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
+        <input
+          type="radio"
+          name={question.id}
+          value="False"
+          checked={selectedAnswer === "False"}
+          onChange={(e) => onAnswerChange(question.id, e.target.value)}
+          className="form-radio h-5 w-5 text-blue-600"
+        />
+        <span className="ml-3 text-gray-700">Faux</span>
+      </label>
     </div>
+  </div>
 );
 
-
 const CheckboxQuestion = ({ question, selectedAnswers, onAnswerChange }) => {
-    const handleCheckboxChange = (optionId) => {
-        const newAnswers = selectedAnswers.includes(optionId)
-            ? selectedAnswers.filter((id) => id !== optionId)
-            : [...selectedAnswers, optionId];
-        onAnswerChange(question.id, newAnswers);
-    };
+  const handleCheckboxChange = (optionId) => {
+    const newAnswers = selectedAnswers.includes(optionId)
+      ? selectedAnswers.filter((id) => id !== optionId)
+      : [...selectedAnswers, optionId];
+    onAnswerChange(question.id, newAnswers);
+  };
 
-    return (
-        <div className="mt-6">
-            <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-            {question.instructions && <p className="text-sm text-gray-500 mt-1">{question.instructions}</p>}
-            <div className="mt-4 space-y-3">
-                {question.options.map((option) => (
-                    <label key={option.id} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            value={option.id}
-                            checked={selectedAnswers.includes(option.id)}
-                            onChange={() => handleCheckboxChange(option.id)}
-                            className="form-checkbox h-5 w-5 text-blue-600"
-                        />
-                        <span className="ml-3 text-gray-700">{option.label}</span>
-                    </label>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className="mt-6">
+      <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
+      {question.instructions && (
+        <p className="text-sm text-gray-500 mt-1">{question.instructions}</p>
+      )}
+      <div className="mt-4 space-y-3">
+        {question.options.map((option) => (
+          <label
+            key={option.id}
+            className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              value={option.id}
+              checked={selectedAnswers.includes(option.id)}
+              onChange={() => handleCheckboxChange(option.id)}
+              className="form-checkbox h-5 w-5 text-blue-600"
+            />
+            <span className="ml-3 text-gray-700">{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 const TextAreaQuestion = ({ question, answer, onAnswerChange }) => (
-    <div className="mt-6">
-        <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-        <textarea
-            value={answer}
-            onChange={(e) => onAnswerChange(question.id, e.target.value)}
-            className="mt-4 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-            rows="4"
-            placeholder="Votre réponse..."
-        />
-    </div>
+  <div className="mt-6">
+    <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
+    <textarea
+      value={answer}
+      onChange={(e) => onAnswerChange(question.id, e.target.value)}
+      className="mt-4 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+      rows="4"
+      placeholder="Votre réponse..."
+    />
+  </div>
 );
-
 
 const QuizResults = ({ results, onRetry, score }) => {
   const totalQuestions = results.length;
@@ -186,8 +196,10 @@ function QuizContent({ quizData: propQuizData }) {
 
   React.useEffect(() => {
     const passed = localStorage.getItem(`course_${courseId}_quiz_completed`);
-    const lastResultStr = localStorage.getItem(`course_${courseId}_quiz_last_result`);
-    if (passed === 'true' && lastResultStr) {
+    const lastResultStr = localStorage.getItem(
+      `course_${courseId}_quiz_last_result`
+    );
+    if (passed === "true" && lastResultStr) {
       try {
         setLastResult(JSON.parse(lastResultStr));
       } catch {}
@@ -196,79 +208,86 @@ function QuizContent({ quizData: propQuizData }) {
 
   // Check if backend quiz format (array) or frontend format (object with sections)
   let normalizedQuizData;
-  
+
   if (Array.isArray(propQuizData) && propQuizData.length > 0) {
     // Backend format: array of sections
     normalizedQuizData = { sections: propQuizData };
-  } else if (propQuizData && propQuizData.sections && propQuizData.sections.length > 0) {
+  } else if (
+    propQuizData &&
+    propQuizData.sections &&
+    propQuizData.sections.length > 0
+  ) {
     // Frontend format: object with sections property
     normalizedQuizData = propQuizData;
   } else {
     // Default quiz for testing
     normalizedQuizData = {
-    sections: [
-      {
-        title: "1) Choisissez la bonne réponse",
-        type: "multiple-choice",
-        questions: [
-          {
-            id: "q1",
-            text: "Lequel des éléments suivants N'EST PAS un principe clé du design ?",
-            correctAnswer: "D",
-            options: [
-              { id: "A", label: "Contraste" },
-              { id: "B", label: "Répétition" },
-              { id: "C", label: "Alignement" },
-              { id: "D", label: "Dissonance" },
-            ],
-          },
-        ],
-      },
-      {
-        title:
-          "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
-        type: "checkbox",
-        instructions: "Vous pouvez sélectionner plus de deux options",
-        questions: [
-          {
-            id: "q2",
-            text: "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
-            correctAnswer: ["B", "D"],
-            options: [
-              { id: "A", label: "Elle est coûteuse" },
-              { id: "B", label: "Elle permet de comprendre les besoins réels" },
-              { id: "C", label: "Elle remplace les tests" },
-              { id: "D", label: "Elle améliore la satisfaction utilisateur" },
-            ],
-          },
-        ],
-      },
-      {
-        title: "2) Répondez brièvement à ces questions",
-        type: "text",
-        questions: [
-          {
-            id: "q3",
-            text: "Qu'est-ce que le design thinking ?",
-            correctAnswer:
-              "Une approche centrée sur l'utilisateur pour résoudre des problèmes",
-          },
-          {
-            id: "q4",
-            text: "Citez deux avantages clés du prototypage dans le processus de design ?",
-            correctAnswer:
-              "Permet de tester rapidement les idées et d'identifier les problèmes tôt",
-          },
-        ],
-      },
-    ],
+      sections: [
+        {
+          title: "1) Choisissez la bonne réponse",
+          type: "multiple-choice",
+          questions: [
+            {
+              id: "q1",
+              text: "Lequel des éléments suivants N'EST PAS un principe clé du design ?",
+              correctAnswer: "D",
+              options: [
+                { id: "A", label: "Contraste" },
+                { id: "B", label: "Répétition" },
+                { id: "C", label: "Alignement" },
+                { id: "D", label: "Dissonance" },
+              ],
+            },
+          ],
+        },
+        {
+          title:
+            "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
+          type: "checkbox",
+          instructions: "Vous pouvez sélectionner plus de deux options",
+          questions: [
+            {
+              id: "q2",
+              text: "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
+              correctAnswer: ["B", "D"],
+              options: [
+                { id: "A", label: "Elle est coûteuse" },
+                {
+                  id: "B",
+                  label: "Elle permet de comprendre les besoins réels",
+                },
+                { id: "C", label: "Elle remplace les tests" },
+                { id: "D", label: "Elle améliore la satisfaction utilisateur" },
+              ],
+            },
+          ],
+        },
+        {
+          title: "2) Répondez brièvement à ces questions",
+          type: "text",
+          questions: [
+            {
+              id: "q3",
+              text: "Qu'est-ce que le design thinking ?",
+              correctAnswer:
+                "Une approche centrée sur l'utilisateur pour résoudre des problèmes",
+            },
+            {
+              id: "q4",
+              text: "Citez deux avantages clés du prototypage dans le processus de design ?",
+              correctAnswer:
+                "Permet de tester rapidement les idées et d'identifier les problèmes tôt",
+            },
+          ],
+        },
+      ],
     };
   }
-  
+
   const quizData = normalizedQuizData;
 
   // Log quiz data for debugging
-  console.log('Quiz data loaded:', quizData);
+  console.log("Quiz data loaded:", quizData);
 
   const handleAnswerChange = (questionId, answer) => {
     setUserAnswers((prev) => ({ ...prev, [questionId]: answer }));
@@ -361,17 +380,19 @@ function QuizContent({ quizData: propQuizData }) {
       ).length;
       const totalQuestions = validationResults.length;
       const score = Math.round((correctAnswers / totalQuestions) * 100);
-      
+
       setQuizScore(score);
       setResults(validationResults);
       setIsSubmitted(true);
-      
+
       const resultToStore = {
         validationResults,
         score,
       };
-      localStorage.setItem(`course_${courseId}_quiz_last_result`, JSON.stringify(resultToStore));
-
+      localStorage.setItem(
+        `course_${courseId}_quiz_last_result`,
+        JSON.stringify(resultToStore)
+      );
 
       // Send quiz results to backend
       try {
@@ -380,7 +401,7 @@ function QuizContent({ quizData: propQuizData }) {
           correctAnswers: correctAnswers,
           totalQuestions: totalQuestions,
           answers: userAnswers,
-          completedAt: new Date().toISOString()
+          completedAt: new Date().toISOString(),
         });
       } catch (error) {
         console.error("Error submitting quiz results to backend:", error);
@@ -389,12 +410,12 @@ function QuizContent({ quizData: propQuizData }) {
 
       // Save quiz completion to unlock certificate
       if (score >= 50) {
-        localStorage.setItem(`course_${courseId}_quiz_completed`, 'true');
+        localStorage.setItem(`course_${courseId}_quiz_completed`, "true");
         localStorage.setItem(`course_${courseId}_quiz_score`, score.toString());
-        
+
         // Dispatch custom event to notify CourseVideos to unlock certificate
-        window.dispatchEvent(new Event('storage'));
-        
+        window.dispatchEvent(new Event("storage"));
+
         await Swal.fire({
           icon: "success",
           title: "Félicitations ! 🎉",
@@ -422,7 +443,6 @@ function QuizContent({ quizData: propQuizData }) {
       setIsLoading(false);
     }
   };
-  
 
   const handleRetry = () => {
     setUserAnswers({});
@@ -435,20 +455,32 @@ function QuizContent({ quizData: propQuizData }) {
 
   if (lastResult) {
     return (
-        <main className="ml-5 w-[72%] max-md:ml-0 max-md:w-full">
-             <>
-              <h2 className="text-xl font-bold text-green-700 mb-2">Vous avez déjà réussi ce quiz !</h2>
-              <div className="mb-4 text-green-800">Dernier score: {lastResult.score}%</div>
-              <QuizResults results={lastResult.validationResults} score={lastResult.score} onRetry={handleRetry} />
-            </>
-        </main>
-    )
+      <main className="ml-5 w-[72%] max-md:ml-0 max-md:w-full">
+        <>
+          <h2 className="text-xl font-bold text-green-700 mb-2">
+            Vous avez déjà réussi ce quiz !
+          </h2>
+          <div className="mb-4 text-green-800">
+            Dernier score: {lastResult.score}%
+          </div>
+          <QuizResults
+            results={lastResult.validationResults}
+            score={lastResult.score}
+            onRetry={handleRetry}
+          />
+        </>
+      </main>
+    );
   }
 
   if (isSubmitted) {
     return (
       <main className="ml-5 w-[72%] max-md:ml-0 max-md:w-full">
-        <QuizResults results={results} score={quizScore} onRetry={handleRetry} />
+        <QuizResults
+          results={results}
+          score={quizScore}
+          onRetry={handleRetry}
+        />
       </main>
     );
   }
@@ -553,32 +585,37 @@ function QuizContent({ quizData: propQuizData }) {
 QuizContent.propTypes = {
   quizData: PropTypes.oneOfType([
     PropTypes.shape({
-        sections: PropTypes.arrayOf(
+      sections: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+          type: PropTypes.oneOf([
+            "multiple-choice",
+            "checkbox",
+            "text",
+            "true-false",
+          ]).isRequired,
+          instructions: PropTypes.string,
+          questions: PropTypes.arrayOf(
             PropTypes.shape({
-                title: PropTypes.string.isRequired,
-                type: PropTypes.oneOf(["multiple-choice", "checkbox", "text", "true-false"]).isRequired,
-                instructions: PropTypes.string,
-                questions: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        id: PropTypes.string.isRequired,
-                        text: PropTypes.string.isRequired,
-                        correctAnswer: PropTypes.oneOfType([
-                            PropTypes.string,
-                            PropTypes.arrayOf(PropTypes.string),
-                        ]),
-                        options: PropTypes.arrayOf(
-                            PropTypes.shape({
-                                id: PropTypes.string.isRequired,
-                                label: PropTypes.string.isRequired,
-                            })
-                        ),
-                    })
-                ).isRequired,
+              id: PropTypes.string.isRequired,
+              text: PropTypes.string.isRequired,
+              correctAnswer: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.arrayOf(PropTypes.string),
+              ]),
+              options: PropTypes.arrayOf(
+                PropTypes.shape({
+                  id: PropTypes.string.isRequired,
+                  label: PropTypes.string.isRequired,
+                })
+              ),
             })
-        ).isRequired,
+          ).isRequired,
+        })
+      ).isRequired,
     }),
-    PropTypes.array // To support backend format
-  ])
+    PropTypes.array, // To support backend format
+  ]),
 };
 
 export default QuizContent;

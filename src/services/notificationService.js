@@ -24,7 +24,9 @@ const notificationService = {
   // Mark all as read
   markAllAsRead: async (userId) => {
     try {
-      const response = await api.patch(`/notifications/user/${userId}/read-all`);
+      const response = await api.patch(
+        `/notifications/user/${userId}/read-all`
+      );
       return response.data;
     } catch (error) {
       console.error("Error marking all notifications as read:", error);

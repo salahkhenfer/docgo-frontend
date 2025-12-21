@@ -111,13 +111,13 @@ const generatePDFCertificate = async (certificateData) => {
   const detailsY = line2 ? 1000 : 950;
   ctx.font = "bold 40px 'Poppins', sans-serif"; // Reduced from 50px
   ctx.fillStyle = "#3b82f6";
-  
+
   // Show score percentage with grade
-  const scoreText = certificateData.quizScore 
+  const scoreText = certificateData.quizScore
     ? `${certificateData.quizScore}% - ${certificateData.grade}`
     : certificateData.grade;
   ctx.fillText(scoreText, canvas.width / 2 - 300, detailsY);
-  
+
   ctx.fillText(
     new Date(certificateData.completionDate).toLocaleDateString("fr-FR"),
     canvas.width / 2 + 300,

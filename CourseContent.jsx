@@ -1,5 +1,3 @@
-import React from "react";
-
 export const CourseContent = () => {
   const courseContent = {
     videoCount: 4,
