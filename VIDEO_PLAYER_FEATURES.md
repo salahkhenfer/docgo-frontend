@@ -3,6 +3,7 @@
 ## ✅ Features Implemented
 
 ### 1. **Video Progress Tracking**
+
 - ✅ Tracks watch progress for each video (percentage watched)
 - ✅ Automatically marks videos as completed when 90% watched
 - ✅ Saves progress to localStorage for persistence
@@ -11,6 +12,7 @@
 - ✅ Gray circle icons for incomplete videos
 
 ### 2. **Sidebar Navigation with Progress**
+
 - ✅ Course title displayed prominently
 - ✅ Progress indicator showing X/Y videos completed with percentage
 - ✅ Interactive video list with numbered items
@@ -19,6 +21,7 @@
 - ✅ Responsive design (desktop + mobile hamburger menu)
 
 ### 3. **Quiz System**
+
 - ✅ Quiz unlocks automatically after ALL videos are completed
 - ✅ Locked state shows FaLock icon and grayed text
 - ✅ Unlocked state shows FaCheckCircle icon and blue clickable link
@@ -29,6 +32,7 @@
 - ✅ Quiz completion saved to localStorage
 
 ### 4. **Certificate System**
+
 - ✅ Certificate unlocks after passing quiz (≥50% score)
 - ✅ Locked until quiz is passed
 - ✅ Links to certificate page at `/Courses/:courseId/videos/certificate`
@@ -37,6 +41,7 @@
 - ✅ PDF download functionality included
 
 ### 5. **Video Player Features**
+
 - ✅ HTML5 video player with custom controls
 - ✅ Play/Pause overlay button (cyan, disappears when playing)
 - ✅ Timeline scrubber with progress bar
@@ -48,6 +53,7 @@
 ## 📂 Files Modified
 
 ### **src/Pages/CourseVideos.jsx**
+
 ```javascript
 // Added Progress Tracking State
 const [completedVideos, setCompletedVideos] = useState(new Set());
@@ -87,7 +93,7 @@ const [isCertificateUnlocked, setIsCertificateUnlocked] = useState(false);
   ) : (
     <span><FaLock /> Quiz (locked)</span>
   )}
-  
+
   {isCertificateUnlocked ? (
     <Link to={`/Courses/${courseId}/videos/certificate`}>
       <FaCheckCircle /> Certificate + PDF
@@ -99,6 +105,7 @@ const [isCertificateUnlocked, setIsCertificateUnlocked] = useState(false);
 ```
 
 ### **src/Pages/QuizContent.jsx**
+
 ```javascript
 // Added courseId and navigation
 import { useParams, useNavigate } from "react-router-dom";
@@ -109,9 +116,9 @@ const [quizScore, setQuizScore] = useState(0);
 
 // Added Certificate Unlock Logic
 if (score >= 50) {
-  localStorage.setItem(`course_${courseId}_quiz_completed`, 'true');
+  localStorage.setItem(`course_${courseId}_quiz_completed`, "true");
   localStorage.setItem(`course_${courseId}_quiz_score`, score.toString());
-  
+
   await Swal.fire({
     title: "Félicitations ! 🎉",
     html: `Score: ${score}%<br />Certificat débloqué`,
@@ -126,6 +133,7 @@ if (score >= 50) {
 ```
 
 ### **src/locales/fr/translation.json**
+
 ```json
 "video_player": {
   "Watch Course": "Regarder le cours",
@@ -142,6 +150,7 @@ if (score >= 50) {
 ```
 
 ### **src/locales/ar/translation.json**
+
 ```json
 "video_player": {
   "Watch Course": "شاهد الدورة",
@@ -159,6 +168,7 @@ if (score >= 50) {
 ## 🔄 User Flow
 
 ### **Step 1: Watch Videos**
+
 1. User navigates to `/Courses/:courseId/watch`
 2. Sees sidebar with all videos listed
 3. Progress bar shows 0% initially
@@ -169,6 +179,7 @@ if (score >= 50) {
 8. Progress bar updates in real-time
 
 ### **Step 2: Complete All Videos**
+
 1. User watches all videos to completion
 2. Progress bar reaches 100%
 3. Quiz section automatically unlocks
@@ -176,6 +187,7 @@ if (score >= 50) {
 5. "Quiz (locked)" becomes "Quiz débloqué" (clickable link)
 
 ### **Step 3: Take Quiz**
+
 1. User clicks "Quiz débloqué" link
 2. Navigates to `/Courses/:courseId/videos/quiz`
 3. Answers multiple choice, checkbox, and text questions
@@ -184,6 +196,7 @@ if (score >= 50) {
 6. Score calculated (correct/total × 100)
 
 ### **Step 4: Pass Quiz & Get Certificate**
+
 1. If score ≥ 50%:
    - Popup: "Félicitations ! 🎉"
    - Quiz completion saved to localStorage
@@ -194,6 +207,7 @@ if (score >= 50) {
    - Certificate remains locked
 
 ### **Step 5: Download Certificate**
+
 1. User sees "Certificate + PDF" unlocked in sidebar
 2. Clicks link to navigate to `/Courses/:courseId/videos/certificate`
 3. Views certificate with student name, course details, score
@@ -221,6 +235,7 @@ localStorage.setItem(`course_${courseId}_quiz_score`, '85');
 ## 🎨 Visual Design
 
 ### **Sidebar (Desktop)**
+
 - White background
 - Border-right divider
 - Course title (2xl font)
@@ -231,18 +246,21 @@ localStorage.setItem(`course_${courseId}_quiz_score`, '85');
 - Lock/unlock icons for quiz/certificate
 
 ### **Mobile**
+
 - Hamburger menu in top header
 - Full-screen slide-out sidebar
 - Same design as desktop
 - Smooth transform animations
 
 ### **Progress Bar**
+
 - Light blue background box
 - Progress percentage displayed
 - Blue fill bar (animated transitions)
 - Text: "X / Y videos completed"
 
 ### **Video Player**
+
 - Rounded container (48px border radius)
 - Shadow effect
 - Large cyan play button overlay
