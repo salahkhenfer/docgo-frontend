@@ -12,7 +12,7 @@ import {
     ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { useAppContext } from "../../AppContext";
-import apiClient from "../../services/apiClient";
+import notificationService from "../../services/notificationService";
 
 const UserNotifications = () => {
     const { t, i18n } = useTranslation();
@@ -27,69 +27,20 @@ const UserNotifications = () => {
         if (user?.id) {
             fetchNotifications();
         }
+        // eslint-disable-next-line
     }, [user?.id, filter]);
 
     const fetchNotifications = async () => {
         try {
             setLoading(true);
-            // Mock data for now - replace with actual API call
-            const mockNotifications = [
-                {
-                    id: 1,
-                    title: "Course Enrollment Confirmed",
-                    message:
-                        "Your enrollment in 'JavaScript Fundamentals' has been confirmed.",
-                    type: "success",
-                    read: false,
-                    createdAt: new Date(
-                        Date.now() - 1000 * 60 * 30
-                    ).toISOString(),
-                },
-                {
-                    id: 2,
-                    title: "Application Under Review",
-                    message:
-                        "Your scholarship application is currently being reviewed.",
-                    type: "info",
-                    read: true,
-                    createdAt: new Date(
-                        Date.now() - 1000 * 60 * 60 * 2
-                    ).toISOString(),
-                },
-                {
-                    id: 3,
-                    title: "Certificate Available",
-                    message:
-                        "Your certificate for 'Web Development Basics' is now ready for download.",
-                    type: "success",
-                    read: false,
-                    createdAt: new Date(
-                        Date.now() - 1000 * 60 * 60 * 24
-                    ).toISOString(),
-                },
-                {
-                    id: 4,
-                    title: "Payment Required",
-                    message:
-                        "Your course payment is overdue. Please complete the payment to continue.",
-                    type: "warning",
-                    read: false,
-                    createdAt: new Date(
-                        Date.now() - 1000 * 60 * 60 * 48
-                    ).toISOString(),
-                },
-            ];
-
+            const allNotifications = await notificationService.getNotifications(user.id);
             // Filter based on selected filter
-            let filteredNotifications = mockNotifications;
+            let filteredNotifications = allNotifications;
             if (filter === "unread") {
-                filteredNotifications = mockNotifications.filter(
-                    (n) => !n.read
-                );
+                filteredNotifications = allNotifications.filter((n) => !n.read);
             } else if (filter === "read") {
-                filteredNotifications = mockNotifications.filter((n) => n.read);
+                filteredNotifications = allNotifications.filter((n) => n.read);
             }
-
             setNotifications(filteredNotifications);
         } catch (error) {
             console.error("Error fetching notifications:", error);
@@ -101,7 +52,7 @@ const UserNotifications = () => {
 
     const handleMarkAsRead = async (notificationId) => {
         try {
-            // Mock API call - replace with actual API
+            await notificationService.markAsRead(notificationId);
             setNotifications((prev) =>
                 prev.map((n) =>
                     n.id === notificationId ? { ...n, read: true } : n
@@ -114,7 +65,7 @@ const UserNotifications = () => {
 
     const handleMarkAllAsRead = async () => {
         try {
-            // Mock API call - replace with actual API
+            await notificationService.markAllAsRead(user.id);
             setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
         } catch (error) {
             console.error("Error marking all notifications as read:", error);
@@ -131,7 +82,7 @@ const UserNotifications = () => {
             )
         ) {
             try {
-                // Mock API call - replace with actual API
+                await notificationService.deleteNotification(notificationId);
                 setNotifications((prev) =>
                     prev.filter((n) => n.id !== notificationId)
                 );

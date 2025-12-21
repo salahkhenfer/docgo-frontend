@@ -95,7 +95,7 @@ const EnrolledCoursesSection = ({ enrollments }) => {
                         key={enrollment.id}
                         className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
                         onClick={() =>
-                            navigate(`/my-courses/${enrollment.CourseId}`)
+                            navigate(`/Courses/${enrollment.CourseId}/watch`)
                         }
                     >
                         <div className="flex items-start gap-4">
@@ -115,39 +115,8 @@ const EnrolledCoursesSection = ({ enrollments }) => {
                                     {enrollment.Course?.Title}
                                 </h3>
                                 <p className="text-sm text-gray-600 mb-2">
-                                    {enrollment.Course?.Category} •{" "}
-                                    {enrollment.Course?.Level}
+                                    {enrollment.Course?.Category} • {enrollment.Course?.Level}
                                 </p>
-
-                                {/* Progress Bar */}
-                                <div className="mb-3">
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-gray-600">
-                                            {t(
-                                                "dashboard.progress",
-                                                "Progress"
-                                            )}
-                                        </span>
-                                        <span className="text-blue-600 font-medium">
-                                            {Math.round(
-                                                enrollment.progressPercentage ||
-                                                    0
-                                            )}
-                                            %
-                                        </span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div
-                                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                            style={{
-                                                width: `${Math.round(
-                                                    enrollment.progressPercentage ||
-                                                        0
-                                                )}%`,
-                                            }}
-                                        ></div>
-                                    </div>
-                                </div>
 
                                 {/* Status Badge */}
                                 <div className="flex items-center justify-between">
@@ -206,7 +175,7 @@ const EnrolledCoursesSection = ({ enrollments }) => {
             {enrollments.length > 6 && (
                 <div className="mt-6 text-center">
                     <button
-                        onClick={() => navigate("/my-courses")}
+                        onClick={() => navigate("/Courses")}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                     >
                         {t("dashboard.viewAllCourses", "View All My Courses")}

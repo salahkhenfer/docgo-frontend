@@ -130,7 +130,7 @@ const CourseSmallCard = ({
 
                         {/* Continue Learning Button */}
                         <button
-                            onClick={() => navigate(`/MyCourses/${course.id}`)}
+                            onClick={() => navigate(`/Courses/${course.id}/watch`)}
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
                         >
                             <FaPlay className="mr-2" />

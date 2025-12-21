@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { FaCheck, FaCheckCircle, FaCircle, FaLock } from "react-icons/fa";
+"use client";
+import React, { useState } from "react";
+import { FaCheckCircle, FaLock, FaCircle, FaCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export function CourseSidebar({ setSidebarOpen, sidebarOpen, quizPassed }) {
+export function CourseSidebar({ setSidebarOpen, sidebarOpen }) {
   const [activeSectionId, setActiveSectionId] = useState(1);
 
   const handleSectionClick = (id) => {
@@ -118,7 +119,7 @@ export function CourseSidebar({ setSidebarOpen, sidebarOpen, quizPassed }) {
             onClick={handleClickCertificate}
             className="mt-6 flex items-center gap-2"
           >
-            {quizPassed ? (
+            {!allCompleted ? (
               <Link
                 to="Certificate"
                 className="text-blue-600 hover:underline flex items-center gap-2"

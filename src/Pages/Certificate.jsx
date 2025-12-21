@@ -1,25 +1,123 @@
 import jsPDF from "jspdf";
 import { Award, Calendar, Download, Eye, Star, User } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAppContext } from "../AppContext";
 import generatePDFCertificate from "../components/certificate/generatePDFCertificate";
+import { useCourse } from "../hooks/useCourse";
+import EnrollmentAPI from "../API/Enrollment";
 
 export default function Certificate() {
     const [isDownloading, setIsDownloading] = useState(false);
     const [showCertificate, setShowCertificate] = useState(false);
+    const [quizScore, setQuizScore] = useState(0);
     const certificateRef = useRef(null);
+    const { courseId } = useParams();
+    const { user } = useAppContext();
+    const { courseData, loading } = useCourse(courseId);
 
-    // Mock certificate data - replace with your actual data
+    // Load quiz score from localStorage and backend
+    useEffect(() => {
+        const loadQuizScore = async () => {
+            // First try localStorage (most recent)
+            const storedScore = localStorage.getItem(`course_${courseId}_quiz_score`);
+            if (storedScore) {
+                setQuizScore(parseInt(storedScore));
+                return;
+            }
+            
+            // Fallback to backend
+            try {
+                const response = await EnrollmentAPI.getCourseProgress(courseId);
+                if (response?.data?.progress?.quizScore !== undefined) {
+                    setQuizScore(response.data.progress.quizScore);
+                }
+            } catch (error) {
+                // Use localStorage fallback again
+                const stored = localStorage.getItem(`course_${courseId}_progress`);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data.quizScore !== undefined) {
+                        setQuizScore(data.quizScore);
+                    }
+                }
+            }
+        };
+        if (courseId) {
+            loadQuizScore();
+        }
+    }, [courseId]);
+
+    // Build certificate data from real course and user data
     const certificateData = {
-        studentName: "salah khenfer",
-        courseName: "Advanced React Development & Modern JavaScript",
-        completionDate: "2024-12-15",
-        instructor: "Dr. imad",
-        grade: "Excellence",
-        courseHours: "120",
-        certificateId: "CERT-2024-RD-001",
+        studentName: user?.name || (user?.firstName && user?.lastName ? user.firstName + " " + user.lastName : "") || "Étudiant",
+        courseName: courseData?.course?.title || "Formation",
+        completionDate: new Date().toISOString().split('T')[0],
+        instructor: courseData?.course?.instructor?.name || courseData?.course?.instructorName || "Instructeur",
+        grade: quizScore >= 80 ? "Excellence" : quizScore >= 65 ? "Très Bien" : "Bien",
+        courseHours: (() => {
+            // Calculate total video duration
+            const videos = courseData?.course?.videos || [];
+            console.log('Total videos found:', videos.length);
+            console.log('Video objects:', videos);
+            
+            if (videos.length === 0) {
+                console.log('No videos, using course duration/hours');
+                return courseData?.course?.duration || courseData?.course?.hours || "N/A";
+            }
+            
+            let totalSeconds = 0;
+            videos.forEach((video, index) => {
+                console.log(`Video ${index + 1}:`, video);
+                // Video duration might be in different formats: "HH:MM:SS", "MM:SS", or seconds
+                const duration = video.duration || video.videoDuration || video.length || video.time || 0;
+                console.log(`  Duration found:`, duration);
+                
+                if (typeof duration === 'string') {
+                    const parts = duration.split(':').map(p => parseInt(p) || 0);
+                    if (parts.length === 3) {
+                        // HH:MM:SS
+                        const seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+                        totalSeconds += seconds;
+                        console.log(`  Parsed as HH:MM:SS: ${seconds} seconds`);
+                    } else if (parts.length === 2) {
+                        // MM:SS
+                        const seconds = parts[0] * 60 + parts[1];
+                        totalSeconds += seconds;
+                        console.log(`  Parsed as MM:SS: ${seconds} seconds`);
+                    } else {
+                        const seconds = parseInt(duration) || 0;
+                        totalSeconds += seconds;
+                        console.log(`  Parsed as number string: ${seconds} seconds`);
+                    }
+                } else if (typeof duration === 'number') {
+                    totalSeconds += duration;
+                    console.log(`  Added as number: ${duration} seconds`);
+                }
+            });
+            
+            console.log('Total seconds:', totalSeconds);
+            // Convert total seconds to hours (rounded to 1 decimal)
+            const hours = (totalSeconds / 3600).toFixed(1);
+            console.log('Total hours:', hours);
+            return hours;
+        })(),
+        certificateId: `CERT-${new Date().getFullYear()}-${courseId}-${user?.id || '000'}`,
         institution: "DocGo",
+        quizScore: quizScore, // Add quiz score to certificate data
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Chargement du certificat...</p>
+                </div>
+            </div>
+        );
+    }
 
     const handleDownloadPDF = async () => {
         setIsDownloading(true);
@@ -176,21 +274,13 @@ export default function Certificate() {
                             </div>
 
                             {/* Details Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-4 md:mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mb-4 md:mb-8">
                                 <div className="bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-lg md:rounded-xl shadow-md md:shadow-lg">
                                     <div className="text-base md:text-2xl font-bold text-blue-600">
-                                        {certificateData.grade}
+                                        {quizScore}% - {certificateData.grade}
                                     </div>
                                     <div className="text-xs md:text-base text-gray-600 font-medium">
                                         Résultat Obtenu
-                                    </div>
-                                </div>
-                                <div className="bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-lg md:rounded-xl shadow-md md:shadow-lg">
-                                    <div className="text-base md:text-2xl font-bold text-purple-600">
-                                        {certificateData.courseHours}h
-                                    </div>
-                                    <div className="text-xs md:text-base text-gray-600 font-medium">
-                                        Durée de Formation
                                     </div>
                                 </div>
                                 <div className="bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-lg md:rounded-xl shadow-md md:shadow-lg">

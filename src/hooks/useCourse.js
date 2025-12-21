@@ -377,7 +377,11 @@ export const useCourse = (courseId) => {
     }, [fetchCourseData]);
 
     // Computed values
-    const isEnrolled = courseData?.userStatus?.isEnrolled || false;
+    const isEnrolled = 
+        courseData?.userStatus?.isEnrolled || 
+        courseData?.userStatus?.applicationStatus === 'approved' ||
+        courseData?.userStatus?.canAccessContent ||
+        false;
     const isFree =
         (courseData?.course?.discountPrice ||
             courseData?.course?.Price ||

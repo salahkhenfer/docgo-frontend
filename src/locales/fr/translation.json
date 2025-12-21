@@ -705,5 +705,23 @@
     "pleaseLoginToVote": "Veuillez vous connecter pour voter sur les FAQ.",
     "alreadyVoted": "Vous avez déjà voté sur cette FAQ.",
     "failedToVote": "Échec de l'envoi du vote. Veuillez réessayer."
+  },
+  "video_player": {
+    "Watch Course": "Regarder le cours",
+    "Back": "Retour",
+    "Back to course": "Retour au cours",
+    "Course Content": "Contenu du cours",
+    "Progress": "Progression",
+    "videos completed": "vidéos terminées",
+    "Quiz unlocked": "Quiz débloqué",
+    "Course Quiz": "Quiz du cours",
+    "Back to Videos": "Retour aux vidéos",
+    "Quiz (locked)": "Quiz (verrouillé)",
+    "Certificate + PDF": "Certificat + PDF",
+    "Certificate + PDF (locked)": "Certificat + PDF (verrouillé)",
+    "No videos available": "Aucune vidéo disponible",
+    "Go back to course": "Retour au cours",
+    "Error loading course": "Erreur de chargement du cours",
+    "Synced": "Synchronisé"
   }
 }

@@ -25,6 +25,7 @@ export function Programs() {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [viewMode, setViewMode] = useState("grid"); // grid or list
   const [searchLoading, setSearchLoading] = useState(false);
   const [showingFeatured, setShowingFeatured] = useState(true);
@@ -109,6 +110,7 @@ export function Programs() {
         const hasFilters =
           filters.category ||
           filters.organization ||
+          filters.status ||
           filters.programType ||
           filters.featured ||
           filters.priceRange ||
@@ -127,6 +129,7 @@ export function Programs() {
             search: debouncedSearch?.trim() || "",
             category: filters.category || "",
             organization: filters.organization || "",
+            status: filters.status || "",
             programType: filters.programType || "",
             featured: filters.featured || "",
             priceRange: filters.priceRange || "",
@@ -149,7 +152,7 @@ export function Programs() {
             }
           });
 
-          response = await clientProgramsAPI.Programss(searchParams);
+          response = await clientProgramsAPI.searchPrograms(searchParams);
         } else {
           // Use regular getPrograms endpoint for all programs
           const getParams = {
@@ -171,7 +174,16 @@ export function Programs() {
           response = await clientProgramsAPI.getPrograms(getParams);
         }
 
+        // Get programs data from response
         const programsData = response.programs || [];
+
+        // Filter programs by selected location if set
+        let filteredPrograms = programsData;
+        if (filters.location) {
+          filteredPrograms = programsData.filter(
+            (p) => p.location && p.location === filters.location
+          );
+        }
 
         // If first page and no search/filters, get featured programs too
         if (page === 1 && !hasSearch && !hasFilters) {
@@ -182,7 +194,7 @@ export function Programs() {
 
             // Remove featured programs from regular results to avoid duplicates
             const featuredIds = new Set(featuredPrograms.map((p) => p.id));
-            const nonFeaturedPrograms = programsData.filter(
+            const nonFeaturedPrograms = filteredPrograms.filter(
               (p) => !featuredIds.has(p.id)
             );
 
@@ -191,11 +203,11 @@ export function Programs() {
             setShowingFeatured(true);
           } catch (featuredError) {
             console.error("Error fetching featured programs:", featuredError);
-            setPrograms(programsData);
+            setPrograms(filteredPrograms);
             setShowingFeatured(false);
           }
         } else {
-          setPrograms(programsData);
+          setPrograms(filteredPrograms);
           setShowingFeatured(false);
         }
 
@@ -230,6 +242,20 @@ export function Programs() {
     [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t]
   );
 
+  // Fetch unique locations
+  const fetchLocations = async () => {
+    try {
+      const response = await clientProgramsAPI.getProgramLocations();
+      const locations = Array.isArray(response.locations)
+        ? response.locations
+        : [];
+      setLocations(locations);
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+      setLocations([]);
+    }
+  };
+
   // Fetch categories and organizations
   const fetchFiltersData = async () => {
     try {
@@ -246,6 +272,9 @@ export function Programs() {
       setCategories(categories);
       setOrganizations(organizations);
 
+      // Fetch locations separately
+      fetchLocations();
+
       // Update organizations count in stats
       setStats((prevStats) => ({
         ...prevStats,
@@ -256,6 +285,7 @@ export function Programs() {
       // Set empty arrays on error to prevent crashes
       setCategories([]);
       setOrganizations([]);
+      setLocations([]);
     }
   };
 
@@ -305,6 +335,7 @@ export function Programs() {
     debouncedSearch,
     filters.category,
     filters.organization,
+    filters.status,
     filters.programType,
     filters.featured,
     filters.priceRange,
@@ -547,12 +578,22 @@ export function Programs() {
               onFilterChange={handleFilterChange}
               categories={categories}
               organizations={organizations}
+              locations={locations}
               onReset={resetFilters}
             />
           </div>
 
           {/* Programs Content */}
           <div className="flex-1">
+            {/* Show selected location if any */}
+            {filters.location && (
+              <div className="mb-4 p-4 bg-green-50 rounded-xl border border-green-200">
+                <span className="text-green-700 font-semibold">
+                  Selected Location:{" "}
+                </span>
+                <span className="text-green-900">{filters.location}</span>
+              </div>
+            )}
             {/* Controls Bar */}
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
               {/* All Programs Header with Featured Note */}

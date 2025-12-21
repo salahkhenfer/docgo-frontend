@@ -72,8 +72,8 @@ export function CourseGrid({
                             Image={course.Image || course.coverImage}
                             title={course.Title}
                             description={course.shortDescription}
-                            price={course.Price}
-                            discountPrice={course.discountPrice}
+                            price={Number(course.Price) || 0}
+                            discountPrice={course.discountPrice ? Number(course.discountPrice) : undefined}
                             currency={course.Currency || "USD"}
                             level={course.Level || course.difficulty}
                             averageRating={

@@ -61,7 +61,7 @@ function AllContentVideosCourse() {
         <div className="flex gap-0  h-full">
           {/* Desktop Sidebar */}
           <div className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
-            <CourseSidebar quizPassed={false} />
+            <CourseSidebar />
           </div>
 
           {/* Mobile Sidebar */}
@@ -104,7 +104,6 @@ function AllContentVideosCourse() {
                 setSidebarOpen={setSidebarOpen}
                 sidebarOpen={sidebarOpen}
                 toggleSidebar={toggleSidebar}
-                quizPassed={false}
               />
             </div>
           </div>

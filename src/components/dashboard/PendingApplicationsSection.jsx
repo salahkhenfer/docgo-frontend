@@ -130,8 +130,8 @@ const PendingApplicationsSection = ({ applications }) => {
                 {allApplications.map((application) => {
                     const item =
                         application.type === "program"
-                            ? application.applicationProgram
-                            : application.applicationCourse;
+                            ? application.applicationProgram || application.Program
+                            : application.applicationCourse || application.Course;
 
                     return (
                         <div
@@ -145,10 +145,13 @@ const PendingApplicationsSection = ({ applications }) => {
                                             ? `${import.meta.env.VITE_API_URL}${
                                                   item.Image
                                               }`
-                                            : "/placeholder-course.png"
+                                            : `/placeholder-${application.type}.png`
                                     }
                                     alt={item?.Title}
-                                    className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                                    className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                                    onError={(e) => {
+                                        e.target.src = `/placeholder-${application.type}.png`;
+                                    }}
                                 />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between mb-2">

@@ -4,7 +4,6 @@ import EnrolledCoursesSection from "./EnrolledCoursesSection";
 import EnrolledProgramsSection from "./EnrolledProgramsSection";
 import PendingApplicationsSection from "./PendingApplicationsSection";
 import Stats from "./Stats";
-import ContactForm from "../contact/ContactForm";
 import Action_Rapid from "./Action_Rapid";
 
 const DashboardOverview = ({
@@ -100,119 +99,10 @@ const DashboardOverview = ({
             <div className="mt-6  gap-8">
                 {/* Left Column - Recent Activity */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* Recent Course Progress */}
-                    <div className="bg-white rounded-lg shadow-sm p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                                {t(
-                                    "dashboard_data.recentCourses",
-                                    "Recent Course Progress"
-                                )}
-                            </h3>
-                            <Link
-                                to="/courses"
-                                className="text-blue-600 hover:text-blue-800 text-sm"
-                            >
-                                {t("dashboard_data.viewAll", "View All")}
-                            </Link>
-                        </div>
-                        <div className="space-y-4">
-                            {recentActivity.progress.length > 0 ? (
-                                recentActivity.progress.map((progress) => (
-                                    <div
-                                        key={progress.id}
-                                        className="flex items-center p-4 border border-gray-200 rounded-lg"
-                                    >
-                                        <img
-                                            src={
-                                                progress.Course?.Image
-                                                    ? `${
-                                                          import.meta.env
-                                                              .VITE_API_URL
-                                                      }${progress.Course.Image}`
-                                                    : "/placeholder-course.png"
-                                            }
-                                            alt={progress.Course?.Title}
-                                            className="w-16 h-16 rounded-lg object-cover"
-                                        />
-                                        <div
-                                            className={`${
-                                                isRTL ? "mr-4" : "ml-4"
-                                            } flex-1`}
-                                        >
-                                            <h4 className="font-medium text-gray-900">
-                                                {progress.Course?.Title}
-                                            </h4>
-                                            <p className="text-sm text-gray-500">
-                                                {progress.Course?.Category} •{" "}
-                                                {progress.Course?.Level}
-                                            </p>
-                                            <div className="mt-2">
-                                                <div className="flex items-center justify-between text-sm">
-                                                    <span>
-                                                        {Math.round(
-                                                            progress.CompletionPercentage ||
-                                                                0
-                                                        )}
-                                                        %{" "}
-                                                        {t(
-                                                            "dashboard_data.complete",
-                                                            "Complete"
-                                                        )}
-                                                    </span>
-                                                    <span
-                                                        className={`px-2 py-1 rounded-full text-xs ${
-                                                            progress.IsCompleted
-                                                                ? "bg-green-100 text-green-800"
-                                                                : "bg-blue-100 text-blue-800"
-                                                        }`}
-                                                    >
-                                                        {progress.IsCompleted
-                                                            ? t(
-                                                                  "dashboard_data.completed",
-                                                                  "Completed"
-                                                              )
-                                                            : t(
-                                                                  "dashboard_data.inProgress",
-                                                                  "In Progress"
-                                                              )}
-                                                    </span>
-                                                </div>
-                                                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                                                    <div
-                                                        className="bg-blue-600 h-2 rounded-full"
-                                                        style={{
-                                                            width: `${Math.round(
-                                                                progress.CompletionPercentage ||
-                                                                    0
-                                                            )}%`,
-                                                        }}
-                                                    ></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-gray-500 text-center py-8">
-                                    {t(
-                                        "dashboard_data.noCourses",
-                                        "No course progress yet"
-                                    )}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
                     {/* Recent Applications - Additional content would go here */}
                 </div>
 
                 <div className="space-y-6">
-                    <ContactForm
-                        context="dashboard"
-                        title={t("dashboard_data.contactSupport", "Need Help?")}
-                    />
-
                     {statistics.coursesInProgress > 0 && (
                         <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-sm p-6 text-white">
                             <h3 className="text-lg font-semibold mb-2">

@@ -71,25 +71,25 @@ const UserSidebar = ({ isOpen, onClose }) => {
             badge: 0, // This would come from notifications API
             badgeColor: "bg-red-500",
         },
+        // {
+        //     id: "favorites",
+        //     name: t("dashboard.sidebar.favorites", "Favorites"),
+        //     icon: HeartIcon,
+        //     path: "/dashboard/favorites",
+        //     badge: null,
+        // },
         {
-            id: "favorites",
-            name: t("dashboard.sidebar.favorites", "Favorites"),
-            icon: HeartIcon,
-            path: "/dashboard/favorites",
-            badge: null,
-        },
-        {
-            id: "certificates",
-            name: t("dashboard.sidebar.certificates", "Certificates"),
-            icon: DocumentTextIcon,
-            path: "/dashboard/certificates",
-            badge: null,
-        },
-        {
-            id: "applications",
-            name: t("dashboard.sidebar.applications", "Applications"),
+            id: "applications-programs",
+            name: t("dashboard.sidebar.programApplications", "Program Applications"),
             icon: AcademicCapIcon,
-            path: "/dashboard/applications",
+            path: "/dashboard/applications/programs",
+            badge: null,
+        },
+        {
+            id: "applications-courses",
+            name: t("dashboard.sidebar.courseApplications", "Course Applications"),
+            icon: DocumentTextIcon,
+            path: "/dashboard/applications/courses",
             badge: null,
         },
         // {

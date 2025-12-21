@@ -11,35 +11,57 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
 
 const UserApplications = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAppContext();
+  const { type } = useParams(); // Get 'programs' or 'courses' from URL
   const [applications, setApplications] = useState({
     programs: [],
     courses: [],
   });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("programs");
+  const [activeTab, setActiveTab] = useState(type || "programs");
 
   const isRTL = i18n.language === "ar";
 
   useEffect(() => {
-    if (user?.id) {
-      fetchApplications();
+    if (type) {
+      setActiveTab(type);
     }
-  }, [user?.id]);
+  }, [type]);
 
   const fetchApplications = async () => {
+    if (!user?.id) return;
+    
     try {
       setLoading(true);
+      
+      // Fetch user profile - same as dashboard overview
       const response = await apiClient.get(`/Users/${user.id}/Profile`);
-
-      if (response.data.success && response.data.data.applications) {
-        setApplications(response.data.data.applications);
+      
+      if (response.data.success && response.data.data) {
+        const data = response.data.data;
+        
+        // For courses: show both applications and enrollments
+        const courseApps = data.applications?.courses || [];
+        const courseEnrollments = data.enrollments?.courses || [];
+        const allCourses = [...courseEnrollments, ...courseApps];
+        
+        // For programs: show both applications and enrollments
+        const programApps = data.applications?.programs || [];
+        const programEnrollments = data.enrollments?.programs || [];
+        const allPrograms = [...programEnrollments, ...programApps];
+        
+        setApplications({
+          programs: allPrograms,
+          courses: allCourses,
+        });
+      } else {
+        setApplications({ programs: [], courses: [] });
       }
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -49,12 +71,17 @@ const UserApplications = () => {
     }
   };
 
+  useEffect(() => {
+    fetchApplications();
+  }, [user?.id]);
+
   const getStatusIcon = (status) => {
     if (!status) return <ClockIcon className="h-5 w-5 text-gray-400" />;
 
     switch (status.toLowerCase()) {
       case "approved":
       case "accepted":
+      case "active":
         return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
       case "rejected":
       case "declined":
@@ -73,6 +100,7 @@ const UserApplications = () => {
     switch (status.toLowerCase()) {
       case "approved":
       case "accepted":
+      case "active":
         return "bg-green-100 text-green-800";
       case "rejected":
       case "declined":
@@ -80,12 +108,15 @@ const UserApplications = () => {
       case "pending":
       case "under_review":
         return "bg-yellow-100 text-yellow-800";
+      case "completed":
+        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const tabs = [
+  // Only show tabs if not coming from a specific route
+  const tabs = type ? [] : [
     {
       id: "programs",
       name: t("applications.programs", "Program Applications"),
@@ -112,6 +143,16 @@ const UserApplications = () => {
     const description =
       item?.Description || item?.description || item?.short_description || "";
     const imageUrl = item?.Image || item?.image || item?.thumbnail;
+
+    // Determine status for display
+    const isEnrollment = !!application.EnrolledAt;
+    let displayStatus = application.Status || "Pending";
+    if (
+      isEnrollment ||
+      ["approved", "accepted", "active"].includes((application.Status || "").toLowerCase())
+    ) {
+      displayStatus = "Active";
+    }
 
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
@@ -141,13 +182,13 @@ const UserApplications = () => {
             </div>
 
             <div className="flex items-center space-x-2">
-              {getStatusIcon(application.Status)}
+              {getStatusIcon(displayStatus)}
               <span
                 className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(
-                  application.Status
+                  displayStatus
                 )}`}
               >
-                {application.Status || "Pending"}
+                {displayStatus}
               </span>
             </div>
           </div>
@@ -157,8 +198,10 @@ const UserApplications = () => {
             <div className="flex items-center">
               <CalendarDaysIcon className="h-4 w-4 mr-2 text-gray-400" />
               <span>
-                {t("applications.appliedOn", "Applied")}:{" "}
-                {new Date(application.createdAt).toLocaleDateString()}
+                {isEnrollment
+                  ? t("applications.enrolledOn", "Enrolled")
+                  : t("applications.appliedOn", "Applied")}:{" "}
+                {new Date(application.createdAt || application.EnrolledAt).toLocaleDateString()}
               </span>
             </div>
             {application.ReviewedAt && (
@@ -243,12 +286,14 @@ const UserApplications = () => {
 
               {application.Status &&
                 (application.Status.toLowerCase() === "approved" ||
-                  application.Status.toLowerCase() === "accepted") && (
+                  application.Status.toLowerCase() === "accepted" ||
+                  application.Status.toLowerCase() === "active" ||
+                  isEnrollment) && (
                   <Link
                     to={
                       type === "program"
-                        ? "/dashboard"
-                        : `/courses/${application.CourseId}/learn`
+                        ? `/Programs/${application.ProgramId}`
+                        : `/Courses/${application.CourseId}/watch`
                     }
                     className="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
                   >
@@ -272,21 +317,36 @@ const UserApplications = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center">
               <AcademicCapIcon className="h-7 w-7 text-blue-600 mr-3" />
-              {t("applications.title", "My Applications")}
+              {type === "programs"
+                ? t("applications.programTitle", "My Program Applications")
+                : type === "courses"
+                ? t("applications.courseTitle", "My Course Applications")
+                : t("applications.title", "My Applications")}
             </h1>
             <p className="mt-1 text-gray-600">
-              {t(
-                "applications.subtitle",
-                "Track your course and program applications"
-              )}
+              {type === "programs"
+                ? t(
+                    "applications.programSubtitle",
+                    "Track your program applications and their status"
+                  )
+                : type === "courses"
+                ? t(
+                    "applications.courseSubtitle",
+                    "Track your course applications and their status"
+                  )
+                : t(
+                    "applications.subtitle",
+                    "Track your course and program applications"
+                  )}
             </p>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-6 border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            {tabs.map((tab) => {
+        {/* Tabs - Only show if not coming from a specific route */}
+        {tabs.length > 0 && (
+          <div className="mt-6 border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
@@ -316,6 +376,7 @@ const UserApplications = () => {
             })}
           </nav>
         </div>
+        )}
       </div>
 
       {/* Content */}

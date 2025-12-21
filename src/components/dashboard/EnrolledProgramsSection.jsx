@@ -119,28 +119,6 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                   </span>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">
-                      {t("dashboard.progress", "Progress")}
-                    </span>
-                    <span className="text-green-600 font-medium">
-                      {Math.round(enrollment.progressPercentage || 0)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                      style={{
-                        width: `${Math.round(
-                          enrollment.progressPercentage || 0
-                        )}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-
                 {/* Status and Scholarship Info */}
                 <div className="flex items-center justify-between mb-3">
                   <span

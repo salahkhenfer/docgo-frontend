@@ -158,12 +158,12 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                     </p>
 
                     {/* Course Description */}
-                    <p className="text-base sm:text-lg text-white mb-8 sm:mb-10 leading-relaxed max-w-3xl">
+                    <div className="text-base sm:text-lg text-white mb-8 sm:mb-10 leading-relaxed max-w-3xl">
                         <RichTextDisplay
                             content={course.Description || course.description}
                             className="text-white"
                         />
-                    </p>
+                    </div>
 
                     {/* Course Tags */}
                     <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">

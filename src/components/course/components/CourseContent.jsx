@@ -26,16 +26,21 @@ const CourseContent = ({
     return (
         <div className="space-y-8">
             {/* Prerequisites */}
-            {course.Prerequisites ? (
-                <RichTextDisplay
-                    textClassName=""
-                    content={course.Prerequisites || course.prerequisites}
-                />
-            ) : (
-                <p className="text-gray-500">
-                    {t("course_data.no_prerequisites") || "No prerequisites"}
-                </p>
-            )}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    {t("course_data.prerequisites") || "Prerequisites"}
+                </h3>
+                {course.Prerequisites ? (
+                    <RichTextDisplay
+                        textClassName=""
+                        content={course.Prerequisites || course.prerequisites}
+                    />
+                ) : (
+                    <p className="text-gray-500">
+                        {t("course_data.no_prerequisites") || "No prerequisites"}
+                    </p>
+                )}
+            </div>
 
             {/* Learning Objectives */}
             {course.objectives && course.objectives.length > 0 && (

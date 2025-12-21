@@ -1,4 +1,4 @@
-import { BookOpen, Clock, MapPin, Star, Tag, Users } from "lucide-react";
+import { BookOpen, Clock, MapPin, Star, Tag } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -319,17 +319,6 @@ export function ProgramCard({ program, onClick, language = "en" }) {
               </span>
             </div>
           )}
-
-          {/* Available Slots */}
-          {program.totalSlots && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Users className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-500">{t("Slots") || "Slots"}:</span>
-              <span className="font-medium">
-                {program.availableSlots || 0}/{program.totalSlots}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Tags */}
@@ -394,7 +383,10 @@ ProgramCard.propTypes = {
     isRemote: PropTypes.bool,
     Image: PropTypes.string,
     applicationDeadline: PropTypes.string,
-    scholarshipAmount: PropTypes.number,
+    scholarshipAmount: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     totalSlots: PropTypes.number,
     availableSlots: PropTypes.number,
     tags: PropTypes.array,

@@ -69,7 +69,10 @@ export const EnrollmentAPI = {
                 message: "Course progress fetched successfully",
             };
         } catch (error) {
-            console.error("Get course progress error:", error);
+            // 404 is expected when no progress exists yet
+            if (error.response?.status !== 404) {
+                console.error("Get course progress error:", error);
+            }
             return {
                 success: false,
                 message:
@@ -100,6 +103,31 @@ export const EnrollmentAPI = {
                 message:
                     error.response?.data?.message ||
                     "Failed to update course progress",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
+
+    // Submit quiz results
+    submitQuizResults: async (courseId, quizData) => {
+        try {
+            const response = await apiClient.post(
+                `/enrollment/courses/${courseId}/quiz-results`,
+                quizData
+            );
+
+            return {
+                success: true,
+                data: response.data.data,
+                message: "Quiz results submitted successfully",
+            };
+        } catch (error) {
+            console.error("Submit quiz results error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    "Failed to submit quiz results",
                 error: error.response?.data?.error || error.message,
             };
         }

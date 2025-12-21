@@ -13,7 +13,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { IoMdRefresh } from "react-icons/io";
@@ -63,6 +63,15 @@ export const Course = () => {
     hasData,
     paymentStatus, // Add payment status
   } = useCourse(courseId);
+
+  // Debug enrollment status
+  useEffect(() => {
+    if (courseData) {
+      console.log("Course Data:", courseData);
+      console.log("Is Enrolled:", isEnrolled);
+      console.log("User Status:", courseData.userStatus);
+    }
+  }, [courseData, isEnrolled]);
 
   const formatCurrency = (amount, currency = "USD") => {
     if (!amount) return t("Free") || "Free";
@@ -368,14 +377,23 @@ export const Course = () => {
                   alt={courseTitle}
                   className="w-full h-full object-cover"
                 />
-                {/* Video Play Button - will be functional when video field is added */}
+                {/* Video Play Button */}
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                  <button
-                    onClick={() => setShowVideo(true)}
-                    className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
-                  >
-                    <PlayCircle className="w-12 h-12 text-blue-600" />
-                  </button>
+                  {isEnrolled ? (
+                    <button
+                      onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                      className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
+                    >
+                      <PlayCircle className="w-16 h-16" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowVideo(true)}
+                      className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
+                    >
+                      <PlayCircle className="w-12 h-12 text-blue-600" />
+                    </button>
+                  )}
                 </div>
               </>
             ) : (
@@ -406,6 +424,17 @@ export const Course = () => {
                 >
                   {courseDescription}
                 </p>
+              )}
+
+              {/* Watch Course Button for Enrolled Users */}
+              {isEnrolled && (
+                <button
+                  onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                  className="mb-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg flex items-center gap-3"
+                >
+                  <PlayCircle className="w-6 h-6" />
+                  {t("Watch Course") || "Watch Course"}
+                </button>
               )}
 
               {/* Course Stats */}

@@ -111,19 +111,23 @@ const generatePDFCertificate = async (certificateData) => {
   const detailsY = line2 ? 1000 : 950;
   ctx.font = "bold 40px 'Poppins', sans-serif"; // Reduced from 50px
   ctx.fillStyle = "#3b82f6";
-  ctx.fillText(certificateData.grade, canvas.width / 2 - 600, detailsY);
-  ctx.fillText(certificateData.courseHours + "h", canvas.width / 2, detailsY);
+  
+  // Show score percentage with grade
+  const scoreText = certificateData.quizScore 
+    ? `${certificateData.quizScore}% - ${certificateData.grade}`
+    : certificateData.grade;
+  ctx.fillText(scoreText, canvas.width / 2 - 300, detailsY);
+  
   ctx.fillText(
     new Date(certificateData.completionDate).toLocaleDateString("fr-FR"),
-    canvas.width / 2 + 600,
+    canvas.width / 2 + 300,
     detailsY
   );
 
   ctx.font = "500 30px 'Poppins', sans-serif"; // Reduced from 35px
   ctx.fillStyle = "#6b7280";
-  ctx.fillText("Résultat", canvas.width / 2 - 600, detailsY + 50);
-  ctx.fillText("Durée", canvas.width / 2, detailsY + 50);
-  ctx.fillText("Date", canvas.width / 2 + 600, detailsY + 50);
+  ctx.fillText("Résultat", canvas.width / 2 - 300, detailsY + 50);
+  ctx.fillText("Date", canvas.width / 2 + 300, detailsY + 50);
 
   // Signatures with adjusted sizes and positions
   const signaturesY = canvas.height - 300;

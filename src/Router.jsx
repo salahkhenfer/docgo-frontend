@@ -23,8 +23,10 @@ import AllContentVideosCourse from "./components/course/courseVideosContent/AllC
 import QuizContent from "./Pages/QuizContent";
 import CourseVideosContent from "./components/course/courseVideosContent/CourseVideosContent";
 import Course from "./Pages/Course";
+import CourseVideos from "./Pages/CourseVideos";
 import { CourseDetails } from "./components/course/CourseDetails";
 import Certificate from "./Pages/Certificate";
+import CourseResources from "./Pages/CourseResources";
 import Profile from "./Pages/Profile/Profile";
 import EditProfile from "./Pages/Profile/EditProfile";
 import NotificationsPage from "./Pages/NotificationsPage";
@@ -130,28 +132,54 @@ const Routers = createBrowserRouter([
                         index: true,
                         element: <CourseDetails />,
                     },
+                ],
+            },
+            {
+                path: "Courses/:courseId/watch",
+                loader: protectedCaseInsensitiveLoader,
+                element: <CourseVideos />,
+            },
+            {
+                path: "Courses/:courseId/watch/quiz",
+                loader: protectedCaseInsensitiveLoader,
+                element: <AllContentVideosCourse />,
+                children: [
                     {
-                        path: "videos",
-                        loader: protectedCaseInsensitiveLoader,
-                        element: <AllContentVideosCourse />,
-                        children: [
-                            {
-                                index: true,
-                                element: <CourseVideosContent />,
-                            },
-                            {
-                                path: ":videoId",
-                                element: <CourseVideosContent />,
-                            },
-                            {
-                                path: "quiz",
-                                element: <QuizContent />,
-                            },
-                            {
-                                path: "certificate",
-                                element: <Certificate />,
-                            },
-                        ],
+                        index: true,
+                        element: <QuizContent />,
+                    },
+                ],
+            },
+            {
+                path: "Courses/:courseId/watch/certificate",
+                loader: protectedCaseInsensitiveLoader,
+                element: <Certificate />,
+            },
+            {
+                path: "Courses/:courseId/watch/resources",
+                loader: protectedCaseInsensitiveLoader,
+                element: <CourseResources />,
+            },
+            {
+                path: "Courses/:courseId/videos",
+                loader: protectedCaseInsensitiveLoader,
+                element: <AllContentVideosCourse />,
+                children: [
+                    {
+                        index: true,
+                        element: <CourseVideosContent />,
+                    },
+                    {
+                        path: ":videoId",
+                        element: <CourseVideosContent />,
+                    },
+                    {
+                        path: "quiz",
+                        element: <QuizContent />,
+                    },
+                    {
+                        path: "certificate",
+                        element: <Certificate />,
                     },
                 ],
             },
@@ -223,7 +251,7 @@ const Routers = createBrowserRouter([
                         element: <UserFavorites />,
                     },
                     {
-                        path: "applications",
+                        path: "applications/:type",
                         element: <UserApplications />,
                     },
                     {

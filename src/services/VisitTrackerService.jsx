@@ -52,8 +52,18 @@ class VisitService {
             await api.put(`/visit/duration/${this.currentVisitId}`, {
                 duration,
             });
+            
+            // Clear the visit ID after successful update to prevent duplicate updates
+            this.currentVisitId = null;
+            this.visitStartTime = null;
         } catch (error) {
-            console.error("Error updating visit duration:", error);
+            // Only log non-400 errors (400 means visit already processed or invalid)
+            if (error.response?.status !== 400) {
+                console.error("Error updating visit duration:", error);
+            }
+            // Clear the visit ID even on error to prevent retry loops
+            this.currentVisitId = null;
+            this.visitStartTime = null;
         }
     }
 

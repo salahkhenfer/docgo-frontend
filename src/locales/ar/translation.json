@@ -701,5 +701,23 @@
     "pleaseLoginToVote": "يرجى تسجيل الدخول للتصويت على الأسئلة الشائعة.",
     "alreadyVoted": "لقد قمت بالتصويت على هذا السؤال بالفعل.",
     "failedToVote": "فشل في إرسال التصويت. يرجى المحاولة مرة أخرى."
+  },
+  "video_player": {
+    "Watch Course": "شاهد الدورة",
+    "Back": "رجوع",
+    "Back to course": "العودة إلى الدورة",
+    "Course Content": "محتوى الدورة",
+    "Progress": "التقدم",
+    "videos completed": "فيديوهات مكتملة",
+    "Quiz unlocked": "تم فتح الاختبار",
+    "Course Quiz": "اختبار الدورة",
+    "Back to Videos": "العودة إلى الفيديوهات",
+    "Quiz (locked)": "الاختبار (مقفل)",
+    "Certificate + PDF": "الشهادة + PDF",
+    "Certificate + PDF (locked)": "الشهادة + PDF (مقفل)",
+    "No videos available": "لا توجد فيديوهات متاحة",
+    "Go back to course": "العودة إلى الدورة",
+    "Error loading course": "خطأ في تحميل الدورة",
+    "Synced": "متزامن"
   }
 }
