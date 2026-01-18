@@ -42,7 +42,7 @@ const PendingApplicationsSection = ({ applications }) => {
             <p className="text-gray-600 mb-6">
               {t(
                 "dashboard.noPendingApplicationsDescription",
-                "Apply for courses and programs to start your journey!"
+                "Apply for courses and programs to start your journey!",
               )}
             </p>
           </div>
@@ -111,7 +111,7 @@ const PendingApplicationsSection = ({ applications }) => {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-900">
-            {t("dashboard.pendingApplications", "Pending Applications")}
+            {t("dashboard.pendingApplications")}
           </h2>
         </div>
         <div className="text-sm text-gray-500">
@@ -175,8 +175,8 @@ const PendingApplicationsSection = ({ applications }) => {
                         application.status === "pending"
                           ? "bg-yellow-100 text-yellow-800"
                           : application.status === "under_review"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-gray-100 text-gray-800"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {application.status === "pending" &&
@@ -206,7 +206,7 @@ const PendingApplicationsSection = ({ applications }) => {
                           </span>
                           <span className="ml-2 text-gray-900 font-medium">
                             {new Date(
-                              item.applicationDeadline
+                              item.applicationDeadline,
                             ).toLocaleDateString()}
                           </span>
                         </div>
@@ -242,15 +242,15 @@ const PendingApplicationsSection = ({ applications }) => {
                       <span>
                         {t(
                           "dashboard.applicationProgress",
-                          "Application Progress"
+                          "Application Progress",
                         )}
                       </span>
                       <span>
                         {application.status === "submitted"
                           ? "33%"
                           : application.status === "under_review"
-                          ? "66%"
-                          : "10%"}
+                            ? "66%"
+                            : "10%"}
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1">
@@ -259,8 +259,8 @@ const PendingApplicationsSection = ({ applications }) => {
                           application.status === "submitted"
                             ? "bg-amber-500 w-1/3"
                             : application.status === "under_review"
-                            ? "bg-blue-500 w-2/3"
-                            : "bg-yellow-500 w-1/12"
+                              ? "bg-blue-500 w-2/3"
+                              : "bg-yellow-500 w-1/12"
                         }`}
                       ></div>
                     </div>
@@ -315,7 +315,7 @@ PendingApplicationsSection.propTypes = {
           scholarshipAmount: PropTypes.number,
           currency: PropTypes.string,
         }),
-      })
+      }),
     ),
     courses: PropTypes.arrayOf(
       PropTypes.shape({
@@ -329,7 +329,7 @@ PendingApplicationsSection.propTypes = {
           Price: PropTypes.number,
           Currency: PropTypes.string,
         }),
-      })
+      }),
     ),
   }),
 };

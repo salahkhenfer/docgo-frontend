@@ -11,7 +11,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.post(
         "/enrollment/courses/apply",
-        courseData
+        courseData,
       );
 
       return {
@@ -36,7 +36,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.post(
         "/enrollment/courses/enroll-free",
-        courseData
+        courseData,
       );
 
       return {
@@ -59,7 +59,7 @@ export const EnrollmentAPI = {
   getCourseProgress: async (courseId) => {
     try {
       const response = await apiClient.get(
-        `/enrollment/courses/${courseId}/progress`
+        `/enrollment/courses/${courseId}/progress`,
       );
 
       return {
@@ -86,7 +86,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.put(
         `/enrollment/courses/${courseId}/progress`,
-        progressData
+        progressData,
       );
 
       return {
@@ -109,8 +109,8 @@ export const EnrollmentAPI = {
   submitQuizResults: async (courseId, quizData) => {
     try {
       const response = await apiClient.post(
-        `/enrollment/courses/${courseId}/quiz-results`,
-        quizData
+        `/api/courses/${courseId}/quiz-result`,
+        quizData,
       );
 
       return {
@@ -138,7 +138,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.post(
         "/enrollment/programs/apply",
-        programData
+        programData,
       );
 
       return {
@@ -163,7 +163,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.post(
         "/enrollment/programs/enroll-free",
-        programData
+        programData,
       );
 
       return {
@@ -186,7 +186,7 @@ export const EnrollmentAPI = {
   getProgramProgress: async (programId) => {
     try {
       const response = await apiClient.get(
-        `/enrollment/programs/${programId}/progress`
+        `/enrollment/programs/${programId}/progress`,
       );
 
       return {
@@ -235,7 +235,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.get(
         "/enrollment/courses/my-applications",
-        { params }
+        { params },
       );
 
       return {
@@ -260,7 +260,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.get(
         "/enrollment/programs/my-applications",
-        { params }
+        { params },
       );
 
       return {
@@ -285,7 +285,7 @@ export const EnrollmentAPI = {
     try {
       const response = await apiClient.get(
         "/enrollment/programs/my-enrollments",
-        { params }
+        { params },
       );
 
       return {

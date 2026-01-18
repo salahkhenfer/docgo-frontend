@@ -1,6 +1,5 @@
 import {
   AcademicCapIcon,
-  BellIcon,
   ChatBubbleLeftRightIcon,
   DocumentTextIcon,
   EnvelopeIcon,
@@ -60,14 +59,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
       badge: contactStats.unread > 0 ? contactStats.unread : null,
       badgeColor: "bg-blue-500",
     },
-    {
-      id: "notifications",
-      name: t("dashboard.sidebar.notifications", "Notifications"),
-      icon: BellIcon,
-      path: "/dashboard/notifications",
-      badge: 0, // This would come from notifications API
-      badgeColor: "bg-red-500",
-    },
+    // Notifications removed from sidebar
     // {
     //     id: "favorites",
     //     name: t("dashboard.sidebar.favorites", "Favorites"),
@@ -128,8 +120,8 @@ const UserSidebar = ({ isOpen, onClose }) => {
               isOpen
                 ? "translate-x-0"
                 : isRTL
-                ? "translate-x-full"
-                : "-translate-x-full"
+                  ? "translate-x-full"
+                  : "-translate-x-full"
             }  max-h-[100vh] `}
       >
         {/* Header */}

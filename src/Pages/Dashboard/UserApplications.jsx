@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
+import { PaymentAPI } from "../../API/Payment";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
 
@@ -23,6 +24,13 @@ const UserApplications = () => {
     programs: [],
     courses: [],
   });
+
+  // Debug: Log programs data when it changes
+  useEffect(() => {
+    if (applications.programs && applications.programs.length > 0) {
+      console.log("Programs data:", applications.programs);
+    }
+  }, [applications.programs]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(type || "programs");
 
@@ -134,6 +142,45 @@ const UserApplications = () => {
       ];
 
   const ApplicationCard = ({ application, type }) => {
+    const [paymentStatus, setPaymentStatus] = useState(null);
+
+    useEffect(() => {
+      const checkPaymentStatus = async () => {
+        const itemId =
+          type === "program"
+            ? application.ProgramId || application.Program?.id
+            : application.CourseId || application.Course?.id;
+        if (itemId && type) {
+          const result = await PaymentAPI.checkPaymentApplication(type, itemId);
+          if (result.success && result.data) {
+            setPaymentStatus(result.data.status);
+          }
+        }
+      };
+      checkPaymentStatus();
+    }, [application.id, type]);
+
+    // Debug: Log status and paymentStatus for each program application after paymentStatus is updated
+    useEffect(() => {
+      if (type === "program") {
+        console.log(
+          "Program Application FULL OBJECT",
+          application.id,
+          application,
+        );
+        console.log("Program Application", application.id, {
+          Status: application.Status,
+          EnrolledAt: application.EnrolledAt,
+          paymentStatus,
+        });
+      }
+    }, [
+      type,
+      application.id,
+      application.Status,
+      application.EnrolledAt,
+      paymentStatus,
+    ]);
     // Get the item using the same pattern as PendingApplicationsSection
     const item =
       type === "program"
@@ -146,13 +193,25 @@ const UserApplications = () => {
       item?.Description || item?.description || item?.short_description || "";
     const imageUrl = item?.Image || item?.image || item?.thumbnail;
 
-    // Determine status for display
-    const isEnrollment = !!application.EnrolledAt;
-    let displayStatus = application.Status || "Pending";
-    if (
+    // Use correct backend property names for status and enrollment
+    const isEnrollment = !!(
+      application.EnrolledAt ||
+      application.enrollDate ||
+      application.enrollmentDate
+    );
+    // Prefer 'status' (lowercase) for program applications, fallback to Status (uppercase) for others
+    let displayStatus = application.status || application.Status || "Pending";
+
+    if (paymentStatus) {
+      if (paymentStatus === "approved") {
+        displayStatus = "Active";
+      } else if (paymentStatus === "pending") {
+        displayStatus = "Pending";
+      }
+    } else if (
       isEnrollment ||
       ["approved", "accepted", "active"].includes(
-        (application.Status || "").toLowerCase()
+        (displayStatus || "").toLowerCase(),
       )
     ) {
       displayStatus = "Active";
@@ -189,7 +248,7 @@ const UserApplications = () => {
               {getStatusIcon(displayStatus)}
               <span
                 className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(
-                  displayStatus
+                  displayStatus,
                 )}`}
               >
                 {displayStatus}
@@ -207,7 +266,7 @@ const UserApplications = () => {
                   : t("applications.appliedOn", "Applied")}
                 :{" "}
                 {new Date(
-                  application.createdAt || application.EnrolledAt
+                  application.createdAt || application.EnrolledAt,
                 ).toLocaleDateString()}
               </span>
             </div>
@@ -252,10 +311,10 @@ const UserApplications = () => {
                   application.Status.toLowerCase() === "accepted")
                   ? "bg-green-50 border-l-green-400"
                   : application.Status &&
-                    (application.Status.toLowerCase() === "rejected" ||
-                      application.Status.toLowerCase() === "declined")
-                  ? "bg-red-50 border-l-red-400"
-                  : "bg-yellow-50 border-l-yellow-400"
+                      (application.Status.toLowerCase() === "rejected" ||
+                        application.Status.toLowerCase() === "declined")
+                    ? "bg-red-50 border-l-red-400"
+                    : "bg-yellow-50 border-l-yellow-400"
               }`}
             >
               <h4 className="text-sm font-medium text-gray-900 mb-1">
@@ -327,24 +386,24 @@ const UserApplications = () => {
               {type === "programs"
                 ? t("applications.programTitle", "My Program Applications")
                 : type === "courses"
-                ? t("applications.courseTitle", "My Course Applications")
-                : t("applications.title", "My Applications")}
+                  ? t("applications.courseTitle", "My Course Applications")
+                  : t("applications.title", "My Applications")}
             </h1>
             <p className="mt-1 text-gray-600">
               {type === "programs"
                 ? t(
                     "applications.programSubtitle",
-                    "Track your program applications and their status"
+                    "Track your program applications and their status",
                   )
                 : type === "courses"
-                ? t(
-                    "applications.courseSubtitle",
-                    "Track your course applications and their status"
-                  )
-                : t(
-                    "applications.subtitle",
-                    "Track your course and program applications"
-                  )}
+                  ? t(
+                      "applications.courseSubtitle",
+                      "Track your course applications and their status",
+                    )
+                  : t(
+                      "applications.subtitle",
+                      "Track your course and program applications",
+                    )}
             </p>
           </div>
         </div>
@@ -405,13 +464,13 @@ const UserApplications = () => {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
                       {t(
                         "applications.noProgramApplications",
-                        "No program applications"
+                        "No program applications",
                       )}
                     </h3>
                     <p className="text-gray-600 mb-4">
                       {t(
                         "applications.noProgramApplicationsText",
-                        "You haven't applied to any programs yet."
+                        "You haven't applied to any programs yet.",
                       )}
                     </p>
                     <Link
@@ -443,13 +502,13 @@ const UserApplications = () => {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
                       {t(
                         "applications.noCourseApplications",
-                        "No course applications"
+                        "No course applications",
                       )}
                     </h3>
                     <p className="text-gray-600 mb-4">
                       {t(
                         "applications.noCourseApplicationsText",
-                        "You haven't applied to any courses yet."
+                        "You haven't applied to any courses yet.",
                       )}
                     </p>
                     <Link

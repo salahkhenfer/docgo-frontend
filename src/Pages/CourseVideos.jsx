@@ -71,12 +71,12 @@ export function CourseVideos() {
               videoProgress: videoProgs,
               lastUpdated:
                 backendProgress.lastUpdated || new Date().toISOString(),
-            })
+            }),
           );
         } else {
           // Fallback to localStorage if backend fails
           const savedProgress = localStorage.getItem(
-            `course_${courseId}_progress`
+            `course_${courseId}_progress`,
           );
           if (savedProgress) {
             const progress = JSON.parse(savedProgress);
@@ -91,7 +91,7 @@ export function CourseVideos() {
         }
         // Fallback to localStorage
         const savedProgress = localStorage.getItem(
-          `course_${courseId}_progress`
+          `course_${courseId}_progress`,
         );
         if (savedProgress) {
           const progress = JSON.parse(savedProgress);
@@ -107,7 +107,7 @@ export function CourseVideos() {
   // Load certificate unlock status - check both quiz completion and score
   useEffect(() => {
     const quizCompleted = localStorage.getItem(
-      `course_${courseId}_quiz_completed`
+      `course_${courseId}_quiz_completed`,
     );
     const quizScore = localStorage.getItem(`course_${courseId}_quiz_score`);
 
@@ -121,7 +121,7 @@ export function CourseVideos() {
     // Also listen for storage changes (when quiz is completed in the same tab)
     const handleStorageChange = () => {
       const completed = localStorage.getItem(
-        `course_${courseId}_quiz_completed`
+        `course_${courseId}_quiz_completed`,
       );
       if (completed === "true") {
         setIsCertificateUnlocked(true);
@@ -157,7 +157,7 @@ export function CourseVideos() {
       // Save to localStorage immediately
       localStorage.setItem(
         `course_${courseId}_progress`,
-        JSON.stringify(progressData)
+        JSON.stringify(progressData),
       );
 
       // Sync to backend
@@ -168,7 +168,7 @@ export function CourseVideos() {
           videoProgress: progress,
           totalVideos: totalVideos,
           overallProgress: Math.round(
-            (completed.size / (totalVideos || 1)) * 100
+            (completed.size / (totalVideos || 1)) * 100,
           ),
         });
 
@@ -181,7 +181,7 @@ export function CourseVideos() {
         setIsSyncing(false);
       }
     },
-    [courseId]
+    [courseId],
   );
 
   if (loading) return <MainLoading />;
@@ -217,7 +217,7 @@ export function CourseVideos() {
   console.log("Course resources:", course.resources);
   console.log(
     "Has resources:",
-    course.resources && course.resources.length > 0
+    course.resources && course.resources.length > 0,
   );
 
   // Debounced function to update video progress to backend
@@ -299,7 +299,7 @@ export function CourseVideos() {
             ...videoProgress,
             [videoId]: progressPercent,
           },
-          videos.length
+          videos.length,
         );
       }
     }
@@ -420,7 +420,7 @@ export function CourseVideos() {
   return (
     <div className="flex w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
       {/* Mobile Header with Sidebar Toggle */}
-      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-20 shadow-sm">
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
@@ -434,7 +434,7 @@ export function CourseVideos() {
           </h1>
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all"
+            className="p-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all"
             aria-label="Toggle course menu"
           >
             <svg
@@ -473,7 +473,7 @@ export function CourseVideos() {
 
       {/* Main Content Container */}
       <div className="flex-1 w-full max-w-[1360px] mx-auto px-4">
-        <div className="flex gap-0 h-full">
+        <div className="lg-md::flex  gap-0 h-full">
           {/* Sidebar - Desktop */}
           <aside className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
             <div className="flex flex-col items-start pr-6 pl-8 border-r border-gray-200 min-h-screen bg-white shadow-sm">
@@ -560,8 +560,8 @@ export function CourseVideos() {
                             isCompleted
                               ? "border-green-500 bg-green-50 hover:bg-green-100 hover:shadow-md"
                               : isActive
-                              ? "border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
-                              : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                                ? "border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
+                                : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm"
                           }`}
                         >
                           {/* Icon */}
@@ -598,8 +598,8 @@ export function CourseVideos() {
                                 isCompleted
                                   ? "text-green-700"
                                   : isActive
-                                  ? "text-blue-700"
-                                  : "text-gray-700 group-hover:text-blue-600"
+                                    ? "text-blue-700"
+                                    : "text-gray-700 group-hover:text-blue-600"
                               }`}
                             >
                               {video.title}
@@ -729,7 +729,7 @@ export function CourseVideos() {
             <div className="h-full overflow-y-auto pt-16 px-6">
               <button
                 onClick={toggleSidebar}
-                className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 <svg
                   className="w-6 h-6"
@@ -767,8 +767,8 @@ export function CourseVideos() {
                           isCompleted
                             ? "border-green-500 bg-green-50 hover:bg-green-100 hover:shadow-md"
                             : isActive
-                            ? "border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
-                            : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                              ? "border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
+                              : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm"
                         }`}
                       >
                         {/* Icon */}
@@ -805,8 +805,8 @@ export function CourseVideos() {
                               isCompleted
                                 ? "text-green-700"
                                 : isActive
-                                ? "text-blue-700"
-                                : "text-gray-700 group-hover:text-blue-600"
+                                  ? "text-blue-700"
+                                  : "text-gray-700 group-hover:text-blue-600"
                             }`}
                           >
                             {video.title}
@@ -932,6 +932,217 @@ export function CourseVideos() {
           <main className="flex-1 min-w-0 ml-5 w-[72%] max-md:ml-0 max-md:w-full">
             {showCertificate ? (
               <div className="flex flex-col w-full max-md:mt-8 max-md:max-w-full">
+                {/* Mobile Sidebar */}
+                <div
+                  className={`md:hidden fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                  }`}
+                >
+                  <div className="h-full overflow-y-auto pt-16 px-6">
+                    <button
+                      onClick={toggleSidebar}
+                      className="absolute top-4 right-4 p-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+
+                    <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                      <Play className="w-5 h-5 text-blue-600" />
+                      {t("Course Content")}
+                    </h2>
+
+                    <nav className="space-y-4">
+                      {videos.map((video, index) => {
+                        const isActive = index === currentVideoIndex;
+                        const videoId = video.id || index;
+                        const isCompleted = completedVideos.has(videoId);
+                        const progress = videoProgress[videoId] || 0;
+                        const hasProgress = progress > 0 && progress < 90;
+
+                        return (
+                          <div key={video.id || index} className="relative">
+                            <button
+                              onClick={() => handleVideoSelect(index)}
+                              className={`flex gap-4 items-center p-4 w-full rounded-xl border-2 transition-all duration-200 text-left group ${
+                                isCompleted
+                                  ? "border-green-500 bg-green-50 hover:bg-green-100 hover:shadow-md"
+                                  : isActive
+                                    ? "border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
+                                    : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                              }`}
+                            >
+                              {/* Icon */}
+                              <div
+                                className={`flex-shrink-0 ${
+                                  isCompleted ? "animate-pulse" : ""
+                                }`}
+                              >
+                                {isCompleted ? (
+                                  <FaCheckCircle className="w-6 h-6 text-green-600" />
+                                ) : (
+                                  <div
+                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                      isActive
+                                        ? "border-blue-600 bg-blue-100"
+                                        : "border-gray-300"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`text-xs font-semibold ${
+                                        isActive
+                                          ? "text-blue-600"
+                                          : "text-gray-500"
+                                      }`}
+                                    >
+                                      {index + 1}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Title and Progress */}
+                              <div className="flex-1">
+                                <span
+                                  className={`font-medium block ${
+                                    isCompleted
+                                      ? "text-green-700"
+                                      : isActive
+                                        ? "text-blue-700"
+                                        : "text-gray-700 group-hover:text-blue-600"
+                                  }`}
+                                >
+                                  {video.title}
+                                </span>
+
+                                {/* Progress bar for partially watched videos */}
+                                {hasProgress && !isCompleted && (
+                                  <div className="mt-2 w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                    <div
+                                      className="bg-blue-500 h-1.5 rounded-full transition-all duration-300"
+                                      style={{ width: `${progress}%` }}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Status Icon */}
+                              {isActive ? (
+                                <Play className="w-4 h-4 text-blue-600 animate-pulse flex-shrink-0" />
+                              ) : (
+                                !isCompleted && (
+                                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                                )
+                              )}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </nav>
+
+                    {/* Quiz and Certificate - Mobile */}
+                    <div className="mt-8 space-y-4">
+                      {/* Resources Button - Mobile - Always show */}
+                      <button
+                        onClick={() => {
+                          setShowResources(true);
+                          setShowQuiz(false);
+                          setShowCertificate(false);
+                          setSidebarOpen(false);
+                        }}
+                        className="w-full p-4 rounded-xl border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-red-50 hover:border-orange-300 transition-all"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-orange-600" />
+                          <div className="flex-1 text-left">
+                            <span className="font-semibold text-orange-700 block">
+                              {t("Resources")}
+                            </span>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-orange-600" />
+                        </div>
+                      </button>
+
+                      {/* Show quiz section only if course has quiz */}
+                      {hasQuiz && (
+                        <div
+                          className={`p-4 rounded-xl border-2 transition-all ${
+                            isQuizUnlocked
+                              ? "border-green-500 bg-gradient-to-r from-green-50 to-emerald-50"
+                              : "border-gray-200 bg-gray-50"
+                          }`}
+                        >
+                          {isQuizUnlocked ? (
+                            <button
+                              onClick={() => {
+                                setShowQuiz(true);
+                                setShowResources(false);
+                                setShowCertificate(false);
+                                setSidebarOpen(false);
+                              }}
+                              className="w-full flex items-center gap-3 text-green-700 font-semibold"
+                            >
+                              <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
+                              <span className="flex-1">
+                                {t("Quiz unlocked")}
+                              </span>
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          ) : (
+                            <div className="flex items-center gap-3 text-gray-400">
+                              <FaLock className="w-5 h-5" />
+                              <span className="flex-1 text-sm">
+                                {t("Quiz (locked)")}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div
+                        className={`p-4 rounded-xl border-2 transition-all ${
+                          isCertificateUnlocked
+                            ? "border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50"
+                            : "border-gray-200 bg-gray-50"
+                        }`}
+                      >
+                        {isCertificateUnlocked ? (
+                          <button
+                            onClick={() => {
+                              setShowCertificate(true);
+                              setShowQuiz(false);
+                              setShowResources(false);
+                              setSidebarOpen(false);
+                            }}
+                            className="w-full flex items-center gap-3 text-purple-700 font-semibold"
+                          >
+                            <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
+                            <span className="flex-1">{t("Certificate")}</span>
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-3 text-gray-400">
+                            <FaLock className="w-5 h-5" />
+                            <span className="flex-1 text-sm">
+                              {t("Certificate (locked)")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {/* Certificate Header with Back Button */}
                 <div className="flex items-center justify-between mb-6">
                   <h1 className="text-2xl font-semibold text-zinc-800">
@@ -990,7 +1201,23 @@ export function CourseVideos() {
 
                 {/* Quiz Content */}
                 <div className="overflow-hidden w-full">
-                  <QuizContent quizData={course.quiz} />
+                  <QuizContent
+                    quizData={course.quiz}
+                    onQuizResult={(passed) => {
+                      if (passed) {
+                        setShowCertificate(true);
+                        setShowQuiz(false);
+                        setShowResources(false);
+                        setSidebarOpen(false);
+                      } else {
+                        setShowCertificate(false);
+                        setShowQuiz(false);
+                        setShowResources(false);
+                        setSidebarOpen(false);
+                        window.location.reload();
+                      }
+                    }}
+                  />
                 </div>
               </div>
             ) : (
@@ -1025,11 +1252,11 @@ export function CourseVideos() {
                               console.error("Video error:", e);
                               console.error(
                                 "Video source:",
-                                getVideoUrl(currentVideo)
+                                getVideoUrl(currentVideo),
                               );
                               console.error(
                                 "Current video object:",
-                                currentVideo
+                                currentVideo,
                               );
                             }}
                           />
@@ -1064,7 +1291,7 @@ export function CourseVideos() {
                             </h3>
                             <p className="text-gray-400 text-sm">
                               {t(
-                                "This video source is not configured properly"
+                                "This video source is not configured properly",
                               )}
                             </p>
                             <p className="text-gray-500 text-xs mt-2">

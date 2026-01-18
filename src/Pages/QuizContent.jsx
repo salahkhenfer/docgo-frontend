@@ -184,7 +184,7 @@ const QuizResults = ({ results, onRetry, score }) => {
   );
 };
 
-function QuizContent({ quizData: propQuizData }) {
+function QuizContent({ quizData: propQuizData, onQuizResult }) {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const [userAnswers, setUserAnswers] = useState({});
@@ -197,7 +197,7 @@ function QuizContent({ quizData: propQuizData }) {
   React.useEffect(() => {
     const passed = localStorage.getItem(`course_${courseId}_quiz_completed`);
     const lastResultStr = localStorage.getItem(
-      `course_${courseId}_quiz_last_result`
+      `course_${courseId}_quiz_last_result`,
     );
     if (passed === "true" && lastResultStr) {
       try {
@@ -310,28 +310,53 @@ function QuizContent({ quizData: propQuizData }) {
             ? "Bonne réponse !"
             : `La bonne réponse était "${correctAnswer}".`;
         } else if (section.type === "true-false") {
-          isCorrect = userAnswer === correctAnswer;
+          // Accept both English and French values for true/false
+          const normalizeTF = (val) => {
+            if (!val) return "";
+            const v = val.toString().toLowerCase();
+            if (["true", "vrai"].includes(v)) return "true";
+            if (["false", "faux"].includes(v)) return "false";
+            return v;
+          };
+          isCorrect = normalizeTF(userAnswer) === normalizeTF(correctAnswer);
           feedback = isCorrect
             ? "Bonne réponse !"
-            : `La bonne réponse était "${correctAnswer}".`;
+            : `La bonne réponse était \"${correctAnswer}\".`;
         } else if (section.type === "checkbox") {
-          const userSet = new Set(userAnswer || []);
-          const correctSet = new Set(correctAnswer);
+          // Ensure both are arrays
+          const userArr = Array.isArray(userAnswer) ? userAnswer : [];
+          const correctArr = Array.isArray(correctAnswer) ? correctAnswer : [];
+          const userSet = new Set(userArr);
+          const correctSet = new Set(correctArr);
           isCorrect =
             userSet.size === correctSet.size &&
             [...userSet].every((x) => correctSet.has(x));
           feedback = isCorrect
             ? "Bonne réponse !"
-            : `Les bonnes réponses étaient: ${correctAnswer.join(", ")}.`;
+            : `Les bonnes réponses étaient: ${correctArr.join(", ")}.`;
         } else if (section.type === "text") {
-          isCorrect =
-            userAnswer &&
-            userAnswer
+          // Robust text comparison: trim, lowercase, ignore accents, require 70% similarity
+          const normalize = (str) =>
+            (str || "")
               .toLowerCase()
-              .includes(correctAnswer.toLowerCase().split(" ")[0]);
+              .normalize("NFD")
+              .replace(/\p{Diacritic}/gu, "")
+              .replace(/[^a-z0-9 ]/gi, "")
+              .trim();
+          const userNorm = normalize(userAnswer);
+          const correctNorm = normalize(correctAnswer);
+          // Simple similarity: at least 70% of correct answer words must appear in user answer
+          const correctWords = correctNorm.split(" ").filter(Boolean);
+          const userWords = userNorm.split(" ").filter(Boolean);
+          const matchCount = correctWords.filter((w) =>
+            userWords.includes(w),
+          ).length;
+          const similarity =
+            correctWords.length > 0 ? matchCount / correctWords.length : 0;
+          isCorrect = similarity >= 0.7;
           feedback = isCorrect
             ? "Bonne réponse !"
-            : "Votre réponse pourrait être améliorée.";
+            : `Votre réponse pourrait être améliorée. Réponse attendue : ${correctAnswer}`;
         }
 
         results.push({
@@ -357,10 +382,10 @@ function QuizContent({ quizData: propQuizData }) {
 
     try {
       const allQuestions = quizData.sections.flatMap(
-        (section) => section.questions
+        (section) => section.questions,
       );
       const unansweredQuestions = allQuestions.filter(
-        (q) => !userAnswers[q.id] || userAnswers[q.id].length === 0
+        (q) => !userAnswers[q.id] || userAnswers[q.id].length === 0,
       );
 
       if (unansweredQuestions.length > 0) {
@@ -376,7 +401,7 @@ function QuizContent({ quizData: propQuizData }) {
 
       const validationResults = await validateAnswers(userAnswers);
       const correctAnswers = validationResults.filter(
-        (r) => r.isCorrect
+        (r) => r.isCorrect,
       ).length;
       const totalQuestions = validationResults.length;
       const score = Math.round((correctAnswers / totalQuestions) * 100);
@@ -391,7 +416,7 @@ function QuizContent({ quizData: propQuizData }) {
       };
       localStorage.setItem(
         `course_${courseId}_quiz_last_result`,
-        JSON.stringify(resultToStore)
+        JSON.stringify(resultToStore),
       );
 
       // Send quiz results to backend
@@ -416,6 +441,8 @@ function QuizContent({ quizData: propQuizData }) {
         // Dispatch custom event to notify CourseVideos to unlock certificate
         window.dispatchEvent(new Event("storage"));
 
+        if (onQuizResult) onQuizResult(true);
+
         await Swal.fire({
           icon: "success",
           title: "Félicitations ! 🎉",
@@ -424,6 +451,9 @@ function QuizContent({ quizData: propQuizData }) {
           confirmButtonColor: "#10b981",
         });
       } else {
+        localStorage.setItem(`course_${courseId}_quiz_completed`, "false");
+        localStorage.setItem(`course_${courseId}_quiz_score`, score.toString());
+        if (onQuizResult) onQuizResult(false);
         await Swal.fire({
           icon: "info",
           title: "Quiz terminé",
@@ -545,7 +575,11 @@ function QuizContent({ quizData: propQuizData }) {
         ))}
 
         <button
-          onClick={handleSubmit}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault && e.preventDefault();
+            handleSubmit();
+          }}
           disabled={isLoading}
           className="flex gap-2 justify-center items-center px-8 py-3 mt-10 max-w-full text-base text-white bg-blue-500 rounded-[56px] w-[275px] max-md:px-5 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
@@ -607,15 +641,16 @@ QuizContent.propTypes = {
                 PropTypes.shape({
                   id: PropTypes.string.isRequired,
                   label: PropTypes.string.isRequired,
-                })
+                }),
               ),
-            })
+            }),
           ).isRequired,
-        })
+        }),
       ).isRequired,
     }),
     PropTypes.array, // To support backend format
   ]),
+  onQuizResult: PropTypes.func,
 };
 
 export default QuizContent;

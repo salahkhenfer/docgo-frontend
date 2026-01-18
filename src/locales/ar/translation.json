@@ -1,4 +1,50 @@
 {
+  "contact": {
+    "supportTitle": "الدعم",
+    "supportDesc": "متاح 7 أيام في الأسبوع للرد على استفساراتك",
+    "getInTouch": "أخبرنا إذا كان لديك أي أسئلة",
+    "helpText": "هل لديك أسئلة؟ فريقنا هنا لمساعدتك. أرسل لنا رسالة وسنرد عليك في أقرب وقت ممكن.",
+    "name": "الاسم الكامل",
+    "namePlaceholder": "أدخل اسمك الكامل",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "message": "رسالتك",
+    "messagePlaceholder": "يرجى وصف سؤالك أو مشكلتك بالتفصيل...",
+    "sendMessage": "إرسال الرسالة",
+    "sending": "جاري الإرسال...",
+    "messageSent": "تم إرسال الرسالة بنجاح!",
+    "thankYou": "شكرًا لرسالتك. سنرد عليك في أقرب وقت ممكن.",
+    "sendAnother": "إرسال رسالة أخرى",
+    "responseTime": "عادةً ما نرد خلال 24 ساعة",
+    "characters": "حرف",
+    "priority": "الأولوية",
+    "priorityLow": "منخفضة",
+    "priorityMedium": "متوسطة",
+    "priorityHigh": "عالية",
+    "priorityUrgent": "عاجلة",
+    "errorSending": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+    "richTextEnabled": "تنسيق نص منسق متاح"
+  },
+  "faq_data": {
+    "title": "الأسئلة المتكررة",
+    "intro": "ابحث عن إجابات للأسئلة الشائعة حول دوراتنا وبرامجنا."
+  },
+  "dashboard": {
+    "sidebar": {
+      "title": "لوحة التحكم",
+      "overview": "نظرة عامة",
+      "messages": "رسائلي",
+      "notifications": "الإشعارات",
+      "programApplications": "طلبات البرامج",
+      "courseApplications": "طلبات الدورات",
+      "support": "هل تحتاج مساعدة؟",
+      "supportText": "تواصل مع فريق الدعم لدينا",
+      "sendMessage": "إرسال رسالة"
+    },
+    "pendingApplications": "طلبات قيد الانتظار",
+    "enrolledCourses": "دوراتي المسجلة",
+    "enrolledPrograms": "برامجي المسجلة"
+  },
   "Home_nav": "الرئيسية",
   "Programs_nav": "البرامج",
   "Courses_nav": "الدورات",

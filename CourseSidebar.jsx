@@ -51,10 +51,32 @@ export function CourseSidebar({ setSidebarOpen, sidebarOpen }) {
   return (
     <aside className="   max-md:ml-0 max-md:w-full">
       <div className="flex   flex-col items-start pr-8 pl-20 border-r border-solid min-h-[1015px] text-zinc-800 max-md:px-5 max-md:mt-8">
-        <h1 className="text-2xl font-semibold leading-9 text-zinc-800">
-          Fondements du design : Des bases à la maîtrise professionnelle
-        </h1>
-
+        <div className="flex justify-between items-center w-full">
+          <h1 className="text-2xl font-semibold leading-9 text-zinc-800">
+            Fondements du design : Des bases à la maîtrise professionnelle
+          </h1>
+          {/* Close Button */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden p-2"
+            aria-label="Close sidebar"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
         {/* Sections Navigation */}
         <section className="mt-8 max-w-full   w-[264px]">
           <h2 className="text-xl leading-10 text-zinc-800">Contenu du cours</h2>

@@ -43,7 +43,7 @@ const PaymentSuccessPage = () => {
                     const redirectPath =
                         itemType === "course"
                             ? `/Courses/${courseId}/videos`
-                            : `/Programs/${programId}`;
+                            : `/dashboard/applications/programs`;
                     navigate(redirectPath);
                     return 0;
                 }
@@ -176,51 +176,69 @@ const PaymentSuccessPage = () => {
 
                     {/* Action Buttons */}
                     <div className="space-y-3">
-                        {paymentData.status === "completed" ? (
+                        {itemType === 'course' ? (
+                            paymentData.status === "completed" ? (
+                                <>
+                                    <Link
+                                        to={`/Courses/${courseId}/content`}
+                                        className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                                    >
+                                        <span className="flex items-center justify-center gap-2">
+                                            <span>Start Learning</span>
+                                            <FaArrowRight />
+                                        </span>
+                                    </Link>
+
+                                    <div className="text-sm text-gray-500">
+                                        Auto-redirecting in {countdown} seconds...
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to={`/Courses/${courseId}`}
+                                        className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                                    >
+                                        <span className="flex items-center justify-center gap-2">
+                                            <span>View Course Details</span>
+                                            <FaArrowRight />
+                                        </span>
+                                    </Link>
+
+                                    <button
+                                        onClick={() => window.print()}
+                                        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                                    >
+                                        <span className="flex items-center justify-center gap-2">
+                                            <FaDownload />
+                                            <span>Save Receipt</span>
+                                        </span>
+                                    </button>
+                                </>
+                            )
+                        ) : (
                             <>
                                 <Link
-                                    to={`/Courses/${courseId}/content`}
+                                    to="/dashboard/applications/programs"
                                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                 >
                                     <span className="flex items-center justify-center gap-2">
-                                        <span>Start Learning</span>
+                                        <span>View My Applications</span>
                                         <FaArrowRight />
                                     </span>
                                 </Link>
-
                                 <div className="text-sm text-gray-500">
                                     Auto-redirecting in {countdown} seconds...
                                 </div>
                             </>
-                        ) : (
-                            <>
-                                <Link
-                                    to={`/Courses/${courseId}`}
-                                    className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-                                >
-                                    <span className="flex items-center justify-center gap-2">
-                                        <span>View Course Details</span>
-                                        <FaArrowRight />
-                                    </span>
-                                </Link>
-
-                                <button
-                                    onClick={() => window.print()}
-                                    className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-                                >
-                                    <span className="flex items-center justify-center gap-2">
-                                        <FaDownload />
-                                        <span>Save Receipt</span>
-                                    </span>
-                                </button>
-                            </>
                         )}
 
+
                         <Link
-                            to="/courses"
+                            to={itemType === 'course' ? '/courses' : '/programs'}
                             className="block w-full text-gray-600 hover:text-gray-800 py-2 transition-colors duration-200"
                         >
-                            Browse More Courses
+                            {itemType === 'course' ? 'Browse More Courses' : 'Browse More Programs'}
                         </Link>
                     </div>
 

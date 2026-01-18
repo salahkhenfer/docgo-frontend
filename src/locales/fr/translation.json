@@ -1,12 +1,56 @@
 {
-  "Home_nav": "Accueil",
-  "Programs_nav": "Programmes",
-  "Courses_nav": "Cours",
-  "Profile_nav": "Profil",
+  "contact": {
+    "supportTitle": "Support",
+    "supportDesc": "Disponible 7j/7 pour répondre à vos questions",
+    "getInTouch": "Faites-nous savoir si vous avez des questions",
+    "helpText": "Vous avez des questions ? Notre équipe est là pour vous aider. Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.",
+    "name": "Nom complet",
+    "namePlaceholder": "Entrez votre nom complet",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "Entrez votre adresse e-mail",
+    "message": "Votre message",
+    "messagePlaceholder": "Veuillez décrire votre question ou problème en détail...",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi...",
+    "messageSent": "Message envoyé avec succès !",
+    "thankYou": "Merci pour votre message. Nous vous répondrons dans les plus brefs délais.",
+    "sendAnother": "Envoyer un autre message",
+    "responseTime": "Nous répondons généralement sous 24 heures",
+    "characters": "caractères",
+    "priority": "Priorité",
+    "priorityLow": "Faible",
+    "priorityMedium": "Moyenne",
+    "priorityHigh": "Haute",
+    "priorityUrgent": "Urgente",
+    "errorSending": "Échec de l'envoi du message. Veuillez réessayer.",
+    "richTextEnabled": "Formatage de texte enrichi disponible"
+  },
+
   "faq_data": {
     "title": "Questions Fréquemment Posées",
     "intro": "Trouvez des réponses aux questions courantes sur nos cours et programmes."
   },
+  "dashboard": {
+    "sidebar": {
+      "title": "Tableau de bord",
+      "overview": "Aperçu",
+      "messages": "Mes messages",
+      "notifications": "Notifications",
+      "programApplications": "Candidatures aux programmes",
+      "courseApplications": "Candidatures aux cours",
+      "support": "Besoin d'aide ?",
+      "supportText": "Contactez notre équipe d'assistance",
+      "sendMessage": "Envoyer un message"
+    },
+    "pendingApplications": "Candidatures en attente",
+    "enrolledCourses": "Mes cours inscrits",
+    "enrolledPrograms": "Mes programmes inscrits"
+  },
+  "Home_nav": "Accueil",
+  "Programs_nav": "Programmes",
+  "Courses_nav": "Cours",
+  "Profile_nav": "Profil",
+
   "FAQ": "FAQ",
   "faq_title": "Questions Fréquemment Posées",
   "ExploreCoursesDescription": "Explorez nos cours en ligne conçus pour améliorer vos compétences et vos connaissances.",

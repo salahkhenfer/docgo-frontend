@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const EnrolledCoursesSection = ({ enrollments }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   if (!enrollments || enrollments.length === 0) {
@@ -30,7 +30,7 @@ const EnrolledCoursesSection = ({ enrollments }) => {
             <p className="text-gray-600 mb-6">
               {t(
                 "dashboard.noEnrolledCoursesDescription",
-                "Start learning by enrolling in courses!"
+                "Start learning by enrolling in courses!",
               )}
             </p>
           </div>
@@ -78,7 +78,7 @@ const EnrolledCoursesSection = ({ enrollments }) => {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-900">
-            {t("dashboard.enrolledCourses", "My Enrolled Courses")}
+            {t("dashboard.enrolledCourses")}
           </h2>
         </div>
         <div className="text-sm text-gray-500">
@@ -107,10 +107,18 @@ const EnrolledCoursesSection = ({ enrollments }) => {
               />
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-900 mb-1 truncate">
-                  {enrollment.Course?.Title}
+                  {i18n.language === "ar" && enrollment.Course?.Title_ar
+                    ? enrollment.Course.Title_ar
+                    : enrollment.Course?.Title}
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
-                  {enrollment.Course?.Category} • {enrollment.Course?.Level}
+                  {i18n.language === "ar" && enrollment.Course?.Category_ar
+                    ? enrollment.Course.Category_ar
+                    : enrollment.Course?.Category}
+                  {" \u2022 "}
+                  {i18n.language === "ar" && enrollment.Course?.Level_ar
+                    ? enrollment.Course.Level_ar
+                    : enrollment.Course?.Level}
                 </p>
 
                 {/* Status Badge */}
@@ -201,7 +209,7 @@ EnrolledCoursesSection.propTypes = {
         Category: PropTypes.string,
         Level: PropTypes.string,
       }),
-    })
+    }),
   ),
 };
 

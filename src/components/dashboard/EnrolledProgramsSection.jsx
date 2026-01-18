@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const EnrolledProgramsSection = ({ enrollments }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   if (!enrollments || enrollments.length === 0) {
@@ -30,7 +30,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
             <p className="text-gray-600 mb-6">
               {t(
                 "dashboard.noEnrolledProgramsDescription",
-                "Apply to scholarship programs to boost your career!"
+                "Apply to scholarship programs to boost your career!",
               )}
             </p>
           </div>
@@ -78,7 +78,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-900">
-            {t("dashboard.enrolledPrograms", "My Enrolled Programs")}
+            {t("dashboard.enrolledPrograms")}
           </h2>
         </div>
         <div className="text-sm text-gray-500">
@@ -107,15 +107,22 @@ const EnrolledProgramsSection = ({ enrollments }) => {
               />
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-gray-900 mb-1 text-lg">
-                  {enrollment.Program?.Title}
+                  {i18n.language === "ar" && enrollment.Program?.Title_ar
+                    ? enrollment.Program.Title_ar
+                    : enrollment.Program?.Title}
                 </h3>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm text-gray-600">
-                    {enrollment.Program?.organization}
+                    {i18n.language === "ar" &&
+                    enrollment.Program?.organization_ar
+                      ? enrollment.Program.organization_ar
+                      : enrollment.Program?.organization}
                   </span>
-                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-400"></span>
                   <span className="text-sm text-gray-600">
-                    {enrollment.Program?.location}
+                    {i18n.language === "ar" && enrollment.Program?.location_ar
+                      ? enrollment.Program.location_ar
+                      : enrollment.Program?.location}
                   </span>
                 </div>
 
@@ -126,15 +133,15 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                       enrollment.status === "completed"
                         ? "bg-green-100 text-green-800"
                         : enrollment.status === "pending_start"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-blue-100 text-blue-800"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-blue-100 text-blue-800"
                     }`}
                   >
                     {enrollment.status === "completed"
                       ? t("dashboard.completed", "Completed")
                       : enrollment.status === "pending_start"
-                      ? t("dashboard.pendingStart", "Pending Start")
-                      : t("dashboard.active", "Active")}
+                        ? t("dashboard.pendingStart", "Pending Start")
+                        : t("dashboard.active", "Active")}
                   </span>
 
                   {enrollment.isScholarship && (
@@ -170,7 +177,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                       <span>{t("dashboard.startDate", "Start Date")}:</span>
                       <span className="font-medium">
                         {new Date(
-                          enrollment.programStartDate
+                          enrollment.programStartDate,
                         ).toLocaleDateString()}
                       </span>
                     </div>
@@ -180,7 +187,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                       <span>{t("dashboard.endDate", "End Date")}:</span>
                       <span className="font-medium">
                         {new Date(
-                          enrollment.programEndDate
+                          enrollment.programEndDate,
                         ).toLocaleDateString()}
                       </span>
                     </div>
@@ -252,7 +259,7 @@ EnrolledProgramsSection.propTypes = {
         location: PropTypes.string,
         currency: PropTypes.string,
       }),
-    })
+    }),
   ),
 };
 

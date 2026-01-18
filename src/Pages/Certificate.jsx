@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import { Award, Calendar, Download, Eye, Star, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import EnrollmentAPI from "../API/Enrollment";
 import { useAppContext } from "../AppContext";
@@ -9,6 +9,7 @@ import generatePDFCertificate from "../components/certificate/generatePDFCertifi
 import { useCourse } from "../hooks/useCourse";
 
 export default function Certificate() {
+  const navigate = useNavigate();
   const [isDownloading, setIsDownloading] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
@@ -16,6 +17,17 @@ export default function Certificate() {
   const { courseId } = useParams();
   const { user } = useAppContext();
   const { courseData, loading } = useCourse(courseId);
+
+  // Redirect if quiz score is not enough to unlock certificate
+  useEffect(() => {
+    // Try to get score from localStorage (most recent)
+    const storedScore = localStorage.getItem(`course_${courseId}_quiz_score`);
+    const score = storedScore ? parseInt(storedScore) : quizScore;
+    if (score < 50) {
+      // Not enough score, redirect to course videos
+      navigate(`/Courses/${courseId}/watch`, { replace: true });
+    }
+  }, [courseId, quizScore, navigate]);
 
   // Load quiz score from localStorage and backend
   useEffect(() => {
@@ -230,7 +242,7 @@ export default function Certificate() {
                   <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-200" />
                   <span>
                     {new Date(
-                      certificateData.completionDate
+                      certificateData.completionDate,
                     ).toLocaleDateString("fr-FR")}
                   </span>
                 </div>
@@ -301,7 +313,7 @@ export default function Certificate() {
                 <div className="bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-lg md:rounded-xl shadow-md md:shadow-lg">
                   <div className="text-base md:text-2xl font-bold text-teal-600">
                     {new Date(
-                      certificateData.completionDate
+                      certificateData.completionDate,
                     ).toLocaleDateString("fr-FR")}
                   </div>
                   <div className="text-xs md:text-base text-gray-600 font-medium">
@@ -435,7 +447,7 @@ export default function Certificate() {
                   </label>
                   <p className="text-gray-600 text-sm md:text-base">
                     {new Date(
-                      certificateData.completionDate
+                      certificateData.completionDate,
                     ).toLocaleDateString("fr-FR")}
                   </p>
                 </div>

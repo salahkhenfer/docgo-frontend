@@ -52,7 +52,7 @@ const CCPPayment = ({
         setCheckingApplication(true);
         const response = await PaymentAPI.checkPaymentApplication(
           itemType,
-          itemData.id
+          itemData.id,
         );
 
         if (response.success && response.data.hasApplication) {
@@ -203,7 +203,7 @@ const CCPPayment = ({
           phoneNumber: paymentForm.phoneNumber,
           email: paymentForm.email,
         },
-        receiptFile
+        receiptFile,
       );
 
       if (!paymentResult.success) {
@@ -237,7 +237,7 @@ const CCPPayment = ({
         } catch (cleanupError) {
           console.warn(
             "Payment cleanup failed (may be normal if file wasn't uploaded):",
-            cleanupError.message
+            cleanupError.message,
           );
         }
       }
@@ -532,7 +532,7 @@ const CCPPayment = ({
                   errors.fullName ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder={t(
-                  "paymentPage.ccpPaymentForm.fullNamePlaceholder"
+                  "paymentPage.ccpPaymentForm.fullNamePlaceholder",
                 )}
               />
               {errors.fullName && (
@@ -543,10 +543,10 @@ const CCPPayment = ({
             {/* CCP Number */}
             <div>
               <label
-                htmlFor="phoneNumber"
+                htmlFor="ccpNumber"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.phoneNumber")}{" "}
+                {t("paymentPage.ccpPaymentForm.ccpNumber")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -560,7 +560,7 @@ const CCPPayment = ({
                   errors.ccpNumber ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder={t(
-                  "paymentPage.ccpPaymentForm.ccpNumberPlaceholder"
+                  "paymentPage.ccpPaymentForm.ccpNumberPlaceholder",
                 )}
               />
               {errors.ccpNumber && (
@@ -590,7 +590,7 @@ const CCPPayment = ({
                     : "border-gray-300"
                 }`}
                 placeholder={t(
-                  "paymentPage.ccpPaymentForm.transferReferencePlaceholder"
+                  "paymentPage.ccpPaymentForm.transferReferencePlaceholder",
                 )}
               />
               {errors.transferReference && (
@@ -623,7 +623,7 @@ const CCPPayment = ({
                   errors.phoneNumber ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder={t(
-                  "paymentPage.ccpPaymentForm.phoneNumberPlaceholder"
+                  "paymentPage.ccpPaymentForm.phoneNumberPlaceholder",
                 )}
               />
               {errors.phoneNumber && (
