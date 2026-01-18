@@ -418,20 +418,10 @@ export function CourseVideos() {
   }
 
   return (
-    <div className="flex w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div className=" w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
       {/* Mobile Header with Sidebar Toggle */}
-      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 shadow-sm">
+      <div className="md:hidden bg-transparent mx-auto   px-4 py-3 sticky bottom-0 z-50 ">
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => navigate(`/Courses/${courseId}`)}
-            className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            {t("Back")}
-          </button>
-          <h1 className="text-lg font-semibold text-gray-800 truncate mx-4">
-            {course.Title}
-          </h1>
           <button
             onClick={toggleSidebar}
             className="p-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all"
@@ -466,14 +456,14 @@ export function CourseVideos() {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed  inset-0 bg-black bg-opacity-50 z-30"
           onClick={toggleSidebar}
         />
       )}
 
       {/* Main Content Container */}
-      <div className="flex-1 w-full max-w-[1360px] mx-auto px-4">
-        <div className="lg-md::flex  gap-0 h-full">
+      <div className="flex-1 w-full  max-w-[1360px] mx-auto  ">
+        <div className="flex   gap-0 h-full">
           {/* Sidebar - Desktop */}
           <aside className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
             <div className="flex flex-col items-start pr-6 pl-8 border-r border-gray-200 min-h-screen bg-white shadow-sm">
@@ -539,12 +529,12 @@ export function CourseVideos() {
               </div>
 
               {/* Video List Navigation */}
-              <section className="w-full mb-8">
+              <section className="w-full  ">
                 <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                   <Play className="w-5 h-5 text-blue-600" />
                   {t("Course Content")}
                 </h2>
-                <nav className="space-y-2">
+                <nav className="space-y-2 ">
                   {videos.map((video, index) => {
                     const isActive = index === currentVideoIndex;
                     const videoId = video.id || index;
@@ -722,7 +712,7 @@ export function CourseVideos() {
 
           {/* Mobile Sidebar */}
           <div
-            className={`md:hidden fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
+            className={`md:hidden mt-20 fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
