@@ -36,7 +36,7 @@ const UserDashboard = () => {
         setDashboardData(response.data.data);
       } else {
         throw new Error(
-          response.data.message || "Failed to fetch dashboard data"
+          response.data.message || "Failed to fetch dashboard data",
         );
       }
     } catch (error) {
@@ -44,7 +44,7 @@ const UserDashboard = () => {
       setError(
         error.response?.data?.message ||
           error.message ||
-          "Failed to load dashboard data"
+          "Failed to load dashboard data",
       );
     } finally {
       setLoading(false);
@@ -116,10 +116,10 @@ const UserDashboard = () => {
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* Main Content with proper spacing for fixed sidebar */}
-        <div className="flex-1 ">
+        <div className={`flex-1 w-full ${isRTL ? "lg:me-64" : "lg:ms-64"}`}>
           {/* <Navigation /> */}
           {/* Mobile header with menu button */}
-          <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
+          <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30 flex items-center">
             <button
               onClick={() => setSidebarOpen(true)}
               className="text-gray-600 hover:text-gray-900"
@@ -129,7 +129,7 @@ const UserDashboard = () => {
           </div>
 
           {/* Dashboard Content */}
-          <div className="min-h-screen">
+          <div className="min-h-screen w-full">
             {isRootDashboard ? (
               <DashboardOverview
                 user={user}

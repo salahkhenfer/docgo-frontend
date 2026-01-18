@@ -92,12 +92,12 @@ const PendingApplicationsSection = ({ applications }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-amber-100 rounded-lg">
+    <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 md:p-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="p-1.5 sm:p-2 bg-amber-100 rounded-lg">
             <svg
-              className="w-6 h-6 text-amber-600"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -110,11 +110,11 @@ const PendingApplicationsSection = ({ applications }) => {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900">
             {t("dashboard.pendingApplications")}
           </h2>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-xs sm:text-sm text-gray-500">
           {allApplications.length} {t("dashboard.applications", "applications")}
         </div>
       </div>
@@ -129,9 +129,9 @@ const PendingApplicationsSection = ({ applications }) => {
           return (
             <div
               key={`${application.type}-${application.id}`}
-              className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4 hover:shadow-md transition-shadow"
+              className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow"
             >
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
                 <img
                   src={
                     item?.Image
@@ -139,18 +139,18 @@ const PendingApplicationsSection = ({ applications }) => {
                       : `/placeholder-${application.type}.png`
                   }
                   alt={item?.Title}
-                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                  className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg object-cover flex-shrink-0"
                   onError={(e) => {
                     e.target.src = `/placeholder-${application.type}.png`;
                   }}
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-start justify-between mb-1 sm:mb-2">
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2">
                         {item?.Title}
                       </h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             application.type === "program"

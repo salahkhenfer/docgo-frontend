@@ -17,21 +17,21 @@ const DashboardOverview = ({
   recentActivity,
 }) => {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="md:container  mx-auto   ">
       {/* Welcome Section and Quick Actions - Flexed horizontally */}
-      <div className="flex flex-col lg:flex-row gap-6 mb-8 items-start">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 mb-6 sm:mb-8 items-start">
         {/* Welcome Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6 flex-1 h-full">
+        <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 flex-1 h-full w-full">
           <div className="flex items-center justify-between h-full">
             <div className="flex-1 h-full">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 {t("dashboard_data.welcome", "Welcome")}, {user?.firstName}{" "}
                 {user?.lastName}!
               </h1>
               <p className="text-gray-600">
                 {t(
                   "dashboard_data.subtitle",
-                  "Suivez vos progrès d'apprentissage et vos demandes de bourses"
+                  "Suivez vos progrès d'apprentissage et vos demandes de bourses",
                 )}
               </p>
             </div>
@@ -107,7 +107,7 @@ const DashboardOverview = ({
                   <span>
                     {t(
                       "dashboard_data.coursesInProgress",
-                      "Courses in Progress"
+                      "Courses in Progress",
                     )}
                   </span>
                   <span className="font-semibold">
@@ -126,7 +126,7 @@ const DashboardOverview = ({
                   <span>
                     {t(
                       "dashboard_data.certificatesEarned",
-                      "Certificates Earned"
+                      "Certificates Earned",
                     )}
                   </span>
                   <span className="font-semibold">

@@ -59,12 +59,12 @@ const EnrolledCoursesSection = ({ enrollments }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+    <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 md:p-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg">
             <svg
-              className="w-6 h-6 text-blue-600"
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -77,11 +77,11 @@ const EnrolledCoursesSection = ({ enrollments }) => {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900">
             {t("dashboard.enrolledCourses")}
           </h2>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-xs sm:text-sm text-gray-500">
           {enrollments.length} {t("dashboard.courses", "courses")}
         </div>
       </div>
