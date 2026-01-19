@@ -1,183 +1,169 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
+import img from "../../../src/assets/Image.png"; // Adjust the path as necessary
 import CardCourse from "../../components/CardCourse";
 import Container from "../../components/Container";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import img from "../../../src/assets/Image.png"; // Adjust the path as necessary
 
 function CoursesSection({ featuredCourses, latestCourses }) {
-    const { t, i18n } = useTranslation();
-    const isRTL = i18n.dir() === "rtl";
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const [maxScroll, setMaxScroll] = useState(0);
-    const carouselRef = useRef(null);
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [maxScroll, setMaxScroll] = useState(0);
+  const carouselRef = useRef(null);
 
-    // Use featured courses or fallback to latest courses or placeholder
-    const coursesToDisplay =
-        featuredCourses && featuredCourses.length > 0
-            ? featuredCourses
-            : latestCourses && latestCourses.length > 0
-            ? latestCourses
-            : Array(6).fill({
-                  url: img,
-                  title: "UI UX Design Course",
-                  description:
-                      "The UI/UX design specialization adopts a design-centered approach...",
-                  price: "1356",
-                  hours: 10,
-                  lessonNumber: 5,
-                  starsNumber: 5,
-              });
+  // Use featured courses or fallback to latest courses or placeholder
+  const coursesToDisplay =
+    featuredCourses && featuredCourses.length > 0
+      ? featuredCourses
+      : latestCourses && latestCourses.length > 0
+        ? latestCourses
+        : Array(6).fill({
+            url: img,
+            title: "UI UX Design Course",
+            description:
+              "The UI/UX design specialization adopts a design-centered approach...",
+            price: "1356",
+            hours: 10,
+            lessonNumber: 5,
+            starsNumber: 5,
+          });
 
-    useEffect(() => {
-        const updateMaxScroll = () => {
-            if (carouselRef.current) {
-                setMaxScroll(
-                    carouselRef.current.scrollWidth -
-                        carouselRef.current.clientWidth
-                );
-            }
-        };
-
-        updateMaxScroll();
-        window.addEventListener("resize", updateMaxScroll);
-
-        return () => window.removeEventListener("resize", updateMaxScroll);
-    }, []);
-
-    const handleScroll = () => {
-        if (carouselRef.current) {
-            const scrollPos = Math.abs(carouselRef.current.scrollLeft);
-            setScrollPosition(scrollPos);
-        }
+  useEffect(() => {
+    const updateMaxScroll = () => {
+      if (carouselRef.current) {
+        setMaxScroll(
+          carouselRef.current.scrollWidth - carouselRef.current.clientWidth,
+        );
+      }
     };
 
-    const handleMouseDown = (e) => {
-        if (carouselRef.current) {
-            setIsDragging(true);
-            setStartX(e.pageX - carouselRef.current.offsetLeft);
-            setScrollLeft(carouselRef.current.scrollLeft);
-        }
-    };
+    updateMaxScroll();
+    window.addEventListener("resize", updateMaxScroll);
 
-    const handleMouseMove = (e) => {
-        if (!isDragging || !carouselRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - carouselRef.current.offsetLeft;
-        const walk = x - startX;
+    return () => window.removeEventListener("resize", updateMaxScroll);
+  }, []);
 
-        carouselRef.current.scrollLeft = scrollLeft - walk;
-    };
+  const handleScroll = () => {
+    if (carouselRef.current) {
+      const scrollPos = Math.abs(carouselRef.current.scrollLeft);
+      setScrollPosition(scrollPos);
+    }
+  };
 
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
+  const handleMouseDown = (e) => {
+    if (carouselRef.current) {
+      setIsDragging(true);
+      setStartX(e.pageX - carouselRef.current.offsetLeft);
+      setScrollLeft(carouselRef.current.scrollLeft);
+    }
+  };
 
-    const handleMouseLeave = () => {
-        setIsDragging(false);
-    };
+  const handleMouseMove = (e) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = x - startX;
 
-    useEffect(() => {
-        const carousel = carouselRef.current;
-        if (!carousel) return;
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
 
-        carousel.addEventListener("scroll", handleScroll);
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
-        return () => carousel.removeEventListener("scroll", handleScroll);
-    }, []);
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
 
-    const handleScrollButton = (direction) => {
-        const scrollAmount = 300;
-        if (carouselRef.current) {
-            const scrollValue =
-                direction === "right" ? scrollAmount : -scrollAmount;
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
 
-            const adjustedScrollValue = isRTL ? -scrollValue : scrollValue;
-            carouselRef.current.scrollBy({
-                left: adjustedScrollValue,
-                behavior: "smooth",
-            });
-        }
-    };
+    carousel.addEventListener("scroll", handleScroll);
 
-    return (
-        <Container>
-            <div id="Coureses" className="relative px-2 sm:px-4 md:px-6">
-                <h2 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium  text-gray-700 text-center mb-8">
-                    {t("DeepenYourKnowledgeWithOurCourses")}
-                </h2>
+    return () => carousel.removeEventListener("scroll", handleScroll);
+  }, []);
 
-                <div
-                    ref={carouselRef}
-                    className="flex gap-4 overflow-x-auto scrollbar-hide"
-                    style={{
-                        direction: isRTL ? "rtl" : "ltr",
-                    }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseLeave}
-                >
-                    {coursesToDisplay.map((course, index) => (
-                        <div key={course.id || index} className="flex-shrink-0">
-                            <CardCourse
-                                id={course.id}
-                                url={
-                                    course.Image
-                                        ? `${import.meta.env.VITE_SERVER_URL}/public${course.Image}`
-                                        : course.url || img
-                                }
-                                title={course.Title || course.title}
-                                description={
-                                    course.Description || course.description
-                                }
-                                price={course.Price || course.price}
-                                hours={course.Duration || course.hours}
-                                lessonNumber={
-                                    course.Lessons_count ||
-                                    course.lessonNumber ||
-                                    0
-                                }
-                                starsNumber={
-                                    course.Rating || course.starsNumber || 5
-                                }
-                                ProfessorName={course.ProfessorName || ""}
-                            />
-                        </div>
-                    ))}
-                </div>
+  const handleScrollButton = (direction) => {
+    const scrollAmount = 300;
+    if (carouselRef.current) {
+      const scrollValue = direction === "right" ? scrollAmount : -scrollAmount;
 
-                <button
-                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
-                        scrollPosition <= 0 ? "hidden" : ""
-                    }`}
-                    onClick={() => handleScrollButton("left")}
-                    aria-label={t("Previous")}
-                >
-                    <ChevronLeft className="w-6 h-6" />
-                </button>
+      const adjustedScrollValue = isRTL ? -scrollValue : scrollValue;
+      carouselRef.current.scrollBy({
+        left: adjustedScrollValue,
+        behavior: "smooth",
+      });
+    }
+  };
 
-                <button
-                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
-                        scrollPosition >= maxScroll ? "hidden" : ""
-                    }`}
-                    onClick={() => handleScrollButton("right")}
-                    aria-label={t("Next")}
-                >
-                    <ChevronRight className="w-6 h-6" />
-                </button>
+  return (
+    <Container>
+      <div id="Coureses" className="relative px-2 sm:px-4 md:px-6">
+        <h2 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium  text-gray-700 text-center mb-8">
+          {t("DeepenYourKnowledgeWithOurCourses")}
+        </h2>
+
+        <div
+          ref={carouselRef}
+          className="flex gap-4 overflow-x-auto scrollbar-hide"
+          style={{
+            direction: isRTL ? "rtl" : "ltr",
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          {coursesToDisplay.map((course, index) => (
+            <div key={course.id || index} className="flex-shrink-0">
+              <CardCourse
+                id={course.id}
+                url={
+                  course.Image
+                    ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                    : course.url || img
+                }
+                title={course.Title || course.title}
+                description={course.Description || course.description}
+                price={course.Price || course.price}
+              />
             </div>
-        </Container>
-    );
+          ))}
+        </div>
+
+        <button
+          className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
+            scrollPosition <= 0 ? "hidden" : ""
+          }`}
+          onClick={() => handleScrollButton("left")}
+          aria-label={t("Previous")}
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        <button
+          className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
+            scrollPosition >= maxScroll ? "hidden" : ""
+          }`}
+          onClick={() => handleScrollButton("right")}
+          aria-label={t("Next")}
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+    </Container>
+  );
 }
 
 CoursesSection.propTypes = {
-    featuredCourses: PropTypes.arrayOf(PropTypes.object),
-    latestCourses: PropTypes.arrayOf(PropTypes.object),
+  featuredCourses: PropTypes.arrayOf(PropTypes.object),
+  latestCourses: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CoursesSection;

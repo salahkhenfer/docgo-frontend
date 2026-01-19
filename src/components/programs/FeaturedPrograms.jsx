@@ -148,8 +148,8 @@ const FeaturedPrograms = ({
                                 {program.Image ? (
                                     <img
                                         src={`${
-                                            import.meta.env.VITE_SERVER_URL
-                                        }/public${program.Image}`}
+                                            import.meta.env.VITE_API_URL
+                                        }${program.Image}`}
                                         alt={
                                             i18n.language === "ar" &&
                                             program.Title_ar
