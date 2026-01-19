@@ -121,7 +121,7 @@ export const ProgramDetails = () => {
 
       if (response.status === 200) {
         toast.success(
-          t("Message sent successfully!") || "Message sent successfully!"
+          t("Message sent successfully!") || "Message sent successfully!",
         );
         setShowContactForm(false);
         setContactForm({
@@ -135,7 +135,7 @@ export const ProgramDetails = () => {
       console.error("Error sending message:", error);
       toast.error(
         t("Failed to send message. Please try again.") ||
-          "Failed to send message. Please try again."
+          "Failed to send message. Please try again.",
       );
     } finally {
       setIsSubmittingContact(false);
@@ -160,7 +160,7 @@ export const ProgramDetails = () => {
           .writeText(window.location.href)
           .then(() => {
             toast.success(
-              t("Link copied to clipboard!") || "Link copied to clipboard!"
+              t("Link copied to clipboard!") || "Link copied to clipboard!",
             );
           })
           .catch(() => {
@@ -172,7 +172,7 @@ export const ProgramDetails = () => {
         .writeText(window.location.href)
         .then(() => {
           toast.success(
-            t("Link copied to clipboard!") || "Link copied to clipboard!"
+            t("Link copied to clipboard!") || "Link copied to clipboard!",
           );
         })
         .catch(() => {
@@ -186,7 +186,7 @@ export const ProgramDetails = () => {
     toast.success(
       isFavorite
         ? t("Removed from favorites") || "Removed from favorites"
-        : t("Added to favorites") || "Added to favorites"
+        : t("Added to favorites") || "Added to favorites",
     );
   };
 
@@ -418,7 +418,7 @@ export const ProgramDetails = () => {
                           <source src={fullVideoUrl} type="video/mp4" />
                           <p className="text-white p-4">
                             {t(
-                              "Your browser does not support the video tag."
+                              "Your browser does not support the video tag.",
                             ) || "Your browser does not support the video tag."}
                           </p>
                         </video>
@@ -552,8 +552,8 @@ export const ProgramDetails = () => {
                         applicationStatus === "approved"
                           ? "bg-green-50 border border-green-200"
                           : applicationStatus === "rejected"
-                          ? "bg-red-50 border border-red-200"
-                          : "bg-yellow-50 border border-yellow-200"
+                            ? "bg-red-50 border border-red-200"
+                            : "bg-yellow-50 border border-yellow-200"
                       }`}
                     >
                       <div
@@ -561,34 +561,37 @@ export const ProgramDetails = () => {
                           applicationStatus === "approved"
                             ? "text-green-600"
                             : applicationStatus === "rejected"
-                            ? "text-red-600"
-                            : "text-yellow-600"
+                              ? "text-red-600"
+                              : "text-yellow-600"
                         }`}
                       >
                         {applicationStatus === "approved"
                           ? "✅"
                           : applicationStatus === "rejected"
-                          ? "❌"
-                          : "⏳"}
+                            ? "❌"
+                            : "⏳"}
                       </div>
                       <h3 className="font-semibold text-gray-900 mb-1">
                         {applicationStatus === "approved"
                           ? t("Application Approved") || "Application Approved"
                           : applicationStatus === "rejected"
-                          ? t("Application Rejected") || "Application Rejected"
-                          : t("Application Pending") || "Application Pending"}
+                            ? t("Application Rejected") ||
+                              "Application Rejected"
+                            : t("Application Pending") || "Application Pending"}
                       </h3>
                       <p className="text-sm text-gray-600">
                         {applicationStatus === "approved"
                           ? t(
-                              "Congratulations! Your application has been approved."
+                              "Congratulations! Your application has been approved.",
                             ) ||
                             "Congratulations! Your application has been approved."
                           : applicationStatus === "rejected"
-                          ? t("Your application was not approved this time.") ||
-                            "Your application was not approved this time."
-                          : t("Your application is under review.") ||
-                            "Your application is under review."}
+                            ? t(
+                                "Your application was not approved this time.",
+                              ) ||
+                              "Your application was not approved this time."
+                            : t("Your application is under review.") ||
+                              "Your application is under review."}
                       </p>
                     </div>
                   </div>
@@ -600,8 +603,8 @@ export const ProgramDetails = () => {
                       applying
                         ? "bg-gray-400 text-gray-600 cursor-not-allowed"
                         : isFree
-                        ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl"
-                        : "bg-blue-600 hover:bg-blue-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl"
+                          ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl"
+                          : "bg-blue-600 hover:bg-blue-700 text-white transform hover:scale-105 shadow-lg hover:shadow-xl"
                     }`}
                   >
                     {applying ? (
@@ -689,16 +692,16 @@ export const ProgramDetails = () => {
                       applicationStatus === "approved"
                         ? "bg-green-50 border border-green-200 text-green-800"
                         : applicationStatus === "rejected"
-                        ? "bg-red-50 border border-red-200 text-red-800"
-                        : "bg-yellow-50 border border-yellow-200 text-yellow-800"
+                          ? "bg-red-50 border border-red-200 text-red-800"
+                          : "bg-yellow-50 border border-yellow-200 text-yellow-800"
                     }`}
                   >
                     <div className="font-semibold">
                       {applicationStatus === "approved"
                         ? t("Application Approved") || "Application Approved"
                         : applicationStatus === "rejected"
-                        ? t("Application Rejected") || "Application Rejected"
-                        : t("Application Pending") || "Application Pending"}
+                          ? t("Application Rejected") || "Application Rejected"
+                          : t("Application Pending") || "Application Pending"}
                     </div>
                   </div>
                 </div>
@@ -710,8 +713,8 @@ export const ProgramDetails = () => {
                     applying
                       ? "bg-gray-400 text-gray-600 cursor-not-allowed"
                       : isFree
-                      ? "bg-green-600 hover:bg-green-700 text-white"
-                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                        ? "bg-green-600 hover:bg-green-700 text-white"
+                        : "bg-blue-600 hover:bg-blue-700 text-white"
                   }`}
                 >
                   {applying ? (

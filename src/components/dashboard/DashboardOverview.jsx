@@ -81,9 +81,11 @@ const DashboardOverview = ({
       {/* New Enrollment and Application Sections */}
       <div className="space-y-6 sm:space-y-8">
         {/* Certificates Section - Show first if user has certificates */}
-        {certificates && certificates.courses && certificates.courses.length > 0 && (
-          <CertificatesSection certificates={certificates} />
-        )}
+        {certificates &&
+          certificates.courses &&
+          certificates.courses.length > 0 && (
+            <CertificatesSection certificates={certificates} />
+          )}
 
         {/* Pending Applications Section */}
         <PendingApplicationsSection applications={applications} />

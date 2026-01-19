@@ -106,7 +106,7 @@ export default function CourseResources() {
                 </h3>
                 <p className="text-slate-600 text-lg">
                   {t(
-                    "There are no PDF resources available for this course yet."
+                    "There are no PDF resources available for this course yet.",
                   )}
                 </p>
               </div>

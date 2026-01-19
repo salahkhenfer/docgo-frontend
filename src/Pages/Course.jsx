@@ -13,7 +13,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { IoMdRefresh } from "react-icons/io";
@@ -108,7 +108,7 @@ export const Course = () => {
       await axios.post(endpoint, requestData);
 
       toast.success(
-        t("Message sent successfully") || "Message sent successfully"
+        t("Message sent successfully") || "Message sent successfully",
       );
 
       setContactForm({
@@ -148,7 +148,7 @@ export const Course = () => {
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success(
-        t("Link copied to clipboard") || "Link copied to clipboard"
+        t("Link copied to clipboard") || "Link copied to clipboard",
       );
     }
   };
@@ -158,7 +158,7 @@ export const Course = () => {
     toast.success(
       isFavorite
         ? t("Removed from favorites") || "Removed from favorites"
-        : t("Added to favorites") || "Added to favorites"
+        : t("Added to favorites") || "Added to favorites",
     );
   };
 
@@ -207,7 +207,7 @@ export const Course = () => {
           </h2>
           <p className="text-sm sm:text-base text-gray-600 mb-6">
             {t(
-              "The course you're looking for doesn't exist or has been removed."
+              "The course you're looking for doesn't exist or has been removed.",
             ) ||
               "The course you're looking for doesn't exist or has been removed."}
           </p>

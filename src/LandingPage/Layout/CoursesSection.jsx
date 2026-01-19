@@ -126,7 +126,11 @@ function CoursesSection({ featuredCourses, latestCourses }) {
                         <div key={course.id || index} className="flex-shrink-0">
                             <CardCourse
                                 id={course.id}
-                                url={course.Image || course.url || img}
+                                url={
+                                    course.Image
+                                        ? `${import.meta.env.VITE_SERVER_URL}/public${course.Image}`
+                                        : course.url || img
+                                }
                                 title={course.Title || course.title}
                                 description={
                                     course.Description || course.description

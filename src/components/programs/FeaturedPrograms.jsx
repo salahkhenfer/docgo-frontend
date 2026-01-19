@@ -11,8 +11,14 @@ import {
 } from "lucide-react";
 import { clientProgramsAPI } from "../../API/Programs";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-const FeaturedPrograms = ({ limit = 6, showViewAll = true }) => {
+const FeaturedPrograms = ({ 
+    limit = 6, 
+    showViewAll = true, 
+    featuredPrograms, 
+    latestPrograms 
+}) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
@@ -47,8 +53,18 @@ const FeaturedPrograms = ({ limit = 6, showViewAll = true }) => {
     };
 
     useEffect(() => {
-        fetchFeaturedPrograms();
-    }, [limit]);
+        // If featuredPrograms or latestPrograms are provided as props, use them
+        if (featuredPrograms && featuredPrograms.length > 0) {
+            setPrograms(featuredPrograms);
+            setLoading(false);
+        } else if (latestPrograms && latestPrograms.length > 0) {
+            setPrograms(latestPrograms);
+            setLoading(false);
+        } else {
+            // Otherwise, fetch programs from API
+            fetchFeaturedPrograms();
+        }
+    }, [limit, featuredPrograms, latestPrograms]);
 
     const handleProgramClick = (programId) => {
         navigate(`/programs/${programId}`);
@@ -284,6 +300,13 @@ const FeaturedPrograms = ({ limit = 6, showViewAll = true }) => {
             </div>
         </div>
     );
+};
+
+FeaturedPrograms.propTypes = {
+    limit: PropTypes.number,
+    showViewAll: PropTypes.bool,
+    featuredPrograms: PropTypes.arrayOf(PropTypes.object),
+    latestPrograms: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default FeaturedPrograms;

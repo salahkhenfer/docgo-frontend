@@ -35,10 +35,10 @@ export function Programs() {
 
   // Debouncing state
   const [searchQuery, setSearchQuery] = useState(
-    searchParams.get("search") || ""
+    searchParams.get("search") || "",
   );
   const [debouncedSearch, setDebouncedSearch] = useState(
-    searchParams.get("search") || ""
+    searchParams.get("search") || "",
   );
 
   // Timeout ref for debouncing
@@ -74,10 +74,10 @@ export function Programs() {
 
   // Sorting state
   const [sortBy, setSortBy] = useState(
-    searchParams.get("sortBy") || "createdAt"
+    searchParams.get("sortBy") || "createdAt",
   );
   const [sortOrder, setSortOrder] = useState(
-    searchParams.get("sortOrder") || "desc"
+    searchParams.get("sortOrder") || "desc",
   );
 
   // UI state
@@ -178,7 +178,7 @@ export function Programs() {
         let filteredPrograms = programsData;
         if (filters.location) {
           filteredPrograms = programsData.filter(
-            (p) => p.location && p.location === filters.location
+            (p) => p.location && p.location === filters.location,
           );
         }
 
@@ -192,7 +192,7 @@ export function Programs() {
             // Remove featured programs from regular results to avoid duplicates
             const featuredIds = new Set(featuredPrograms.map((p) => p.id));
             const nonFeaturedPrograms = filteredPrograms.filter(
-              (p) => !featuredIds.has(p.id)
+              (p) => !featuredIds.has(p.id),
             );
 
             // Combine: featured first, then others
@@ -236,7 +236,7 @@ export function Programs() {
         setSearchLoading(false);
       }
     },
-    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t]
+    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t],
   );
 
   // Fetch unique locations
@@ -304,7 +304,7 @@ export function Programs() {
       // Use normal navigation for pagination (user expects to scroll to top)
       setSearchParams(params, { replace: !isPagination });
     },
-    [filters, pagination.currentPage, sortBy, sortOrder, setSearchParams]
+    [filters, pagination.currentPage, sortBy, sortOrder, setSearchParams],
   );
 
   // Effects
@@ -604,7 +604,7 @@ export function Programs() {
                       </h3>
                       <p className="text-sm text-blue-700">
                         {t(
-                          "Featured programs shown first, followed by all others"
+                          "Featured programs shown first, followed by all others",
                         ) ||
                           "Featured programs shown first, followed by all others"}
                       </p>
@@ -780,7 +780,7 @@ export function Programs() {
                     </h3>
                     <p className="text-gray-600 mb-6">
                       {t(
-                        "There are currently no programs available. Please check back later."
+                        "There are currently no programs available. Please check back later.",
                       ) ||
                         "There are currently no programs available. Please check back later."}
                     </p>

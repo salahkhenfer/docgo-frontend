@@ -45,7 +45,7 @@ const PaymentPage = () => {
         const itemType = courseId ? "course" : "program";
 
         const response = await axios.get(
-          `/user-payments/check-application/${itemType}/${itemId}`
+          `/user-payments/check-application/${itemType}/${itemId}`,
         );
 
         if (response.data.success && response.data.hasApplication) {
@@ -65,7 +65,7 @@ const PaymentPage = () => {
               allowOutsideClick: false,
             }).then(() => {
               navigate(
-                `/${itemType === "course" ? "Courses" : "Programs"}/${itemId}`
+                `/${itemType === "course" ? "Courses" : "Programs"}/${itemId}`,
               );
             });
             return;
@@ -81,7 +81,7 @@ const PaymentPage = () => {
               showConfirmButton: false,
             }).then(() => {
               navigate(
-                `/dashboard/${itemType === "course" ? "courses" : "programs"}`
+                `/dashboard/${itemType === "course" ? "courses" : "programs"}`,
               );
             });
             return;
@@ -143,7 +143,7 @@ const PaymentPage = () => {
           },
         });
         setError(
-          "Failed to fetch payment configuration , please try later or contact the support team"
+          "Failed to fetch payment configuration , please try later or contact the support team",
         );
       } finally {
         setConfigLoading(false);
@@ -210,12 +210,12 @@ const PaymentPage = () => {
         const currentItemType = courseId
           ? "course"
           : programId
-          ? "program"
-          : "item";
+            ? "program"
+            : "item";
 
         // Don't redirect, show error message instead
         setError(
-          `Failed to fetch ${currentItemType} data. Please try again later.`
+          `Failed to fetch ${currentItemType} data. Please try again later.`,
         );
 
         // Set basic item data from URL params if available
@@ -252,7 +252,7 @@ const PaymentPage = () => {
             `/api/upload/Payment/${
               itemType === "course" ? "Courses" : "Programs"
             }/${itemData.id}`,
-            JSON.stringify({ method: "DELETE" })
+            JSON.stringify({ method: "DELETE" }),
           );
         } catch (error) {
           console.warn("Cleanup on unload failed:", error);
@@ -407,7 +407,7 @@ const PaymentPage = () => {
     // Set default payment method if none selected or current selection is not available
     if (availableMethods.length > 0) {
       const currentMethodAvailable = availableMethods.some(
-        (method) => method.id === selectedMethod
+        (method) => method.id === selectedMethod,
       );
 
       if (!currentMethodAvailable) {
@@ -467,7 +467,7 @@ const PaymentPage = () => {
       } catch (cleanupError) {
         console.warn(
           "Payment cleanup failed (may be normal):",
-          cleanupError.message
+          cleanupError.message,
         );
       }
     }
@@ -644,7 +644,7 @@ const PaymentPage = () => {
                         <p className="text-red-600">
                           <strong>Submitted:</strong>{" "}
                           {new Date(
-                            existingPayment.createdAt
+                            existingPayment.createdAt,
                           ).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -697,7 +697,7 @@ const PaymentPage = () => {
                         <p className="text-gray-600">
                           <strong>Submitted:</strong>{" "}
                           {new Date(
-                            existingPayment.createdAt
+                            existingPayment.createdAt,
                           ).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -724,8 +724,8 @@ const PaymentPage = () => {
                   {existingPayment && existingPayment.status === "rejected"
                     ? "Resubmit Payment"
                     : existingPayment && existingPayment.status === "deleted"
-                    ? "Submit New Payment"
-                    : "Choose Payment Method"}
+                      ? "Submit New Payment"
+                      : "Choose Payment Method"}
                 </h2>
 
                 <PaymentMethodSelector
@@ -805,7 +805,7 @@ const PaymentPage = () => {
                         {t(
                           itemType === "course"
                             ? "paymentPage.coursePrice"
-                            : "paymentPage.programFee"
+                            : "paymentPage.programFee",
                         )}
                       </span>
                       <span className="font-semibold text-gray-900 text-lg">
