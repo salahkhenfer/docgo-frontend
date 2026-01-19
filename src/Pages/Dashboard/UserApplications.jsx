@@ -25,12 +25,6 @@ const UserApplications = () => {
     courses: [],
   });
 
-  // Debug: Log programs data when it changes
-  useEffect(() => {
-    if (applications.programs && applications.programs.length > 0) {
-      console.log("Programs data:", applications.programs);
-    }
-  }, [applications.programs]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(type || "programs");
 
@@ -160,27 +154,6 @@ const UserApplications = () => {
       checkPaymentStatus();
     }, [application.id, type]);
 
-    // Debug: Log status and paymentStatus for each program application after paymentStatus is updated
-    useEffect(() => {
-      if (type === "program") {
-        console.log(
-          "Program Application FULL OBJECT",
-          application.id,
-          application,
-        );
-        console.log("Program Application", application.id, {
-          Status: application.Status,
-          EnrolledAt: application.EnrolledAt,
-          paymentStatus,
-        });
-      }
-    }, [
-      type,
-      application.id,
-      application.Status,
-      application.EnrolledAt,
-      paymentStatus,
-    ]);
     // Get the item using the same pattern as PendingApplicationsSection
     const item =
       type === "program"

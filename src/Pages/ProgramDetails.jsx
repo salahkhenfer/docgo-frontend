@@ -250,14 +250,6 @@ export const ProgramDetails = () => {
 
   const { program } = programData;
 
-  // Console log the program data
-  console.log("=== PROGRAM DATA ===");
-  console.log("Full program object:", program);
-  console.log("program.videoUrl:", program.videoUrl);
-  console.log("program.videos:", program.videos);
-  console.log("program.videos[0]?.videoUrl:", program.videos?.[0]?.videoUrl);
-  console.log("program.Image:", program.Image);
-
   // Check what video URL we'll use
   const videoUrl = program.videoUrl || program.videos?.[0]?.videoUrl;
   const fullVideoUrl =
@@ -265,8 +257,6 @@ export const ProgramDetails = () => {
     (videoUrl.startsWith("http")
       ? videoUrl
       : `${import.meta.env.VITE_API_URL}${videoUrl}`);
-  console.log("Final video URL to use:", fullVideoUrl);
-  console.log("===================");
 
   const programTitle =
     i18n.language === "ar" && program.Title_ar

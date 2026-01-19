@@ -286,9 +286,6 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
 
   const quizData = normalizedQuizData;
 
-  // Log quiz data for debugging
-  console.log("Quiz data loaded:", quizData);
-
   const handleAnswerChange = (questionId, answer) => {
     setUserAnswers((prev) => ({ ...prev, [questionId]: answer }));
   };

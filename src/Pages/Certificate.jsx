@@ -80,11 +80,8 @@ export default function Certificate() {
     courseHours: (() => {
       // Calculate total video duration
       const videos = courseData?.course?.videos || [];
-      console.log("Total videos found:", videos.length);
-      console.log("Video objects:", videos);
 
       if (videos.length === 0) {
-        console.log("No videos, using course duration/hours");
         return (
           courseData?.course?.duration || courseData?.course?.hours || "N/A"
         );
@@ -92,7 +89,6 @@ export default function Certificate() {
 
       let totalSeconds = 0;
       videos.forEach((video, index) => {
-        console.log(`Video ${index + 1}:`, video);
         // Video duration might be in different formats: "HH:MM:SS", "MM:SS", or seconds
         const duration =
           video.duration ||
@@ -100,7 +96,6 @@ export default function Certificate() {
           video.length ||
           video.time ||
           0;
-        console.log(`  Duration found:`, duration);
 
         if (typeof duration === "string") {
           const parts = duration.split(":").map((p) => parseInt(p) || 0);
@@ -108,27 +103,21 @@ export default function Certificate() {
             // HH:MM:SS
             const seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
             totalSeconds += seconds;
-            console.log(`  Parsed as HH:MM:SS: ${seconds} seconds`);
           } else if (parts.length === 2) {
             // MM:SS
             const seconds = parts[0] * 60 + parts[1];
             totalSeconds += seconds;
-            console.log(`  Parsed as MM:SS: ${seconds} seconds`);
           } else {
             const seconds = parseInt(duration) || 0;
             totalSeconds += seconds;
-            console.log(`  Parsed as number string: ${seconds} seconds`);
           }
         } else if (typeof duration === "number") {
           totalSeconds += duration;
-          console.log(`  Added as number: ${duration} seconds`);
         }
       });
 
-      console.log("Total seconds:", totalSeconds);
       // Convert total seconds to hours (rounded to 1 decimal)
       const hours = (totalSeconds / 3600).toFixed(1);
-      console.log("Total hours:", hours);
       return hours;
     })(),
     certificateId: `CERT-${new Date().getFullYear()}-${courseId}-${

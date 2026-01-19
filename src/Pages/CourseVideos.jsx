@@ -211,15 +211,6 @@ export function CourseVideos() {
   // Fix: Quiz data is an array, check if it has items
   const hasQuiz = Array.isArray(course.quiz) && course.quiz.length > 0;
 
-  // Debug: Log quiz availability
-  console.log("Course quiz data:", course.quiz);
-  console.log("Has quiz:", hasQuiz);
-  console.log("Course resources:", course.resources);
-  console.log(
-    "Has resources:",
-    course.resources && course.resources.length > 0,
-  );
-
   // Debounced function to update video progress to backend
   const updateVideoProgressDebounced = (() => {
     let timeoutId;
@@ -343,7 +334,6 @@ export function CourseVideos() {
     if (videoPath.startsWith("http")) return videoPath;
 
     const fullUrl = import.meta.env.VITE_API_URL + videoPath;
-    console.log("Video URL:", fullUrl);
     return fullUrl;
   };
 

@@ -125,42 +125,47 @@ const Profile = () => {
         profileData.enrollments?.courses?.map((enrollment) => ({
             id: enrollment.Course?.id || enrollment.id,
             title: enrollment.Course?.Title || "Unknown Course",
-            description: `Course Duration: ${
+            description: enrollment.Course?.Description || `Course Duration: ${
                 enrollment.Course?.Duration || "Unknown"
             }`,
-            progress: Math.round(enrollment.CompletionPercentage || 0),
-            duration: enrollment.Course?.Duration,
+            progress: Math.round(enrollment.progressPercentage || enrollment.CompletionPercentage || 0),
+            duration: enrollment.Course?.Duration ? String(enrollment.Course.Duration) : null,
             Image: enrollment.Course?.Image,
-            isCompleted: enrollment.IsCompleted,
+            isCompleted: enrollment.IsCompleted || enrollment.status === "completed",
+            status: enrollment.status || (enrollment.IsCompleted ? "completed" : "active"),
+            enrolledAt: enrollment.enrollmentDate || enrollment.createdAt || enrollment.LastWatchedAt,
             lastWatchedAt: enrollment.LastWatchedAt,
+            videos_count: enrollment.Course?.videos_count || enrollment.Course?.VideosCount,
         })) || [];
 
     // Transform applications (combine programs and courses)
+    // Backend structure: data.applications.programs[] and data.applications.courses[]
     const transformedApplications = [
         ...(profileData.applications?.programs?.map((app) => ({
             id: app.id,
-            program: app.applicationProgram?.Title || "Unknown Program",
-            university:
-                app.applicationProgram?.organization || "Unknown University",
-            country: app.applicationProgram?.location || "Unknown",
-            status: app.status,
+            program: app.Program?.Title || app.Program?.Title_ar || "Unknown Program",
+            university: app.Program?.organization || app.Program?.organization_ar || "Unknown University",
+            country: app.Program?.location || "Unknown",
+            status: app.status, // "opened", "pending", "approved", "completed"
             submissionDate: app.createdAt,
-            deadline: app.applicationProgram?.applicationDeadline,
+            deadline: app.Program?.applicationDeadline,
             type: "program",
-            scholarshipAmount: app.applicationProgram?.scholarshipAmount,
-            currency: app.applicationProgram?.currency,
+            scholarshipAmount: app.Program?.scholarshipAmount,
+            currency: app.Program?.currency,
+            paymentType: app.paymentType,
+            category: app.Program?.Category || app.Program?.Category_ar,
         })) || []),
         ...(profileData.applications?.courses?.map((app) => ({
             id: app.id,
-            program: app.applicationCourse?.Title || "Unknown Course",
+            program: app.Course?.Title || app.Course?.Title_ar || "Unknown Course",
             university: "DocGo Platform",
             country: "Online",
             status: app.status,
             submissionDate: app.createdAt,
             type: "course",
-            price: app.applicationCourse?.Price,
-            level: app.applicationCourse?.Level,
-            category: app.applicationCourse?.Category,
+            price: app.Course?.Price,
+            level: app.Course?.Level || app.Course?.Level_ar,
+            category: app.Course?.Category || app.Course?.Category_ar,
         })) || []),
     ];
 

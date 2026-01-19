@@ -81,10 +81,6 @@ export default function Courses() {
 
     // State management
     const [courses, setCourses] = useState([]);
-    useEffect(() => {
-        console.log("Courses ", courses);
-
-    }, [courses]);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

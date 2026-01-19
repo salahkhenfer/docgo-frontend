@@ -80,9 +80,9 @@ const CourseCard = ({ course }) => {
 
     // Extract course data whether it's from enrollment or direct course object
     const courseData = course.Course || course;
-    const enrollmentProgress = course.progress || 0;
-    const enrollmentDate = course.enrolledAt || course.createdAt;
-    const enrollmentStatus = course.status || "active";
+    const enrollmentProgress = course.progress || course.progressPercentage || 0;
+    const enrollmentDate = course.enrolledAt || course.enrollmentDate || course.createdAt || course.lastWatchedAt;
+    const enrollmentStatus = course.status || (course.isCompleted ? "completed" : "active");
 
     return (
         <div className="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow border border-gray-100">
@@ -128,7 +128,7 @@ const CourseCard = ({ course }) => {
                 <div className="flex justify-between text-xs text-gray-500 mb-3">
                     <span>
                         {t("courses_data.enrolled")}:{" "}
-                        {new Date(enrollmentDate).toLocaleDateString()}
+                        {enrollmentDate ? new Date(enrollmentDate).toLocaleDateString() : t("profile_data.active")}
                     </span>
                     {courseData.duration && <span>{courseData.duration}</span>}
                 </div>

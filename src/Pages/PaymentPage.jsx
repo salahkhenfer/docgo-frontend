@@ -300,20 +300,6 @@ const PaymentPage = () => {
   const price = getItemPrice();
   // const originalPrice = getOriginalPrice(); // Commented out - not currently used
 
-  // Debug logging for program pricing
-  if (itemType === "program" && itemData) {
-    console.log("Program Payment Debug:", {
-      itemData,
-      Price: itemData.Price,
-      price: itemData.price,
-      discountPrice: itemData.discountPrice,
-      scholarshipAmount: itemData.scholarshipAmount,
-      calculatedPrice: price,
-      Currency: itemData.Currency,
-      currency: itemData.currency,
-    });
-  }
-
   // Improved currency handling with proper fallbacks
   const getCurrency = () => {
     // Try to get currency from item data

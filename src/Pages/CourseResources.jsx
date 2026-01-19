@@ -16,12 +16,6 @@ export default function CourseResources() {
   }
 
   const course = courseData?.course;
-  console.log("CourseResources - Full courseData:", courseData);
-  console.log("CourseResources - course object:", course);
-  console.log("CourseResources - course.resources:", course?.resources);
-  console.log("CourseResources - course.pdfs:", course?.pdfs);
-  console.log("CourseResources - course.documents:", course?.documents);
-  console.log("CourseResources - course.files:", course?.files);
 
   const resources =
     course?.resources ||
@@ -29,7 +23,6 @@ export default function CourseResources() {
     course?.documents ||
     course?.files ||
     [];
-  console.log("CourseResources - final resources array:", resources);
 
   // If viewing a PDF, show it in an embedded viewer
   if (viewingPdf) {
@@ -121,14 +114,6 @@ export default function CourseResources() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {resources.map((resource, index) => {
-                // Log the entire resource object to see its structure
-                console.log(`=== Resource ${index} ===`);
-                console.log(
-                  "Full resource object:",
-                  JSON.stringify(resource, null, 2)
-                );
-                console.log("All keys:", Object.keys(resource));
-
                 // Try to find URL in any possible field
                 let resourceUrl =
                   resource.url ||
@@ -154,9 +139,6 @@ export default function CourseResources() {
                     resourceUrl.startsWith("/") ? "" : "/"
                   }${resourceUrl}`;
                 }
-
-                console.log("Extracted Resource URL:", resourceUrl);
-                console.log("===================");
 
                 const handleOpenPDF = () => {
                   if (!resourceUrl) {

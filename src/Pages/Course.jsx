@@ -64,15 +64,6 @@ export const Course = () => {
     paymentStatus, // Add payment status
   } = useCourse(courseId);
 
-  // Debug enrollment status
-  useEffect(() => {
-    if (courseData) {
-      console.log("Course Data:", courseData);
-      console.log("Is Enrolled:", isEnrolled);
-      console.log("User Status:", courseData.userStatus);
-    }
-  }, [courseData, isEnrolled]);
-
   const formatCurrency = (amount, currency = "USD") => {
     if (!amount) return t("Free") || "Free";
     // eslint-disable-next-line no-undef
@@ -152,7 +143,7 @@ export const Course = () => {
           url: window.location.href,
         });
       } catch (error) {
-        console.log("Error sharing:", error);
+        // Error sharing
       }
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -241,7 +232,6 @@ export const Course = () => {
   } = courseData;
 
   const handleVideoClick = (video) => {
-    console.log("Video clicked:", video);
     setCurrentVideo(video);
     setShowVideo(true);
   };
@@ -265,9 +255,6 @@ export const Course = () => {
       video.videoPath ||
       video.Video ||
       video.video;
-
-    console.log("Video object:", video);
-    console.log("Extracted video path:", videoPath);
 
     if (!videoPath) return null;
     if (videoPath.startsWith("http")) return videoPath;

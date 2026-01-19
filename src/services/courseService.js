@@ -72,7 +72,6 @@ export const courseService = {
             const response = await api.post(`/enrollment/courses/enroll-free`, {
                 courseId: courseId,
             });
-            console.log("Enroll Free Course Response:", response.data);
             
             return response.data;
         } catch (error) {
