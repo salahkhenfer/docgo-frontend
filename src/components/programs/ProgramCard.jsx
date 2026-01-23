@@ -93,7 +93,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         year: "numeric",
         month: "short",
         day: "numeric",
-      }
+      },
     );
   };
 
@@ -262,7 +262,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
           {program.status && (
             <span
               className={`px-3 py-1 text-xs rounded-full font-medium ${getStatusColor(
-                program.status
+                program.status,
               )}`}
             >
               {t(program.status) || program.status}
@@ -271,7 +271,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
           {program.programType && (
             <span
               className={`px-3 py-1 text-xs rounded-full font-medium ${getProgramTypeColor(
-                program.programType
+                program.programType,
               )}`}
             >
               {getProgramTypeIcon(program.programType)} {program.programType}
@@ -345,7 +345,8 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         {(() => {
           // Determine program price (discount > price > Price)
           const pDiscount =
-            program.discountPrice !== undefined && program.discountPrice !== null
+            program.discountPrice !== undefined &&
+            program.discountPrice !== null
               ? Number(program.discountPrice)
               : 0;
           const pPrice = Number(program.Price || program.price || 0);
@@ -366,7 +367,10 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                 to={`/Courses/${courseId}`}
                 onClick={() => {
                   window.scrollTo(0, 0);
-                  console.log("Free program - redirecting to course:", courseId);
+                  console.log(
+                    "Free program - redirecting to course:",
+                    courseId,
+                  );
                   if (onClick) onClick(program.id);
                 }}
                 className="w-full text-center px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"

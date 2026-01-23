@@ -3,10 +3,10 @@ function Step({ Number, label, description }) {
     <div className="group relative flex flex-col items-center gap-6 p-8 text-center bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
       {/* Gradient Glow on Hover */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/0 via-indigo-400/0 to-purple-400/0 group-hover:from-blue-400/10 group-hover:via-indigo-400/10 group-hover:to-purple-400/10 transition-all duration-500"></div>
-      
+
       {/* Top Accent Line */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full group-hover:w-3/4 transition-all duration-500"></div>
-      
+
       <div className="relative z-10 flex flex-col items-center gap-6">
         {/* Enhanced Number Circle */}
         <div className="relative">

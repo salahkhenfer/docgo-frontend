@@ -61,16 +61,16 @@ export function Programs() {
     location: searchParams.get("location") || "",
     isRemote: searchParams.get("isRemote") || "",
   });
-  
+
   // Debug log on mount
   useEffect(() => {
     console.log("Programs.jsx - Initial filters from URL:", {
       category: searchParams.get("category"),
       location: searchParams.get("location"),
-      allParams: Object.fromEntries(searchParams.entries())
+      allParams: Object.fromEntries(searchParams.entries()),
     });
   }, []);
-  
+
   // Sync filters from URL parameters whenever they change
   useEffect(() => {
     const newFilters = {
@@ -88,19 +88,19 @@ export function Programs() {
       location: searchParams.get("location") || "",
       isRemote: searchParams.get("isRemote") || "",
     };
-    
+
     console.log("Syncing filters from URL:", newFilters);
     setFilters(newFilters);
-    
+
     // Also sync search query
     const urlSearch = searchParams.get("search") || "";
     setSearchQuery(urlSearch);
     setDebouncedSearch(urlSearch);
-    
+
     // Sync pagination
     const page = parseInt(searchParams.get("page")) || 1;
-    setPagination(prev => ({ ...prev, currentPage: page }));
-    
+    setPagination((prev) => ({ ...prev, currentPage: page }));
+
     // Sync sorting
     const urlSortBy = searchParams.get("sortBy") || "createdAt";
     const urlSortOrder = searchParams.get("sortOrder") || "desc";
@@ -170,7 +170,7 @@ export function Programs() {
           hasFilters,
           filters,
           debouncedSearch,
-          page
+          page,
         });
 
         let response;
@@ -234,8 +234,13 @@ export function Programs() {
         let programsData = [];
         if (response) {
           // Try multiple possible response structures
-          programsData = response.data?.programs || response.data?.data?.programs || response.programs || response.data || [];
-          
+          programsData =
+            response.data?.programs ||
+            response.data?.data?.programs ||
+            response.programs ||
+            response.data ||
+            [];
+
           // If still empty but response has data property, check if it's an array
           if (!Array.isArray(programsData) || programsData.length === 0) {
             if (Array.isArray(response.data)) {
@@ -245,8 +250,11 @@ export function Programs() {
             }
           }
         }
-        
-        console.log("Programs response (full):", JSON.stringify(response, null, 2));
+
+        console.log(
+          "Programs response (full):",
+          JSON.stringify(response, null, 2),
+        );
         console.log("Programs data (parsed):", programsData);
         console.log("Programs data length:", programsData.length);
         console.log("Programs data is array:", Array.isArray(programsData));
@@ -266,13 +274,16 @@ export function Programs() {
           try {
             const featuredResponse =
               await clientProgramsAPI.getFeaturedPrograms(6);
-            
+
             // Handle different response structures for featured programs
             let featuredPrograms = [];
             if (featuredResponse) {
-              featuredPrograms = featuredResponse.data?.programs || featuredResponse.programs || [];
+              featuredPrograms =
+                featuredResponse.data?.programs ||
+                featuredResponse.programs ||
+                [];
             }
-            
+
             console.log("Featured programs:", featuredPrograms);
 
             // Remove featured programs from regular results to avoid duplicates
@@ -282,31 +293,43 @@ export function Programs() {
             );
 
             // Combine: featured first, then others
-            const combinedPrograms = [...featuredPrograms, ...nonFeaturedPrograms];
-            console.log("Setting combined programs (featured + regular):", combinedPrograms.length);
-            
+            const combinedPrograms = [
+              ...featuredPrograms,
+              ...nonFeaturedPrograms,
+            ];
+            console.log(
+              "Setting combined programs (featured + regular):",
+              combinedPrograms.length,
+            );
+
             // Store ALL programs for filtering
             setAllPrograms(combinedPrograms);
             setPrograms(combinedPrograms);
             setShowingFeatured(true);
-            
+
             // Extract filter data from ALL programs
             extractFiltersFromPrograms(combinedPrograms);
           } catch (featuredError) {
             console.error("Error fetching featured programs:", featuredError);
-            console.log("Setting programs from filteredPrograms (no featured):", filteredPrograms.length);
-            
+            console.log(
+              "Setting programs from filteredPrograms (no featured):",
+              filteredPrograms.length,
+            );
+
             // Store ALL programs for filtering
             setAllPrograms(filteredPrograms);
             setPrograms(filteredPrograms);
             setShowingFeatured(false);
-            
+
             // Extract filter data from ALL programs
             extractFiltersFromPrograms(filteredPrograms);
           }
         } else {
-          console.log("Setting programs (with filters/search):", filteredPrograms.length);
-          
+          console.log(
+            "Setting programs (with filters/search):",
+            filteredPrograms.length,
+          );
+
           // When filters are active, don't overwrite allPrograms
           // Just update the displayed programs
           setPrograms(filteredPrograms);
@@ -352,41 +375,43 @@ export function Programs() {
     }
 
     // Extract unique categories
-    const uniqueCategories = [...new Set(
-      programsData
-        .map(p => p.category || p.Category)
-        .filter(Boolean)
-    )];
-    
+    const uniqueCategories = [
+      ...new Set(
+        programsData.map((p) => p.category || p.Category).filter(Boolean),
+      ),
+    ];
+
     // Extract unique organizations
-    const uniqueOrganizations = [...new Set(
-      programsData
-        .map(p => p.organization || p.Organization)
-        .filter(Boolean)
-    )];
-    
+    const uniqueOrganizations = [
+      ...new Set(
+        programsData
+          .map((p) => p.organization || p.Organization)
+          .filter(Boolean),
+      ),
+    ];
+
     // Extract unique locations
-    const uniqueLocations = [...new Set(
-      programsData
-        .map(p => p.location || p.Location)
-        .filter(Boolean)
-    )];
+    const uniqueLocations = [
+      ...new Set(
+        programsData.map((p) => p.location || p.Location).filter(Boolean),
+      ),
+    ];
 
     console.log("Extracted filters from ALL programs:", {
       categories: uniqueCategories,
       organizations: uniqueOrganizations,
       locations: uniqueLocations,
-      totalPrograms: programsData.length
+      totalPrograms: programsData.length,
     });
 
     // Set filters from all programs
     setCategories(uniqueCategories);
     setOrganizations(uniqueOrganizations);
     setLocations(uniqueLocations);
-    
-    setStats(prev => ({
+
+    setStats((prev) => ({
       ...prev,
-      organizations: uniqueOrganizations.length
+      organizations: uniqueOrganizations.length,
     }));
   }, []);
 
@@ -462,7 +487,7 @@ export function Programs() {
   useEffect(() => {
     fetchFiltersData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
   // Fetch programs whenever filters or pagination changes
   useEffect(() => {
     console.log("Fetching programs due to filters/pagination change", {
@@ -470,7 +495,7 @@ export function Programs() {
       debouncedSearch,
       page: pagination.currentPage,
       sortBy,
-      sortOrder
+      sortOrder,
     });
     fetchPrograms(pagination.currentPage, false, true);
   }, [

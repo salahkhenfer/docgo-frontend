@@ -69,7 +69,8 @@ body,
 
 /* ==== Creative Background Animations ==== */
 @keyframes blob {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   33% {
@@ -81,7 +82,8 @@ body,
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
   50% {
@@ -110,7 +112,7 @@ body,
 }
 
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;

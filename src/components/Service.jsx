@@ -1,14 +1,13 @@
-import { Link } from "react-router-dom";
-import LightColoredButton from "./Buttons/LightColoredButton";
-import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Service({ url, h1, h3, p, btn, to }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.div 
+    <motion.div
       className="group relative flex flex-col gap-6 p-8 w-full md:w-[45%] lg:w-[48%] bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -17,7 +16,7 @@ function Service({ url, h1, h3, p, btn, to }) {
     >
       {/* Gradient Background Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-indigo-500/5 group-hover:via-purple-500/5 group-hover:to-pink-500/5 transition-all duration-500"></div>
-      
+
       {/* Sparkle Effect */}
       <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <Sparkles className="w-6 h-6 text-purple-500 animate-pulse" />
@@ -59,13 +58,15 @@ function Service({ url, h1, h3, p, btn, to }) {
 
         {/* Enhanced Button */}
         <Link to={to} className="w-full mt-4">
-          <motion.button 
+          <motion.button
             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 group/btn"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <span>{btn}</span>
-            <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
+            <ArrowRight
+              className={`w-5 h-5 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`}
+            />
           </motion.button>
         </Link>
       </div>
