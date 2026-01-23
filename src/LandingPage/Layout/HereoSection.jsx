@@ -1,12 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  BookOpen,
-  Globe,
-  GraduationCap,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import StudyForm from "../../components/StudyForm";
@@ -90,8 +83,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-          >
-          </motion.div>
+          ></motion.div>
 
           {/* CTA Button with Enhanced Design */}
           <motion.div
