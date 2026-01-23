@@ -18,6 +18,7 @@ export function Programs() {
 
   // State management
   const [programs, setPrograms] = useState([]);
+  const [allPrograms, setAllPrograms] = useState([]); // Store all programs for filtering
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -49,7 +50,7 @@ export function Programs() {
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
     organization: searchParams.get("organization") || "",
-    status: searchParams.get("status") || "open",
+    status: searchParams.get("status") || "",
     featured: searchParams.get("featured") || "",
     programType: searchParams.get("programType") || "",
     priceRange: searchParams.get("priceRange") || "",
@@ -60,6 +61,52 @@ export function Programs() {
     location: searchParams.get("location") || "",
     isRemote: searchParams.get("isRemote") || "",
   });
+  
+  // Debug log on mount
+  useEffect(() => {
+    console.log("Programs.jsx - Initial filters from URL:", {
+      category: searchParams.get("category"),
+      location: searchParams.get("location"),
+      allParams: Object.fromEntries(searchParams.entries())
+    });
+  }, []);
+  
+  // Sync filters from URL parameters whenever they change
+  useEffect(() => {
+    const newFilters = {
+      search: searchParams.get("search") || "",
+      category: searchParams.get("category") || "",
+      organization: searchParams.get("organization") || "",
+      status: searchParams.get("status") || "",
+      featured: searchParams.get("featured") || "",
+      programType: searchParams.get("programType") || "",
+      priceRange: searchParams.get("priceRange") || "",
+      minPrice: searchParams.get("minPrice") || "",
+      maxPrice: searchParams.get("maxPrice") || "",
+      tags: searchParams.get("tags") || "",
+      country: searchParams.get("country") || "",
+      location: searchParams.get("location") || "",
+      isRemote: searchParams.get("isRemote") || "",
+    };
+    
+    console.log("Syncing filters from URL:", newFilters);
+    setFilters(newFilters);
+    
+    // Also sync search query
+    const urlSearch = searchParams.get("search") || "";
+    setSearchQuery(urlSearch);
+    setDebouncedSearch(urlSearch);
+    
+    // Sync pagination
+    const page = parseInt(searchParams.get("page")) || 1;
+    setPagination(prev => ({ ...prev, currentPage: page }));
+    
+    // Sync sorting
+    const urlSortBy = searchParams.get("sortBy") || "createdAt";
+    const urlSortOrder = searchParams.get("sortOrder") || "desc";
+    setSortBy(urlSortBy);
+    setSortOrder(urlSortOrder);
+  }, [searchParams]);
   // Use ref to avoid dependency issues
   const filtersRef = useRef(filters);
   filtersRef.current = filters;
@@ -118,6 +165,14 @@ export function Programs() {
           filters.location ||
           filters.isRemote;
 
+        console.log("Fetching programs with:", {
+          hasSearch,
+          hasFilters,
+          filters,
+          debouncedSearch,
+          page
+        });
+
         let response;
 
         if (hasSearch || hasFilters) {
@@ -140,6 +195,7 @@ export function Programs() {
             limit: pagination.limit,
             sortBy,
             sortOrder,
+            includeUnpublished: true, // Show unpublished programs (for testing/admin)
           };
 
           // Remove empty parameters
@@ -149,6 +205,7 @@ export function Programs() {
             }
           });
 
+          console.log("Calling searchPrograms with:", searchParams);
           response = await clientProgramsAPI.searchPrograms(searchParams);
         } else {
           // Use regular getPrograms endpoint for all programs
@@ -157,7 +214,7 @@ export function Programs() {
             limit: pagination.limit,
             sortBy,
             sortOrder,
-            status: filters.status || "open",
+            status: filters.status || "",
             featured: filters.featured || "",
             programType: filters.programType || "",
             priceRange: filters.priceRange || "",
@@ -167,19 +224,41 @@ export function Programs() {
             country: filters.country || "",
             location: filters.location || "",
             isRemote: filters.isRemote || "",
+            includeUnpublished: true, // Show unpublished programs (for testing/admin)
           };
+          console.log("Calling getPrograms with:", getParams);
           response = await clientProgramsAPI.getPrograms(getParams);
         }
 
-        // Get programs data from response
-        const programsData = response.programs || [];
+        // Get programs data from response - handle different response structures
+        let programsData = [];
+        if (response) {
+          // Try multiple possible response structures
+          programsData = response.data?.programs || response.data?.data?.programs || response.programs || response.data || [];
+          
+          // If still empty but response has data property, check if it's an array
+          if (!Array.isArray(programsData) || programsData.length === 0) {
+            if (Array.isArray(response.data)) {
+              programsData = response.data;
+            } else if (Array.isArray(response)) {
+              programsData = response;
+            }
+          }
+        }
+        
+        console.log("Programs response (full):", JSON.stringify(response, null, 2));
+        console.log("Programs data (parsed):", programsData);
+        console.log("Programs data length:", programsData.length);
+        console.log("Programs data is array:", Array.isArray(programsData));
 
         // Filter programs by selected location if set
         let filteredPrograms = programsData;
         if (filters.location) {
+          console.log("Filtering by location:", filters.location);
           filteredPrograms = programsData.filter(
             (p) => p.location && p.location === filters.location,
           );
+          console.log("Filtered programs count:", filteredPrograms.length);
         }
 
         // If first page and no search/filters, get featured programs too
@@ -187,7 +266,14 @@ export function Programs() {
           try {
             const featuredResponse =
               await clientProgramsAPI.getFeaturedPrograms(6);
-            const featuredPrograms = featuredResponse.programs || [];
+            
+            // Handle different response structures for featured programs
+            let featuredPrograms = [];
+            if (featuredResponse) {
+              featuredPrograms = featuredResponse.data?.programs || featuredResponse.programs || [];
+            }
+            
+            console.log("Featured programs:", featuredPrograms);
 
             // Remove featured programs from regular results to avoid duplicates
             const featuredIds = new Set(featuredPrograms.map((p) => p.id));
@@ -196,14 +282,33 @@ export function Programs() {
             );
 
             // Combine: featured first, then others
-            setPrograms([...featuredPrograms, ...nonFeaturedPrograms]);
+            const combinedPrograms = [...featuredPrograms, ...nonFeaturedPrograms];
+            console.log("Setting combined programs (featured + regular):", combinedPrograms.length);
+            
+            // Store ALL programs for filtering
+            setAllPrograms(combinedPrograms);
+            setPrograms(combinedPrograms);
             setShowingFeatured(true);
+            
+            // Extract filter data from ALL programs
+            extractFiltersFromPrograms(combinedPrograms);
           } catch (featuredError) {
             console.error("Error fetching featured programs:", featuredError);
+            console.log("Setting programs from filteredPrograms (no featured):", filteredPrograms.length);
+            
+            // Store ALL programs for filtering
+            setAllPrograms(filteredPrograms);
             setPrograms(filteredPrograms);
             setShowingFeatured(false);
+            
+            // Extract filter data from ALL programs
+            extractFiltersFromPrograms(filteredPrograms);
           }
         } else {
+          console.log("Setting programs (with filters/search):", filteredPrograms.length);
+          
+          // When filters are active, don't overwrite allPrograms
+          // Just update the displayed programs
           setPrograms(filteredPrograms);
           setShowingFeatured(false);
         }
@@ -238,6 +343,52 @@ export function Programs() {
     },
     [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t],
   );
+
+  // Extract filter options from program data
+  const extractFiltersFromPrograms = useCallback((programsData) => {
+    if (!Array.isArray(programsData) || programsData.length === 0) {
+      console.log("No programs to extract filters from");
+      return;
+    }
+
+    // Extract unique categories
+    const uniqueCategories = [...new Set(
+      programsData
+        .map(p => p.category || p.Category)
+        .filter(Boolean)
+    )];
+    
+    // Extract unique organizations
+    const uniqueOrganizations = [...new Set(
+      programsData
+        .map(p => p.organization || p.Organization)
+        .filter(Boolean)
+    )];
+    
+    // Extract unique locations
+    const uniqueLocations = [...new Set(
+      programsData
+        .map(p => p.location || p.Location)
+        .filter(Boolean)
+    )];
+
+    console.log("Extracted filters from ALL programs:", {
+      categories: uniqueCategories,
+      organizations: uniqueOrganizations,
+      locations: uniqueLocations,
+      totalPrograms: programsData.length
+    });
+
+    // Set filters from all programs
+    setCategories(uniqueCategories);
+    setOrganizations(uniqueOrganizations);
+    setLocations(uniqueLocations);
+    
+    setStats(prev => ({
+      ...prev,
+      organizations: uniqueOrganizations.length
+    }));
+  }, []);
 
   // Fetch unique locations
   const fetchLocations = async () => {
@@ -307,12 +458,40 @@ export function Programs() {
     [filters, pagination.currentPage, sortBy, sortOrder, setSearchParams],
   );
 
-  // Effects
+  // Effects - Fetch filter data on mount only
   useEffect(() => {
     fetchFiltersData();
-    // Load programs initially
-    fetchPrograms();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  
+  // Fetch programs whenever filters or pagination changes
+  useEffect(() => {
+    console.log("Fetching programs due to filters/pagination change", {
+      filters,
+      debouncedSearch,
+      page: pagination.currentPage,
+      sortBy,
+      sortOrder
+    });
+    fetchPrograms(pagination.currentPage, false, true);
+  }, [
+    debouncedSearch,
+    filters.category,
+    filters.organization,
+    filters.status,
+    filters.featured,
+    filters.programType,
+    filters.priceRange,
+    filters.minPrice,
+    filters.maxPrice,
+    filters.tags,
+    filters.country,
+    filters.location,
+    filters.isRemote,
+    pagination.currentPage,
+    sortBy,
+    sortOrder,
+    fetchPrograms,
+  ]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -322,30 +501,6 @@ export function Programs() {
       }
     };
   }, []);
-
-  // Effect for when search or filters change
-  useEffect(() => {
-    // Reset to page 1 when search/filters change
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
-    fetchPrograms(1, true, true); // Pass isFilterChange = true
-  }, [
-    debouncedSearch,
-    filters.category,
-    filters.organization,
-    filters.status,
-    filters.programType,
-    filters.featured,
-    filters.priceRange,
-    filters.minPrice,
-    filters.maxPrice,
-    filters.tags,
-    filters.country,
-    filters.location,
-    filters.isRemote,
-    sortBy,
-    sortOrder,
-    fetchPrograms,
-  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle search with debouncing
   const handleSearch = useCallback((value) => {
@@ -375,19 +530,33 @@ export function Programs() {
 
   useEffect(() => {
     // This is for filter changes - use replace: true to preserve scroll
-    updateURLParams(false);
-  }, [updateURLParams]);
+    // Only update URL when filters change from user interaction, not from URL sync
+    if (filtersRef.current !== filters) {
+      updateURLParams(false);
+    }
+  }, [filters, updateURLParams]);
 
   // Event handlers
   const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({
-      ...prev,
+    const newFilters = {
+      ...filters,
       [key]: value,
-    }));
+    };
+    console.log("handleFilterChange:", { key, value, newFilters });
+    setFilters(newFilters);
     setPagination((prev) => ({
       ...prev,
       currentPage: 1,
     }));
+
+    // Update URL params immediately
+    const params = new URLSearchParams();
+    Object.entries(newFilters).forEach(([k, v]) => {
+      if (v) params.set(k, v);
+    });
+    if (sortBy !== "createdAt") params.set("sortBy", sortBy);
+    if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
+    setSearchParams(params, { replace: true });
 
     // For search, use debounced handler
     if (key === "search") {
@@ -433,11 +602,11 @@ export function Programs() {
       clearTimeout(timeoutRef.current);
     }
 
-    setFilters({
+    const cleared = {
       search: "",
       category: "",
       organization: "",
-      status: "open",
+      status: "",
       featured: "",
       programType: "",
       priceRange: "",
@@ -447,7 +616,9 @@ export function Programs() {
       country: "",
       location: "",
       isRemote: "",
-    });
+    };
+    console.log("resetFilters ->", cleared);
+    setFilters(cleared);
     setSearchQuery("");
     setDebouncedSearch("");
     setPagination((prev) => ({

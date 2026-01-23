@@ -35,12 +35,16 @@ const FeaturedPrograms = ({
                 limit,
             });
             
-
-            if (response.success) {
-                setPrograms(response.data.programs || []);
+            // Handle different response structures
+            if (response && response.success) {
+                const programs = response.data?.programs || response.programs || [];
+                setPrograms(programs);
+            } else if (response && response.programs) {
+                // Direct programs array in response
+                setPrograms(response.programs || []);
             } else {
                 throw new Error(
-                    response.message || "Failed to fetch featured programs"
+                    response?.message || "Failed to fetch featured programs"
                 );
             }
         } catch (err) {

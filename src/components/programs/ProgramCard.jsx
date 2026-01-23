@@ -342,18 +342,56 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         )}
 
         {/* Action Button */}
-        <Link
-          to={`/Programs/${program.id}`}
-          onClick={() => {
-            window.scrollTo(0, 0);
-            if (onClick) {
-              onClick(program.id);
-            }
-          }}
-          className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
-        >
-          {t("View Details") || "View Details"}
-        </Link>
+        {(() => {
+          // Determine program price (discount > price > Price)
+          const pDiscount =
+            program.discountPrice !== undefined && program.discountPrice !== null
+              ? Number(program.discountPrice)
+              : 0;
+          const pPrice = Number(program.Price || program.price || 0);
+          const effectivePrice = pDiscount > 0 ? pDiscount : pPrice;
+
+          // Try to find linked course id on program object
+          const courseId =
+            program.courseId ||
+            program.CourseId ||
+            (program.linkedCourse && program.linkedCourse.id) ||
+            (program.Course && program.Course.id) ||
+            null;
+
+          // If program is free and has a linked course, go directly to course
+          if (effectivePrice === 0 && courseId) {
+            return (
+              <Link
+                to={`/Courses/${courseId}`}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  console.log("Free program - redirecting to course:", courseId);
+                  if (onClick) onClick(program.id);
+                }}
+                className="w-full text-center px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
+              >
+                {t("Go to Course") || "Go to Course"}
+              </Link>
+            );
+          }
+
+          // Default: go to program details
+          return (
+            <Link
+              to={`/Programs/${program.id}`}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                if (onClick) {
+                  onClick(program.id);
+                }
+              }}
+              className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+            >
+              {t("View Details") || "View Details"}
+            </Link>
+          );
+        })()}
       </div>
     </article>
   );

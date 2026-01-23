@@ -2,31 +2,160 @@ import { useTranslation } from "react-i18next";
 import DarkColorButton from "../../components/Buttons/DarkColorButton";
 import StudyForm from "../../components/StudyForm";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles, Globe, GraduationCap, BookOpen, Users } from "lucide-react";
 
 function HeroSection() {
     const { t } = useTranslation();
     return (
-        <div className="flex justify-between items-center w-full h-full py-16 px-28 lg-md:max-3xl:px-20 lg-md:max-3xl:py-12 md:max-lg-md:px-8 md:max-lg-md:py-6 sm-sm:max-lg-sm:flex-col sm-sm:max-lg-sm:px-4">
-            <div className="flex flex-col items-start gap-5 w-[50%] py-16 sm-sm:max-lg-sm:items-center sm-sm:max-lg-sm:w-full">
-                <p className="text-xl text-customGray font-normal md:max-3xl:text-lg md:max-lg-md:text-base sm-sm:max-lg-sm:text-sm sm-sm:max-lg-sm:text-center">
-                    {t("ExploreOpportunities")}
-                </p>
-                <h1 className=" text-customGray font-medium leading-snug lg:text-3xl lg-md:leading-normal md:text-lg sm-sm:max-lg-sm:text-center sm-sm:text-lg">
-                    {t("DiveIntoPossibilities")}
-                </h1>
-                <p className="text-xl text-customGray leading-10 font-normal md:max-3xl:text-lg lg-md:max-3xl:leading-normal md:max-lg-md:text-base sm-sm:max-lg-sm:text-center sm-sm:max-lg-sm:text-sm">
-                    {t("JoinUsToDiscover")}
-                </p>
-                <Link to="/Programs">
-                    <DarkColorButton
-                        text={t("StudyAbroad")}
-                        style={
-                            "md:text-[12px] sm-sm:px-2 sm-sm:py-1 lg:px-8 lg:py-2 lg:text-base sm-sm:text-sm  px-8"
-                        }
-                    />
-                </Link>
+        <div className="relative flex justify-between items-center w-full py-12 md:py-16 px-6 md:px-12 lg:px-20 xl:px-28 overflow-hidden">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {/* Large Gradient Orbs */}
+                <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-400/30 rounded-full filter blur-3xl animate-blob"></div>
+                <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-indigo-400/30 to-pink-400/30 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
+                <div className="absolute -bottom-40 left-1/4 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
+                
+                {/* Floating Geometric Shapes */}
+                <div className="absolute top-20 left-1/4 w-20 h-20 border-4 border-blue-400/20 rounded-lg rotate-45 animate-float"></div>
+                <div className="absolute top-1/3 right-1/4 w-16 h-16 border-4 border-purple-400/20 rounded-full animate-float animation-delay-2000"></div>
+                <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-gradient-to-br from-indigo-400/20 to-pink-400/20 rounded-lg rotate-12 animate-float animation-delay-3000"></div>
+                <div className="absolute top-2/3 right-1/3 w-8 h-8 border-4 border-pink-400/20 rounded-full animate-float animation-delay-4000"></div>
+                
+                {/* Grid Pattern */}
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]"></div>
             </div>
-            <StudyForm />
+
+            <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12 w-full">
+                {/* Left Content Section */}
+                <motion.div 
+                    className="flex flex-col items-start gap-5 w-full lg:w-[50%] text-center lg:text-left"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                    {/* Badge with Icon */}
+                    <motion.div 
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm mx-auto lg:mx-0"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.6 }}
+                    >
+                        <Sparkles className="w-3 h-3 text-blue-600" />
+                        <p className="text-xs md:text-sm text-gray-700 font-medium">
+                            {t("ExploreOpportunities")}
+                        </p>
+                        <Sparkles className="w-3 h-3 text-purple-600" />
+                    </motion.div>
+
+                    {/* Main Heading with Gradient */}
+                    <motion.h1 
+                        className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight mx-auto lg:mx-0"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.8 }}
+                    >
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm">
+                            {t("DiveIntoPossibilities")}
+                        </span>
+                    </motion.h1>
+
+                    {/* Decorative Line */}
+                    <motion.div 
+                        className="h-1 w-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full mx-auto lg:mx-0"
+                        initial={{ width: 0 }}
+                        animate={{ width: 96 }}
+                        transition={{ delay: 0.5, duration: 0.8 }}
+                    />
+
+                    {/* Subheading */}
+                    <motion.p 
+                        className="text-sm md:text-base lg:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, duration: 0.8 }}
+                    >
+                        {t("JoinUsToDiscover")}
+                    </motion.p>
+
+                    {/* Stats Cards */}
+                    <motion.div 
+                        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 w-full"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.8 }}
+                    >
+                        <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+                            <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                                <Globe className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-500 font-medium">Countries</p>
+                                <p className="text-base font-bold text-gray-800">50+</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-purple-100">
+                            <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg">
+                                <GraduationCap className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-500 font-medium">Programs</p>
+                                <p className="text-base font-bold text-gray-800">200+</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-indigo-100">
+                            <div className="p-2 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-lg">
+                                <BookOpen className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-500 font-medium">Courses</p>
+                                <p className="text-base font-bold text-gray-800">500+</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-pink-100">
+                            <div className="p-2 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg">
+                                <Users className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-500 font-medium">Students</p>
+                                <p className="text-base font-bold text-gray-800">10K+</p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* CTA Button with Enhanced Design */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8, duration: 0.8 }}
+                        className="mx-auto lg:mx-0"
+                    >
+                        <Link to="/Programs">
+                            <motion.button 
+                                className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-sm md:text-base rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <span className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                <span className="relative flex items-center gap-2">
+                                    {t("StudyAbroad")}
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                </span>
+                            </motion.button>
+                        </Link>
+                    </motion.div>
+                </motion.div>
+
+                {/* Right Form Section */}
+                <motion.div
+                    className="w-full lg:w-[45%]"
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                >
+                    <StudyForm />
+                </motion.div>
+            </div>
         </div>
     );
 }

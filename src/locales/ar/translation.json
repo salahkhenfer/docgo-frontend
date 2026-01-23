@@ -765,5 +765,13 @@
     "Go back to course": "العودة إلى الدورة",
     "Error loading course": "خطأ في تحميل الدورة",
     "Synced": "متزامن"
-  }
+  },
+  "Resources": "الموارد التعليمية",
+  "Certificate": "الشهادة",
+  "Certificate (locked)": "الشهادة (مقفلة)",
+  "Course Certificate": "شهادة الدورة",
+  "Course Resources": "موارد الدورة",
+  "Video not available": "الفيديو غير متاح",
+  "This video source is not configured properly": "مصدر الفيديو غير مُعدّ بشكل صحيح",
+  "Go to Course": "انتقل إلى الدورة"
 }
