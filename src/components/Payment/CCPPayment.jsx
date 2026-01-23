@@ -676,7 +676,6 @@ const CCPPayment = ({
                     ? "border-red-500 bg-red-50 hover:bg-red-100"
                     : "border-green-500 bg-green-50 hover:bg-green-100"
                 } ${fileName ? "border-solid bg-green-100" : ""}`}
-                onClick={handleFileSelect}
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
                   {fileName ? (

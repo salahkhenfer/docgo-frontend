@@ -91,48 +91,6 @@ function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
           >
-            <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-blue-100">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
-                <Globe className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-500 font-medium">
-                  Countries
-                </p>
-                <p className="text-base font-bold text-gray-800">50+</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-purple-100">
-              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg">
-                <GraduationCap className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-500 font-medium">
-                  Programs
-                </p>
-                <p className="text-base font-bold text-gray-800">200+</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-indigo-100">
-              <div className="p-2 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-lg">
-                <BookOpen className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-500 font-medium">Courses</p>
-                <p className="text-base font-bold text-gray-800">500+</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg transition-shadow border border-pink-100">
-              <div className="p-2 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg">
-                <Users className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-500 font-medium">
-                  Students
-                </p>
-                <p className="text-base font-bold text-gray-800">10K+</p>
-              </div>
-            </div>
           </motion.div>
 
           {/* CTA Button with Enhanced Design */}

@@ -62,15 +62,6 @@ export function Programs() {
     isRemote: searchParams.get("isRemote") || "",
   });
 
-  // Debug log on mount
-  useEffect(() => {
-    console.log("Programs.jsx - Initial filters from URL:", {
-      category: searchParams.get("category"),
-      location: searchParams.get("location"),
-      allParams: Object.fromEntries(searchParams.entries()),
-    });
-  }, []);
-
   // Sync filters from URL parameters whenever they change
   useEffect(() => {
     const newFilters = {
@@ -89,7 +80,6 @@ export function Programs() {
       isRemote: searchParams.get("isRemote") || "",
     };
 
-    console.log("Syncing filters from URL:", newFilters);
     setFilters(newFilters);
 
     // Also sync search query
@@ -165,14 +155,6 @@ export function Programs() {
           filters.location ||
           filters.isRemote;
 
-        console.log("Fetching programs with:", {
-          hasSearch,
-          hasFilters,
-          filters,
-          debouncedSearch,
-          page,
-        });
-
         let response;
 
         if (hasSearch || hasFilters) {
@@ -205,7 +187,6 @@ export function Programs() {
             }
           });
 
-          console.log("Calling searchPrograms with:", searchParams);
           response = await clientProgramsAPI.searchPrograms(searchParams);
         } else {
           // Use regular getPrograms endpoint for all programs
@@ -226,48 +207,21 @@ export function Programs() {
             isRemote: filters.isRemote || "",
             includeUnpublished: true, // Show unpublished programs (for testing/admin)
           };
-          console.log("Calling getPrograms with:", getParams);
           response = await clientProgramsAPI.getPrograms(getParams);
         }
 
-        // Get programs data from response - handle different response structures
-        let programsData = [];
-        if (response) {
-          // Try multiple possible response structures
-          programsData =
-            response.data?.programs ||
-            response.data?.data?.programs ||
-            response.programs ||
-            response.data ||
-            [];
+        // Parse programs from response
+        const programsData =
+          response?.data?.programs ||
+          response?.data?.data?.programs ||
+          response?.programs ||
+          (Array.isArray(response?.data) ? response.data : []) ||
+          (Array.isArray(response) ? response : []);
 
-          // If still empty but response has data property, check if it's an array
-          if (!Array.isArray(programsData) || programsData.length === 0) {
-            if (Array.isArray(response.data)) {
-              programsData = response.data;
-            } else if (Array.isArray(response)) {
-              programsData = response;
-            }
-          }
-        }
-
-        console.log(
-          "Programs response (full):",
-          JSON.stringify(response, null, 2),
-        );
-        console.log("Programs data (parsed):", programsData);
-        console.log("Programs data length:", programsData.length);
-        console.log("Programs data is array:", Array.isArray(programsData));
-
-        // Filter programs by selected location if set
-        let filteredPrograms = programsData;
-        if (filters.location) {
-          console.log("Filtering by location:", filters.location);
-          filteredPrograms = programsData.filter(
-            (p) => p.location && p.location === filters.location,
-          );
-          console.log("Filtered programs count:", filteredPrograms.length);
-        }
+        // Filter by location if specified
+        const filteredPrograms = filters.location
+          ? programsData.filter((p) => p.location === filters.location)
+          : programsData;
 
         // If first page and no search/filters, get featured programs too
         if (page === 1 && !hasSearch && !hasFilters) {
@@ -275,63 +229,34 @@ export function Programs() {
             const featuredResponse =
               await clientProgramsAPI.getFeaturedPrograms(6);
 
-            // Handle different response structures for featured programs
-            let featuredPrograms = [];
-            if (featuredResponse) {
-              featuredPrograms =
-                featuredResponse.data?.programs ||
-                featuredResponse.programs ||
-                [];
-            }
+            const featuredPrograms =
+              featuredResponse?.data?.programs ||
+              featuredResponse?.programs ||
+              [];
 
-            console.log("Featured programs:", featuredPrograms);
-
-            // Remove featured programs from regular results to avoid duplicates
+            // Combine featured first, then non-featured (avoid duplicates)
             const featuredIds = new Set(featuredPrograms.map((p) => p.id));
             const nonFeaturedPrograms = filteredPrograms.filter(
               (p) => !featuredIds.has(p.id),
             );
-
-            // Combine: featured first, then others
             const combinedPrograms = [
               ...featuredPrograms,
               ...nonFeaturedPrograms,
             ];
-            console.log(
-              "Setting combined programs (featured + regular):",
-              combinedPrograms.length,
-            );
 
-            // Store ALL programs for filtering
             setAllPrograms(combinedPrograms);
             setPrograms(combinedPrograms);
             setShowingFeatured(true);
-
-            // Extract filter data from ALL programs
             extractFiltersFromPrograms(combinedPrograms);
           } catch (featuredError) {
-            console.error("Error fetching featured programs:", featuredError);
-            console.log(
-              "Setting programs from filteredPrograms (no featured):",
-              filteredPrograms.length,
-            );
-
-            // Store ALL programs for filtering
+            // Fallback to regular programs if featured fetch fails
             setAllPrograms(filteredPrograms);
             setPrograms(filteredPrograms);
             setShowingFeatured(false);
-
-            // Extract filter data from ALL programs
             extractFiltersFromPrograms(filteredPrograms);
           }
         } else {
-          console.log(
-            "Setting programs (with filters/search):",
-            filteredPrograms.length,
-          );
-
-          // When filters are active, don't overwrite allPrograms
-          // Just update the displayed programs
+          // When filters are active, only update displayed programs
           setPrograms(filteredPrograms);
           setShowingFeatured(false);
         }
@@ -369,19 +294,13 @@ export function Programs() {
 
   // Extract filter options from program data
   const extractFiltersFromPrograms = useCallback((programsData) => {
-    if (!Array.isArray(programsData) || programsData.length === 0) {
-      console.log("No programs to extract filters from");
-      return;
-    }
+    if (!Array.isArray(programsData) || programsData.length === 0) return;
 
-    // Extract unique categories
     const uniqueCategories = [
       ...new Set(
         programsData.map((p) => p.category || p.Category).filter(Boolean),
       ),
     ];
-
-    // Extract unique organizations
     const uniqueOrganizations = [
       ...new Set(
         programsData
@@ -389,26 +308,15 @@ export function Programs() {
           .filter(Boolean),
       ),
     ];
-
-    // Extract unique locations
     const uniqueLocations = [
       ...new Set(
         programsData.map((p) => p.location || p.Location).filter(Boolean),
       ),
     ];
 
-    console.log("Extracted filters from ALL programs:", {
-      categories: uniqueCategories,
-      organizations: uniqueOrganizations,
-      locations: uniqueLocations,
-      totalPrograms: programsData.length,
-    });
-
-    // Set filters from all programs
     setCategories(uniqueCategories);
     setOrganizations(uniqueOrganizations);
     setLocations(uniqueLocations);
-
     setStats((prev) => ({
       ...prev,
       organizations: uniqueOrganizations.length,
@@ -490,13 +398,6 @@ export function Programs() {
 
   // Fetch programs whenever filters or pagination changes
   useEffect(() => {
-    console.log("Fetching programs due to filters/pagination change", {
-      filters,
-      debouncedSearch,
-      page: pagination.currentPage,
-      sortBy,
-      sortOrder,
-    });
     fetchPrograms(pagination.currentPage, false, true);
   }, [
     debouncedSearch,
@@ -567,7 +468,6 @@ export function Programs() {
       ...filters,
       [key]: value,
     };
-    console.log("handleFilterChange:", { key, value, newFilters });
     setFilters(newFilters);
     setPagination((prev) => ({
       ...prev,
@@ -642,7 +542,6 @@ export function Programs() {
       location: "",
       isRemote: "",
     };
-    console.log("resetFilters ->", cleared);
     setFilters(cleared);
     setSearchQuery("");
     setDebouncedSearch("");
