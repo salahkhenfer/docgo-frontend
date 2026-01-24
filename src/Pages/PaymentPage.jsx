@@ -139,7 +139,7 @@ const PaymentPage = () => {
           ccp: { enabled: false, available: false },
           general: {
             defaultCurrency: "DZD",
-            supportedCurrencies: ["USD", "DZD", "EUR"],
+            supportedCurrencies: ["USD", "DZD", "DZD"],
           },
         });
         setError(
