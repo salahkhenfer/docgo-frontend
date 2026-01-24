@@ -323,7 +323,20 @@
   },
   "common": {
     "retry": "Réessayer",
-    "back": "Retour"
+    "back": "Retour",
+    "ok": "OK",
+    "cancel": "Annuler",
+    "yes": "Oui",
+    "no": "Non",
+    "waitingForApproval": "Vous serez notifié une fois approuvé",
+    "resubmitQuestion": "Voulez-vous réessayer de soumettre votre paiement?",
+    "submitNewQuestion": "Voulez-vous soumettre un nouveau paiement?",
+    "applicationStatus": "Le statut de votre candidature est:",
+    "alreadyEnrolled": "Vous êtes déjà inscrit à ce",
+    "redirecting": "Redirection...",
+    "ccpSubmitted": "Votre paiement CCP a été soumis pour vérification. Vous serez notifié une fois approuvé.",
+    "paypalProcessed": "Votre paiement PayPal a été traité. Votre candidature est en attente de l'approbation de l'administrateur.",
+    "loginRequired": "Vous devez vous connecter"
   },
   "Courses": "Cours",
   "Programs": "Programmes",
@@ -767,5 +780,80 @@
     "Go back to course": "Retour au cours",
     "Error loading course": "Erreur de chargement du cours",
     "Synced": "Synchronisé"
+  },
+  "alerts": {
+    "enrollment": {
+      "successTitle": "Inscription réussie! 🎉",
+      "successText": "Vous avez réussi à vous inscrire à ce cours. Vous pouvez maintenant accéder à tout le contenu.",
+      "startLearning": "Commencer à apprendre",
+      "failedTitle": "Inscription échouée",
+      "failedText": "Impossible de s'inscrire au cours. Veuillez réessayer.",
+      "alreadyEnrolledTitle": "Déjà inscrit",
+      "alreadyEnrolledText": "Vous êtes déjà inscrit à ce cours.",
+      "goToCourse": "Aller au cours"
+    },
+    "application": {
+      "successTitle": "Candidature soumise! 🎉",
+      "successText": "Votre candidature pour ce programme gratuit a été soumise avec succès. Vous recevrez une confirmation une fois approuvée.",
+      "viewApplications": "Voir les candidatures",
+      "failedTitle": "Candidature échouée",
+      "failedText": "Impossible de soumettre votre candidature pour le programme. Veuillez réessayer.",
+      "alreadyAppliedTitle": "Déjà postulé",
+      "alreadyEnrolledTitle": "Déjà inscrit!",
+      "alreadyEnrolledText": "Vous êtes déjà inscrit à ce programme."
+    },
+    "payment": {
+      "pendingTitle": "Paiement en attente",
+      "pendingText": "Votre paiement est actuellement examiné par notre équipe d'administration.",
+      "transactionId": "ID de transaction:",
+      "rejectedTitle": "Paiement rejeté",
+      "rejectedText": "Votre paiement précédent a été rejeté.",
+      "reason": "Raison:",
+      "resubmit": "Soumettre à nouveau",
+      "deletedTitle": "Paiement supprimé",
+      "deletedText": "Votre paiement a été supprimé par l'administrateur.",
+      "submitNew": "Soumettre un nouveau paiement",
+      "successTitle": "Paiement réussi!",
+      "successText": "Votre paiement a été traité avec succès.",
+      "goToPrograms": "Aller aux programmes",
+      "errorTitle": "Erreur de paiement!",
+      "errorText": "Impossible de traiter votre paiement. Veuillez vérifier vos données et réessayer.",
+      "tryAgain": "Réessayer",
+      "goBack": "Retour"
+    },
+    "certificate": {
+      "generatingTitle": "Génération du certificat",
+      "generatingText": "Veuillez patienter pendant la création de votre certificat...",
+      "successTitle": "Téléchargement réussi!",
+      "successText": "Votre certificat a été généré avec succès.",
+      "errorTitle": "Erreur",
+      "errorText": "Une erreur s'est produite lors de la génération du certificat."
+    },
+    "quiz": {
+      "incompleteTitle": "Questions incomplètes",
+      "incompleteText": "Veuillez répondre à toutes les questions avant de soumettre.",
+      "successTitle": "Félicitations! 🎉",
+      "passText": "Vous avez obtenu {{score}}%. Vous pouvez maintenant obtenir votre certificat.",
+      "viewResults": "Voir mes résultats",
+      "failTitle": "Quiz terminé",
+      "failText": "Vous avez obtenu {{score}}%. Au moins 50% est nécessaire pour débloquer le certificat.",
+      "errorTitle": "Erreur",
+      "errorText": "Une erreur s'est produite lors de la validation. Veuillez réessayer."
+    },
+    "auth": {
+      "authRequiredTitle": "Authentification requise",
+      "authRequiredText": "Vous devez vous connecter pour accéder à cette ressource.",
+      "goToLogin": "Aller à la connexion",
+      "successTitle": "Connexion réussie",
+      "successText": "Vous êtes maintenant connecté.",
+      "registrationSuccessTitle": "Inscription réussie",
+      "registrationSuccessText": "Vous êtes maintenant inscrit. Vous pouvez vous connecter.",
+      "logoutSuccessTitle": "Déconnexion réussie!",
+      "logoutSuccessText": "Vous avez été déconnecté avec succès."
+    },
+    "messages": {
+      "sentTitle": "Message envoyé",
+      "sentText": "Votre message a été envoyé avec succès."
+    }
   }
 }

@@ -56,12 +56,11 @@ const PaymentPage = () => {
           if (application.status === "pending") {
             Swal.fire({
               icon: "info",
-              title: "Payment Already Submitted",
-              html: `You have already submitted a payment for this ${itemType}.<br/><br/>
-                                   <strong>Status:</strong> Pending Verification<br/>
-                                   <strong>Transaction ID:</strong> ${application.transactionId}<br/><br/>
-                                   Please wait for admin approval. You will be notified once verified.`,
-              confirmButtonText: "Go Back",
+              title: t("alerts.payment.pendingTitle", "Payment Pending"),
+              html: `${t("alerts.payment.pendingTitle", "Payment Pending")}<br/><br/>
+                                   <strong>${t("alerts.payment.transactionId", "Transaction ID:")}</strong> ${application.transactionId}<br/><br/>
+                                   ${t("common.waitingForApproval", "Please wait for admin approval. You will be notified once verified.")}`,
+              confirmButtonText: t("alerts.payment.goBack", "Go Back"),
               allowOutsideClick: false,
             }).then(() => {
               navigate(
@@ -75,8 +74,8 @@ const PaymentPage = () => {
           if (application.status === "approved") {
             Swal.fire({
               icon: "success",
-              title: "Already Enrolled!",
-              text: `You are already enrolled in this ${itemType}. Redirecting...`,
+              title: t("alerts.payment.successTitle", "Payment Successful!"),
+              text: `${t("common.alreadyEnrolled", "You are already enrolled in this")} ${itemType}. ${t("common.redirecting", "Redirecting...")}`,
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
@@ -422,17 +421,17 @@ const PaymentPage = () => {
   };
 
   const handlePaymentSuccess = (paymentData) => {
-    let successMessage = "Payment Successful!";
-    let redirectMessage = "Redirecting to your dashboard...";
+    let successMessage = t("alerts.payment.successTitle");
+    let redirectMessage = t("common.redirecting", "Redirecting to your dashboard...");
 
     if (paymentData.method === "ccp") {
-      successMessage = "Payment Submitted!";
+      successMessage = t("alerts.payment.successTitle");
       redirectMessage =
-        "Your CCP payment has been submitted for verification. You will be notified once it's approved.";
+        t("common.ccpSubmitted", "Your CCP payment has been submitted for verification. You will be notified once it's approved.");
     } else if (paymentData.method === "paypal") {
-      successMessage = "Payment Successful!";
+      successMessage = t("alerts.payment.successTitle");
       redirectMessage =
-        "Your PayPal payment has been processed. Your application is pending admin approval.";
+        t("common.paypalProcessed", "Your PayPal payment has been processed. Your application is pending admin approval.");
     }
 
     Swal.fire({
@@ -442,7 +441,7 @@ const PaymentPage = () => {
       timer: paymentData.method === "ccp" ? 5000 : 3000,
       timerProgressBar: true,
       showConfirmButton: true,
-      confirmButtonText: "Go to Programs",
+      confirmButtonText: t("alerts.payment.goToPrograms", "Go to Programs"),
       allowOutsideClick: false,
       allowEscapeKey: false,
     }).then((result) => {
@@ -485,14 +484,14 @@ const PaymentPage = () => {
     }
 
     Swal.fire({
-      title: errorTitle,
+      title: t("alerts.payment.errorTitle", "Payment Error"),
       text: errorMessage,
       icon: "error",
       showConfirmButton: true,
-      confirmButtonText: "Try Again",
+      confirmButtonText: t("alerts.payment.tryAgain", "Try Again"),
       confirmButtonColor: "#ef4444",
       showCancelButton: true,
-      cancelButtonText: "Go Back",
+      cancelButtonText: t("alerts.payment.goBack", "Go Back"),
       cancelButtonColor: "#6b7280",
       allowOutsideClick: true,
       allowEscapeKey: true,

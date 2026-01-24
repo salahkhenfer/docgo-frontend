@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import { Award, Calendar, Download, Eye, Star, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import EnrollmentAPI from "../API/Enrollment";
 import { useAppContext } from "../AppContext";
@@ -10,6 +11,7 @@ import { useCourse } from "../hooks/useCourse";
 
 export default function Certificate() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isDownloading, setIsDownloading] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
@@ -144,8 +146,8 @@ export default function Certificate() {
     try {
       // Show loading alert
       Swal.fire({
-        title: "Génération du certificat",
-        html: "Veuillez patienter pendant la création de votre certificat...",
+        title: t("alerts.certificate.generatingTitle", "Generating Certificate"),
+        html: t("alerts.certificate.generatingText", "Please wait while your certificate is being created..."),
         allowOutsideClick: false,
       });
 
@@ -172,10 +174,10 @@ export default function Certificate() {
 
       // Show success alert
       await Swal.fire({
-        title: "Téléchargement réussi!",
-        text: "Votre certificat a été généré avec succès.",
+        title: t("alerts.certificate.successTitle", "Download Successful!"),
+        text: t("alerts.certificate.successText", "Your certificate has been generated successfully."),
         icon: "success",
-        confirmButtonText: "OK",
+        confirmButtonText: t("common.ok", "OK"),
       });
 
       // Safe filename generation
@@ -190,10 +192,10 @@ export default function Certificate() {
     } catch (error) {
       console.error("Erreur lors de la génération du PDF:", error);
       Swal.fire({
-        title: "Erreur",
-        text: "Une erreur est survenue lors de la génération du certificat.",
+        title: t("alerts.certificate.errorTitle", "Error"),
+        text: t("alerts.certificate.errorText", "An error occurred while generating the certificate."),
         icon: "error",
-        confirmButtonText: "OK",
+        confirmButtonText: t("common.ok", "OK"),
       });
     } finally {
       setIsDownloading(false);

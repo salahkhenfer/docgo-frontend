@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { useAppContext } from "../AppContext";
 import courseService from "../services/courseService";
 import axios from "../utils/axios";
+import {
+  showEnrollmentSuccess,
+  showEnrollmentError,
+  showInfo,
+  showWarning,
+} from "../utils/sweetAlertHelper";
 
 export const useCourse = (courseId) => {
   const [courseData, setCourseData] = useState(null);
@@ -15,6 +22,7 @@ export const useCourse = (courseId) => {
   const [redirecting, setRedirecting] = useState(false);
   const navigate = useNavigate();
   const { isAuth, user } = useAppContext();
+  const { t } = useTranslation();
   const abortControllerRef = useRef(null);
 
   // Check payment application status
@@ -151,18 +159,7 @@ export const useCourse = (courseId) => {
       await fetchCourseData(true);
 
       // Show success message with better UX
-      await Swal.fire({
-        title: "Enrollment Successful! 🎉",
-        text: "You have successfully enrolled in this course. You can now access all content.",
-        icon: "success",
-        confirmButtonColor: "#10b981",
-        confirmButtonText: "Start Learning",
-        customClass: {
-          popup: "rounded-lg shadow-xl",
-          title: "text-lg font-semibold text-gray-900",
-          content: "text-gray-600",
-        },
-      });
+      await showEnrollmentSuccess();
 
       // Navigate to course videos
       navigate(`/MyCourses/${courseId}`);
@@ -185,14 +182,14 @@ export const useCourse = (courseId) => {
 
       if (error.response?.status === 400 && redirecting) {
         const result = await Swal.fire({
-          title: "Already Enrolled",
+          title: t("alerts.enrollment.alreadyEnrolledTitle", "Already Enrolled"),
           text: errorMessage,
           icon: "info",
           showCancelButton: true,
           confirmButtonColor: "#10b981",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: "Go to Course",
-          cancelButtonText: "Cancel",
+          confirmButtonText: t("alerts.enrollment.goToCourse", "Go to Course"),
+          cancelButtonText: t("common.cancel", "Cancel"),
           customClass: {
             popup: "rounded-lg shadow-xl",
             title: "text-lg font-semibold text-gray-900",
@@ -205,7 +202,7 @@ export const useCourse = (courseId) => {
         }
       } else {
         await Swal.fire({
-          title: "Enrollment Failed",
+          title: t("alerts.enrollment.failedTitle", "Enrollment Failed"),
           text: errorMessage,
           icon: "error",
           confirmButtonColor: "#ef4444",
@@ -226,14 +223,14 @@ export const useCourse = (courseId) => {
     // Check authentication first
     if (!isAuth || !user) {
       const result = await Swal.fire({
-        title: "Authentication Required",
-        text: "You need to log in to enroll in this course.",
+        title: t("alerts.auth.authRequiredTitle", "Authentication Required"),
+        text: t("alerts.auth.authRequiredText", "Please log in to enroll in this course"),
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3b82f6",
         cancelButtonColor: "#6b7280",
-        confirmButtonText: "Go to Login",
-        cancelButtonText: "Cancel",
+        confirmButtonText: t("alerts.auth.goToLogin", "Go to Login"),
+        cancelButtonText: t("common.cancel", "Cancel"),
         customClass: {
           popup: "rounded-lg shadow-xl",
           title: "text-lg font-semibold text-gray-900",
@@ -259,29 +256,29 @@ export const useCourse = (courseId) => {
     if (paymentStatus) {
       if (paymentStatus.status === "pending") {
         await Swal.fire({
-          title: "Payment Pending",
-          html: `Your payment is currently under review by our admin team.<br/><br/>
-                           <strong>Transaction ID:</strong> ${paymentStatus.transactionId}<br/><br/>
-                           You will be notified once it's approved.`,
+          title: t("alerts.payment.pendingTitle", "Payment Pending"),
+          html: `${t("alerts.payment.pendingText", "Your payment is pending approval")}<br/><br/>
+                           <strong>${t("alerts.payment.transactionId", "Transaction ID:")}</strong> ${paymentStatus.transactionId}<br/><br/>
+                           ${t("common.waitingForApproval", "You will be notified once it's approved.")}`,
           icon: "info",
           confirmButtonColor: "#3b82f6",
-          confirmButtonText: "OK",
+          confirmButtonText: t("common.ok", "OK"),
         });
         return;
       }
 
       if (paymentStatus.status === "rejected") {
         const result = await Swal.fire({
-          title: "Payment Rejected",
-          html: `Your previous payment was rejected.<br/><br/>
-                           <strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>
-                           Would you like to resubmit your payment?`,
+          title: t("alerts.payment.rejectedTitle", "Payment Rejected"),
+          html: `${t("alerts.payment.rejectedText", "Your payment was rejected")}<br/><br/>
+                           <strong>${t("alerts.payment.reason", "Reason:")}</strong> ${paymentStatus.rejectionReason}<br/><br/>
+                           ${t("common.resubmitQuestion", "Would you like to resubmit your payment?")}`,
           icon: "error",
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: "Resubmit Payment",
-          cancelButtonText: "Cancel",
+          confirmButtonText: t("alerts.payment.resubmit", "Resubmit"),
+          cancelButtonText: t("common.cancel", "Cancel"),
         });
 
         if (result.isConfirmed) {
@@ -298,20 +295,20 @@ export const useCourse = (courseId) => {
 
       if (paymentStatus.status === "deleted") {
         const result = await Swal.fire({
-          title: "Payment Deleted",
-          html: `Your payment has been removed by the administrator.<br/><br/>
+          title: t("alerts.payment.deletedTitle", "Payment Deleted"),
+          html: `${t("alerts.payment.deletedText", "Your payment was deleted")}<br/><br/>
                            ${
                              paymentStatus.rejectionReason
-                               ? `<strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>`
+                               ? `<strong>${t("alerts.payment.reason", "Reason:")}</strong> ${paymentStatus.rejectionReason}<br/><br/>`
                                : ""
                            }
-                           Would you like to submit a new payment?`,
+                           ${t("common.submitNewQuestion", "Would you like to submit a new payment?")}`,
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: "Submit New Payment",
-          cancelButtonText: "Cancel",
+          confirmButtonText: t("alerts.payment.submitNew", "Submit New"),
+          cancelButtonText: t("common.cancel", "Cancel"),
         });
 
         if (result.isConfirmed) {

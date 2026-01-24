@@ -1,5 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import i18n from "../i18n";
+
 const handleLogout = async ({
     setAuth,
     setUser,
@@ -7,6 +9,7 @@ const handleLogout = async ({
     setIsDropdownOpen = null,
 }) => {
     const API_URL = import.meta.env.VITE_API_URL;
+    const { t } = i18n;
 
     try {
         // Send a request to the logout endpoint on the server
@@ -34,8 +37,8 @@ const handleLogout = async ({
         sessionStorage.removeItem("user");
         // Show success alert for 2 seconds then redirect
         Swal.fire({
-            title: "Logged Out!",
-            text: "You have been successfully logged out.",
+            title: t("alerts.auth.logoutSuccessTitle", "Logged Out"),
+            text: t("alerts.auth.logoutSuccessText", "You have been successfully logged out"),
             icon: "success",
             timer: 2000,
             showConfirmButton: false,

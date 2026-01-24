@@ -5,6 +5,7 @@ import handleRegister, { validateFirstStep } from "../../API/Register";
 import AnimatedSelect from "../../components/AnimatedSelect";
 import Register_Step_2 from "./Register_Step_2";
 import InlineLoading from "../../InlineLoading";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 const Register = () => {
     const [step, setStep] = useState(1);
@@ -12,6 +13,7 @@ const Register = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const { set_Auth, set_user } = useAppContext();
+    const { t } = useTranslation();
     const backgroundImage = "../../src/assets/Login.png";
     // Form data state
     const [formData, setFormData] = useState({
@@ -93,8 +95,8 @@ const Register = () => {
             if (r.success) {
                 setLoading(false);
                 Swal.fire({
-                    title: "Inscription réussie",
-                    text: "Vous êtes maintenant inscrit. Vous pouvez vous connecter.",
+                    title: t("alerts.auth.registrationSuccessTitle", "Registration Successful"),
+                    text: t("alerts.auth.registrationSuccessText", "You are now registered. You can log in."),
                     icon: "success",
                     timerProgressBar: true,
                     timer: 2000,
@@ -104,9 +106,10 @@ const Register = () => {
                 });
             } else if (r.status === 410) {
                 Swal.fire({
-                    title: "Inscriptions réussies, mais vous devez vous connecter",
+                    title: t("alerts.auth.registrationSuccessTitle", "Registration Successful"),
+                    text: t("common.loginRequired", "You must log in"),
                     icon: "success",
-                    confirmButtonText: "OK",
+                    confirmButtonText: t("common.ok", "OK"),
                     timerProgressBar: true,
                     timer: 2000,
                     allowEscapeKey: true,

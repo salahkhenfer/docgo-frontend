@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { clientProgramsAPI } from "../API/Programs";
 import { useAppContext } from "../AppContext";
@@ -15,6 +16,7 @@ export const useProgram = (programId) => {
 
   const navigate = useNavigate();
   const { isAuth, user } = useAppContext();
+  const { t } = useTranslation();
   const abortControllerRef = useRef(null);
 
   // Check payment application status
@@ -252,11 +254,11 @@ export const useProgram = (programId) => {
 
       // Show success message
       await Swal.fire({
-        title: "Application Submitted! 🎉",
-        text: "Your application for this free program has been submitted successfully. You will receive confirmation once approved.",
+        title: t("alerts.application.successTitle", "Application Submitted"),
+        text: t("alerts.application.successText", "Your application has been submitted successfully"),
         icon: "success",
         confirmButtonColor: "#10b981",
-        confirmButtonText: "View Applications",
+        confirmButtonText: t("alerts.application.viewApplications", "View Applications"),
         customClass: {
           popup: "rounded-lg shadow-xl",
           title: "text-lg font-semibold text-gray-900",
@@ -282,7 +284,7 @@ export const useProgram = (programId) => {
       }
 
       await Swal.fire({
-        title: "Application Failed",
+        title: t("alerts.application.failedTitle", "Application Failed"),
         text: errorMessage,
         icon: "error",
         confirmButtonColor: "#ef4444",
@@ -302,14 +304,14 @@ export const useProgram = (programId) => {
     // Check authentication first
     if (!isAuth || !user) {
       const result = await Swal.fire({
-        title: "Authentication Required",
-        text: "You need to log in to apply for this program.",
+        title: t("alerts.auth.authRequiredTitle", "Authentication Required"),
+        text: t("alerts.auth.authRequiredText", "Please log in to apply for this program"),
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3b82f6",
         cancelButtonColor: "#6b7280",
-        confirmButtonText: "Go to Login",
-        cancelButtonText: "Cancel",
+        confirmButtonText: t("alerts.auth.goToLogin", "Go to Login"),
+        cancelButtonText: t("common.cancel", "Cancel"),
         customClass: {
           popup: "rounded-lg shadow-xl",
           title: "text-lg font-semibold text-gray-900",
@@ -331,11 +333,11 @@ export const useProgram = (programId) => {
 
       if (status === "approved") {
         await Swal.fire({
-          title: "Already Enrolled!",
-          text: "You are already enrolled in this program.",
+          title: t("alerts.application.alreadyEnrolledTitle", "Already Enrolled"),
+          text: t("alerts.application.alreadyEnrolledText", "You are already enrolled in this program"),
           icon: "info",
           confirmButtonColor: "#3b82f6",
-          confirmButtonText: "View My Applications",
+          confirmButtonText: t("alerts.application.viewApplications", "View Applications"),
           customClass: {
             popup: "rounded-lg shadow-xl",
             title: "text-lg font-semibold text-gray-900",
@@ -344,11 +346,11 @@ export const useProgram = (programId) => {
         });
       } else {
         await Swal.fire({
-          title: "Application Already Submitted",
-          text: `You have already applied to this program. Your application status is: ${status}`,
+          title: t("alerts.application.alreadyAppliedTitle", "Already Applied"),
+          text: `${t("common.applicationStatus", "Your application status is:")} ${status}`,
           icon: "info",
           confirmButtonColor: "#3b82f6",
-          confirmButtonText: "View My Applications",
+          confirmButtonText: t("alerts.application.viewApplications", "View Applications"),
           customClass: {
             popup: "rounded-lg shadow-xl",
             title: "text-lg font-semibold text-gray-900",
@@ -365,29 +367,29 @@ export const useProgram = (programId) => {
     if (paymentStatus) {
       if (paymentStatus.status === "pending") {
         await Swal.fire({
-          title: "Payment Pending",
-          html: `Your payment is currently under review by our admin team.<br/><br/>
-                           <strong>Transaction ID:</strong> ${paymentStatus.transactionId}<br/><br/>
-                           You will be notified once it's approved.`,
+          title: t("alerts.payment.pendingTitle", "Payment Pending"),
+          html: `${t("alerts.payment.pendingText", "Your payment is pending approval")}<br/><br/>
+                           <strong>${t("alerts.payment.transactionId", "Transaction ID:")}</strong> ${paymentStatus.transactionId}<br/><br/>
+                           ${t("common.waitingForApproval", "You will be notified once it's approved.")}`,
           icon: "info",
           confirmButtonColor: "#3b82f6",
-          confirmButtonText: "OK",
+          confirmButtonText: t("common.ok", "OK"),
         });
         return;
       }
 
       if (paymentStatus.status === "rejected") {
         const result = await Swal.fire({
-          title: "Payment Rejected",
-          html: `Your previous payment was rejected.<br/><br/>
-                           <strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>
-                           Would you like to resubmit your payment?`,
+          title: t("alerts.payment.rejectedTitle", "Payment Rejected"),
+          html: `${t("alerts.payment.rejectedText", "Your payment was rejected")}<br/><br/>
+                           <strong>${t("alerts.payment.reason", "Reason:")}</strong> ${paymentStatus.rejectionReason}<br/><br/>
+                           ${t("common.resubmitQuestion", "Would you like to resubmit your payment?")}`,
           icon: "error",
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: "Resubmit Payment",
-          cancelButtonText: "Cancel",
+          confirmButtonText: t("alerts.payment.resubmit", "Resubmit"),
+          cancelButtonText: t("common.cancel", "Cancel"),
         });
 
         if (result.isConfirmed) {
@@ -404,20 +406,20 @@ export const useProgram = (programId) => {
 
       if (paymentStatus.status === "deleted") {
         const result = await Swal.fire({
-          title: "Payment Deleted",
-          html: `Your payment has been removed by the administrator.<br/><br/>
+          title: t("alerts.payment.deletedTitle", "Payment Deleted"),
+          html: `${t("alerts.payment.deletedText", "Your payment was deleted")}<br/><br/>
                            ${
                              paymentStatus.rejectionReason
-                               ? `<strong>Reason:</strong> ${paymentStatus.rejectionReason}<br/><br/>`
+                               ? `<strong>${t("alerts.payment.reason", "Reason:")}</strong> ${paymentStatus.rejectionReason}<br/><br/>`
                                : ""
                            }
-                           Would you like to submit a new payment?`,
+                           ${t("common.submitNewQuestion", "Would you like to submit a new payment?")}`,
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: "Submit New Payment",
-          cancelButtonText: "Cancel",
+          confirmButtonText: t("alerts.payment.submitNew"),
+          cancelButtonText: t("common.cancel", "Cancel"),
         });
 
         if (result.isConfirmed) {

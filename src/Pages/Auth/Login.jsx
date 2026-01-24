@@ -2,10 +2,12 @@ import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import InlineLoading from "../../InlineLoading";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import axios from "axios";
 const Login = () => {
     const backgroundImage = "../../../src/assets/Login.png";
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -63,8 +65,8 @@ const Login = () => {
                 // localStorage.setItem("user", JSON.stringify(data.user));
                 // sessionStorage.setItem("user", JSON.stringify(data.user));
                 Swal.fire({
-                    title: "Connexion réussie",
-                    text: "Vous êtes maintenant connecté.",
+                    title: t("alerts.auth.successTitle", "Login Successful"),
+                    text: t("alerts.auth.successText", "You are now logged in."),
                     icon: "success",
                     showConfirmButton: false,
                     timer: 2000,

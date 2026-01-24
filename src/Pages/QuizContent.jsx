@@ -388,8 +388,8 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
       if (unansweredQuestions.length > 0) {
         await Swal.fire({
           icon: "warning",
-          title: "Questions incomplètes",
-          text: "Veuillez répondre à toutes les questions avant de soumettre.",
+          title: t("alerts.quiz.incompleteTitle", "Incomplete Quiz"),
+          text: t("alerts.quiz.incompleteText", "Please answer all questions before submitting"),
           confirmButtonColor: "#3b82f6",
         });
         setIsLoading(false);
@@ -442,9 +442,9 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
 
         await Swal.fire({
           icon: "success",
-          title: "Félicitations ! 🎉",
-          html: `<strong>Vous avez obtenu ${score}%</strong><br />Vous pouvez maintenant obtenir votre certificat.`,
-          confirmButtonText: "Voir mes résultats",
+          title: t("alerts.quiz.successTitle", "Quiz Passed!"),
+          html: `<strong>${t("alerts.quiz.passText", "Congratulations! Your score is {{score}}%").replace("{{score}}", score)}</strong>`,
+          confirmButtonText: t("alerts.quiz.viewResults", "View Results"),
           confirmButtonColor: "#10b981",
         });
       } else {
@@ -453,17 +453,17 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
         if (onQuizResult) onQuizResult(false);
         await Swal.fire({
           icon: "info",
-          title: "Quiz terminé",
-          html: `Vous avez obtenu ${score}%.<br />Il faut au moins 50% pour débloquer le certificat.`,
-          confirmButtonText: "Voir les résultats",
+          title: t("alerts.quiz.failTitle", "Quiz Failed"),
+          html: t("alerts.quiz.failText", "Your score is {{score}}%. You need at least 50% to pass.").replace("{{score}}", score),
+          confirmButtonText: t("alerts.quiz.viewResults", "View Results"),
           confirmButtonColor: "#3b82f6",
         });
       }
     } catch (error) {
       await Swal.fire({
         icon: "error",
-        title: "Erreur",
-        text: "Une erreur s'est produite lors de la validation. Veuillez réessayer.",
+        title: t("alerts.quiz.errorTitle", "Error"),
+        text: t("alerts.quiz.errorText", "An error occurred while submitting your quiz"),
         confirmButtonColor: "#ef4444",
       });
     } finally {

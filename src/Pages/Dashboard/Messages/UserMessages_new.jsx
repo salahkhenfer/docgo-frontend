@@ -19,10 +19,10 @@ function UserMessages_new() {
     const handleSuccess = () => {
         // Navigate back to messages list after successful submission
         Swal.fire({
-            title: t("messages.sent", "Message Sent"),
+            title: t("alerts.messages.sentTitle", t("messages.sent", "Message Sent")),
             text: t(
-                "messages.sentText",
-                "Your message has been sent successfully."
+                "alerts.messages.sentText",
+                t("messages.sentText", "Your message has been sent successfully.")
             ),
             icon: "success",
             timer: 2000,
