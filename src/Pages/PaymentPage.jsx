@@ -76,12 +76,12 @@ const PaymentPage = () => {
             Swal.fire({
               icon: "success",
               title: "Already Enrolled!",
-              text: `You are already enrolled in this ${itemType}. Redirecting to your dashboard...`,
+              text: `You are already enrolled in this ${itemType}. Redirecting...`,
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
               navigate(
-                `/dashboard/${itemType === "course" ? "courses" : "programs"}`,
+                itemType === "course" ? `/MyCourses/${courseId}` : "/programs",
               );
             });
             return;
@@ -442,13 +442,13 @@ const PaymentPage = () => {
       timer: paymentData.method === "ccp" ? 5000 : 3000,
       timerProgressBar: true,
       showConfirmButton: true,
-      confirmButtonText: "Go to Dashboard",
+      confirmButtonText: "Go to Programs",
       allowOutsideClick: false,
       allowEscapeKey: false,
     }).then((result) => {
-      // Navigate to dashboard
+      // Navigate to programs page
       if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-        navigate("/dashboard/applications");
+        navigate("/programs");
       }
     });
   };

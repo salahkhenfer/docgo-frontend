@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clientProgramsAPI } from "../API/Programs";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
+import axios from "../utils/axios";
+import { useAppContext } from "../AppContext";
 import FilterSidebar from "../components/programs/FilterSidebar";
 import Pagination from "../components/programs/Pagination";
 import ProgramCard from "../components/programs/ProgramCard";
@@ -15,10 +17,12 @@ export function Programs() {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isAuth } = useAppContext();
 
   // State management
   const [programs, setPrograms] = useState([]);
   const [allPrograms, setAllPrograms] = useState([]); // Store all programs for filtering
+  const [enrolledProgramIds, setEnrolledProgramIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -218,10 +222,15 @@ export function Programs() {
           (Array.isArray(response?.data) ? response.data : []) ||
           (Array.isArray(response) ? response : []);
 
+        // Filter out enrolled programs
+        const unenrolledPrograms = programsData.filter(
+          (p) => !enrolledProgramIds.has(p.id)
+        );
+
         // Filter by location if specified
         const filteredPrograms = filters.location
-          ? programsData.filter((p) => p.location === filters.location)
-          : programsData;
+          ? unenrolledPrograms.filter((p) => p.location === filters.location)
+          : unenrolledPrograms;
 
         // If first page and no search/filters, get featured programs too
         if (page === 1 && !hasSearch && !hasFilters) {
@@ -289,7 +298,7 @@ export function Programs() {
         setSearchLoading(false);
       }
     },
-    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t],
+    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t, enrolledProgramIds],
   );
 
   // Extract filter options from program data
@@ -390,6 +399,30 @@ export function Programs() {
     },
     [filters, pagination.currentPage, sortBy, sortOrder, setSearchParams],
   );
+
+  // Fetch user's enrolled programs on mount
+  useEffect(() => {
+    const fetchEnrolledPrograms = async () => {
+      if (!isAuth) return;
+      
+      try {
+        const response = await axios.get("/enrollment/my-applications");
+        if (response?.data?.data?.applications) {
+          const enrolledIds = new Set(
+            response.data.data.applications
+              .filter(app => app.status === "approved" || app.applicationStatus === "approved")
+              .map(app => app.ProgramId || app.Program?.id)
+              .filter(Boolean)
+          );
+          setEnrolledProgramIds(enrolledIds);
+        }
+      } catch (error) {
+        console.error("Error fetching enrolled programs:", error);
+      }
+    };
+    
+    fetchEnrolledPrograms();
+  }, [isAuth]);
 
   // Effects - Fetch filter data on mount only
   useEffect(() => {

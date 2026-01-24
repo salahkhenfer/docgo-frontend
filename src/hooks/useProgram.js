@@ -327,6 +327,36 @@ export const useProgram = (programId) => {
 
     // Check if already applied (you might want to add this check)
     if (programData?.userStatus?.hasApplied) {
+      const status = programData.userStatus.applicationStatus;
+      
+      if (status === "approved") {
+        await Swal.fire({
+          title: "Already Enrolled!",
+          text: "You are already enrolled in this program.",
+          icon: "info",
+          confirmButtonColor: "#3b82f6",
+          confirmButtonText: "View My Applications",
+          customClass: {
+            popup: "rounded-lg shadow-xl",
+            title: "text-lg font-semibold text-gray-900",
+            content: "text-gray-600",
+          },
+        });
+      } else {
+        await Swal.fire({
+          title: "Application Already Submitted",
+          text: `You have already applied to this program. Your application status is: ${status}`,
+          icon: "info",
+          confirmButtonColor: "#3b82f6",
+          confirmButtonText: "View My Applications",
+          customClass: {
+            popup: "rounded-lg shadow-xl",
+            title: "text-lg font-semibold text-gray-900",
+            content: "text-gray-600",
+          },
+        });
+      }
+      
       navigate("/my-applications");
       return;
     }

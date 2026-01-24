@@ -154,11 +154,11 @@ const CCPPayment = ({
         return;
       }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
+      // Validate file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
-          receiptFile: "File size must be less than 5MB",
+          receiptFile: "File size must be less than 50MB",
         }));
         // Reset file input
         event.target.value = null;

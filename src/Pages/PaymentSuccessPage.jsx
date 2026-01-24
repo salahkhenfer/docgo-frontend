@@ -42,8 +42,8 @@ const PaymentSuccessPage = () => {
                     // Redirect based on item type
                     const redirectPath =
                         itemType === "course"
-                            ? `/Courses/${courseId}/videos`
-                            : `/dashboard/applications/programs`;
+                            ? `/MyCourses/${courseId}`
+                            : `/my-applications`;
                     navigate(redirectPath);
                     return 0;
                 }
@@ -180,7 +180,7 @@ const PaymentSuccessPage = () => {
                             paymentData.status === "completed" ? (
                                 <>
                                     <Link
-                                        to={`/Courses/${courseId}/content`}
+                                        to={`/MyCourses/${courseId}`}
                                         className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                     >
                                         <span className="flex items-center justify-center gap-2">
@@ -219,7 +219,7 @@ const PaymentSuccessPage = () => {
                         ) : (
                             <>
                                 <Link
-                                    to="/dashboard/applications/programs"
+                                    to="/my-applications"
                                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                 >
                                     <span className="flex items-center justify-center gap-2">
