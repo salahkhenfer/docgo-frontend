@@ -19,10 +19,16 @@ function UserMessages_new() {
     const handleSuccess = () => {
         // Navigate back to messages list after successful submission
         Swal.fire({
-            title: t("alerts.messages.sentTitle", t("messages.sent", "Message Sent")),
+            title: t(
+                "alerts.messages.sentTitle",
+                t("messages.sent", "Message Sent"),
+            ),
             text: t(
                 "alerts.messages.sentText",
-                t("messages.sentText", "Your message has been sent successfully.")
+                t(
+                    "messages.sentText",
+                    "Your message has been sent successfully.",
+                ),
             ),
             icon: "success",
             timer: 2000,
@@ -58,7 +64,7 @@ function UserMessages_new() {
                             <p className="mt-1 text-gray-600">
                                 {t(
                                     "messages.newMessageSubtitle",
-                                    "Send a message to our support team"
+                                    "Send a message to our support team",
                                 )}
                             </p>
                         </div>
@@ -74,7 +80,7 @@ function UserMessages_new() {
                         <span>
                             {t(
                                 "messages.contactSupport",
-                                "Contact our support team for assistance"
+                                "Contact our support team for assistance",
                             )}
                         </span>
                     </div>
@@ -128,7 +134,7 @@ function UserMessages_new() {
                             <p className="text-sm text-gray-600">
                                 {t(
                                     "messages.technicalDesc",
-                                    "Issues with courses, videos, or platform functionality"
+                                    "Issues with courses, videos, or platform functionality",
                                 )}
                             </p>
                         </div>
@@ -139,7 +145,7 @@ function UserMessages_new() {
                             <p className="text-sm text-gray-600">
                                 {t(
                                     "messages.billingDesc",
-                                    "Questions about payments, refunds, or subscriptions"
+                                    "Questions about payments, refunds, or subscriptions",
                                 )}
                             </p>
                         </div>
@@ -150,7 +156,7 @@ function UserMessages_new() {
                             <p className="text-sm text-gray-600">
                                 {t(
                                     "messages.accountDesc",
-                                    "Profile settings, password reset, or account issues"
+                                    "Profile settings, password reset, or account issues",
                                 )}
                             </p>
                         </div>
@@ -161,7 +167,7 @@ function UserMessages_new() {
                             <p className="text-sm text-gray-600">
                                 {t(
                                     "messages.generalDesc",
-                                    "Other questions or feedback about our services"
+                                    "Other questions or feedback about our services",
                                 )}
                             </p>
                         </div>
@@ -189,13 +195,13 @@ function UserMessages_new() {
                                 <strong>
                                     {t(
                                         "messages.responseTime",
-                                        "Response Time"
+                                        "Response Time",
                                     )}
                                     :
                                 </strong>{" "}
                                 {t(
                                     "messages.responseTimeDesc",
-                                    "We typically respond within 24 hours during business days."
+                                    "We typically respond within 24 hours during business days.",
                                 )}
                             </p>
                         </div>

@@ -50,7 +50,7 @@ const Login = () => {
                             "Content-Type": "application/json",
                         },
                         withCredentials: true,
-                    }
+                    },
                 );
                 const data = response.data;
                 if (response.status === 404) {
@@ -66,7 +66,10 @@ const Login = () => {
                 // sessionStorage.setItem("user", JSON.stringify(data.user));
                 Swal.fire({
                     title: t("alerts.auth.successTitle", "Login Successful"),
-                    text: t("alerts.auth.successText", "You are now logged in."),
+                    text: t(
+                        "alerts.auth.successText",
+                        "You are now logged in.",
+                    ),
                     icon: "success",
                     showConfirmButton: false,
                     timer: 2000,
@@ -79,13 +82,13 @@ const Login = () => {
             } catch (err) {
                 setError(
                     err.message ||
-                        "Une erreur est survenue lors de la connexion"
+                        "Une erreur est survenue lors de la connexion",
                 );
             } finally {
                 setLoading(false);
             }
         },
-        [formData, navigate, set_Auth, set_user]
+        [formData, navigate, set_Auth, set_user],
     );
 
     return (

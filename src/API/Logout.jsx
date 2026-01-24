@@ -19,7 +19,7 @@ const handleLogout = async ({
             {
                 withCredentials: true,
                 validateStatus: () => true,
-            }
+            },
         );
     } catch (error) {
         console.error("Logout error:", error);
@@ -38,7 +38,10 @@ const handleLogout = async ({
         // Show success alert for 2 seconds then redirect
         Swal.fire({
             title: t("alerts.auth.logoutSuccessTitle", "Logged Out"),
-            text: t("alerts.auth.logoutSuccessText", "You have been successfully logged out"),
+            text: t(
+                "alerts.auth.logoutSuccessText",
+                "You have been successfully logged out",
+            ),
             icon: "success",
             timer: 2000,
             showConfirmButton: false,

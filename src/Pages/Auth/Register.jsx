@@ -95,8 +95,14 @@ const Register = () => {
             if (r.success) {
                 setLoading(false);
                 Swal.fire({
-                    title: t("alerts.auth.registrationSuccessTitle", "Registration Successful"),
-                    text: t("alerts.auth.registrationSuccessText", "You are now registered. You can log in."),
+                    title: t(
+                        "alerts.auth.registrationSuccessTitle",
+                        "Registration Successful",
+                    ),
+                    text: t(
+                        "alerts.auth.registrationSuccessText",
+                        "You are now registered. You can log in.",
+                    ),
                     icon: "success",
                     timerProgressBar: true,
                     timer: 2000,
@@ -106,7 +112,10 @@ const Register = () => {
                 });
             } else if (r.status === 410) {
                 Swal.fire({
-                    title: t("alerts.auth.registrationSuccessTitle", "Registration Successful"),
+                    title: t(
+                        "alerts.auth.registrationSuccessTitle",
+                        "Registration Successful",
+                    ),
                     text: t("common.loginRequired", "You must log in"),
                     icon: "success",
                     confirmButtonText: t("common.ok", "OK"),
@@ -118,7 +127,7 @@ const Register = () => {
                 });
             } else setError(r.message || "Registration failed");
         },
-        [formData, set_Auth, set_user, navigate]
+        [formData, set_Auth, set_user, navigate],
     );
     const step_2 = useCallback(
         () => (
@@ -144,7 +153,7 @@ const Register = () => {
             handleSubmit,
             loading,
             error,
-        ]
+        ],
     );
 
     // Render step 1 form
