@@ -23,7 +23,7 @@ export const useProgram = (programId) => {
 
     try {
       const response = await axios.get(
-        `/user-payments/check-application/program/${programId}`
+        `/user-payments/check-application/program/${programId}`,
       );
 
       if (response.data.success && response.data.hasApplication) {
@@ -91,7 +91,7 @@ export const useProgram = (programId) => {
         console.error("Error checking enrollment status:", err);
       }
     },
-    [isAuth, programId]
+    [isAuth, programId],
   );
 
   // Memoized fetch function to prevent unnecessary re-renders
@@ -125,7 +125,7 @@ export const useProgram = (programId) => {
             if (typeof response.program.objectives === "string") {
               try {
                 response.program.objectives = JSON.parse(
-                  response.program.objectives
+                  response.program.objectives,
                 );
               } catch {
                 response.program.objectives = [response.program.objectives];
@@ -143,7 +143,7 @@ export const useProgram = (programId) => {
             if (typeof response.program.benefits === "string") {
               try {
                 response.program.benefits = JSON.parse(
-                  response.program.benefits
+                  response.program.benefits,
                 );
               } catch {
                 response.program.benefits = [response.program.benefits];
@@ -161,7 +161,7 @@ export const useProgram = (programId) => {
             if (typeof response.program.requirements === "string") {
               try {
                 response.program.requirements = JSON.parse(
-                  response.program.requirements
+                  response.program.requirements,
                 );
               } catch {
                 response.program.requirements = [response.program.requirements];
@@ -209,7 +209,7 @@ export const useProgram = (programId) => {
         abortControllerRef.current = null;
       }
     },
-    [programId, checkPaymentStatus, checkEnrollmentStatus]
+    [programId, checkPaymentStatus, checkEnrollmentStatus],
   );
 
   // Initial fetch effect
@@ -328,7 +328,7 @@ export const useProgram = (programId) => {
     // Check if already applied (you might want to add this check)
     if (programData?.userStatus?.hasApplied) {
       const status = programData.userStatus.applicationStatus;
-      
+
       if (status === "approved") {
         await Swal.fire({
           title: "Already Enrolled!",
@@ -356,7 +356,7 @@ export const useProgram = (programId) => {
           },
         });
       }
-      
+
       navigate("/my-applications");
       return;
     }
@@ -437,7 +437,7 @@ export const useProgram = (programId) => {
       programData?.program?.discountPrice ||
         programData?.program?.price ||
         programData?.program?.Price ||
-        0
+        0,
     );
 
     if (programPrice === 0) {

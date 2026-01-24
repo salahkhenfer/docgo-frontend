@@ -4,14 +4,14 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clientProgramsAPI } from "../API/Programs";
-import LoadingSpinner from "../components/Common/LoadingSpinner";
-import axios from "../utils/axios";
 import { useAppContext } from "../AppContext";
+import LoadingSpinner from "../components/Common/LoadingSpinner";
 import FilterSidebar from "../components/programs/FilterSidebar";
 import Pagination from "../components/programs/Pagination";
 import ProgramCard from "../components/programs/ProgramCard";
 import ProgramsList from "../components/programs/ProgramsList";
 import StatsOverview from "../components/programs/StatsOverview";
+import axios from "../utils/axios";
 
 export function Programs() {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
@@ -224,7 +224,7 @@ export function Programs() {
 
         // Filter out enrolled programs
         const unenrolledPrograms = programsData.filter(
-          (p) => !enrolledProgramIds.has(p.id)
+          (p) => !enrolledProgramIds.has(p.id),
         );
 
         // Filter by location if specified
@@ -298,7 +298,15 @@ export function Programs() {
         setSearchLoading(false);
       }
     },
-    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t, enrolledProgramIds],
+    [
+      debouncedSearch,
+      filters,
+      pagination.limit,
+      sortBy,
+      sortOrder,
+      t,
+      enrolledProgramIds,
+    ],
   );
 
   // Extract filter options from program data
@@ -404,15 +412,19 @@ export function Programs() {
   useEffect(() => {
     const fetchEnrolledPrograms = async () => {
       if (!isAuth) return;
-      
+
       try {
         const response = await axios.get("/enrollment/my-applications");
         if (response?.data?.data?.applications) {
           const enrolledIds = new Set(
             response.data.data.applications
-              .filter(app => app.status === "approved" || app.applicationStatus === "approved")
-              .map(app => app.ProgramId || app.Program?.id)
-              .filter(Boolean)
+              .filter(
+                (app) =>
+                  app.status === "approved" ||
+                  app.applicationStatus === "approved",
+              )
+              .map((app) => app.ProgramId || app.Program?.id)
+              .filter(Boolean),
           );
           setEnrolledProgramIds(enrolledIds);
         }
@@ -420,7 +432,7 @@ export function Programs() {
         console.error("Error fetching enrolled programs:", error);
       }
     };
-    
+
     fetchEnrolledPrograms();
   }, [isAuth]);
 
