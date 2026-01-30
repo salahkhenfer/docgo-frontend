@@ -3,6 +3,13 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAppContext } from "./AppContext";
 import MainLoading from "./MainLoading";
 
+const getSafeNextPath = (raw) => {
+    if (!raw || typeof raw !== "string") return null;
+    if (!raw.startsWith("/")) return null;
+    if (raw.startsWith("//")) return null;
+    return raw;
+};
+
 const ProtectedRoute = ({ children, requireAuth = true }) => {
     const { user, loading, checkAuthStatus } = useAppContext();
     const location = useLocation();
@@ -26,7 +33,22 @@ const ProtectedRoute = ({ children, requireAuth = true }) => {
 
     // If auth is required but user is not authenticated
     if (requireAuth && !user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        const next = `${location.pathname}${location.search}${location.hash || ""}`;
+        const safeNext = getSafeNextPath(next);
+        if (safeNext && !safeNext.toLowerCase().startsWith("/login")) {
+            sessionStorage.setItem("postLoginRedirect", safeNext);
+        }
+
+        const nextParam = safeNext
+            ? `?next=${encodeURIComponent(safeNext)}`
+            : "";
+        return (
+            <Navigate
+                to={`/login${nextParam}`}
+                state={{ from: location }}
+                replace
+            />
+        );
     }
 
     // If user is authenticated but trying to access auth pages

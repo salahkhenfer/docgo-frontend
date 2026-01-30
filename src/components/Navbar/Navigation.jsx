@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useAppContext } from "../../AppContext";
 import { useFavorites } from "../../hooks/useFavorite";
+import { useUserNavigation } from "../../context/UserNavigationContext";
 import logo from "../../assets/Logo.png";
 import LanguageDropdown from "../../components/LanguageDropdown";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
@@ -13,6 +14,7 @@ import NavBarDropDown from "./NavBarDropDown";
 function Navigation() {
     const { t } = useTranslation();
     const { user, isAuth } = useAppContext();
+    const { getActiveNavItem } = useUserNavigation();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [activeSection, setActiveSection] = useState("");
     const [isScrolled, setIsScrolled] = useState(false);
@@ -84,7 +86,9 @@ function Navigation() {
         }
     };
     const MainContent = () => {
-        const getNavLinkClass = (path, sectionId = null) => {
+        const activeNavItem = getActiveNavItem;
+
+        const getNavLinkClass = (itemId, sectionId = null) => {
             let isActive = false;
 
             if (sectionId) {
@@ -92,17 +96,7 @@ function Navigation() {
                 isActive = activeSection === sectionId;
             } else {
                 // For regular navigation links
-                if (path === "/") {
-                    // Home is active for both "/" and "/dashboard"
-                    isActive =
-                        location.pathname === "/" ||
-                        location.pathname === "/dashboard";
-                } else {
-                    // For other pages, check exact path or if current path starts with the link path
-                    isActive =
-                        location.pathname === path ||
-                        location.pathname.startsWith(path + "/");
-                }
+                isActive = activeNavItem === itemId;
             }
 
             return `relative px-4 py-2 font-medium text-sm lg:text-base transition-all duration-300 group
@@ -126,34 +120,29 @@ function Navigation() {
             />
         );
 
-        const isHomeActive =
-            location.pathname === "/" || location.pathname === "/dashboard";
-        const isProgramsActive =
-            location.pathname === "/programs" ||
-            location.pathname.startsWith("/programs/");
-        const isCoursesActive =
-            location.pathname === "/courses" ||
-            location.pathname.startsWith("/courses/");
-        const isFaqActive = location.pathname === "/faq";
+        const isHomeActive = activeNavItem === "home";
+        const isProgramsActive = activeNavItem === "programs";
+        const isCoursesActive = activeNavItem === "courses";
+        const isFaqActive = activeNavItem === "faq";
 
         return (
             <div className="flex justify-center items-center gap-2 lg:gap-4">
-                <Link to="/" className={getNavLinkClass("/")}>
+                <Link to="/" className={getNavLinkClass("home")}>
                     {t("Home_nav")}
                     <ActiveIndicator isActive={isHomeActive} />
                 </Link>
-                <Link to="/programs" className={getNavLinkClass("/programs")}>
+                <Link to="/programs" className={getNavLinkClass("programs")}>
                     {t("Programs_nav")}
                     <ActiveIndicator isActive={isProgramsActive} />
                 </Link>
-                <Link to="/courses" className={getNavLinkClass("/courses")}>
+                <Link to="/courses" className={getNavLinkClass("courses")}>
                     {t("Courses_nav")}
                     <ActiveIndicator isActive={isCoursesActive} />
                 </Link>
                 <Link
                     to="/faq"
                     className={`${getNavLinkClass(
-                        "/faq"
+                        "faq",
                     )} flex items-center gap-1`}
                 >
                     {t("FAQ")}
@@ -178,7 +167,7 @@ function Navigation() {
                             onClick={() => handleScrollToSection("ourServices")}
                             className={`${getNavLinkClass(
                                 "",
-                                "ourServices"
+                                "ourServices",
                             )} bg-transparent border-none cursor-pointer`}
                         >
                             {t("OurServicesLink")}
@@ -190,7 +179,7 @@ function Navigation() {
                             onClick={() => handleScrollToSection("aboutUs")}
                             className={`${getNavLinkClass(
                                 "",
-                                "aboutUs"
+                                "aboutUs",
                             )} bg-transparent border-none cursor-pointer`}
                         >
                             {t("AboutUsLink")}

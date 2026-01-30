@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import InlineLoading from "../../InlineLoading";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,36 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { set_Auth, set_user } = useAppContext();
+    const location = useLocation();
+    const { set_Auth, set_user, login } = useAppContext();
+
+    const getSafeNextPath = (raw) => {
+        if (!raw || typeof raw !== "string") return null;
+        if (!raw.startsWith("/")) return null;
+        if (raw.startsWith("//")) return null;
+        return raw;
+    };
+
+    const redirectTo = useMemo(() => {
+        const params = new URLSearchParams(location.search);
+        const nextFromQuery =
+            getSafeNextPath(params.get("next")) ||
+            getSafeNextPath(params.get("from"));
+        const nextFromState = getSafeNextPath(
+            location.state?.from
+                ? `${location.state.from.pathname}${location.state.from.search || ""}${location.state.from.hash || ""}`
+                : null,
+        );
+        const nextFromStorage = getSafeNextPath(
+            sessionStorage.getItem("postLoginRedirect"),
+        );
+
+        const candidate =
+            nextFromQuery || nextFromState || nextFromStorage || "/";
+        if (candidate.toLowerCase().startsWith("/login")) return "/";
+        if (candidate.toLowerCase().startsWith("/register")) return "/";
+        return candidate;
+    }, [location.search, location.state]);
 
     // Handle form field changes
     const handleChange = useCallback((e) => {
@@ -41,29 +70,12 @@ const Login = () => {
             }
 
             try {
-                // Replace with your actual login API endpoint
-                const response = await axios.post(
-                    `${import.meta.env.VITE_API_URL}/Login`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        withCredentials: true,
-                    },
-                );
-                const data = response.data;
-                if (response.status === 404) {
-                    setError("email ou password est incorrect ou introuvable");
-                } else if (response.status !== 200 || response.status > 299) {
-                    throw new Error(data.message || "Échec de la connexion");
+                // Use centralized context login (sets storage + state)
+                const result = await login(formData);
+                if (!result?.success) {
+                    throw new Error(result?.message || "Échec de la connexion");
                 }
 
-                // Success - update auth context
-                // set_Auth(true);
-                // set_user(data.user);
-                // localStorage.setItem("user", JSON.stringify(data.user));
-                // sessionStorage.setItem("user", JSON.stringify(data.user));
                 Swal.fire({
                     title: t("alerts.auth.successTitle", "Login Successful"),
                     text: t(
@@ -77,7 +89,8 @@ const Login = () => {
                     // allowOutsideClick: false,
                     allowEscapeKey: false,
                 }).then(() => {
-                    window.location.href = "/";
+                    sessionStorage.removeItem("postLoginRedirect");
+                    navigate(redirectTo, { replace: true });
                 });
             } catch (err) {
                 setError(
@@ -88,7 +101,7 @@ const Login = () => {
                 setLoading(false);
             }
         },
-        [formData, navigate, set_Auth, set_user],
+        [formData, login, navigate, redirectTo, set_Auth, set_user, t],
     );
 
     return (

@@ -8,6 +8,7 @@ import Navigation from "./components/Navbar/Navigation";
 import visitService from "./services/VisitTrackerService";
 import homeService from "./services/homeService";
 import { useAppContext } from "./AppContext";
+import { UserNavigationProvider } from "./context/UserNavigationContext";
 import MainLoading from "./MainLoading";
 
 function App() {
@@ -111,15 +112,17 @@ function App() {
     }
 
     return (
-        <div className="relative">
-            {!shouldHideNavAndFooter && <Navigation />}
-            <Outlet />
-            {!shouldHideNavAndFooter && (
-                <Reveal>
-                    <Footer contactInfo={contactInfo} />
-                </Reveal>
-            )}
-        </div>
+        <UserNavigationProvider>
+            <div className="relative">
+                {!shouldHideNavAndFooter && <Navigation />}
+                <Outlet />
+                {!shouldHideNavAndFooter && (
+                    <Reveal>
+                        <Footer contactInfo={contactInfo} />
+                    </Reveal>
+                )}
+            </div>
+        </UserNavigationProvider>
     );
 }
 

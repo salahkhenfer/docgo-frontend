@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import handleRegister, { validateFirstStep } from "../../API/Register";
 import AnimatedSelect from "../../components/AnimatedSelect";
@@ -12,6 +12,27 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const getSafeNextPath = (raw) => {
+        if (!raw || typeof raw !== "string") return null;
+        if (!raw.startsWith("/")) return null;
+        if (raw.startsWith("//")) return null;
+        return raw;
+    };
+
+    const getRedirectTo = () => {
+        const params = new URLSearchParams(location.search);
+        const nextFromQuery =
+            getSafeNextPath(params.get("next")) ||
+            getSafeNextPath(params.get("from"));
+        const nextFromStorage = getSafeNextPath(
+            sessionStorage.getItem("postLoginRedirect"),
+        );
+        const candidate = nextFromQuery || nextFromStorage || "/";
+        if (candidate.toLowerCase().startsWith("/register")) return "/";
+        if (candidate.toLowerCase().startsWith("/login")) return "/";
+        return candidate;
+    };
     const { set_Auth, set_user } = useAppContext();
     const { t } = useTranslation();
     const backgroundImage = "../../src/assets/Login.png";
@@ -108,7 +129,9 @@ const Register = () => {
                     timer: 2000,
                     allowEscapeKey: true,
                 }).then(() => {
-                    window.location.href = "/";
+                    const redirectTo = getRedirectTo();
+                    sessionStorage.removeItem("postLoginRedirect");
+                    navigate(redirectTo, { replace: true });
                 });
             } else if (r.status === 410) {
                 Swal.fire({

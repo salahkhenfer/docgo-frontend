@@ -7,6 +7,7 @@ import logo from "../../assets/Logo.png";
 import LanguageDropdown from "../../components/LanguageDropdown";
 import { useAppContext } from "../../AppContext";
 import { useFavorites } from "../../hooks/useFavorite";
+import { useUserNavigation } from "../../context/UserNavigationContext";
 import NavBarDropDown from "./NavBarDropDown";
 
 function NavigationMobile() {
@@ -14,6 +15,7 @@ function NavigationMobile() {
     const [isOpen, setIsOpen] = useState(false);
     const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
     const { user, isAuth } = useAppContext();
+    const { getActiveNavItem } = useUserNavigation();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -128,8 +130,7 @@ function NavigationMobile() {
                                 to="/"
                                 className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                     ${
-                                        location.pathname === "/" ||
-                                        location.pathname === "/dashboard"
+                                        getActiveNavItem === "home"
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
@@ -145,10 +146,7 @@ function NavigationMobile() {
                                 to="/Programs"
                                 className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                     ${
-                                        location.pathname === "/Programs" ||
-                                        location.pathname.startsWith(
-                                            "/Programs/"
-                                        )
+                                        getActiveNavItem === "programs"
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
@@ -164,10 +162,7 @@ function NavigationMobile() {
                                 to="/Courses"
                                 className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                     ${
-                                        location.pathname === "/Courses" ||
-                                        location.pathname.startsWith(
-                                            "/Courses/"
-                                        )
+                                        getActiveNavItem === "courses"
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
@@ -183,10 +178,7 @@ function NavigationMobile() {
                                 to="/favorites"
                                 className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden flex items-center gap-2
                                     ${
-                                        location.pathname === "/favorites" ||
-                                        location.pathname.startsWith(
-                                            "/favorites/"
-                                        )
+                                        getActiveNavItem === "favorites"
                                             ? "bg-red-50 text-red-600 border-l-4 border-red-500"
                                             : "text-gray-700 hover:bg-red-50 hover:text-red-600"
                                     }`}
@@ -214,7 +206,7 @@ function NavigationMobile() {
                                 to="/faq"
                                 className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                     ${
-                                        location.pathname === "/faq"
+                                        getActiveNavItem === "faq"
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}

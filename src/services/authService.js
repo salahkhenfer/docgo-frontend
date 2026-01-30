@@ -58,7 +58,11 @@ export const authService = {
     // },
 
     // Logout
-    logout: async () => {
+    logout: async (options = {}) => {
+        const redirectTo =
+            typeof options.redirectTo === "string" && options.redirectTo
+                ? options.redirectTo
+                : "/";
         try {
             await authApi.post("/Logout");
         } catch (error) {
@@ -67,7 +71,7 @@ export const authService = {
             // Clear local storage regardless of API call success
             localStorage.removeItem("user");
             sessionStorage.removeItem("user");
-            window.location.href = "/";
+            window.location.href = redirectTo;
         }
     },
 };
