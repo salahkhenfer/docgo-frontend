@@ -35,8 +35,8 @@ export const FavoritesProvider = ({ children }) => {
         try {
             if (user) {
                 // Authenticated user - fetch from server
-                const response = await favoritesService.getFavorites();
-                const serverFavorites = response.data.favorites;
+                const payload = await favoritesService.getFavorites();
+                const serverFavorites = payload?.data?.favorites || [];
 
                 // Process server favorites into our format
                 const processedFavorites = {
@@ -44,6 +44,7 @@ export const FavoritesProvider = ({ children }) => {
                         .filter((fav) => fav.type === "course")
                         .map((fav) => ({
                             ...fav.Course,
+                            type: "course",
                             favoriteId: fav.id,
                             addedAt: fav.createdAt,
                         })),
@@ -51,6 +52,7 @@ export const FavoritesProvider = ({ children }) => {
                         .filter((fav) => fav.type === "program")
                         .map((fav) => ({
                             ...fav.Program,
+                            type: "program",
                             favoriteId: fav.id,
                             addedAt: fav.createdAt,
                         })),
@@ -89,7 +91,7 @@ export const FavoritesProvider = ({ children }) => {
                 await favoritesService.addToFavorites(
                     courseId,
                     programId,
-                    type
+                    type,
                 );
 
                 // Update local state
@@ -97,7 +99,11 @@ export const FavoritesProvider = ({ children }) => {
                     ...prev,
                     [type === "course" ? "courses" : "programs"]: [
                         ...prev[type === "course" ? "courses" : "programs"],
-                        { ...item, addedAt: new Date().toISOString() },
+                        {
+                            ...item,
+                            type,
+                            addedAt: new Date().toISOString(),
+                        },
                     ],
                 }));
             } else {
@@ -126,7 +132,7 @@ export const FavoritesProvider = ({ children }) => {
                 await favoritesService.removeFromFavorites(
                     courseId,
                     programId,
-                    type
+                    type,
                 );
 
                 // Update local state
