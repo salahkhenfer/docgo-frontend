@@ -29,7 +29,6 @@ import CourseResources from "./Pages/CourseResources";
 import CourseVideos from "./Pages/CourseVideos";
 import UserDashboard from "./Pages/Dashboard/UserDashboard";
 import NotFound from "./pages/NotFound";
-import NotificationsPage from "./Pages/NotificationsPage";
 import EditProfile from "./Pages/Profile/EditProfile";
 import Profile from "./Pages/Profile/Profile";
 import QuizContent from "./Pages/QuizContent";
@@ -135,7 +134,7 @@ const Routers = createBrowserRouter([
             {
                 path: "notifications",
                 loader: protectedCaseInsensitiveLoader,
-                element: <NotificationsPage />,
+                element: <UserNotifications />,
             },
             {
                 path: "Courses/:courseId",
