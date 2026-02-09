@@ -7,6 +7,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Hls from "hls.js";
 import { useTranslation } from "react-i18next";
 import { FaCheckCircle, FaLock } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,6 +28,7 @@ export function CourseVideos() {
 
   // Video player states
   const videoRef = useRef(null);
+  const hlsRef = useRef(null);
   const [isPlaying, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -317,6 +319,8 @@ export function CourseVideos() {
     }
 
     const videoPath =
+      video.streamUrl ||
+      video.stream_url ||
       video.videoUrl ||
       video.video_url ||
       video.url ||
@@ -336,6 +340,58 @@ export function CourseVideos() {
     const fullUrl = import.meta.env.VITE_API_URL + videoPath;
     return fullUrl;
   };
+
+  // Attach HLS when the backend returns an .m3u8 URL
+  useEffect(() => {
+    const url = getVideoUrl(currentVideo);
+    const videoEl = videoRef.current;
+
+    if (!videoEl || !url) return;
+
+    // Cleanup previous instance
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
+
+    const isHls = url.includes(".m3u8");
+
+    if (!isHls) {
+      // Native playback for MP4/others
+      if (videoEl.src !== url) {
+        videoEl.src = url;
+      }
+      return;
+    }
+
+    // Safari can play HLS natively
+    if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
+      videoEl.src = url;
+      return;
+    }
+
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: false,
+      });
+      hlsRef.current = hls;
+      hls.loadSource(url);
+      hls.attachMedia(videoEl);
+      hls.on(Hls.Events.ERROR, (_evt, data) => {
+        console.error("HLS error:", data);
+      });
+    } else {
+      console.warn("HLS not supported in this browser");
+    }
+
+    return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [currentVideoIndex]);
 
   // Handle video selection
   const handleVideoSelect = (index) => {
