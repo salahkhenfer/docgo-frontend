@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link as ScrollSmooth } from "react-scroll";
 import PropTypes from "prop-types";
+import logo from "../../assets/Logo.png";
 import {
     Facebook,
     Instagram,
@@ -10,29 +11,24 @@ import {
     Phone,
 } from "lucide-react";
 
-function Footer({ contactInfo }) {
+function Footer({ contactInfo, branding = null }) {
     const { t } = useTranslation();
 
-    // Get social media links from contactInfo
-    const getSocialLink = (type) => {
-        if (!contactInfo?.social) return "#";
-        const social = contactInfo.social.find((s) => s.type === type);
-        return social?.value || "#";
-    };
+    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const brandName = branding?.brandName || "";
+    const brandLogoSrc = (() => {
+        const logoUrl = branding?.logoUrl;
+        if (!logoUrl) return logo;
+        const base = `${apiBase}${logoUrl}`;
+        const updatedAt = branding?.logoUpdatedAt;
+        if (!updatedAt) return base;
+        const v = new Date(updatedAt).getTime();
+        return `${base}?v=${v}`;
+    })();
 
-    // Get email
-    const getEmail = () => {
-        if (!contactInfo?.emails || contactInfo.emails.length === 0)
-            return null;
-        return contactInfo.emails[0].value;
-    };
-
-    // Get phone
-    const getPhone = () => {
-        if (!contactInfo?.phones || contactInfo.phones.length === 0)
-            return null;
-        return contactInfo.phones[0].value;
-    };
+    const getSocialLink = (type) => contactInfo?.[type] || "#";
+    const getEmail = () => contactInfo?.email || null;
+    const getPhone = () => contactInfo?.phone || null;
 
     return (
         <footer className="bg-gray-50 px-4 py-12 md:px-8 lg:px-16 max-lg:text-center">
@@ -193,17 +189,22 @@ function Footer({ contactInfo }) {
                     </div>
 
                     <div className="space-y-6">
-                        <img
-                            src="../../../src/assets/Logo.png"
-                            alt="Logo"
-                            className="w-12 h-12"
-                        />
+                        <div className="flex items-center gap-3 max-lg:justify-center">
+                            <img
+                                src={brandLogoSrc}
+                                alt="Logo"
+                                className="w-12 h-12"
+                            />
+                            {brandName ? (
+                                <span className="font-semibold text-gray-900">
+                                    {brandName}
+                                </span>
+                            ) : null}
+                        </div>
                         <p className="text-gray-600">{t("OurPlatform")}</p>
 
                         <div className="flex space-x-4 max-lg:justify-center">
-                            {contactInfo?.social?.find(
-                                (s) => s.type === "facebook"
-                            ) && (
+                            {contactInfo?.facebook && (
                                 <a
                                     href={getSocialLink("facebook")}
                                     target="_blank"
@@ -213,9 +214,7 @@ function Footer({ contactInfo }) {
                                     <Facebook className="w-6 h-6" />
                                 </a>
                             )}
-                            {contactInfo?.social?.find(
-                                (s) => s.type === "instagram"
-                            ) && (
+                            {contactInfo?.instagram && (
                                 <a
                                     href={getSocialLink("instagram")}
                                     target="_blank"
@@ -225,9 +224,7 @@ function Footer({ contactInfo }) {
                                     <Instagram className="w-6 h-6" />
                                 </a>
                             )}
-                            {contactInfo?.social?.find(
-                                (s) => s.type === "linkedin"
-                            ) && (
+                            {contactInfo?.linkedin && (
                                 <a
                                     href={getSocialLink("linkedin")}
                                     target="_blank"
@@ -237,9 +234,7 @@ function Footer({ contactInfo }) {
                                     <Linkedin className="w-6 h-6" />
                                 </a>
                             )}
-                            {contactInfo?.social?.find(
-                                (s) => s.type === "youtube"
-                            ) && (
+                            {contactInfo?.youtube && (
                                 <a
                                     href={getSocialLink("youtube")}
                                     target="_blank"
@@ -280,11 +275,8 @@ function Footer({ contactInfo }) {
 }
 
 Footer.propTypes = {
-    contactInfo: PropTypes.shape({
-        social: PropTypes.arrayOf(PropTypes.object),
-        emails: PropTypes.arrayOf(PropTypes.object),
-        phones: PropTypes.arrayOf(PropTypes.object),
-    }),
+    contactInfo: PropTypes.object,
+    branding: PropTypes.object,
 };
 
 export default Footer;

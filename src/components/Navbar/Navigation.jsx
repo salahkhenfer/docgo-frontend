@@ -11,7 +11,7 @@ import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import NavigationMobile from "./NavigationMobile";
 import NavBarDropDown from "./NavBarDropDown";
 
-function Navigation() {
+function Navigation({ branding = null }) {
     const { t } = useTranslation();
     const { user, isAuth } = useAppContext();
     const { getActiveNavItem } = useUserNavigation();
@@ -21,6 +21,18 @@ function Navigation() {
     const { i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const brandName = branding?.brandName || "";
+    const brandLogoSrc = (() => {
+        const logoUrl = branding?.logoUrl;
+        if (!logoUrl) return logo;
+        const base = `${apiBase}${logoUrl}`;
+        const updatedAt = branding?.logoUpdatedAt;
+        if (!updatedAt) return base;
+        const v = new Date(updatedAt).getTime();
+        return `${base}?v=${v}`;
+    })();
 
     // Add favorites hook
     const { totalCount } = useFavorites();
@@ -224,16 +236,23 @@ function Navigation() {
                 sm-sm:max-lg:hidden`}
             >
                 <Link to="/" className="flex items-center">
-                    <img
-                        className={`rounded-full transition-all duration-300 hover:scale-105
-                            ${
-                                isScrolled
-                                    ? "w-16 h-16 md:w-12 md:h-12 lg:w-14 lg:h-14"
-                                    : "w-24 h-24 md:w-16 md:h-16 lg:w-20 lg:h-20"
-                            }`}
-                        src={logo}
-                        alt="Docgo Agency logo"
-                    />
+                    <div className="flex items-center gap-3">
+                        <img
+                            className={`rounded-full transition-all duration-300 hover:scale-105
+                                ${
+                                    isScrolled
+                                        ? "w-16 h-16 md:w-12 md:h-12 lg:w-14 lg:h-14"
+                                        : "w-24 h-24 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                                }`}
+                            src={brandLogoSrc}
+                            alt="Logo"
+                        />
+                        {brandName ? (
+                            <span className="hidden md:block font-semibold text-gray-800">
+                                {brandName}
+                            </span>
+                        ) : null}
+                    </div>
                 </Link>
                 <MainContent />
                 {/* <div
@@ -311,7 +330,7 @@ function Navigation() {
             </nav>
 
             {/* Pass the isDropdownOpen and setIsDropdownOpen states to NavigationMobile */}
-            <NavigationMobile />
+            <NavigationMobile branding={branding} />
         </div>
     );
 }

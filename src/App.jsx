@@ -14,6 +14,7 @@ import MainLoading from "./MainLoading";
 function App() {
     const [loading, setLoading] = useState(true);
     const [contactInfo, setContactInfo] = useState(null);
+    const [siteSettings, setSiteSettings] = useState(null);
     const location = useLocation();
     const { loading: authLoading } = useAppContext(); // Use auth loading from context
 
@@ -37,7 +38,9 @@ function App() {
             try {
                 const response = await homeService.getHomePageData();
                 if (response.success) {
-                    setContactInfo(response.data.contactInfo);
+                    setSiteSettings(response.data.siteSettings || null);
+                    // New format: contactInfo is a single object
+                    setContactInfo(response.data.contactInfo || null);
                 }
             } catch (error) {
                 console.error("Error fetching contact info:", error);
@@ -114,11 +117,16 @@ function App() {
     return (
         <UserNavigationProvider>
             <div className="relative">
-                {!shouldHideNavAndFooter && <Navigation />}
+                {!shouldHideNavAndFooter && (
+                    <Navigation branding={siteSettings} />
+                )}
                 <Outlet />
                 {!shouldHideNavAndFooter && (
                     <Reveal>
-                        <Footer contactInfo={contactInfo} />
+                        <Footer
+                            contactInfo={contactInfo}
+                            branding={siteSettings}
+                        />
                     </Reveal>
                 )}
             </div>

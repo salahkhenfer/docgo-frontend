@@ -10,7 +10,7 @@ import { useFavorites } from "../../hooks/useFavorite";
 import { useUserNavigation } from "../../context/UserNavigationContext";
 import NavBarDropDown from "./NavBarDropDown";
 
-function NavigationMobile() {
+function NavigationMobile({ branding = null }) {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
@@ -18,6 +18,18 @@ function NavigationMobile() {
     const { getActiveNavItem } = useUserNavigation();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const brandName = branding?.brandName || "";
+    const brandLogoSrc = (() => {
+        const logoUrl = branding?.logoUrl;
+        if (!logoUrl) return logo;
+        const base = `${apiBase}${logoUrl}`;
+        const updatedAt = branding?.logoUpdatedAt;
+        if (!updatedAt) return base;
+        const v = new Date(updatedAt).getTime();
+        return `${base}?v=${v}`;
+    })();
 
     const { totalCount } = useFavorites();
 
@@ -46,11 +58,18 @@ function NavigationMobile() {
         <div className="hidden sm-sm:max-lg:block">
             <div className="flex justify-between items-center px-4 py-3 shadow-md">
                 <Link to="/">
-                    <img
-                        className="w-16 h-16 rounded-full transition-transform duration-300 hover:scale-105"
-                        src={logo}
-                        alt="Docgo Agency logo"
-                    />
+                    <div className="flex items-center gap-3">
+                        <img
+                            className="w-16 h-16 rounded-full transition-transform duration-300 hover:scale-105"
+                            src={brandLogoSrc}
+                            alt="Logo"
+                        />
+                        {brandName ? (
+                            <span className="font-semibold text-gray-800">
+                                {brandName}
+                            </span>
+                        ) : null}
+                    </div>
                 </Link>
 
                 <div className="flex items-center gap-4">
