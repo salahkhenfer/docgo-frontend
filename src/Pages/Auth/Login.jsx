@@ -72,6 +72,10 @@ const Login = () => {
             try {
                 // Use centralized context login (sets storage + state)
                 const result = await login(formData);
+                if (result?.blocked) {
+                    navigate("/blocked", { replace: true });
+                    return;
+                }
                 if (!result?.success) {
                     throw new Error(result?.message || "Échec de la connexion");
                 }

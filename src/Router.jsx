@@ -9,6 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
+import Blocked from "./Pages/Auth/Blocked";
 import Courses from "./Pages/Courses";
 import FAQPage from "./Pages/FAQPage";
 import FavoritesPage from "./Pages/FavoritesPage";
@@ -96,6 +97,10 @@ const Routers = createBrowserRouter([
             {
                 index: true,
                 element: <Home />,
+            },
+            {
+                path: "blocked",
+                element: <Blocked />,
             },
             {
                 path: "Programs",

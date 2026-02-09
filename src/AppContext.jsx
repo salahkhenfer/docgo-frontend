@@ -104,16 +104,15 @@ export const AppProvider = ({ children }) => {
                 validateStatus: () => true, // Don't throw on any status
             });
 
-
             if (response.status === 200 && response.data.user) {
                 set_user(response.data.user);
                 localStorage.setItem(
                     "user",
-                    JSON.stringify(response.data.user)
+                    JSON.stringify(response.data.user),
                 );
                 sessionStorage.setItem(
                     "user",
-                    JSON.stringify(response.data.user)
+                    JSON.stringify(response.data.user),
                 );
                 return true;
             } else {
@@ -143,15 +142,30 @@ export const AppProvider = ({ children }) => {
                 set_user(response.data.user);
                 localStorage.setItem(
                     "user",
-                    JSON.stringify(response.data.user)
+                    JSON.stringify(response.data.user),
                 );
                 sessionStorage.setItem(
                     "user",
-                    JSON.stringify(response.data.user)
+                    JSON.stringify(response.data.user),
                 );
                 set_Auth(true);
                 return { success: true, user: response.data.user };
             } else {
+                if (
+                    response.status === 403 &&
+                    (response.data?.code === "USER_BLOCKED" ||
+                        String(response.data?.message || "")
+                            .toLowerCase()
+                            .includes("blocked"))
+                ) {
+                    return {
+                        success: false,
+                        blocked: true,
+                        message:
+                            response.data?.message ||
+                            "Your account has been blocked",
+                    };
+                }
                 return {
                     success: false,
                     message: response.data?.message || "Login failed",
