@@ -1,285 +1,262 @@
 import apiClient from "../services/apiClient";
 
-// Payment API for handling PayPal and CCP payments
+// Payment API (CCP screenshot payments only for now)
 export const PaymentAPI = {
-  // =================================================================
-  // CHECK PAYMENT APPLICATION
-  // =================================================================
+    // =================================================================
+    // CHECK PAYMENT APPLICATION
+    // =================================================================
 
-  // Check if user has an existing payment application for an item
-  checkPaymentApplication: async (itemType, itemId) => {
-    try {
-      const response = await apiClient.get(
-        `/user-payments/check-application/${itemType}/${itemId}`,
-      );
+    // Check if user has an existing payment application for an item
+    checkPaymentApplication: async (itemType, itemId) => {
+        try {
+            const response = await apiClient.get(
+                `/user-payments/check-application/${itemType}/${itemId}`,
+            );
 
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (error) {
-      console.error("Check payment application error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message ||
-          "Failed to check payment application",
-      };
-    }
-  },
+            return {
+                success: true,
+                data: response.data,
+            };
+        } catch (error) {
+            console.error("Check payment application error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    "Failed to check payment application",
+            };
+        }
+    },
 
-  // Get all user's payments
-  getMyPayments: async () => {
-    try {
-      const response = await apiClient.get("/user-payments/my-payments");
+    // Get all user's payments
+    getMyPayments: async () => {
+        try {
+            const response = await apiClient.get("/user-payments/my-payments");
 
-      return {
-        success: true,
-        data: response.data.data,
-      };
-    } catch (error) {
-      console.error("Get my payments error:", error);
-      return {
-        success: false,
-        message: error.response?.data?.message || "Failed to fetch payments",
-      };
-    }
-  },
+            return {
+                success: true,
+                data: response.data.data,
+            };
+        } catch (error) {
+            console.error("Get my payments error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message || "Failed to fetch payments",
+            };
+        }
+    },
 
-  // =================================================================
-  // PAYPAL PAYMENT METHODS
-  // =================================================================
+    // =================================================================
+    // ONLINE PAYMENT METHODS (DISABLED)
+    // =================================================================
 
-  // Create PayPal payment order
-  createPayPalPayment: async (itemData) => {
-    try {
-      const response = await apiClient.post("/payment/paypal/create", {
-        itemType: itemData.itemType,
-        itemId: itemData.itemId,
-        description:
-          itemData.description || `${itemData.itemType}: ${itemData.itemName}`,
-        returnUrl: `${window.location.origin}/payment/success`,
-        cancelUrl: `${window.location.origin}/payment/cancel`,
-      });
+    // Create online payment order
+    createPayPalPayment: async (itemData) => {
+        return {
+            success: false,
+            message:
+                "Online payments are disabled. Please use CCP screenshot payment.",
+            error: "PAYPAL_DISABLED",
+        };
+    },
 
-      return {
-        success: true,
-        data: response.data.data,
-        message: "PayPal order created successfully",
-      };
-    } catch (error) {
-      console.error("Create PayPal payment error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message || "Failed to create PayPal payment",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+    // Capture online payment after approval
+    capturePayPalPayment: async (orderId) => {
+        return {
+            success: false,
+            message:
+                "Online payments are disabled. Please use CCP screenshot payment.",
+            error: "PAYPAL_DISABLED",
+        };
+    },
 
-  // Capture PayPal payment after approval
-  capturePayPalPayment: async (orderId) => {
-    try {
-      const response = await apiClient.post(
-        `/payment/paypal/capture/${orderId}`,
-      );
+    // =================================================================
+    // CCP PAYMENT METHODS
+    // =================================================================
 
-      return {
-        success: true,
-        data: response.data.data,
-        message: "Payment captured successfully",
-      };
-    } catch (error) {
-      console.error("Capture PayPal payment error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message || "Failed to capture PayPal payment",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+    // Create CCP payment with screenshot upload
+    createCCPPayment: async (itemData, paymentForm, screenshotFile) => {
+        try {
+            const formData = new FormData();
 
-  // =================================================================
-  // CCP PAYMENT METHODS
-  // =================================================================
+            formData.append("CCP_number", paymentForm.ccpNumber);
 
-  // Create CCP payment with screenshot upload
-  createCCPPayment: async (itemData, paymentForm, screenshotFile) => {
-    try {
-      const formData = new FormData();
+            // Add phone number if provided
+            if (paymentForm.phoneNumber) {
+                formData.append("phoneNumber", paymentForm.phoneNumber);
+            }
 
-      formData.append("CCP_number", paymentForm.ccpNumber);
+            // Add screenshot file with correct field name
+            if (screenshotFile) {
+                formData.append("Image", screenshotFile);
+            } else {
+                throw new Error("Screenshot is required");
+            }
 
-      // Add phone number if provided
-      if (paymentForm.phoneNumber) {
-        formData.append("phoneNumber", paymentForm.phoneNumber);
-      }
+            // Validation
+            if (!paymentForm.ccpNumber) {
+                throw new Error("CCP number is required");
+            }
+            if (!screenshotFile) {
+                throw new Error("Screenshot is required");
+            }
 
-      // Add screenshot file with correct field name
-      if (screenshotFile) {
-        formData.append("Image", screenshotFile);
-      } else {
-        throw new Error("Screenshot is required");
-      }
+            let response;
+            if (itemData.itemType === "course") {
+                response = await apiClient.post(
+                    "/upload/Payment/Courses/" + itemData.itemId,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    },
+                );
+            } else if (itemData.itemType === "program") {
+                response = await apiClient.post(
+                    "/upload/Payment/Programs/" + itemData.itemId,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    },
+                );
+            } else {
+                throw new Error("Invalid item type");
+            }
 
-      // Validation
-      if (!paymentForm.ccpNumber) {
-        throw new Error("CCP number is required");
-      }
-      if (!screenshotFile) {
-        throw new Error("Screenshot is required");
-      }
+            return {
+                success: true,
+                data: response.data.data || response.data,
+                message:
+                    response.data.message ||
+                    "CCP payment submitted successfully",
+            };
+        } catch (error) {
+            console.error("Create CCP payment error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Failed to create CCP payment",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
 
-      let response;
-      if (itemData.itemType === "course") {
-        response = await apiClient.post(
-          "/upload/Payment/Courses/" + itemData.itemId,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          },
-        );
-      } else if (itemData.itemType === "program") {
-        response = await apiClient.post(
-          "/upload/Payment/Programs/" + itemData.itemId,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          },
-        );
-      } else {
-        throw new Error("Invalid item type");
-      }
+    // =================================================================
+    // CCP PAYMENT CLEANUP (Error/Cancellation Handling)
+    // =================================================================
 
-      return {
-        success: true,
-        data: response.data.data || response.data,
-        message: response.data.message || "CCP payment submitted successfully",
-      };
-    } catch (error) {
-      console.error("Create CCP payment error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to create CCP payment",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+    // Clean up CCP payment screenshot after error or cancellation
+    cleanupCCPPayment: async (itemData) => {
+        try {
+            let response;
+            if (itemData.itemType === "course") {
+                response = await apiClient.delete(
+                    "/upload/Payment/Courses/" + itemData.itemId,
+                );
+            } else if (itemData.itemType === "program") {
+                response = await apiClient.delete(
+                    "/upload/Payment/Programs/" + itemData.itemId,
+                );
+            } else {
+                throw new Error("Invalid item type");
+            }
 
-  // =================================================================
-  // CCP PAYMENT CLEANUP (Error/Cancellation Handling)
-  // =================================================================
+            return {
+                success: true,
+                data: response.data.data || response.data,
+                message: response.data.message || "Payment cleanup successful",
+            };
+        } catch (error) {
+            console.error("CCP payment cleanup error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Failed to cleanup payment",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
 
-  // Clean up CCP payment screenshot after error or cancellation
-  cleanupCCPPayment: async (itemData) => {
-    try {
-      let response;
-      if (itemData.itemType === "course") {
-        response = await apiClient.delete(
-          "/upload/Payment/Courses/" + itemData.itemId,
-        );
-      } else if (itemData.itemType === "program") {
-        response = await apiClient.delete(
-          "/upload/Payment/Programs/" + itemData.itemId,
-        );
-      } else {
-        throw new Error("Invalid item type");
-      }
+    // =================================================================
+    // PAYMENT HISTORY AND STATUS
+    // =================================================================
 
-      return {
-        success: true,
-        data: response.data.data || response.data,
-        message: response.data.message || "Payment cleanup successful",
-      };
-    } catch (error) {
-      console.error("CCP payment cleanup error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to cleanup payment",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+    // Get user payment history
+    getUserPayments: async (params = {}) => {
+        try {
+            const response = await apiClient.get("/payment/my-payments", {
+                params,
+            });
 
-  // =================================================================
-  // PAYMENT HISTORY AND STATUS
-  // =================================================================
+            return {
+                success: true,
+                data: response.data.data,
+                message: "Payment history fetched successfully",
+            };
+        } catch (error) {
+            console.error("Get user payments error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    "Failed to fetch payment history",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
 
-  // Get user payment history
-  getUserPayments: async (params = {}) => {
-    try {
-      const response = await apiClient.get("/payment/my-payments", {
-        params,
-      });
+    // Get specific payment details
+    getPaymentDetails: async (paymentId) => {
+        try {
+            const response = await apiClient.get(`/payment/${paymentId}`);
 
-      return {
-        success: true,
-        data: response.data.data,
-        message: "Payment history fetched successfully",
-      };
-    } catch (error) {
-      console.error("Get user payments error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message || "Failed to fetch payment history",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+            return {
+                success: true,
+                data: response.data.data,
+                message: "Payment details fetched successfully",
+            };
+        } catch (error) {
+            console.error("Get payment details error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message ||
+                    "Failed to fetch payment details",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
 
-  // Get specific payment details
-  getPaymentDetails: async (paymentId) => {
-    try {
-      const response = await apiClient.get(`/payment/${paymentId}`);
+    // Cancel payment
+    cancelPayment: async (paymentId) => {
+        try {
+            const response = await apiClient.post(
+                `/payment/${paymentId}/cancel`,
+            );
 
-      return {
-        success: true,
-        data: response.data.data,
-        message: "Payment details fetched successfully",
-      };
-    } catch (error) {
-      console.error("Get payment details error:", error);
-      return {
-        success: false,
-        message:
-          error.response?.data?.message || "Failed to fetch payment details",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
-
-  // Cancel payment
-  cancelPayment: async (paymentId) => {
-    try {
-      const response = await apiClient.post(`/payment/${paymentId}/cancel`);
-
-      return {
-        success: true,
-        data: response.data.data,
-        message: "Payment cancelled successfully",
-      };
-    } catch (error) {
-      console.error("Cancel payment error:", error);
-      return {
-        success: false,
-        message: error.response?.data?.message || "Failed to cancel payment",
-        error: error.response?.data?.error || error.message,
-      };
-    }
-  },
+            return {
+                success: true,
+                data: response.data.data,
+                message: "Payment cancelled successfully",
+            };
+        } catch (error) {
+            console.error("Cancel payment error:", error);
+            return {
+                success: false,
+                message:
+                    error.response?.data?.message || "Failed to cancel payment",
+                error: error.response?.data?.error || error.message,
+            };
+        }
+    },
 };
 
 export default PaymentAPI;

@@ -335,7 +335,7 @@
         "alreadyEnrolled": "Vous êtes déjà inscrit à ce",
         "redirecting": "Redirection...",
         "ccpSubmitted": "Votre paiement CCP a été soumis pour vérification. Vous serez notifié une fois approuvé.",
-        "paypalProcessed": "Votre paiement PayPal a été traité. Votre candidature est en attente de l'approbation de l'administrateur.",
+        "paypalProcessed": "Votre paiement a été traité. Votre candidature est en attente de l'approbation de l'administrateur.",
         "loginRequired": "Vous devez vous connecter"
     },
     "Courses": "Cours",
@@ -491,7 +491,7 @@
         "selectPaymentMethod": "Sélectionnez le mode de paiement",
         "paymentMethods": "Modes de paiement",
         "ccpPayment": "Paiement CCP Algérie",
-        "paypalPayment": "PayPal",
+        "paypalPayment": "Paiement en ligne (désactivé)",
         "backToItem": "Retour",
         "course": "cours",
         "program": "programme",

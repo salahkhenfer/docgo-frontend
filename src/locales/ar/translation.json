@@ -310,7 +310,7 @@
         "alreadyEnrolled": "أنت مسجل بالفعل في",
         "redirecting": "جاري التوجيه...",
         "ccpSubmitted": "تم إرسال دفعة CCP الخاصة بك للتحقق. سيتم إخطارك بمجرد الموافقة.",
-        "paypalProcessed": "تمت معالجة دفعة PayPal الخاصة بك. طلبك قيد انتظار موافقة المسؤول.",
+        "paypalProcessed": "تمت معالجة دفعتك. طلبك قيد انتظار موافقة المسؤول.",
         "loginRequired": "يجب عليك تسجيل الدخول"
     },
     "Programs": "  البرامج المتاحة",
@@ -465,7 +465,7 @@
         "selectPaymentMethod": "اختر طريقة الدفع",
         "paymentMethods": "طرق الدفع",
         "ccpPayment": "دفع CCP الجزائر",
-        "paypalPayment": "باي بال",
+        "paypalPayment": "الدفع الإلكتروني (معطل)",
         "backToItem": "رجوع",
         "course": "دورة",
         "program": "برنامج",

@@ -13,7 +13,7 @@ export function CourseCard({
     description,
     price,
     discountPrice,
-    currency = "USD",
+    currency = "DZD",
     level,
     averageRating,
     totalReviews,
@@ -60,7 +60,7 @@ export function CourseCard({
             minimumFractionDigits: 0,
             maximumFractionDigits: 2,
         });
-        return `${formattedNumber} ${currency}`;
+        return `${formattedNumber} DZD`;
     };
 
     const getEnrollmentStatusText = () => {
@@ -227,8 +227,8 @@ export function CourseCard({
                                                 isFullStar
                                                     ? "text-yellow-400 fill-yellow-400"
                                                     : isHalfStar
-                                                    ? "text-yellow-400 fill-yellow-200"
-                                                    : "text-gray-300 fill-gray-200"
+                                                      ? "text-yellow-400 fill-yellow-200"
+                                                      : "text-gray-300 fill-gray-200"
                                             } transition-colors`}
                                         />
                                     );
@@ -253,8 +253,8 @@ export function CourseCard({
                                 enrollmentStatus === "approved"
                                     ? "bg-green-100 text-green-700"
                                     : enrollmentStatus === "pending"
-                                    ? "bg-yellow-100 text-yellow-700"
-                                    : "bg-red-100 text-red-700"
+                                      ? "bg-yellow-100 text-yellow-700"
+                                      : "bg-red-100 text-red-700"
                             }`}
                         >
                             {getEnrollmentStatusText()}

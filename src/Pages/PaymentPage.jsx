@@ -10,7 +10,6 @@ import { useAppContext } from "../AppContext";
 import ccpIcon from "../assets/ccp.png";
 import CCPPayment from "../components/Payment/CCPPayment";
 import PaymentMethodSelector from "../components/Payment/PaymentMethodSelector";
-import PayPalPayment from "../components/Payment/PayPalPayment";
 import MainLoading from "../MainLoading";
 import axios from "../utils/axios";
 const PaymentPage = () => {
@@ -134,22 +133,17 @@ const PaymentPage = () => {
                 if (response.success) {
                     setPaymentConfig(response.data);
 
-                    // Set default payment method based on what's available
-                    if (response.data.paypal.available) {
-                        setSelectedMethod("paypal");
-                    } else if (response.data.ccp.available) {
-                        setSelectedMethod("ccp");
-                    }
+                    // CCP screenshot payments only
+                    setSelectedMethod("ccp");
                 }
             } catch (error) {
                 console.error("Error fetching payment config:", error);
                 // Use fallback configuration
                 setPaymentConfig({
-                    paypal: { enabled: false, available: false },
                     ccp: { enabled: false, available: false },
                     general: {
                         defaultCurrency: "DZD",
-                        supportedCurrencies: ["USD", "DZD", "DZD"],
+                        supportedCurrencies: ["DZD"],
                     },
                 });
                 setError(
@@ -325,23 +319,8 @@ const PaymentPage = () => {
 
     // Improved currency handling with proper fallbacks
     const getCurrency = () => {
-        // Try to get currency from item data
-        if (itemData?.Currency) return itemData.Currency;
-        if (itemData?.currency) return itemData.currency;
-
-        // Try to get from payment config
-        if (paymentConfig?.general?.defaultCurrency) {
-            return paymentConfig.general.defaultCurrency;
-        }
-
-        // Default fallback based on item type and location
-        if (itemType === "course") {
-            return "USD"; // Most courses are in USD
-        } else if (itemType === "program") {
-            return "DZD"; // Most programs are in DZD (Algeria)
-        }
-
-        return "DZD"; // Final fallback
+        // Platform is DZD-only for now.
+        return "DZD";
     };
 
     const currency = getCurrency();
@@ -387,16 +366,6 @@ const PaymentPage = () => {
         if (!paymentConfig) return [];
 
         return [
-            // {
-            //     id: "paypal",
-            //     name: "PayPal",
-            //     description: "Pay securely with PayPal",
-            //     detailedInstructions: paymentConfig.paypal?.instructions,
-            //     icon: paypalIcon,
-            //     available: paymentConfig.paypal?.available,
-            //     enabled: paymentConfig.paypal?.enabled,
-            //     isEnabled: paymentConfig.paypal?.isEnabled,
-            // },
             {
                 id: "ccp",
                 name: "Algeria CCP",
@@ -456,12 +425,6 @@ const PaymentPage = () => {
             redirectMessage = t(
                 "common.ccpSubmitted",
                 "Your CCP payment has been submitted for verification. You will be notified once it's approved.",
-            );
-        } else if (paymentData.method === "paypal") {
-            successMessage = t("alerts.payment.successTitle");
-            redirectMessage = t(
-                "common.paypalProcessed",
-                "Your PayPal payment has been processed. Your application is pending admin approval.",
             );
         }
 
@@ -827,22 +790,6 @@ const PaymentPage = () => {
                                 />
 
                                 <div className="mt-8">
-                                    {selectedMethod === "paypal" && (
-                                        <PayPalPayment
-                                            itemData={itemData}
-                                            itemType={itemType}
-                                            amount={price}
-                                            currency={currency}
-                                            paymentConfig={
-                                                paymentConfig?.paypal
-                                            }
-                                            onSuccess={handlePaymentSuccess}
-                                            onError={handlePaymentError}
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                        />
-                                    )}
-
                                     {selectedMethod === "ccp" && (
                                         <CCPPayment
                                             itemData={itemData}

@@ -81,14 +81,14 @@ export const CourseDetails = () => {
         checkAuth();
     }, []);
 
-    const formatCurrency = (amount, currency = "USD") => {
+    const formatCurrency = (amount) => {
         if (!amount) return t("Free") || "Free";
         // eslint-disable-next-line no-undef
         return new Intl.NumberFormat(
             i18n.language === "ar" ? "ar-DZ" : "en-US",
             {
                 style: "currency",
-                currency: currency,
+                currency: "DZD",
             }
         ).format(amount);
     };
