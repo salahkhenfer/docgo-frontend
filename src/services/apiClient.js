@@ -1,6 +1,16 @@
 import axios from "axios";
+import { getApiBaseUrl } from "../utils/apiBaseUrl";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = getApiBaseUrl();
+
+const DEV_AUTH_ENABLED =
+    import.meta.env.DEV &&
+    ["1", "true", "yes"].includes(
+        String(
+            import.meta.env.VITE_USER_AUTH_TRUE_WHILE_DEV || "",
+        ).toLowerCase(),
+    );
+const DEV_USER_ID = Number(import.meta.env.VITE_DEV_USER_ID || 1);
 
 // Create axios instance with default configuration
 const api = axios.create({
@@ -10,6 +20,10 @@ const api = axios.create({
         "Content-Type": "application/json",
     },
 });
+
+if (DEV_AUTH_ENABLED) {
+    api.defaults.headers.common["X-Dev-Auth-UserId"] = String(DEV_USER_ID);
+}
 
 // Add response interceptor for error handling
 api.interceptors.response.use(

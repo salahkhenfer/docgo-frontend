@@ -55,8 +55,28 @@ const caseInsensitiveLoader = ({ request }) => {
 
 // Auth protection loader
 const protectedLoader = ({ request }) => {
-    const user = localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (!user) {
+    // Dev-only bypass (matches AppContext/apiClient)
+    const devAuthEnabled =
+        import.meta.env.DEV &&
+        ["1", "true", "yes"].includes(
+            String(
+                import.meta.env.VITE_USER_AUTH_TRUE_WHILE_DEV || "",
+            ).toLowerCase(),
+        );
+
+    const userRaw =
+        localStorage.getItem("user") || sessionStorage.getItem("user");
+    let hasValidUser = false;
+    if (userRaw) {
+        try {
+            const parsed = JSON.parse(userRaw);
+            hasValidUser = !!parsed?.id;
+        } catch {
+            hasValidUser = false;
+        }
+    }
+
+    if (!devAuthEnabled && !hasValidUser) {
         const url = new URL(request.url);
         const next = `${url.pathname}${url.search}${url.hash}`;
         try {

@@ -10,6 +10,8 @@ import homeService from "./services/homeService";
 import { useAppContext } from "./AppContext";
 import { UserNavigationProvider } from "./context/UserNavigationContext";
 import MainLoading from "./MainLoading";
+import Seo from "./components/SEO/Seo";
+import { useTranslation } from "react-i18next";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -17,10 +19,110 @@ function App() {
     const [siteSettings, setSiteSettings] = useState(null);
     const location = useLocation();
     const { loading: authLoading } = useAppContext(); // Use auth loading from context
+    const { i18n } = useTranslation();
 
     // Check if we're in auth routes that shouldn't have navbar/footer
-    const isAuthRoute = ["/login", "/register"].includes(location.pathname);
+    const pathname = location.pathname.toLowerCase();
+    const isAuthRoute = ["/login", "/register"].includes(pathname);
     const shouldHideNavAndFooter = isAuthRoute;
+
+    const isProtectedArea =
+        pathname.startsWith("/dashboard") ||
+        pathname.startsWith("/profile") ||
+        pathname.startsWith("/myapplications") ||
+        pathname.startsWith("/my-applications") ||
+        pathname.startsWith("/notifications") ||
+        pathname.startsWith("/payment") ||
+        pathname.includes("/watch") ||
+        pathname.includes("/videos") ||
+        pathname.includes("/resources") ||
+        pathname.includes("/certificate");
+
+    const noIndex = isAuthRoute || isProtectedArea;
+
+    const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
+        ? "ar"
+        : "en";
+    const seoLocale = seoLang === "ar" ? "ar_DZ" : "en_US";
+
+    const seo = (() => {
+        if (pathname === "/") {
+            return {
+                title: "Home",
+                description:
+                    "DocGo: explore courses and programs, enroll, and learn online.",
+            };
+        }
+
+        if (pathname === "/courses") {
+            return {
+                title: "Courses",
+                description: "Browse all available courses on DocGo.",
+            };
+        }
+
+        if (pathname.startsWith("/courses/")) {
+            return {
+                title: pathname.includes("/watch") ? "Watch Course" : "Course",
+                description: "Course details and learning content on DocGo.",
+            };
+        }
+
+        if (pathname === "/programs") {
+            return {
+                title: "Programs",
+                description: "Browse all available programs on DocGo.",
+            };
+        }
+
+        if (pathname.startsWith("/programs/")) {
+            return {
+                title: "Program",
+                description: "Program details and enrollment on DocGo.",
+            };
+        }
+
+        if (pathname === "/faq") {
+            return {
+                title: "FAQ",
+                description: "Frequently asked questions about DocGo.",
+            };
+        }
+
+        if (pathname === "/favorites") {
+            return {
+                title: "Favorites",
+                description: "Your saved courses and programs on DocGo.",
+            };
+        }
+
+        if (pathname === "/login") {
+            return {
+                title: "Login",
+                description: "Login to your DocGo account.",
+            };
+        }
+
+        if (pathname === "/register") {
+            return {
+                title: "Register",
+                description: "Create your DocGo account.",
+            };
+        }
+
+        if (pathname.startsWith("/dashboard")) {
+            return {
+                title: "Dashboard",
+                description: "Your DocGo dashboard.",
+            };
+        }
+
+        return {
+            title: "DocGo",
+            description:
+                "DocGo: explore courses and programs, enroll, and learn online.",
+        };
+    })();
 
     useEffect(() => {
         // Track page visit whenever location changes
@@ -117,6 +219,14 @@ function App() {
     return (
         <UserNavigationProvider>
             <div className="relative">
+                <Seo
+                    title={seo.title}
+                    description={seo.description}
+                    canonicalPath={location.pathname}
+                    noIndex={noIndex}
+                    lang={seoLang}
+                    locale={seoLocale}
+                />
                 {!shouldHideNavAndFooter && (
                     <Navigation branding={siteSettings} />
                 )}

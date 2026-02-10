@@ -10,21 +10,24 @@ import i18n from "./i18n";
 import { HeroUIProvider } from "@heroui/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { AppProvider } from "./AppContext"; 
+import { AppProvider } from "./AppContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
+import { HelmetProvider } from "react-helmet-async";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <AppProvider>
-            <FavoritesProvider>
-                <I18nextProvider i18n={i18n}>
-                    <HeroUIProvider>
-                        <Suspense fallback={<MainLoading />}>
-                            <RouterProvider router={Routers} />
-                        </Suspense>
-                    </HeroUIProvider>
-                </I18nextProvider>
-            </FavoritesProvider>
-        </AppProvider>
-    </StrictMode>
+        <HelmetProvider>
+            <AppProvider>
+                <FavoritesProvider>
+                    <I18nextProvider i18n={i18n}>
+                        <HeroUIProvider>
+                            <Suspense fallback={<MainLoading />}>
+                                <RouterProvider router={Routers} />
+                            </Suspense>
+                        </HeroUIProvider>
+                    </I18nextProvider>
+                </FavoritesProvider>
+            </AppProvider>
+        </HelmetProvider>
+    </StrictMode>,
 );

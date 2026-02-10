@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
 import axios from "axios";
+import { getApiBaseUrl } from "./utils/apiBaseUrl";
 
 const AppContext = createContext();
 
@@ -61,10 +62,27 @@ const reducer = (state, action) => {
 export const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    // In dev, prefer same-origin requests so Vite proxy can keep cookies first-party.
+    // In production, set VITE_API_URL to your real backend origin.
+    const API_URL = getApiBaseUrl();
+
+    // Dev-only bypass: allows testing dashboard without real auth.
+    // Must be enabled explicitly in Vite env and only works in dev builds.
+    const DEV_AUTH_ENABLED =
+        import.meta.env.DEV &&
+        ["1", "true", "yes"].includes(
+            String(
+                import.meta.env.VITE_USER_AUTH_TRUE_WHILE_DEV || "",
+            ).toLowerCase(),
+        );
+    const DEV_USER_ID = Number(import.meta.env.VITE_DEV_USER_ID || 1);
 
     // Configure axios defaults
     axios.defaults.withCredentials = true;
+    if (DEV_AUTH_ENABLED) {
+        axios.defaults.headers.common["X-Dev-Auth-UserId"] =
+            String(DEV_USER_ID);
+    }
 
     const set_Auth = (isAuth) => {
         dispatch({ type: "SET_AUTH", payload: isAuth });
@@ -98,6 +116,21 @@ export const AppProvider = ({ children }) => {
     const checkAuthStatus = async () => {
         try {
             setLoading(true);
+
+            if (DEV_AUTH_ENABLED) {
+                const devUser = {
+                    id: DEV_USER_ID,
+                    userType: "user",
+                    firstName: "Dev",
+                    lastName: "User",
+                    email: "dev@example.com",
+                };
+                set_user(devUser);
+                localStorage.setItem("user", JSON.stringify(devUser));
+                sessionStorage.setItem("user", JSON.stringify(devUser));
+                return true;
+            }
+
             // Use consistent endpoint name (check_Auth)
             const response = await axios.get(API_URL + "/check_Auth", {
                 withCredentials: true,
@@ -139,17 +172,18 @@ export const AppProvider = ({ children }) => {
             });
 
             if (response.status === 200 && response.data.user) {
-                set_user(response.data.user);
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.user),
-                );
-                sessionStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.user),
-                );
+                // Normalize user shape: backend returns userId/userType at the top level.
+                const normalizedUser = {
+                    ...response.data.user,
+                    id: response.data.user?.id ?? response.data.userId,
+                    userType:
+                        response.data.user?.userType ?? response.data.userType,
+                };
+                set_user(normalizedUser);
+                localStorage.setItem("user", JSON.stringify(normalizedUser));
+                sessionStorage.setItem("user", JSON.stringify(normalizedUser));
                 set_Auth(true);
-                return { success: true, user: response.data.user };
+                return { success: true, user: normalizedUser };
             } else {
                 if (
                     response.status === 403 &&
