@@ -57,7 +57,16 @@ const ProtectedRoute = ({ children, requireAuth = true }) => {
         user &&
         (location.pathname === "/login" || location.pathname === "/register")
     ) {
-        return <Navigate to="/" replace />;
+        let target = "/dashboard";
+        try {
+            const stored = sessionStorage.getItem("postLoginRedirect");
+            const safe = getSafeNextPath(stored);
+            if (safe) target = safe;
+            sessionStorage.removeItem("postLoginRedirect");
+        } catch {
+            // ignore storage errors
+        }
+        return <Navigate to={target} replace />;
     }
 
     return children;

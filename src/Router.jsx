@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
+import { getApiBaseUrl } from "./utils/apiBaseUrl";
 
 import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
@@ -54,15 +55,8 @@ const caseInsensitiveLoader = ({ request }) => {
 };
 
 // Auth protection loader
-const protectedLoader = ({ request }) => {
-    // Dev-only bypass (matches AppContext/apiClient)
-    const devAuthEnabled =
-        import.meta.env.DEV &&
-        ["1", "true", "yes"].includes(
-            String(
-                import.meta.env.VITE_USER_AUTH_TRUE_WHILE_DEV || "",
-            ).toLowerCase(),
-        );
+const protectedLoader = async ({ request }) => {
+    const API_URL = getApiBaseUrl();
 
     const userRaw =
         localStorage.getItem("user") || sessionStorage.getItem("user");
@@ -76,7 +70,41 @@ const protectedLoader = ({ request }) => {
         }
     }
 
-    if (!devAuthEnabled && !hasValidUser) {
+    // If we don't have a cached user, check cookie auth with the backend.
+    // This prevents the login<->dashboard bounce on hard refresh.
+    if (!hasValidUser) {
+        try {
+            const resp = await fetch(`${API_URL}/check_Auth`, {
+                method: "GET",
+                credentials: "include",
+                headers: { Accept: "application/json" },
+            });
+
+            if (resp.ok) {
+                const data = await resp.json().catch(() => null);
+                const authedUser = data?.user;
+                if (authedUser?.id) {
+                    try {
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify(authedUser),
+                        );
+                        sessionStorage.setItem(
+                            "user",
+                            JSON.stringify(authedUser),
+                        );
+                    } catch {
+                        // ignore storage errors
+                    }
+                    hasValidUser = true;
+                }
+            }
+        } catch {
+            // ignore network errors; will fall back to redirect below
+        }
+    }
+
+    if (!hasValidUser) {
         const url = new URL(request.url);
         const next = `${url.pathname}${url.search}${url.hash}`;
         try {
@@ -303,7 +331,23 @@ const Routers = createBrowserRouter([
         ),
     },
     {
+        path: "Login",
+        element: (
+            <ProtectedRoute requireAuth={false}>
+                <Login />
+            </ProtectedRoute>
+        ),
+    },
+    {
         path: "register",
+        element: (
+            <ProtectedRoute requireAuth={false}>
+                <Register />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "Register",
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Register />
