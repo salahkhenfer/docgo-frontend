@@ -60,23 +60,16 @@ export const ProgramDetails = () => {
         hasData,
     } = useProgram(programId);
 
-    // If the user already applied to this program, show the status and
-    // redirect them back to the previous page (or to /my-applications if no history).
+    // If the user already applied to this program, send them to the
+    // per-program status page (single source of truth for application UX).
     useEffect(() => {
         if (!hasApplied) return;
 
-        // Give the user a short moment to read the status, then redirect.
-        const timer = setTimeout(() => {
-            // Prefer navigating back, fall back to applications page
-            if (window.history.length > 1) {
-                navigate(-1);
-            } else {
-                navigate("/my-applications");
-            }
-        }, 2500); // 2.5s delay
-
-        return () => clearTimeout(timer);
-    }, [hasApplied, navigate]);
+        navigate(`/Programs/${programId}/status`, {
+            replace: true,
+            state: { from: location?.pathname || "/" },
+        });
+    }, [hasApplied, navigate, programId, location?.pathname]);
 
     const formatCurrency = (amount) => {
         if (!amount) return t("Free") || "Free";

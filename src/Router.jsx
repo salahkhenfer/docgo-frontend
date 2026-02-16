@@ -43,16 +43,10 @@ import UserCertificates from "./Pages/Dashboard/UserCertificates";
 import UserFavorites from "./Pages/Dashboard/UserFavorites";
 import UserNotifications from "./Pages/Dashboard/UserNotifications";
 import UserSettings from "./Pages/Dashboard/UserSettings";
-// Case-insensitive loader
-const caseInsensitiveLoader = ({ request }) => {
-    const url = new URL(request.url);
-    const normalizedPath = url.pathname.toLowerCase();
 
-    if (url.pathname !== normalizedPath) {
-        return redirect(normalizedPath + url.search + url.hash);
-    }
-    return null;
-};
+import MyLearning from "./Pages/Dashboard/MyLearning";
+import MyPrograms from "./Pages/Dashboard/MyPrograms";
+import ProgramApplicationStatus from "./Pages/ProgramApplicationStatus";
 
 // Auth protection loader
 const protectedLoader = async ({ request }) => {
@@ -119,20 +113,9 @@ const protectedLoader = async ({ request }) => {
     return null;
 };
 
-// Combined loader for protected routes
-const protectedCaseInsensitiveLoader = ({ request }) => {
-    // First check case sensitivity
-    const caseResult = caseInsensitiveLoader({ request });
-    if (caseResult) return caseResult;
-
-    // Then check authentication
-    return protectedLoader({ request });
-};
-
 const Routers = createBrowserRouter([
     {
         path: "/",
-        loader: caseInsensitiveLoader,
         element: (
             <>
                 <App />
@@ -147,45 +130,67 @@ const Routers = createBrowserRouter([
             },
             {
                 path: "blocked",
+                caseSensitive: false,
                 element: <Blocked />,
             },
             {
                 path: "Programs",
+                caseSensitive: false,
                 element: <Programs />,
             },
             {
                 path: "Programs/:programId",
+                caseSensitive: false,
                 element: <ProgramDetails />,
             },
             {
+                path: "Programs/:programId/status",
+                caseSensitive: false,
+                loader: protectedLoader,
+                element: <ProgramApplicationStatus />,
+            },
+            {
+                path: "program/:programId/status",
+                caseSensitive: false,
+                loader: protectedLoader,
+                element: <ProgramApplicationStatus />,
+            },
+            {
                 path: "myapplications",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <MyApplications />,
             },
             {
                 path: "my-applications",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <MyApplications />,
             },
             {
                 path: "Courses",
+                caseSensitive: false,
                 element: <Courses />,
             },
             {
                 path: "faq",
+                caseSensitive: false,
                 element: <FAQPage />,
             },
             {
                 path: "favorites",
+                caseSensitive: false,
                 element: <FavoritesPage />,
             },
             {
                 path: "notifications",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <UserNotifications />,
             },
             {
                 path: "Courses/:courseId",
+                caseSensitive: false,
                 element: <Course />,
                 children: [
                     {
@@ -196,12 +201,14 @@ const Routers = createBrowserRouter([
             },
             {
                 path: "Courses/:courseId/watch",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <CourseVideos />,
             },
             {
                 path: "Courses/:courseId/watch/quiz",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <AllContentVideosCourse />,
                 children: [
                     {
@@ -212,17 +219,20 @@ const Routers = createBrowserRouter([
             },
             {
                 path: "Courses/:courseId/watch/certificate",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <Certificate />,
             },
             {
                 path: "Courses/:courseId/watch/resources",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <CourseResources />,
             },
             {
                 path: "Courses/:courseId/videos",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <AllContentVideosCourse />,
                 children: [
                     {
@@ -231,51 +241,61 @@ const Routers = createBrowserRouter([
                     },
                     {
                         path: ":videoId",
+                        caseSensitive: false,
                         element: <CourseVideosContent />,
                     },
                     {
                         path: "quiz",
+                        caseSensitive: false,
                         element: <QuizContent />,
                     },
                     {
                         path: "certificate",
+                        caseSensitive: false,
                         element: <Certificate />,
                     },
                 ],
             },
             {
                 path: "profile",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <Profile />,
             },
             {
                 path: "profile/edit",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <EditProfile />,
             },
             {
                 path: "payment/course/:courseId",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <PaymentPage />,
             },
             {
                 path: "payment/program/:programId",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <PaymentPage />,
             },
             {
                 path: "payment/success/course/:courseId",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <PaymentSuccessPage />,
             },
             {
                 path: "payment/success/program/:programId",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <PaymentSuccessPage />,
             },
             {
                 path: "dashboard",
-                loader: protectedCaseInsensitiveLoader,
+                caseSensitive: false,
+                loader: protectedLoader,
                 element: <UserDashboard />,
                 children: [
                     {
@@ -283,7 +303,18 @@ const Routers = createBrowserRouter([
                         element: <div />, // This will be handled by the UserDashboard component
                     },
                     {
+                        path: "my-learning",
+                        caseSensitive: false,
+                        element: <MyLearning />,
+                    },
+                    {
+                        path: "my-programs",
+                        caseSensitive: false,
+                        element: <MyPrograms />,
+                    },
+                    {
                         path: "messages",
+                        caseSensitive: false,
                         element: <UserMessages_Default />,
                         children: [
                             {
@@ -292,6 +323,7 @@ const Routers = createBrowserRouter([
                             },
                             {
                                 path: "new",
+                                caseSensitive: false,
                                 element: <UserMessages_new />,
                             },
                         ],
@@ -299,23 +331,28 @@ const Routers = createBrowserRouter([
 
                     {
                         path: "notifications",
+                        caseSensitive: false,
                         element: <UserNotifications />,
                     },
 
                     {
                         path: "settings",
+                        caseSensitive: false,
                         element: <UserSettings />,
                     },
                     {
                         path: "favorites",
+                        caseSensitive: false,
                         element: <UserFavorites />,
                     },
                     {
                         path: "applications/:type",
+                        caseSensitive: false,
                         element: <UserApplications />,
                     },
                     {
                         path: "certificates",
+                        caseSensitive: false,
                         element: <UserCertificates />,
                     },
                 ],
@@ -324,6 +361,7 @@ const Routers = createBrowserRouter([
     },
     {
         path: "login",
+        caseSensitive: false,
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Login />
@@ -332,6 +370,7 @@ const Routers = createBrowserRouter([
     },
     {
         path: "Login",
+        caseSensitive: false,
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Login />
@@ -340,6 +379,7 @@ const Routers = createBrowserRouter([
     },
     {
         path: "register",
+        caseSensitive: false,
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Register />
@@ -348,6 +388,7 @@ const Routers = createBrowserRouter([
     },
     {
         path: "Register",
+        caseSensitive: false,
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Register />

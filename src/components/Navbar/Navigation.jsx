@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -21,6 +22,10 @@ function Navigation({ branding = null }) {
     const { i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const isDashboardRoute = location.pathname
+        .toLowerCase()
+        .startsWith("/dashboard");
 
     const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
     const brandName = branding?.brandName || "";
@@ -111,13 +116,13 @@ function Navigation({ branding = null }) {
                 isActive = activeNavItem === itemId;
             }
 
-            return `relative px-4 py-2 font-medium text-sm lg:text-base transition-all duration-300 group
+            return `relative px-3 py-2 font-medium text-sm lg:text-base transition-all duration-300 group
                 ${
                     isActive
                         ? "text-[#0086C9]"
                         : "text-gray-700 hover:text-[#0086C9]"
                 }
-                lg:max-3xl:text-sm md:max-lg:text-[12px]`;
+                `;
         };
 
         const ActiveIndicator = ({ isActive }) => (
@@ -131,6 +136,10 @@ function Navigation({ branding = null }) {
                 }`}
             />
         );
+
+        ActiveIndicator.propTypes = {
+            isActive: PropTypes.bool,
+        };
 
         const isHomeActive = activeNavItem === "home";
         const isProgramsActive = activeNavItem === "programs";
@@ -151,6 +160,24 @@ function Navigation({ branding = null }) {
                     {t("Courses_nav")}
                     <ActiveIndicator isActive={isCoursesActive} />
                 </Link>
+                {/* {isAuth && (
+                    <>
+                        <Link
+                            to="/dashboard/my-learning"
+                            className={getNavLinkClass("dashboard")}
+                        >
+                            {t("MyLearning", "My Learning")}
+                            <ActiveIndicator isActive={isDashboardActive} />
+                        </Link>
+                        <Link
+                            to="/dashboard/my-programs"
+                            className={getNavLinkClass("dashboard")}
+                        >
+                            {t("MyPrograms", "My Programs")}
+                            <ActiveIndicator isActive={isDashboardActive} />
+                        </Link>
+                    </>
+                )} */}
                 <Link
                     to="/faq"
                     className={`${getNavLinkClass(
@@ -231,9 +258,8 @@ function Navigation({ branding = null }) {
             />
 
             <nav
-                className={`flex justify-between items-center px-10 transition-all duration-300
-                ${isScrolled ? "py-2" : "py-0"} 
-                sm-sm:max-lg:hidden`}
+                className={`hidden lg:flex justify-between items-center px-4 sm:px-6 lg:px-10 transition-all duration-300
+                ${isScrolled ? "py-2" : "py-3"}`}
             >
                 <Link to="/" className="flex items-center">
                     <div className="flex items-center gap-3">
@@ -278,8 +304,7 @@ function Navigation({ branding = null }) {
                 <div
                     className={`flex justify-${
                         i18n.language === "ar" ? "end" : "start"
-                    } items-center gap-4 font-medium text-lg 
-                    lg:max-3xl:text-sm lg-md:max-3xl:gap-3 md:max-lg:text-[12px] md:max-lg:gap-2`}
+                    } items-center gap-3 font-medium text-sm lg:text-base`}
                 >
                     <LanguageDropdown />
 
@@ -330,9 +355,23 @@ function Navigation({ branding = null }) {
             </nav>
 
             {/* Pass the isDropdownOpen and setIsDropdownOpen states to NavigationMobile */}
-            <NavigationMobile branding={branding} />
+            {!isDashboardRoute ? (
+                <NavigationMobile branding={branding} />
+            ) : null}
         </div>
     );
 }
+
+Navigation.propTypes = {
+    branding: PropTypes.shape({
+        brandName: PropTypes.string,
+        logoUrl: PropTypes.string,
+        logoUpdatedAt: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.instanceOf(Date),
+        ]),
+    }),
+};
 
 export default Navigation;

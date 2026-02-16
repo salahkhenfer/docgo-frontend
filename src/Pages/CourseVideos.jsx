@@ -196,6 +196,92 @@ export function CourseVideos() {
         [courseId],
     );
 
+    // Get video URL with API base
+    const getVideoUrl = useCallback((video) => {
+        if (!video) {
+            return null;
+        }
+
+        const videoPath =
+            video.streamUrl ||
+            video.stream_url ||
+            video.videoUrl ||
+            video.video_url ||
+            video.url ||
+            video.VideoUrl ||
+            video.path ||
+            video.videoPath ||
+            video.Video ||
+            video.video;
+
+        if (!videoPath) {
+            return null;
+        }
+
+        if (typeof videoPath === "string" && videoPath.startsWith("http")) {
+            return videoPath;
+        }
+
+        return import.meta.env.VITE_API_URL + videoPath;
+    }, []);
+
+    // Attach HLS when the backend returns an .m3u8 URL
+    // Must be declared before any conditional returns to keep hook order stable.
+    useEffect(() => {
+        const course = courseData?.course;
+        const videos = course?.videos || [];
+        const currentVideo = videos[currentVideoIndex];
+
+        const url = getVideoUrl(currentVideo);
+        const videoEl = videoRef.current;
+
+        if (!videoEl || !url) return;
+
+        // Cleanup previous instance
+        if (hlsRef.current) {
+            hlsRef.current.destroy();
+            hlsRef.current = null;
+        }
+
+        const isHls = url.includes(".m3u8");
+
+        if (!isHls) {
+            // Native playback for MP4/others
+            if (videoEl.src !== url) {
+                videoEl.src = url;
+            }
+            return;
+        }
+
+        // Safari can play HLS natively
+        if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
+            videoEl.src = url;
+            return;
+        }
+
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: false,
+            });
+            hlsRef.current = hls;
+            hls.loadSource(url);
+            hls.attachMedia(videoEl);
+            hls.on(Hls.Events.ERROR, (_evt, data) => {
+                console.error("HLS error:", data);
+            });
+        } else {
+            console.warn("HLS not supported in this browser");
+        }
+
+        return () => {
+            if (hlsRef.current) {
+                hlsRef.current.destroy();
+                hlsRef.current = null;
+            }
+        };
+    }, [courseData, currentVideoIndex, getVideoUrl]);
+
     if (loading) return <MainLoading />;
 
     if (hasError || !courseData) {
@@ -216,8 +302,26 @@ export function CourseVideos() {
         );
     }
 
-    const { course } = courseData;
-    const videos = course.videos || [];
+    if (!courseData?.course) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">
+                        {t("Course data is incomplete. Please try again.")}
+                    </p>
+                    <button
+                        onClick={() => navigate(`/Courses/${courseId}`)}
+                        className="text-blue-600 hover:underline"
+                    >
+                        {t("Go back to course")}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    const course = courseData.course;
+    const videos = course?.videos || [];
     const currentVideo = videos[currentVideoIndex];
 
     // Fix: Quiz data is an array, check if it has items
@@ -320,88 +424,6 @@ export function CourseVideos() {
             setCurrentTime(time);
         }
     };
-
-    // Get video URL with API base
-    const getVideoUrl = (video) => {
-        if (!video) {
-            console.warn("No video object provided");
-            return null;
-        }
-
-        const videoPath =
-            video.streamUrl ||
-            video.stream_url ||
-            video.videoUrl ||
-            video.video_url ||
-            video.url ||
-            video.VideoUrl ||
-            video.path ||
-            video.videoPath ||
-            video.Video ||
-            video.video;
-
-        if (!videoPath) {
-            console.warn("No video path found in video object:", video);
-            return null;
-        }
-
-        if (videoPath.startsWith("http")) return videoPath;
-
-        const fullUrl = import.meta.env.VITE_API_URL + videoPath;
-        return fullUrl;
-    };
-
-    // Attach HLS when the backend returns an .m3u8 URL
-    useEffect(() => {
-        const url = getVideoUrl(currentVideo);
-        const videoEl = videoRef.current;
-
-        if (!videoEl || !url) return;
-
-        // Cleanup previous instance
-        if (hlsRef.current) {
-            hlsRef.current.destroy();
-            hlsRef.current = null;
-        }
-
-        const isHls = url.includes(".m3u8");
-
-        if (!isHls) {
-            // Native playback for MP4/others
-            if (videoEl.src !== url) {
-                videoEl.src = url;
-            }
-            return;
-        }
-
-        // Safari can play HLS natively
-        if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
-            videoEl.src = url;
-            return;
-        }
-
-        if (Hls.isSupported()) {
-            const hls = new Hls({
-                enableWorker: true,
-                lowLatencyMode: false,
-            });
-            hlsRef.current = hls;
-            hls.loadSource(url);
-            hls.attachMedia(videoEl);
-            hls.on(Hls.Events.ERROR, (_evt, data) => {
-                console.error("HLS error:", data);
-            });
-        } else {
-            console.warn("HLS not supported in this browser");
-        }
-
-        return () => {
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
-                hlsRef.current = null;
-            }
-        };
-    }, [currentVideoIndex]);
 
     // Handle video selection
     const handleVideoSelect = (index) => {

@@ -33,6 +33,8 @@ export const UserNavigationProvider = ({ children }) => {
             "/profile": "DocGo - My Profile",
             "/profile/edit": "DocGo - Edit Profile",
             "/dashboard": "DocGo - Dashboard",
+            "/dashboard/my-learning": "DocGo - My Learning",
+            "/dashboard/my-programs": "DocGo - My Programs",
         }),
         [],
     );
@@ -121,6 +123,8 @@ export const UserNavigationProvider = ({ children }) => {
                 favorites: "DocGo - Dashboard - My Favorites",
                 notifications: "DocGo - Dashboard - Notifications",
                 settings: "DocGo - Dashboard - Settings",
+                "my-learning": "DocGo - My Learning",
+                "my-programs": "DocGo - My Programs",
             };
             const title = dashboardTitles[pathSegment] || "DocGo - Dashboard";
             setPageTitle(title);

@@ -1,4 +1,7 @@
-function ErrorElement({ error }) {
+import { useRouteError } from "react-router-dom";
+
+function ErrorElement() {
+    const error = useRouteError();
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-md shadow-lg text-center max-w-md mx-auto">

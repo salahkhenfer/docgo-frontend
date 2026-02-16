@@ -55,7 +55,7 @@ function NavigationMobile({ branding = null }) {
     };
 
     return (
-        <div className="hidden sm-sm:max-lg:block">
+        <div className="block lg:hidden">
             <div className="flex justify-between items-center px-4 py-3 shadow-md">
                 <Link to="/">
                     <div className="flex items-center gap-3">
@@ -143,6 +143,49 @@ function NavigationMobile({ branding = null }) {
                                     </span>
                                     <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                                 </Link>
+                            )}
+
+                            {user && isAuth && (
+                                <>
+                                    <Link
+                                        to="/dashboard/my-learning"
+                                        className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                            ${
+                                                location.pathname
+                                                    .toLowerCase()
+                                                    .startsWith(
+                                                        "/dashboard/my-learning",
+                                                    )
+                                                    ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                                    : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                            }`}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        <span className="relative z-10">
+                                            {t("MyLearning", "My Learning")}
+                                        </span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                    </Link>
+                                    <Link
+                                        to="/dashboard/my-programs"
+                                        className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                            ${
+                                                location.pathname
+                                                    .toLowerCase()
+                                                    .startsWith(
+                                                        "/dashboard/my-programs",
+                                                    )
+                                                    ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                                    : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                            }`}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        <span className="relative z-10">
+                                            {t("MyPrograms", "My Programs")}
+                                        </span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                    </Link>
+                                </>
                             )}
 
                             <Link

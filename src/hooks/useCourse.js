@@ -167,8 +167,8 @@ export const useCourse = (courseId) => {
             // Show success message with better UX
             await showEnrollmentSuccess();
 
-            // Navigate to course videos
-            navigate(`/MyCourses/${courseId}`);
+            // Navigate to course watch page
+            navigate(`/Courses/${courseId}/watch`);
         } catch (error) {
             console.error("Free enrollment error:", error);
 
@@ -212,7 +212,7 @@ export const useCourse = (courseId) => {
                 });
 
                 if (result.isConfirmed) {
-                    navigate(`/MyCourses/${courseId}`);
+                    navigate(`/Courses/${courseId}/watch`);
                 }
             } else {
                 await Swal.fire({
@@ -273,7 +273,7 @@ export const useCourse = (courseId) => {
 
         // Check if already enrolled
         if (courseData?.userStatus?.isEnrolled) {
-            navigate(`/MyCourses/${courseId}`);
+            navigate(`/Courses/${courseId}/watch`);
             return;
         }
 
@@ -392,11 +392,9 @@ export const useCourse = (courseId) => {
     }, [fetchCourseData]);
 
     // Computed values
-    const isEnrolled =
-        courseData?.userStatus?.isEnrolled ||
-        courseData?.userStatus?.applicationStatus === "approved" ||
-        courseData?.userStatus?.canAccessContent ||
-        false;
+    // Enrollment must reflect an explicit enroll/apply action, not just that the
+    // course content is viewable (e.g. free courses may expose previews).
+    const isEnrolled = !!courseData?.userStatus?.isEnrolled;
     const isFree =
         (courseData?.course?.discountPrice ||
             courseData?.course?.Price ||
