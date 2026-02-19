@@ -26,6 +26,10 @@ const initialState = {
     user: null,
     Notifications: null,
     loading: true,
+    // App-wide public data fetched once on startup
+    siteSettings: null, // { brandName, logoUrl, logoUpdatedAt }
+    contactInfo: null, // { phone, email, facebook, … }
+    homePageContent: null,
 };
 
 const reducer = (state, action) => {
@@ -61,6 +65,14 @@ const reducer = (state, action) => {
                 ...state,
                 loading: action.payload,
             };
+        case "SET_APP_DATA":
+            return {
+                ...state,
+                siteSettings: action.payload.siteSettings ?? state.siteSettings,
+                contactInfo: action.payload.contactInfo ?? state.contactInfo,
+                homePageContent:
+                    action.payload.homePageContent ?? state.homePageContent,
+            };
         default:
             return state;
     }
@@ -95,6 +107,7 @@ export const AppProvider = ({ children }) => {
             try {
                 localStorage.removeItem("user");
                 sessionStorage.removeItem("user");
+                // Keep _appSiteData — it's public data not tied to user session
             } catch {
                 // ignore storage errors
             }
@@ -126,33 +139,97 @@ export const AppProvider = ({ children }) => {
         [dispatch],
     );
 
+    const setAppData = useCallback(
+        (payload) => {
+            dispatch({ type: "SET_APP_DATA", payload });
+        },
+        [dispatch],
+    );
+
     const checkAuthStatus = useCallback(async () => {
         try {
             setLoading(true);
 
-            // Use consistent endpoint name (check_Auth)
-            const response = await axios.get(API_URL + "/check_Auth", {
-                withCredentials: true,
-                validateStatus: () => true, // Don't throw on any status
-            });
+            // Serve cached site data instantly so navbar/footer render immediately
+            let cachedSiteRaw = null;
+            try {
+                cachedSiteRaw = sessionStorage.getItem("_appSiteData");
+            } catch {}
+            if (cachedSiteRaw) {
+                try {
+                    const cached = JSON.parse(cachedSiteRaw);
+                    setAppData({
+                        siteSettings: cached.siteSettings,
+                        contactInfo: cached.contactInfo,
+                        homePageContent: cached.homePageContent,
+                    });
+                } catch {}
+            }
 
-            if (response.status === 200 && response.data.user) {
-                set_user(response.data.user);
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.user),
-                );
-                sessionStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data.user),
-                );
-                return true;
+            // Fire auth check AND site-settings in parallel — single round-trip cost
+            const [authResult, siteResult] = await Promise.allSettled([
+                axios.get(API_URL + "/check_Auth", {
+                    withCredentials: true,
+                    validateStatus: () => true,
+                }),
+                // Only refetch if not already cached
+                cachedSiteRaw
+                    ? Promise.resolve(null)
+                    : axios.get(API_URL + "/public/site-settings", {
+                          validateStatus: () => true,
+                      }),
+            ]);
+
+            // ── Auth ──────────────────────────────────────────────────────────
+            if (authResult.status === "fulfilled") {
+                const r = authResult.value;
+                if (r?.status === 200 && r.data?.user) {
+                    set_user(r.data.user);
+                    localStorage.setItem("user", JSON.stringify(r.data.user));
+                    sessionStorage.setItem("user", JSON.stringify(r.data.user));
+                } else {
+                    set_user(null);
+                    localStorage.removeItem("user");
+                    sessionStorage.removeItem("user");
+                }
             } else {
                 set_user(null);
                 localStorage.removeItem("user");
                 sessionStorage.removeItem("user");
-                return false;
             }
+
+            // ── Site / branding data ──────────────────────────────────────────
+            if (siteResult.status === "fulfilled" && siteResult.value) {
+                const sd = siteResult.value?.data;
+                if (sd && sd.success !== false) {
+                    const s = sd.settings || {};
+                    const siteSettings = {
+                        brandName: s.brandName || null,
+                        logoUrl: s.logoUrl || null,
+                        logoUpdatedAt: s.logoUpdatedAt || null,
+                    };
+                    const contactInfo = s.contact || {};
+                    const homePageContent = sd.homePageContent || null;
+                    setAppData({ siteSettings, contactInfo, homePageContent });
+                    // Cache so next navigate doesn't re-fetch
+                    try {
+                        sessionStorage.setItem(
+                            "_appSiteData",
+                            JSON.stringify({
+                                siteSettings,
+                                contactInfo,
+                                homePageContent,
+                            }),
+                        );
+                    } catch {}
+                }
+            }
+
+            return (
+                authResult.status === "fulfilled" &&
+                authResult.value?.status === 200 &&
+                !!authResult.value?.data?.user
+            );
         } catch (error) {
             set_user(null);
             localStorage.removeItem("user");
@@ -161,7 +238,7 @@ export const AppProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, [API_URL, setLoading, set_user]);
+    }, [API_URL, setLoading, set_user, setAppData]);
 
     const login = useCallback(
         async (credentials) => {

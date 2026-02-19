@@ -31,8 +31,9 @@ export default function Seo({
     locale,
     robots,
     jsonLd,
+    siteName: siteNameProp,
 }) {
-    const siteName = import.meta.env.VITE_SITE_NAME || "DocGo";
+    const siteName = siteNameProp || import.meta.env.VITE_SITE_NAME || "DocGo";
 
     const canonical = canonicalPath
         ? toAbsoluteUrl(canonicalPath)

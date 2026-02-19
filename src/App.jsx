@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import Logo from "../src/assets/Logo.png";
 import "./index.css";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./LandingPage/Layout/Footer";
 import Reveal from "./components/Reveal";
 import Navigation from "./components/Navbar/Navigation";
 import visitService from "./services/VisitTrackerService";
-import homeService from "./services/homeService";
 import { useAppContext } from "./AppContext";
 import { UserNavigationProvider } from "./context/UserNavigationContext";
 import MainLoading from "./MainLoading";
@@ -15,10 +13,9 @@ import { useTranslation } from "react-i18next";
 
 function App() {
     const [loading, setLoading] = useState(true);
-    const [contactInfo, setContactInfo] = useState(null);
-    const [siteSettings, setSiteSettings] = useState(null);
     const location = useLocation();
-    const { loading: authLoading } = useAppContext(); // Use auth loading from context
+    // Auth state + pre-fetched site data (fetched in parallel on startup by AppContext)
+    const { loading: authLoading, siteSettings, contactInfo } = useAppContext();
     const { i18n } = useTranslation();
 
     // Check if we're in auth routes that shouldn't have navbar/footer
@@ -45,82 +42,83 @@ function App() {
         : "en";
     const seoLocale = seoLang === "ar" ? "ar_DZ" : "en_US";
 
+    // Dynamic brand name — falls back to "DocGo" until site settings load
+    const brand = siteSettings?.brandName || "DocGo";
+
     const seo = (() => {
         if (pathname === "/") {
             return {
                 title: "Home",
-                description:
-                    "DocGo: explore courses and programs, enroll, and learn online.",
+                description: `${brand}: explore courses and programs, enroll, and learn online.`,
             };
         }
 
         if (pathname === "/courses") {
             return {
                 title: "Courses",
-                description: "Browse all available courses on DocGo.",
+                description: `Browse all available courses on ${brand}.`,
             };
         }
 
         if (pathname.startsWith("/courses/")) {
             return {
                 title: pathname.includes("/watch") ? "Watch Course" : "Course",
-                description: "Course details and learning content on DocGo.",
+                description: `Course details and learning content on ${brand}.`,
             };
         }
 
         if (pathname === "/programs") {
             return {
                 title: "Programs",
-                description: "Browse all available programs on DocGo.",
+                description: `Browse all available programs on ${brand}.`,
             };
         }
 
         if (pathname.startsWith("/programs/")) {
             return {
                 title: "Program",
-                description: "Program details and enrollment on DocGo.",
+                description: `Program details and enrollment on ${brand}.`,
             };
         }
 
         if (pathname === "/faq") {
             return {
                 title: "FAQ",
-                description: "Frequently asked questions about DocGo.",
+                description: `Frequently asked questions about ${brand}.`,
             };
         }
 
         if (pathname === "/favorites") {
             return {
                 title: "Favorites",
-                description: "Your saved courses and programs on DocGo.",
+                description: `Your saved courses and programs on ${brand}.`,
             };
         }
 
         if (pathname === "/login") {
             return {
                 title: "Login",
-                description: "Login to your DocGo account.",
+                description: `Login to your ${brand} account.`,
             };
         }
 
         if (pathname === "/register") {
             return {
                 title: "Register",
-                description: "Create your DocGo account.",
+                description: `Create your ${brand} account.`,
             };
         }
 
         if (pathname.startsWith("/dashboard")) {
             return {
                 title: "Dashboard",
-                description: "Your DocGo dashboard.",
+                description: `Your ${brand} dashboard.`,
             };
         }
 
         return {
-            title: "DocGo",
-            description:
-                "DocGo: explore courses and programs, enroll, and learn online.",
+            title: brand,
+            description: `${brand}: explore courses and programs, enroll, and learn online.`,
         };
     })();
 
@@ -135,29 +133,11 @@ function App() {
     }, [location.pathname]);
 
     useEffect(() => {
-        // Fetch contact info for footer
-        const fetchContactInfo = async () => {
-            try {
-                const response = await homeService.getHomePageData();
-                if (response.success) {
-                    setSiteSettings(response.data.siteSettings || null);
-                    // New format: contactInfo is a single object
-                    setContactInfo(response.data.contactInfo || null);
-                }
-            } catch (error) {
-                console.error("Error fetching contact info:", error);
-            }
-        };
-
-        fetchContactInfo();
-    }, []);
-
-    useEffect(() => {
         setLoading(true);
 
         const fetch_Images = () => {
             return new Promise((resolve) => {
-                const Images = [Logo];
+                const Images = [];
                 let loadedCount = 0;
 
                 if (Images.length === 0) {
@@ -226,6 +206,7 @@ function App() {
                     noIndex={noIndex}
                     lang={seoLang}
                     locale={seoLocale}
+                    siteName={brand}
                 />
                 {!shouldHideNavAndFooter && (
                     <Navigation branding={siteSettings} />
