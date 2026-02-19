@@ -60,14 +60,19 @@ function NavigationMobile({ branding = null }) {
                 <Link to="/">
                     <div className="flex items-center gap-3">
                         <img
-                            className="w-16 h-16 rounded-full transition-transform duration-300 hover:scale-105"
+                            className="w-14 h-14 rounded-xl object-cover shadow-sm ring-2 ring-gray-100 transition-transform duration-300 hover:scale-105"
                             src={brandLogoSrc}
                             alt="Logo"
                         />
                         {brandName ? (
-                            <span className="font-semibold text-gray-800">
-                                {brandName}
-                            </span>
+                            <div className="flex flex-col">
+                                <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
+                                    {brandName}
+                                </span>
+                                <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                    e-learning
+                                </span>
+                            </div>
                         ) : null}
                     </div>
                 </Link>

@@ -193,12 +193,17 @@ function Footer({ contactInfo, branding = null }) {
                             <img
                                 src={brandLogoSrc}
                                 alt="Logo"
-                                className="w-12 h-12"
+                                className="w-12 h-12 rounded-xl object-cover shadow-sm"
                             />
                             {brandName ? (
-                                <span className="font-semibold text-gray-900">
-                                    {brandName}
-                                </span>
+                                <div className="flex flex-col">
+                                    <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
+                                        {brandName}
+                                    </span>
+                                    <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                        e-learning
+                                    </span>
+                                </div>
                             ) : null}
                         </div>
                         <p className="text-gray-600">{t("OurPlatform")}</p>

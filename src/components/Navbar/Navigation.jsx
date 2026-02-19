@@ -264,7 +264,7 @@ function Navigation({ branding = null }) {
                 <Link to="/" className="flex items-center">
                     <div className="flex items-center gap-3">
                         <img
-                            className={`rounded-full transition-all duration-300 hover:scale-105
+                            className={`rounded-xl object-cover transition-all duration-300 hover:scale-105 shadow-sm ring-2 ring-white
                                 ${
                                     isScrolled
                                         ? "w-16 h-16 md:w-12 md:h-12 lg:w-14 lg:h-14"
@@ -274,9 +274,14 @@ function Navigation({ branding = null }) {
                             alt="Logo"
                         />
                         {brandName ? (
-                            <span className="hidden md:block font-semibold text-gray-800">
-                                {brandName}
-                            </span>
+                            <div className="hidden md:flex flex-col">
+                                <span className="font-extrabold text-xl tracking-tight text-gray-900 leading-tight">
+                                    {brandName}
+                                </span>
+                                <span className="text-xs text-blue-600 font-medium tracking-wide uppercase">
+                                    Plateforme e-learning
+                                </span>
+                            </div>
                         ) : null}
                     </div>
                 </Link>
