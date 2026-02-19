@@ -386,15 +386,15 @@ const Routers = createBrowserRouter([
             </ProtectedRoute>
         ),
     },
-    // {
-    //     path: "Register",
-    //     caseSensitive: false,
-    //     element: (
-    //         <ProtectedRoute requireAuth={false}>
-    //             <Register />
-    //         </ProtectedRoute>
-    //     ),
-    // },
+    {
+        path: "Register",
+        caseSensitive: false,
+        element: (
+            <ProtectedRoute requireAuth={false}>
+                <Register />
+            </ProtectedRoute>
+        ),
+    },
     { path: "*", element: <NotFound /> },
 ]);
 

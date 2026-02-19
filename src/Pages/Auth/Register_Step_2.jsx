@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { StudyFields, StudyDomains } from "../../data/fields";
-import { Countries } from "../../data/Countries";
+import React, { useState, useEffect } from "react";
+import {
+    StudyFields as DefaultStudyFields,
+    StudyDomains as DefaultStudyDomains,
+} from "../../data/fields";
+import { Countries as DefaultCountries } from "../../data/Countries";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
+import { getApiBaseUrl } from "../../utils/apiBaseUrl";
 
 const Register_Sterp_2 = ({
     formData,
@@ -22,6 +26,39 @@ const Register_Sterp_2 = ({
 
     // Add local validation state
     const [phoneError, setPhoneError] = useState("");
+
+    // Options loaded from API (with static fallback)
+    const [countries, setCountries] = useState(DefaultCountries);
+    const [studyFields, setStudyFields] = useState(DefaultStudyFields);
+    const [studyDomains, setStudyDomains] = useState(DefaultStudyDomains);
+
+    useEffect(() => {
+        const apiBase = getApiBaseUrl();
+        fetch(`${apiBase}/public/register-options`)
+            .then((r) => (r.ok ? r.json() : null))
+            .then((data) => {
+                if (data) {
+                    if (
+                        Array.isArray(data.countries) &&
+                        data.countries.length > 0
+                    )
+                        setCountries(data.countries);
+                    if (
+                        Array.isArray(data.studyFields) &&
+                        data.studyFields.length > 0
+                    )
+                        setStudyFields(data.studyFields);
+                    if (
+                        Array.isArray(data.studyDomains) &&
+                        data.studyDomains.length > 0
+                    )
+                        setStudyDomains(data.studyDomains);
+                }
+            })
+            .catch(() => {
+                // silent: static fallback already set
+            });
+    }, []);
 
     // Function to get localized display name
     const getLocalizedOption = (optionString) => {
@@ -101,7 +138,7 @@ const Register_Sterp_2 = ({
                         <option value="">
                             {t("register.selectCountry") || "Select Country"}
                         </option>
-                        {Countries.map((country) => (
+                        {countries.map((country) => (
                             <option key={country} value={country}>
                                 {getLocalizedOption(country)}
                             </option>
@@ -129,7 +166,7 @@ const Register_Sterp_2 = ({
                         <option value="">
                             {t("register.selectField") || "Select Study Field"}
                         </option>
-                        {StudyFields.map((field) => (
+                        {studyFields.map((field) => (
                             <option key={field} value={field}>
                                 {getLocalizedOption(field)}
                             </option>
@@ -158,7 +195,7 @@ const Register_Sterp_2 = ({
                             {t("register.selectDomain") ||
                                 "Select Specialization"}
                         </option>
-                        {StudyDomains.map((domain) => (
+                        {studyDomains.map((domain) => (
                             <option key={domain} value={domain}>
                                 {getLocalizedOption(domain)}
                             </option>
