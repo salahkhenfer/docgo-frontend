@@ -8,9 +8,11 @@ import GermanyFlag from "../../../src/assets/Germany.png";
 import BelgiumFlag from "../../../src/assets/Belgium.png";
 import UnitedStatesFlag from "../../../src/assets/UnitedStates.png";
 
-function AboutUsSection() {
+function AboutUsSection({ cms }) {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.dir() === "rtl";
+    const lang = i18n.language?.split("-")[0] || "en";
+    const c = (key) => cms?.[`${key}_${lang}`] || cms?.[`${key}_en`] || null;
 
     const flags = [
         { url: FranceFlag, name: t("France") },
@@ -38,11 +40,11 @@ function AboutUsSection() {
                 <div className="backdrop-blur-sm bg-[#F7FCFF]/20 rounded-lg shadow-lg p-6 sm:p-8 md:p-12 lg:p-16">
                     <div className="max-w-4xl mx-auto flex flex-col gap-6 md:gap-8 lg:gap-10">
                         <h1 className="sm:text-2xl lg:text-2xl xl:text-3xl font-medium text-customGray text-center">
-                            {t("AboutUs")}
+                            {c("aboutTitle") || t("AboutUs")}
                         </h1>
 
                         <p className="sm-sm:text-[12px] sm:text-sm lg:text-base xl:text-lg text-customGray leading-relaxed text-center">
-                            {t("AboutUsDescription")}
+                            {c("aboutDescription") || t("AboutUsDescription")}
                         </p>
 
                         <div className="grid grid-cols-2 place-items-center sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 md:gap-4 lg:gap-6 py-6 md:py-8">
