@@ -359,7 +359,14 @@
         "redirecting": "Redirecting...",
         "ccpSubmitted": "Your CCP payment has been submitted for verification. You will be notified once approved.",
         "paypalProcessed": "Your payment has been processed. Your application is pending admin approval.",
-        "loginRequired": "You need to log in"
+        "loginRequired": "You need to log in",
+        "fillAllFields": "Please fill all required fields.",
+        "messageSentSuccess": "Message sent successfully!",
+        "messageSendError": "Failed to send your message. Please try again.",
+        "linkCopied": "Link copied to clipboard!",
+        "linkCopyFailed": "Failed to copy link.",
+        "addedToFavorites": "Added to favorites",
+        "removedFromFavorites": "Removed from favorites"
     },
 
     "Courses": "Courses",
@@ -1010,5 +1017,28 @@
         "errorDetails": "Error Details:",
         "goBack": "Please go back to the",
         "homePage": "home page"
+    },
+
+    "apiErrors": {
+        "serverError": "A server error occurred. Please try again.",
+        "notFound": "The requested resource was not found.",
+        "courseNotFound": "Course not found.",
+        "programNotFound": "Program not found.",
+        "userNotFound": "User not found.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "forbidden": "Access denied.",
+        "blocked": "Your account has been blocked. Please contact support.",
+        "alreadyEnrolled": "You are already enrolled in this course.",
+        "alreadyApplied": "You have already applied to this program.",
+        "notEnrolled": "You are not enrolled in this course.",
+        "paymentFailed": "Unable to process your payment. Please check your details and try again.",
+        "paymentNotFound": "Payment record not found.",
+        "failedToUpload": "Failed to upload. Please try again.",
+        "failedToUpdate": "Failed to update. Please try again.",
+        "failedToLoad": "Failed to load data. Please try again.",
+        "networkError": "Network error. Please check your connection and try again.",
+        "validationError": "Invalid data provided. Please check your input.",
+        "noFileUploaded": "No file selected. Please choose a file to upload.",
+        "unknown": "An unexpected error occurred. Please try again."
     }
 }

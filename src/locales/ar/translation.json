@@ -1,4 +1,4 @@
-{
+﻿{
     "contact": {
         "supportTitle": "الدعم",
         "supportDesc": "متاح 7 أيام في الأسبوع للرد على استفساراتك",
@@ -69,14 +69,11 @@
     "profile_data": {
         "noCourses": "لا توجد دورات متاحة",
         "noCoursesDescription": "استكشف مجموعة متنوعة من الدورات المتاحة لدينا.",
-
         "noCertificates": "لا توجد شهادات متاحة",
         "noCertificatesDescription": "استكشف مجموعة متنوعة من الشهادات المتاحة لدينا.",
-
         "browseCourses": "استعرض الدورات",
         "browsePrograms": "استعرض البرامج",
         "applyCourses": "تقدم للدورات",
-
         "noApplications": "لا توجد طلبات متاحة",
         "noApplicationsDescription": "استكشف مجموعة متنوعة من الطلبات المتاحة لدينا.",
         "professional_member": "عضو محترف",
@@ -314,7 +311,14 @@
         "redirecting": "جاري التوجيه...",
         "ccpSubmitted": "تم إرسال دفعة CCP الخاصة بك للتحقق. سيتم إخطارك بمجرد الموافقة.",
         "paypalProcessed": "تمت معالجة دفعتك. طلبك قيد انتظار موافقة المسؤول.",
-        "loginRequired": "يجب عليك تسجيل الدخول"
+        "loginRequired": "يجب عليك تسجيل الدخول",
+        "fillAllFields": "يرجى ملء جميع الحقول المطلوبة.",
+        "messageSentSuccess": "تم إرسال الرسالة بنجاح!",
+        "messageSendError": "تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.",
+        "linkCopied": "تم نسخ الرابط إلى الحافظة!",
+        "linkCopyFailed": "تعذّر نسخ الرابط.",
+        "addedToFavorites": "أضيف إلى المفضلات",
+        "removedFromFavorites": "تم إزالته من المفضلات"
     },
     "Programs": "  البرامج المتاحة",
     "Courses": "الدورات",
@@ -567,10 +571,34 @@
     "invalidExpiryFormat": "تنسيق شهر/سنة",
     "expiredCard": "البطاقة منتهية الصلاحية",
     "invalidCVV": "CVV غير صالح",
-    "paymentSuccess": "تم الدفع بنجاح!",
+    "paymentSuccess": {
+        "titleCompleted": "تم الدفع بنجاح!",
+        "titlePending": "تم تقديم الدفع!",
+        "ccpSubmitted": "تم تقديم دفعك بطريقة CCP للتحقق.",
+        "ccpImportant": "مهم",
+        "ccpVerifyTime": "سنتحقق من دفعتك خلال 24 ساعة. ستتلقى تأكيدًا عبر البريد الإلكتروني بعد التحقق.",
+        "courseEnrolled": "تم التسجيل في الدورة",
+        "programApplied": "تم التقدم للبرنامج",
+        "paymentDetails": "تفاصيل الدفع",
+        "paymentId": "رقم الدفع",
+        "method": "طريقة الدفع",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "startLearning": "ابدأ التعلم",
+        "autoRedirect": "إعادة التوجيه التلقائية خلال {{countdown}} ثواني...",
+        "viewCourseDetails": "عرض تفاصيل الدورة",
+        "saveReceipt": "حفظ الإيصال",
+        "viewApplications": "عرض طلباتي",
+        "browseMoreCourses": "تصفح المزيد من الدورات",
+        "browseMorePrograms": "تصفح المزيد من البرامج",
+        "needHelp": "هل تحتاج مساعدة؟ تواصل مع فريق الدعم:",
+        "sendSupportMessage": "إرسال رسالة دعم",
+        "contactSupport": "التواصل مع الدعم",
+        "paymentContextCourse": "سيتم وسم رسالتك كدعم دفع للدورة.",
+        "paymentContextProgram": "سيتم وسم رسالتك كدعم دفع للبرنامج."
+    },
     "processing": "جاري المعالجة...",
     "completePayment": "إتمام الدفع",
-
     "RechercherUnCours": "ابحث عن دورة...",
     "Gratuit": "مجاني",
     "Payant": "مدفوع",
@@ -595,7 +623,6 @@
     "hours": "ساعات",
     "cours": "دورة",
     "Completezvotreeducation": "أكمل تعليمك",
-
     "profile": {
         "professional_member": "عضو محترف",
         "name": "الاسم",
@@ -863,34 +890,6 @@
             "sentText": "تم إرسال رسالتك بنجاح."
         }
     },
-
-    "paymentSuccess": {
-        "titleCompleted": "تم الدفع بنجاح!",
-        "titlePending": "تم تقديم الدفع!",
-        "ccpSubmitted": "تم تقديم دفعك بطريقة CCP للتحقق.",
-        "ccpImportant": "مهم",
-        "ccpVerifyTime": "سنتحقق من دفعتك خلال 24 ساعة. ستتلقى تأكيدًا عبر البريد الإلكتروني بعد التحقق.",
-        "courseEnrolled": "تم التسجيل في الدورة",
-        "programApplied": "تم التقدم للبرنامج",
-        "paymentDetails": "تفاصيل الدفع",
-        "paymentId": "رقم الدفع",
-        "method": "طريقة الدفع",
-        "amount": "المبلغ",
-        "status": "الحالة",
-        "startLearning": "ابدأ التعلم",
-        "autoRedirect": "إعادة التوجيه التلقائية خلال {{countdown}} ثواني...",
-        "viewCourseDetails": "عرض تفاصيل الدورة",
-        "saveReceipt": "حفظ الإيصال",
-        "viewApplications": "عرض طلباتي",
-        "browseMoreCourses": "تصفح المزيد من الدورات",
-        "browseMorePrograms": "تصفح المزيد من البرامج",
-        "needHelp": "هل تحتاج مساعدة؟ تواصل مع فريق الدعم:",
-        "sendSupportMessage": "إرسال رسالة دعم",
-        "contactSupport": "التواصل مع الدعم",
-        "paymentContextCourse": "سيتم وسم رسالتك كدعم دفع للدورة.",
-        "paymentContextProgram": "سيتم وسم رسالتك كدعم دفع للبرنامج."
-    },
-
     "favorites": {
         "title": "مفضلاتي",
         "savedCourses": "دوراتك وبرامجك المحفوظة",
@@ -911,7 +910,6 @@
         "scholarship": "منحة",
         "deadline": "آخر موعد"
     },
-
     "quiz_page": {
         "true": "صحيح",
         "false": "خطأ",
@@ -926,7 +924,6 @@
         "textPlaceholder": "اكتب إجابتك هنا...",
         "description": "الوصف"
     },
-
     "myApplicationsPage": {
         "title": "طلباتي",
         "noApplications": "لا توجد طلبات حتى الآن",
@@ -942,7 +939,6 @@
             "rejected": "مرفوض"
         }
     },
-
     "courseInfo": {
         "courseStatistics": "إحصائيات الدورة",
         "totalStudents": "إجمالي الطلاب",
@@ -963,19 +959,39 @@
         "instructor": "المدرب",
         "courseInstructor": "مدرب الدورة"
     },
-
     "blocked": {
         "title": "تم حظر الحساب",
         "message": "تم حظر حسابك من قبل مسؤول. إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع الدعم.",
         "goHome": "الصفحة الرئيسية",
         "backToLogin": "العودة إلى تسجيل الدخول"
     },
-
     "errorPage": {
         "title": "أوبس! حدث خطأ",
         "message": "حدث خطأ في هذه الصفحة.",
         "errorDetails": "تفاصيل الخطأ:",
         "goBack": "يرجى العودة إلى",
         "homePage": "الصفحة الرئيسية"
+    },
+    "apiErrors": {
+        "serverError": "حدث خطأ في الخادم. يرجى المحاولة مرة أخرى.",
+        "notFound": "المورد المطلوب غير موجود.",
+        "courseNotFound": "الدورة غير موجودة.",
+        "programNotFound": "البرنامج غير موجود.",
+        "userNotFound": "المستخدم غير موجود.",
+        "unauthorized": "ليس لديك صلاحية لتنفيذ هذا الإجراء.",
+        "forbidden": "تم رفض الوصول.",
+        "blocked": "تم حظر حسابك. يرجى التواصل مع الدعم.",
+        "alreadyEnrolled": "أنت مسجّل بالفعل في هذه الدورة.",
+        "alreadyApplied": "لقد تقدمت بالفعل لهذا البرنامج.",
+        "notEnrolled": "لست مسجّلاً في هذه الدورة.",
+        "paymentFailed": "تعذّر معالجة دفعتك. تحقّق من بياناتك وحاول مرة أخرى.",
+        "paymentNotFound": "سجل الدفع غير موجود.",
+        "failedToUpload": "فشل الرفع. يرجى المحاولة مرة أخرى.",
+        "failedToUpdate": "فشل التحديث. يرجى المحاولة مرة أخرى.",
+        "failedToLoad": "فشل تحميل البيانات. يرجى المحاولة مرة أخرى.",
+        "networkError": "خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.",
+        "validationError": "بيانات غير صحيحة. يرجى مراجعة مدخلاتك.",
+        "noFileUploaded": "لم يتم تحديد ملف. يرجى اختيار ملف للرفع.",
+        "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
     }
 }

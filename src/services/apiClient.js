@@ -1,4 +1,5 @@
 import axios from "axios";
+import i18next from "i18next";
 import { getApiBaseUrl } from "../utils/apiBaseUrl";
 
 const API_URL = getApiBaseUrl();
@@ -24,6 +25,14 @@ const api = axios.create({
 if (DEV_AUTH_ENABLED) {
     api.defaults.headers.common["X-Dev-Auth-UserId"] = String(DEV_USER_ID);
 }
+
+// Send the current UI language with every request
+// so the server can return localized messages if it supports it
+api.interceptors.request.use((config) => {
+    const lang = i18next.language || "en";
+    config.headers["Accept-Language"] = lang;
+    return config;
+});
 
 // Add response interceptor for error handling
 api.interceptors.response.use(

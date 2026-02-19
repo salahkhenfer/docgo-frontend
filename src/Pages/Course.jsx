@@ -23,6 +23,7 @@ import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
 import axios from "../utils/axios";
 import Seo from "../components/SEO/Seo";
+import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 
 // Import component parts
 import VideoPlayer from "../components/Common/VideoPlayer";
@@ -83,17 +84,13 @@ export const Course = () => {
 
         // Validate required fields
         if (!contactForm.subject || !contactForm.message) {
-            toast.error(
-                t("Please fill all fields") || "Please fill all fields",
-            );
+            toast.error(t("common.fillAllFields"));
             return;
         }
 
         // For non-authenticated users, validate name and email
         if (!user && (!contactForm.name || !contactForm.email)) {
-            toast.error(
-                t("Please fill all fields") || "Please fill all fields",
-            );
+            toast.error(t("common.fillAllFields"));
             return;
         }
 
@@ -116,9 +113,7 @@ export const Course = () => {
             const endpoint = user ? "/contact" : "/contact";
             await axios.post(endpoint, requestData);
 
-            toast.success(
-                t("Message sent successfully") || "Message sent successfully",
-            );
+            toast.success(t("common.messageSentSuccess"));
 
             setContactForm({
                 subject: "",
@@ -129,7 +124,7 @@ export const Course = () => {
             setShowContactForm(false);
         } catch (error) {
             console.error("Error sending message:", error);
-            toast.error(t("Error sending message") || "Error sending message");
+            toast.error(getApiErrorMessage(error, t));
         } finally {
             setIsSubmittingContact(false);
         }

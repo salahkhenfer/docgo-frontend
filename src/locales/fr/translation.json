@@ -339,7 +339,14 @@
         "redirecting": "Redirection...",
         "ccpSubmitted": "Votre paiement CCP a été soumis pour vérification. Vous serez notifié une fois approuvé.",
         "paypalProcessed": "Votre paiement a été traité. Votre candidature est en attente de l'approbation de l'administrateur.",
-        "loginRequired": "Vous devez vous connecter"
+        "loginRequired": "Vous devez vous connecter",
+        "fillAllFields": "Veuillez remplir tous les champs obligatoires.",
+        "messageSentSuccess": "Message envoyé avec succès !",
+        "messageSendError": "Impossible d'envoyer votre message. Veuillez réessayer.",
+        "linkCopied": "Lien copié dans le presse-papiers !",
+        "linkCopyFailed": "Impossible de copier le lien.",
+        "addedToFavorites": "Ajouté aux favoris",
+        "removedFromFavorites": "Retiré des favoris"
     },
     "Courses": "Cours",
     "Programs": "Programmes",
@@ -978,5 +985,28 @@
         "errorDetails": "Détails de l'erreur :",
         "goBack": "Veuillez retourner à la",
         "homePage": "page d'accueil"
+    },
+
+    "apiErrors": {
+        "serverError": "Une erreur serveur s'est produite. Veuillez réessayer.",
+        "notFound": "La ressource demandée est introuvable.",
+        "courseNotFound": "Cours introuvable.",
+        "programNotFound": "Programme introuvable.",
+        "userNotFound": "Utilisateur introuvable.",
+        "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+        "forbidden": "Accès refusé.",
+        "blocked": "Votre compte a été bloqué. Veuillez contacter le support.",
+        "alreadyEnrolled": "Vous êtes déjà inscrit à ce cours.",
+        "alreadyApplied": "Vous avez déjà postulé à ce programme.",
+        "notEnrolled": "Vous n'êtes pas inscrit à ce cours.",
+        "paymentFailed": "Impossible de traiter votre paiement. Vérifiez vos informations et réessayez.",
+        "paymentNotFound": "Enregistrement de paiement introuvable.",
+        "failedToUpload": "Chargement échoué. Veuillez réessayer.",
+        "failedToUpdate": "Mise à jour échouée. Veuillez réessayer.",
+        "failedToLoad": "Chargement des données échoué. Veuillez réessayer.",
+        "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez.",
+        "validationError": "Données invalides. Veuillez vérifier votre saisie.",
+        "noFileUploaded": "Aucun fichier sélectionné. Veuillez choisir un fichier.",
+        "unknown": "Une erreur inattendue s'est produite. Veuillez réessayer."
     }
 }

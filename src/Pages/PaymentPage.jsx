@@ -12,6 +12,7 @@ import CCPPayment from "../components/Payment/CCPPayment";
 import PaymentMethodSelector from "../components/Payment/PaymentMethodSelector";
 import MainLoading from "../MainLoading";
 import axios from "../utils/axios";
+import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 const PaymentPage = () => {
     const { t } = useTranslation();
     const params = useParams();
@@ -471,17 +472,8 @@ const PaymentPage = () => {
             }
         }
 
-        let errorTitle = "Payment Failed!";
-        let errorMessage =
-            "Unable to process your payment. Please check your details and try again.";
-
-        if (error.message) {
-            errorMessage = error.message;
-        }
-
-        if (error.response?.data?.message) {
-            errorMessage = error.response.data.message;
-        }
+        let errorTitle = t("alerts.payment.errorTitle", "Payment Failed!");
+        const errorMessage = getApiErrorMessage(error, t);
 
         Swal.fire({
             title: t("alerts.payment.errorTitle", "Payment Error"),

@@ -20,6 +20,7 @@ import { useProgram } from "../hooks/useProgram";
 import MainLoading from "../MainLoading";
 import axios from "../utils/axios";
 import Seo from "../components/SEO/Seo";
+import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 
 // Import component parts
 import ProgramContent from "../components/Program/ProgramContent";
@@ -27,6 +28,7 @@ import ProgramFAQSection from "../components/Program/ProgramFAQSection";
 
 export const ProgramDetails = () => {
     const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
+    const { t: tGlobal } = useTranslation(); // global keys (common.*, apiErrors.*)
     const { programId } = useParams();
     const navigate = useNavigate();
     const { user } = useAppContext();
@@ -86,16 +88,12 @@ export const ProgramDetails = () => {
         e.preventDefault();
 
         if (!contactForm.subject || !contactForm.message) {
-            toast.error(
-                t("Please fill all fields") || "Please fill all fields",
-            );
+            toast.error(tGlobal("common.fillAllFields"));
             return;
         }
 
         if (!user && (!contactForm.name || !contactForm.email)) {
-            toast.error(
-                t("Please fill all fields") || "Please fill all fields",
-            );
+            toast.error(tGlobal("common.fillAllFields"));
             return;
         }
 
@@ -122,10 +120,7 @@ export const ProgramDetails = () => {
             const response = await axios.post("/contact", requestData);
 
             if (response.status === 200) {
-                toast.success(
-                    t("Message sent successfully!") ||
-                        "Message sent successfully!",
-                );
+                toast.success(tGlobal("common.messageSentSuccess"));
                 setShowContactForm(false);
                 setContactForm({
                     subject: "",
@@ -136,10 +131,7 @@ export const ProgramDetails = () => {
             }
         } catch (error) {
             console.error("Error sending message:", error);
-            toast.error(
-                t("Failed to send message. Please try again.") ||
-                    "Failed to send message. Please try again.",
-            );
+            toast.error(getApiErrorMessage(error, tGlobal));
         } finally {
             setIsSubmittingContact(false);
         }
@@ -162,30 +154,20 @@ export const ProgramDetails = () => {
                 navigator.clipboard
                     .writeText(window.location.href)
                     .then(() => {
-                        toast.success(
-                            t("Link copied to clipboard!") ||
-                                "Link copied to clipboard!",
-                        );
+                        toast.success(tGlobal("common.linkCopied"));
                     })
                     .catch(() => {
-                        toast.error(
-                            t("Failed to copy link") || "Failed to copy link",
-                        );
+                        toast.error(tGlobal("common.linkCopyFailed"));
                     });
             }
         } else {
             navigator.clipboard
                 .writeText(window.location.href)
                 .then(() => {
-                    toast.success(
-                        t("Link copied to clipboard!") ||
-                            "Link copied to clipboard!",
-                    );
+                    toast.success(tGlobal("common.linkCopied"));
                 })
                 .catch(() => {
-                    toast.error(
-                        t("Failed to copy link") || "Failed to copy link",
-                    );
+                    toast.error(tGlobal("common.linkCopyFailed"));
                 });
         }
     };
@@ -194,8 +176,8 @@ export const ProgramDetails = () => {
         setIsFavorite(!isFavorite);
         toast.success(
             isFavorite
-                ? t("Removed from favorites") || "Removed from favorites"
-                : t("Added to favorites") || "Added to favorites",
+                ? tGlobal("common.removedFromFavorites")
+                : tGlobal("common.addedToFavorites"),
         );
     };
 

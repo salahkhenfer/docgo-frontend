@@ -9,6 +9,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
 import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
+import { getApiErrorMessage } from "../../utils/apiErrorTranslate";
 
 const EditProfile = () => {
     const { user, updateUserProfile } = useAppContext();
@@ -110,13 +111,18 @@ const EditProfile = () => {
                     ...prev,
                     profile_pic_link: data.fileLink,
                 }));
-                toast.success("Profile picture uploaded successfully!");
+                toast.success(
+                    t(
+                        "editProfile.uploadSuccess",
+                        "Profile picture uploaded successfully!",
+                    ),
+                );
             } else {
-                toast.error(data.error || "Failed to upload Image");
+                toast.error(getApiErrorMessage({ response: { data } }, t));
             }
         } catch (error) {
             console.error("Error uploading Image:", error);
-            toast.error("Network error. Please try again.");
+            toast.error(getApiErrorMessage(error, t));
         } finally {
             setUploadingImage(false);
         }
@@ -196,14 +202,19 @@ const EditProfile = () => {
                     updateUserProfile(data.user);
                 }
 
-                toast.success("Profile updated successfully!");
+                toast.success(
+                    t(
+                        "editProfile.updateSuccess",
+                        "Profile updated successfully!",
+                    ),
+                );
                 navigate("/profile");
             } else {
-                toast.error(data.error || "Failed to update profile");
+                toast.error(getApiErrorMessage({ response: { data } }, t));
             }
         } catch (error) {
             console.error("Error updating profile:", error);
-            toast.error("Network error. Please try again.");
+            toast.error(getApiErrorMessage(error, t));
         } finally {
             setLoading(false);
         }
@@ -225,11 +236,11 @@ const EditProfile = () => {
                     ...data,
                 }));
             } else {
-                toast.error("Failed to fetch profile data");
+                toast.error(t("apiErrors.failedToLoad"));
             }
         } catch (error) {
             console.error("Error fetching profile data:", error);
-            toast.error("Network error. Please try again.");
+            toast.error(getApiErrorMessage(error, t));
         } finally {
             setLoading(false);
         }
