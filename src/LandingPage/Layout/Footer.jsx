@@ -119,7 +119,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/faq"
                                     className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
                                 >
-                                    {"FAQ"}
+                                    {t("FAQ")}
                                 </a>
                             </li>
                             <li>

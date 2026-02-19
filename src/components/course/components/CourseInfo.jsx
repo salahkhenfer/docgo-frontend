@@ -8,6 +8,7 @@ import {
     FaDownload,
 } from "react-icons/fa";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const CourseSidebar = ({
     courseStats,
@@ -16,6 +17,7 @@ const CourseSidebar = ({
     course,
     userStatus,
 }) => {
+    const { t } = useTranslation();
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
@@ -34,34 +36,42 @@ const CourseSidebar = ({
                 <div className="flex items-center mb-4">
                     <FaChartLine className="text-blue-500 text-xl mr-3" />
                     <h3 className="text-lg font-bold text-gray-900">
-                        Course Statistics
+                        {t("courseInfo.courseStatistics")}
                     </h3>
                 </div>
 
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Total Students</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.totalStudents")}
+                        </span>
                         <span className="font-semibold text-gray-900">
                             {courseStats?.enrolledCount || 0}
                         </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Completion Rate</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.completionRate")}
+                        </span>
                         <span className="font-semibold text-green-600">
                             {courseStats?.completionRate || 0}%
                         </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Average Rating</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.averageRating")}
+                        </span>
                         <span className="font-semibold text-yellow-600">
                             {courseStats?.averageRating?.toFixed(1) || "0.0"} ⭐
                         </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Total Reviews</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.totalReviews")}
+                        </span>
                         <span className="font-semibold text-gray-900">
                             {courseStats?.reviewCount || 0}
                         </span>
@@ -75,7 +85,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <FaCalendarAlt className="text-green-500 text-xl mr-3" />
                         <h3 className="text-lg font-bold text-gray-900">
-                            Upcoming Sessions
+                            {t("courseInfo.upcomingSessions")}
                         </h3>
                     </div>
 
@@ -91,7 +101,7 @@ const CourseSidebar = ({
                                 <div className="text-sm text-green-600">
                                     📅{" "}
                                     {formatDate(
-                                        meet.scheduledTime || meet.date
+                                        meet.scheduledTime || meet.date,
                                     )}
                                 </div>
                                 {meet.description && (
@@ -111,7 +121,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <FaCertificate className="text-yellow-500 text-xl mr-3" />
                         <h3 className="text-lg font-bold text-gray-900">
-                            Certificate
+                            {t("courseInfo.certificate")}
                         </h3>
                     </div>
 
@@ -119,15 +129,15 @@ const CourseSidebar = ({
                         <div className="flex items-center text-yellow-800 mb-2">
                             <FaTrophy className="mr-2" />
                             <span className="font-semibold">
-                                Certificate Earned!
+                                {t("courseInfo.certificateEarned")}
                             </span>
                         </div>
                         <div className="text-sm text-yellow-700 mb-3">
-                            Congratulations on completing the course
+                            {t("courseInfo.congratulations")}
                         </div>
                         <button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                             <FaDownload className="mr-2" />
-                            Download Certificate
+                            {t("courseInfo.downloadCertificate")}
                         </button>
                     </div>
                 </div>
@@ -138,14 +148,16 @@ const CourseSidebar = ({
                 <div className="flex items-center mb-4">
                     <FaGraduationCap className="text-purple-500 text-xl mr-3" />
                     <h3 className="text-lg font-bold text-gray-900">
-                        Course Details
+                        {t("courseInfo.courseDetails")}
                     </h3>
                 </div>
 
                 <div className="space-y-3 text-sm">
                     <div className="flex items-center">
                         <FaGlobeAmericas className="text-gray-400 mr-3" />
-                        <span className="text-gray-600">Language:</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.language")}:
+                        </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.language || "English"}
                         </span>
@@ -153,7 +165,9 @@ const CourseSidebar = ({
 
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3">📊</span>
-                        <span className="text-gray-600">Level:</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.level")}:
+                        </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.level || "Beginner"}
                         </span>
@@ -161,7 +175,9 @@ const CourseSidebar = ({
 
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3">🏷️</span>
-                        <span className="text-gray-600">Category:</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.category")}:
+                        </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.category || "General"}
                         </span>
@@ -169,7 +185,9 @@ const CourseSidebar = ({
 
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3">🎯</span>
-                        <span className="text-gray-600">Field:</span>
+                        <span className="text-gray-600">
+                            {t("courseInfo.field")}:
+                        </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.field || "Education"}
                         </span>
@@ -178,10 +196,12 @@ const CourseSidebar = ({
                     {course.lastUpdated && (
                         <div className="flex items-center">
                             <span className="text-gray-400 mr-3">🔄</span>
-                            <span className="text-gray-600">Last Updated:</span>
+                            <span className="text-gray-600">
+                                {t("courseInfo.lastUpdated")}:
+                            </span>
                             <span className="ml-auto font-medium text-gray-900">
                                 {new Date(
-                                    course.lastUpdated
+                                    course.lastUpdated,
                                 ).toLocaleDateString()}
                             </span>
                         </div>
@@ -195,7 +215,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <span className="text-indigo-500 text-xl mr-3">👨‍🏫</span>
                         <h3 className="text-lg font-bold text-gray-900">
-                            Instructor
+                            {t("courseInfo.instructor")}
                         </h3>
                     </div>
 
@@ -210,7 +230,8 @@ const CourseSidebar = ({
                                 {course.instructor.name || "Instructor"}
                             </div>
                             <div className="text-sm text-gray-500">
-                                {course.instructor.title || "Course Instructor"}
+                                {course.instructor.title ||
+                                    t("courseInfo.courseInstructor")}
                             </div>
                         </div>
                     </div>

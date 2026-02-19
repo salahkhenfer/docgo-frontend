@@ -1,6 +1,7 @@
 import { CheckCircle, XCircle } from "lucide-react";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import EnrollmentAPI from "../API/Enrollment";
@@ -37,39 +38,48 @@ const MultipleChoiceQuestion = ({
     </div>
 );
 
-const TrueFalseQuestion = ({ question, selectedAnswer, onAnswerChange }) => (
-    <div className="mt-6">
-        <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-        <div className="mt-4 flex space-x-4">
-            <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
-                <input
-                    type="radio"
-                    name={question.id}
-                    value="True"
-                    checked={selectedAnswer === "True"}
-                    onChange={(e) =>
-                        onAnswerChange(question.id, e.target.value)
-                    }
-                    className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-gray-700">Vrai</span>
-            </label>
-            <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
-                <input
-                    type="radio"
-                    name={question.id}
-                    value="False"
-                    checked={selectedAnswer === "False"}
-                    onChange={(e) =>
-                        onAnswerChange(question.id, e.target.value)
-                    }
-                    className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-gray-700">Faux</span>
-            </label>
+const TrueFalseQuestion = ({ question, selectedAnswer, onAnswerChange }) => {
+    const { t } = useTranslation();
+    return (
+        <div className="mt-6">
+            <h3 className="text-lg font-medium text-gray-800">
+                {question.text}
+            </h3>
+            <div className="mt-4 flex space-x-4">
+                <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
+                    <input
+                        type="radio"
+                        name={question.id}
+                        value="True"
+                        checked={selectedAnswer === "True"}
+                        onChange={(e) =>
+                            onAnswerChange(question.id, e.target.value)
+                        }
+                        className="form-radio h-5 w-5 text-blue-600"
+                    />
+                    <span className="ml-3 text-gray-700">
+                        {t("quiz_page.true")}
+                    </span>
+                </label>
+                <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
+                    <input
+                        type="radio"
+                        name={question.id}
+                        value="False"
+                        checked={selectedAnswer === "False"}
+                        onChange={(e) =>
+                            onAnswerChange(question.id, e.target.value)
+                        }
+                        className="form-radio h-5 w-5 text-blue-600"
+                    />
+                    <span className="ml-3 text-gray-700">
+                        {t("quiz_page.false")}
+                    </span>
+                </label>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 const CheckboxQuestion = ({ question, selectedAnswers, onAnswerChange }) => {
     const handleCheckboxChange = (optionId) => {
@@ -112,20 +122,26 @@ const CheckboxQuestion = ({ question, selectedAnswers, onAnswerChange }) => {
     );
 };
 
-const TextAreaQuestion = ({ question, answer, onAnswerChange }) => (
-    <div className="mt-6">
-        <h3 className="text-lg font-medium text-gray-800">{question.text}</h3>
-        <textarea
-            value={answer}
-            onChange={(e) => onAnswerChange(question.id, e.target.value)}
-            className="mt-4 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-            rows="4"
-            placeholder="Votre réponse..."
-        />
-    </div>
-);
+const TextAreaQuestion = ({ question, answer, onAnswerChange }) => {
+    const { t } = useTranslation();
+    return (
+        <div className="mt-6">
+            <h3 className="text-lg font-medium text-gray-800">
+                {question.text}
+            </h3>
+            <textarea
+                value={answer}
+                onChange={(e) => onAnswerChange(question.id, e.target.value)}
+                className="mt-4 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                rows="4"
+                placeholder={t("quiz_page.textPlaceholder")}
+            />
+        </div>
+    );
+};
 
 const QuizResults = ({ results, onRetry, score }) => {
+    const { t } = useTranslation();
     const totalQuestions = results.length;
     const correctAnswers = results.filter((r) => r.isCorrect).length;
 
@@ -133,7 +149,7 @@ const QuizResults = ({ results, onRetry, score }) => {
         <div className="mt-8 p-6 bg-white rounded-lg shadow-lg">
             <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                    Résultats du Quiz
+                    {t("quiz_page.results")}
                 </h2>
                 <div
                     className="text-4xl font-bold mb-2"
@@ -149,7 +165,8 @@ const QuizResults = ({ results, onRetry, score }) => {
                     {score}%
                 </div>
                 <p className="text-gray-600">
-                    {correctAnswers} sur {totalQuestions} questions correctes
+                    {correctAnswers} {t("quiz_page.of")} {totalQuestions}{" "}
+                    {t("quiz_page.question")}
                 </p>
             </div>
 
@@ -197,7 +214,7 @@ const QuizResults = ({ results, onRetry, score }) => {
                     onClick={onRetry}
                     className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                    Recommencer le Quiz
+                    {t("quiz_page.backToCourse")}
                 </button>
             </div>
         </div>
@@ -206,6 +223,7 @@ const QuizResults = ({ results, onRetry, score }) => {
 
 function QuizContent({ quizData: propQuizData, onQuizResult }) {
     const { courseId } = useParams();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [userAnswers, setUserAnswers] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -545,10 +563,10 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
             <main className="ml-5 w-[72%] max-md:ml-0 max-md:w-full">
                 <>
                     <h2 className="text-xl font-bold text-green-700 mb-2">
-                        Vous avez déjà réussi ce quiz !
+                        {t("quiz_page.results")}
                     </h2>
                     <div className="mb-4 text-green-800">
-                        Dernier score: {lastResult.score}%
+                        {t("quiz_page.score")}: {lastResult.score}%
                     </div>
                     <QuizResults
                         results={lastResult.validationResults}
@@ -671,10 +689,10 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                 ></path>
                             </svg>
-                            <span>Validation...</span>
+                            <span>{t("quiz_page.submitting")}</span>
                         </>
                     ) : (
-                        <span>Complet</span>
+                        <span>{t("quiz_page.submit")}</span>
                     )}
                 </button>
             </div>

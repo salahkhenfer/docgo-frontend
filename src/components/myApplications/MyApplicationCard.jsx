@@ -1,22 +1,24 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CheckCircle, XCircle, Clock, Calendar, MapPin } from "lucide-react";
 
 const MyApplicationCard = ({ program, status }) => {
+    const { t } = useTranslation();
     const StatusBadge = ({ status }) => {
         const statusConfig = {
             rejected: {
                 icon: XCircle,
-                text: "Rejected",
+                text: t("myApplicationsPage.status.rejected"),
                 className: "bg-red-50 text-red-700 border-red-200",
             },
             accepted: {
                 icon: CheckCircle,
-                text: "Accepted",
+                text: t("myApplicationsPage.status.accepted"),
                 className: "bg-green-50 text-green-700 border-green-200",
             },
             pending: {
                 icon: Clock,
-                text: "Pending",
+                text: t("myApplicationsPage.status.pending"),
                 className: "bg-amber-50 text-amber-700 border-amber-200",
             },
         };
@@ -84,7 +86,10 @@ const MyApplicationCard = ({ program, status }) => {
                                             size={16}
                                             className="text-gray-400"
                                         />
-                                        <span>Applied on March 15, 2024</span>
+                                        <span>
+                                            {t("myApplicationsPage.appliedOn")}{" "}
+                                            {program.appliedDate || ""}
+                                        </span>
                                     </div>
 
                                     <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -92,12 +97,19 @@ const MyApplicationCard = ({ program, status }) => {
                                             size={16}
                                             className="text-gray-400"
                                         />
-                                        <span>France</span>
+                                        <span>
+                                            {program.location ||
+                                                t(
+                                                    "myApplicationsPage.location",
+                                                )}
+                                        </span>
                                     </div>
 
                                     <div className="mt-4">
                                         <h3 className="text-sm font-semibold text-gray-900 mb-2">
-                                            Description
+                                            {t(
+                                                "myApplicationsPage.description",
+                                            )}
                                         </h3>
                                         <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
                                             {program.description}
@@ -119,10 +131,10 @@ const MyApplicationCard = ({ program, status }) => {
                     <div className="mt-6 pt-4 border-t border-amber-200/50">
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-xs font-medium text-amber-700">
-                                Application Progress
+                                {t("myApplicationsPage.applicationProgress")}
                             </span>
                             <span className="text-xs text-amber-600">
-                                Under Review
+                                {t("myApplicationsPage.underReview")}
                             </span>
                         </div>
                         <div className="w-full bg-amber-200/50 rounded-full h-2">

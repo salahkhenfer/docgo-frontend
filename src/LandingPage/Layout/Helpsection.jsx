@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Mail, MessageSquare, Phone, Sparkles } from "lucide-react";
 import PropTypes from "prop-types";
 import contactus from "../../../src/assets/beautiful girl contact us.png";
@@ -5,6 +6,7 @@ import Container from "../../components/Container";
 import ContactForm from "../../components/contact/ContactForm";
 
 function HelpSection({ contactInfo }) {
+    const { t } = useTranslation();
     return (
         <section
             id="contact"
@@ -33,9 +35,7 @@ function HelpSection({ contactInfo }) {
                     </div>
                     <div className="h-1.5 w-48 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full mb-6"></div>
                     <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed">
-                        Vous avez des questions ? Notre équipe est là pour vous
-                        aider. Envoyez-nous un message et nous vous répondrons
-                        dans les plus brefs délais.
+                        {t("contact.helpText")}
                     </p>
                 </div>
 
@@ -50,8 +50,7 @@ function HelpSection({ contactInfo }) {
                             {/* Contact Information */}
                             <div className="relative z-10 space-y-6 mb-8">
                                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 leading-tight">
-                                    faites-nous savoir si vous avez des
-                                    questions
+                                    {t("contact.getInTouch")}
                                 </h3>
 
                                 {contactInfo?.email && (
@@ -61,7 +60,7 @@ function HelpSection({ contactInfo }) {
                                         </div>
                                         <div>
                                             <p className="font-semibold mb-1 text-blue-100">
-                                                Email
+                                                {t("Email")}
                                             </p>
                                             <a
                                                 href={`mailto:${contactInfo.email}`}
@@ -80,7 +79,7 @@ function HelpSection({ contactInfo }) {
                                         </div>
                                         <div>
                                             <p className="font-semibold mb-1 text-blue-100">
-                                                Téléphone
+                                                {t("contact.phone")}
                                             </p>
                                             <a
                                                 href={`tel:${contactInfo.phone}`}
@@ -98,11 +97,10 @@ function HelpSection({ contactInfo }) {
                                     </div>
                                     <div>
                                         <p className="font-semibold mb-1 text-blue-100">
-                                            Support
+                                            {t("contact.supportTitle")}
                                         </p>
                                         <p className="text-white/90">
-                                            Disponible 7j/7 pour répondre à vos
-                                            questions
+                                            {t("contact.supportDesc")}
                                         </p>
                                     </div>
                                 </div>

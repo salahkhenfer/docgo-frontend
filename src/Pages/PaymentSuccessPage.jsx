@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     FaArrowRight,
     FaCheckCircle,
@@ -25,6 +26,8 @@ const PaymentSuccessPage = () => {
         email: null,
     });
     const [showContactModal, setShowContactModal] = useState(false);
+
+    const { t } = useTranslation();
 
     const paymentData = location.state?.paymentData;
     const itemData =
@@ -106,8 +109,8 @@ const PaymentSuccessPage = () => {
                     {/* Title */}
                     <h1 className="text-2xl font-bold text-gray-900 mb-4">
                         {paymentData.status === "completed"
-                            ? "Payment Successful!"
-                            : "Payment Submitted!"}
+                            ? t("paymentSuccess.titleCompleted")
+                            : t("paymentSuccess.titlePending")}
                     </h1>
 
                     {/* Message */}
@@ -115,15 +118,14 @@ const PaymentSuccessPage = () => {
                         {isCCP && (
                             <div className="space-y-2">
                                 <p className="text-gray-600">
-                                    Your CCP payment has been submitted for
-                                    verification.
+                                    {t("paymentSuccess.ccpSubmitted")}
                                 </p>
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                                     <p className="text-sm text-yellow-800">
-                                        <strong>Important:</strong> We will
-                                        verify your payment within 24 hours. You
-                                        will receive an email confirmation once
-                                        verified.
+                                        <strong>
+                                            {t("paymentSuccess.ccpImportant")}:
+                                        </strong>{" "}
+                                        {t("paymentSuccess.ccpVerifyTime")}
                                     </p>
                                 </div>
                             </div>
@@ -134,8 +136,8 @@ const PaymentSuccessPage = () => {
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                         <h3 className="font-medium text-gray-900 mb-2">
                             {itemType === "course"
-                                ? "Course Enrolled"
-                                : "Program Applied"}
+                                ? t("paymentSuccess.courseEnrolled")
+                                : t("paymentSuccess.programApplied")}
                         </h3>
                         <div className="flex items-center gap-3">
                             {itemData.Image && (
@@ -159,25 +161,25 @@ const PaymentSuccessPage = () => {
                     {/* Payment Details */}
                     <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
                         <h3 className="font-medium text-gray-900 mb-2">
-                            Payment Details
+                            {t("paymentSuccess.paymentDetails")}
                         </h3>
                         <div className="space-y-1 text-sm text-gray-600">
                             <div className="flex justify-between">
-                                <span>Payment ID:</span>
+                                <span>{t("paymentSuccess.paymentId")}:</span>
                                 <span className="font-mono">
                                     {paymentData.paymentId}
                                 </span>
                             </div>
                             <div className="flex justify-between">
-                                <span>Method:</span>
+                                <span>{t("paymentSuccess.method")}:</span>
                                 <span>CCP</span>
                             </div>
                             <div className="flex justify-between">
-                                <span>Amount:</span>
+                                <span>{t("paymentSuccess.amount")}:</span>
                                 <span>{paymentData.amount} DZD</span>
                             </div>
                             <div className="flex justify-between">
-                                <span>Status:</span>
+                                <span>{t("paymentSuccess.status")}:</span>
                                 <span
                                     className={`capitalize ${
                                         paymentData.status === "completed"
@@ -201,14 +203,19 @@ const PaymentSuccessPage = () => {
                                         className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                     >
                                         <span className="flex items-center justify-center gap-2">
-                                            <span>Start Learning</span>
+                                            <span>
+                                                {t(
+                                                    "paymentSuccess.startLearning",
+                                                )}
+                                            </span>
                                             <FaArrowRight />
                                         </span>
                                     </Link>
 
                                     <div className="text-sm text-gray-500">
-                                        Auto-redirecting in {countdown}{" "}
-                                        seconds...
+                                        {t("paymentSuccess.autoRedirect", {
+                                            countdown,
+                                        })}
                                     </div>
                                 </>
                             ) : (
@@ -218,7 +225,11 @@ const PaymentSuccessPage = () => {
                                         className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                     >
                                         <span className="flex items-center justify-center gap-2">
-                                            <span>View Course Details</span>
+                                            <span>
+                                                {t(
+                                                    "paymentSuccess.viewCourseDetails",
+                                                )}
+                                            </span>
                                             <FaArrowRight />
                                         </span>
                                     </Link>
@@ -229,7 +240,11 @@ const PaymentSuccessPage = () => {
                                     >
                                         <span className="flex items-center justify-center gap-2">
                                             <FaDownload />
-                                            <span>Save Receipt</span>
+                                            <span>
+                                                {t(
+                                                    "paymentSuccess.saveReceipt",
+                                                )}
+                                            </span>
                                         </span>
                                     </button>
                                 </>
@@ -241,12 +256,18 @@ const PaymentSuccessPage = () => {
                                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                                 >
                                     <span className="flex items-center justify-center gap-2">
-                                        <span>View My Applications</span>
+                                        <span>
+                                            {t(
+                                                "paymentSuccess.viewApplications",
+                                            )}
+                                        </span>
                                         <FaArrowRight />
                                     </span>
                                 </Link>
                                 <div className="text-sm text-gray-500">
-                                    Auto-redirecting in {countdown} seconds...
+                                    {t("paymentSuccess.autoRedirect", {
+                                        countdown,
+                                    })}
                                 </div>
                             </>
                         )}
@@ -258,15 +279,15 @@ const PaymentSuccessPage = () => {
                             className="block w-full text-gray-600 hover:text-gray-800 py-2 transition-colors duration-200"
                         >
                             {itemType === "course"
-                                ? "Browse More Courses"
-                                : "Browse More Programs"}
+                                ? t("paymentSuccess.browseMoreCourses")
+                                : t("paymentSuccess.browseMorePrograms")}
                         </Link>
                     </div>
 
                     {/* Support Info */}
                     <div className="mt-6 pt-6 border-t border-gray-200">
                         <p className="text-sm text-gray-500 mb-3">
-                            Besoin d'aide ? Contactez notre équipe de support :
+                            {t("paymentSuccess.needHelp")}
                         </p>
                         <div className="space-y-2">
                             {adminContact.phone && (
@@ -302,7 +323,7 @@ const PaymentSuccessPage = () => {
                             className="mt-3 flex items-center justify-center gap-2 w-full text-sm text-white bg-gray-700 hover:bg-gray-800 py-2.5 px-4 rounded-lg transition-colors"
                         >
                             <FaComment />
-                            Envoyer un message de support
+                            {t("paymentSuccess.sendSupportMessage")}
                         </button>
                     </div>
                 </div>
@@ -320,7 +341,7 @@ const PaymentSuccessPage = () => {
                     >
                         <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b">
                             <h3 className="text-lg font-semibold text-gray-900">
-                                Contacter le support
+                                {t("paymentSuccess.contactSupport")}
                             </h3>
                             <button
                                 onClick={() => setShowContactModal(false)}
@@ -332,8 +353,8 @@ const PaymentSuccessPage = () => {
                         <div className="px-6 pb-6 pt-4">
                             <p className="text-sm text-gray-500 mb-4">
                                 {itemType === "course"
-                                    ? "Votre message sera marqué comme support paiement pour le cours."
-                                    : "Votre message sera marqué comme support paiement pour le programme."}
+                                    ? t("paymentSuccess.paymentContextCourse")
+                                    : t("paymentSuccess.paymentContextProgram")}
                             </p>
                             <ContactForm
                                 context="payment"

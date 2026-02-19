@@ -23,7 +23,8 @@
         "priorityHigh": "Haute",
         "priorityUrgent": "Urgente",
         "errorSending": "Échec de l'envoi du message. Veuillez réessayer.",
-        "richTextEnabled": "Formatage de texte enrichi disponible"
+        "richTextEnabled": "Formatage de texte enrichi disponible",
+        "phone": "Téléphone"
     },
 
     "faq_data": {
@@ -52,6 +53,8 @@
     "Profile_nav": "Profil",
 
     "FAQ": "FAQ",
+    "MyLearning": "Mon apprentissage",
+    "MyPrograms": "Mes programmes",
     "faq_title": "Questions Fréquemment Posées",
     "ExploreCoursesDescription": "Explorez nos cours en ligne conçus pour améliorer vos compétences et vos connaissances.",
     "search_courses": "Rechercher des cours...",
@@ -376,6 +379,7 @@
     "UnitedStates": "États-Unis",
     "StudyAbroadQuote": "« Étudier à l'étranger peut changer votre façon de voir le monde » ..",
     "OurServices": "Nos services",
+    "ServicesSubtitle": "Découvrez nos services complets conçus pour vous aider à atteindre vos objectifs éducatifs",
     "GuidanceForStudyingAbroad": "Guidance pour étudier à l'étranger",
     "StudyingAbroadChangesPerspective": "Étudier à l'étranger peut changer votre façon de voir le monde",
     "GuidanceDescription": "Naviguez votre parcours pour étudier dans les meilleures institutions internationales avec un soutien personnalisé. Notre équipe vous aide à choisir les bons programmes, à préparer votre candidature et à comprendre les exigences.",
@@ -722,7 +726,11 @@
         "pending": "En attente",
         "rejected": "Rejeté",
         "scholarshipApplications": "Candidatures aux bourses",
-        "learningProgress": "Progrès d'apprentissage"
+        "learningProgress": "Progrès d'apprentissage",
+        "subtitle": "Voici un aperçu de votre parcours d'apprentissage et de vos candidatures aux bourses",
+        "coursesInProgress": "Cours en cours",
+        "coursesCompleted": "Cours terminés",
+        "certificatesEarned": "Certificats obtenus"
     },
     "messages": {
         "another_one": "Envoyer un autre",
@@ -855,5 +863,120 @@
             "sentTitle": "Message envoyé",
             "sentText": "Votre message a été envoyé avec succès."
         }
+    },
+
+    "paymentSuccess": {
+        "titleCompleted": "Paiement réussi !",
+        "titlePending": "Paiement soumis !",
+        "ccpSubmitted": "Votre paiement CCP a été soumis pour vérification.",
+        "ccpImportant": "Important",
+        "ccpVerifyTime": "Nous vérifierons votre paiement sous 24 heures. Vous recevrez une confirmation par e-mail une fois vérifié.",
+        "courseEnrolled": "Cours inscrit",
+        "programApplied": "Programme postulé",
+        "paymentDetails": "Détails du paiement",
+        "paymentId": "ID de paiement",
+        "method": "Méthode",
+        "amount": "Montant",
+        "status": "Statut",
+        "startLearning": "Commencer l'apprentissage",
+        "autoRedirect": "Redirection automatique dans {{countdown}} secondes...",
+        "viewCourseDetails": "Voir les détails du cours",
+        "saveReceipt": "Enregistrer le reçu",
+        "viewApplications": "Voir mes candidatures",
+        "browseMoreCourses": "Parcourir plus de cours",
+        "browseMorePrograms": "Parcourir plus de programmes",
+        "needHelp": "Besoin d'aide ? Contactez notre équipe de support :",
+        "sendSupportMessage": "Envoyer un message de support",
+        "contactSupport": "Contacter le support",
+        "paymentContextCourse": "Votre message sera marqué comme support paiement pour le cours.",
+        "paymentContextProgram": "Votre message sera marqué comme support paiement pour le programme."
+    },
+
+    "favorites": {
+        "title": "Mes Favoris",
+        "savedCourses": "Vos cours et programmes enregistrés",
+        "savedCoursesLocal": "Vos cours et programmes enregistrés localement",
+        "all": "Tous",
+        "courses": "Cours",
+        "programs": "Programmes",
+        "noFavorites": "Aucun favori pour le moment",
+        "startExploring": "Commencez à explorer les cours et programmes pour les ajouter à vos favoris !",
+        "browseCourses": "Parcourir les cours",
+        "free": "Gratuit",
+        "viewCourse": "Voir le cours",
+        "viewProgram": "Voir le programme",
+        "enrollNow": "S'inscrire maintenant",
+        "applyNow": "Postuler maintenant",
+        "level": "Niveau",
+        "from": "Depuis",
+        "scholarship": "Bourse",
+        "deadline": "Date limite"
+    },
+
+    "quiz_page": {
+        "true": "Vrai",
+        "false": "Faux",
+        "submit": "Soumettre le quiz",
+        "submitting": "Soumission...",
+        "results": "Vos résultats",
+        "score": "Score",
+        "question": "Question",
+        "of": "sur",
+        "backToCourse": "Retour au cours",
+        "viewCertificate": "Voir le certificat",
+        "textPlaceholder": "Écrivez votre réponse ici...",
+        "description": "Description"
+    },
+
+    "myApplicationsPage": {
+        "title": "Mes Candidatures",
+        "noApplications": "Aucune candidature pour le moment",
+        "startExploring": "Commencez à explorer les programmes",
+        "appliedOn": "Postulé le",
+        "location": "Lieu",
+        "description": "Description",
+        "applicationProgress": "Progression de la candidature",
+        "underReview": "En cours d'examen",
+        "status": {
+            "pending": "En attente",
+            "accepted": "Accepté",
+            "rejected": "Rejeté"
+        }
+    },
+
+    "courseInfo": {
+        "courseStatistics": "Statistiques du cours",
+        "totalStudents": "Total des étudiants",
+        "completionRate": "Taux de complétion",
+        "averageRating": "Note moyenne",
+        "totalReviews": "Total des avis",
+        "upcomingSessions": "Prochaines sessions",
+        "certificate": "Certificat",
+        "certificateEarned": "Certificat obtenu !",
+        "congratulations": "Félicitations pour avoir terminé le cours",
+        "downloadCertificate": "Télécharger le certificat",
+        "courseDetails": "Détails du cours",
+        "language": "Langue",
+        "level": "Niveau",
+        "category": "Catégorie",
+        "field": "Domaine",
+        "lastUpdated": "Dernière mise à jour",
+        "instructor": "Instructeur",
+        "courseInstructor": "Instructeur du cours"
+    },
+
+    "blocked": {
+        "title": "Compte bloqué",
+        "message": "Votre compte a été bloqué par un administrateur. Si vous pensez que c'est une erreur, veuillez contacter le support.",
+        "goHome": "Accueil",
+        "backToLogin": "Retour à la connexion"
+    },
+
+    "errorPage": {
+        "title": "Oups ! Une erreur s'est produite",
+        "message": "Quelque chose s'est mal passé sur cette page.",
+        "errorDetails": "Détails de l'erreur :",
+        "goBack": "Veuillez retourner à la",
+        "homePage": "page d'accueil"
     }
 }

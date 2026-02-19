@@ -23,7 +23,8 @@
         "priorityHigh": "عالية",
         "priorityUrgent": "عاجلة",
         "errorSending": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.",
-        "richTextEnabled": "تنسيق نص منسق متاح"
+        "richTextEnabled": "تنسيق نص منسق متاح",
+        "phone": "الهاتف"
     },
     "faq_data": {
         "title": "الأسئلة المتكررة",
@@ -50,6 +51,8 @@
     "Courses_nav": "الدورات",
     "Profile_nav": "الملف الشخصي",
     "FAQ": "الأسئلة الشائعة",
+    "MyLearning": "تعلمي",
+    "MyPrograms": "برامجي",
     "faq_title": "الأسئلة الشائعة ",
     "no_faq_now": "لا توجد أسئلة شائعة متاحة في الوقت الحالي.",
     "ExploreCoursesDescription": "استكشف دوراتنا عبر الإنترنت المصممة لتعزيز مهاراتك ومعرفتك.",
@@ -351,6 +354,7 @@
     "UnitedStates": "الولايات المتحدة",
     "StudyAbroadQuote": "« يمكن أن تغير الدراسة في الخارج طريقتك في رؤية العالم » ..",
     "OurServices": "خدماتنا",
+    "ServicesSubtitle": "اكتشف خدماتنا الشاملة المصممة لمساعدتك على تحقيق أهدافك التعليمية",
     "GuidanceForStudyingAbroad": "الإرشاد للدراسة في الخارج",
     "StudyingAbroadChangesPerspective": "الدراسة في الخارج يمكن أن تغير طريقة رؤيتك للعالم",
     "GuidanceDescription": "تنقل خلال رحلتك للدراسة في أفضل المؤسسات الدولية مع دعم شخصي. يساعدك فريقنا على اختيار البرامج المناسبة، إعداد طلبك، وفهم المتطلبات.",
@@ -720,8 +724,13 @@
         "approved": "موافق عليه",
         "pending": "قيد الانتظار",
         "rejected": "مرفوض",
+        "شهادات_منح_دراسية": "طلبات المنح الدراسية",
         "scholarshipApplications": "طلبات المنح الدراسية",
-        "learningProgress": "تقدم التعلم"
+        "learningProgress": "تقدم التعلم",
+        "subtitle": "إليك نظرة عامة على رحلتك التعليمية وطلبات المنح الدراسية",
+        "coursesInProgress": "دورات جارية",
+        "coursesCompleted": "دورات مكتملة",
+        "certificatesEarned": "شهادات حاصل عليها"
     },
     "messages": {
         "yourMessage": "رسالتك",
@@ -853,5 +862,120 @@
             "sentTitle": "تم إرسال الرسالة",
             "sentText": "تم إرسال رسالتك بنجاح."
         }
+    },
+
+    "paymentSuccess": {
+        "titleCompleted": "تم الدفع بنجاح!",
+        "titlePending": "تم تقديم الدفع!",
+        "ccpSubmitted": "تم تقديم دفعك بطريقة CCP للتحقق.",
+        "ccpImportant": "مهم",
+        "ccpVerifyTime": "سنتحقق من دفعتك خلال 24 ساعة. ستتلقى تأكيدًا عبر البريد الإلكتروني بعد التحقق.",
+        "courseEnrolled": "تم التسجيل في الدورة",
+        "programApplied": "تم التقدم للبرنامج",
+        "paymentDetails": "تفاصيل الدفع",
+        "paymentId": "رقم الدفع",
+        "method": "طريقة الدفع",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "startLearning": "ابدأ التعلم",
+        "autoRedirect": "إعادة التوجيه التلقائية خلال {{countdown}} ثواني...",
+        "viewCourseDetails": "عرض تفاصيل الدورة",
+        "saveReceipt": "حفظ الإيصال",
+        "viewApplications": "عرض طلباتي",
+        "browseMoreCourses": "تصفح المزيد من الدورات",
+        "browseMorePrograms": "تصفح المزيد من البرامج",
+        "needHelp": "هل تحتاج مساعدة؟ تواصل مع فريق الدعم:",
+        "sendSupportMessage": "إرسال رسالة دعم",
+        "contactSupport": "التواصل مع الدعم",
+        "paymentContextCourse": "سيتم وسم رسالتك كدعم دفع للدورة.",
+        "paymentContextProgram": "سيتم وسم رسالتك كدعم دفع للبرنامج."
+    },
+
+    "favorites": {
+        "title": "مفضلاتي",
+        "savedCourses": "دوراتك وبرامجك المحفوظة",
+        "savedCoursesLocal": "دوراتك وبرامجك المحفوظة محليًا",
+        "all": "الكل",
+        "courses": "الدورات",
+        "programs": "البرامج",
+        "noFavorites": "لا توجد مفضلات حتى الآن",
+        "startExploring": "ابدأ باستكشاف الدورات والبرامج لإضافتها إلى مفضلاتك!",
+        "browseCourses": "تصفح الدورات",
+        "free": "مجاني",
+        "viewCourse": "عرض الدورة",
+        "viewProgram": "عرض البرنامج",
+        "enrollNow": "سجل الآن",
+        "applyNow": "قدم الآن",
+        "level": "المستوى",
+        "from": "من",
+        "scholarship": "منحة",
+        "deadline": "آخر موعد"
+    },
+
+    "quiz_page": {
+        "true": "صحيح",
+        "false": "خطأ",
+        "submit": "إرسال الاختبار",
+        "submitting": "جاري الإرسال...",
+        "results": "نتائجك",
+        "score": "الدرجة",
+        "question": "سؤال",
+        "of": "من",
+        "backToCourse": "العودة إلى الدورة",
+        "viewCertificate": "عرض الشهادة",
+        "textPlaceholder": "اكتب إجابتك هنا...",
+        "description": "الوصف"
+    },
+
+    "myApplicationsPage": {
+        "title": "طلباتي",
+        "noApplications": "لا توجد طلبات حتى الآن",
+        "startExploring": "ابدأ باستكشاف البرامج",
+        "appliedOn": "تقدم في",
+        "location": "الموقع",
+        "description": "الوصف",
+        "applicationProgress": "تقدم الطلب",
+        "underReview": "قيد المراجعة",
+        "status": {
+            "pending": "قيد الانتظار",
+            "accepted": "مقبول",
+            "rejected": "مرفوض"
+        }
+    },
+
+    "courseInfo": {
+        "courseStatistics": "إحصائيات الدورة",
+        "totalStudents": "إجمالي الطلاب",
+        "completionRate": "معدل الإتمام",
+        "averageRating": "متوسط التقييم",
+        "totalReviews": "إجمالي التقييمات",
+        "upcomingSessions": "الجلسات القادمة",
+        "certificate": "الشهادة",
+        "certificateEarned": "تم الحصول على الشهادة!",
+        "congratulations": "تهانينا بإتمامك الدورة",
+        "downloadCertificate": "تحميل الشهادة",
+        "courseDetails": "تفاصيل الدورة",
+        "language": "اللغة",
+        "level": "المستوى",
+        "category": "الفئة",
+        "field": "المجال",
+        "lastUpdated": "آخر تحديث",
+        "instructor": "المدرب",
+        "courseInstructor": "مدرب الدورة"
+    },
+
+    "blocked": {
+        "title": "تم حظر الحساب",
+        "message": "تم حظر حسابك من قبل مسؤول. إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع الدعم.",
+        "goHome": "الصفحة الرئيسية",
+        "backToLogin": "العودة إلى تسجيل الدخول"
+    },
+
+    "errorPage": {
+        "title": "أوبس! حدث خطأ",
+        "message": "حدث خطأ في هذه الصفحة.",
+        "errorDetails": "تفاصيل الخطأ:",
+        "goBack": "يرجى العودة إلى",
+        "homePage": "الصفحة الرئيسية"
     }
 }

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { clientCoursesAPI } from "../API/Courses";
 import { clientProgramsAPI } from "../API/Programs";
@@ -8,6 +9,7 @@ import { useFavorites } from "../hooks/useFavorite";
 import MainLoading from "../MainLoading";
 
 const FavoritesPage = () => {
+    const { t } = useTranslation();
     const { favorites, loading, totalCount } = useFavorites();
     const { user } = useAppContext();
     const [activeTab, setActiveTab] = useState("all");
@@ -35,12 +37,12 @@ const FavoritesPage = () => {
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                        My Favorites
+                        {t("favorites.title")}
                     </h1>
                     <p className="text-gray-600 text-lg">
                         {user
-                            ? "Your saved courses and programs"
-                            : "Your locally saved courses and programs"}
+                            ? t("favorites.savedCourses")
+                            : t("favorites.savedCoursesLocal")}
                     </p>
                 </div>
 
@@ -54,7 +56,7 @@ const FavoritesPage = () => {
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
                     >
-                        All ({totalCount})
+                        {t("favorites.all")} ({totalCount})
                     </button>
                     <button
                         onClick={() => setActiveTab("courses")}
@@ -64,7 +66,7 @@ const FavoritesPage = () => {
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
                     >
-                        Courses ({favorites.courses.length})
+                        {t("favorites.courses")} ({favorites.courses.length})
                     </button>
                     <button
                         onClick={() => setActiveTab("programs")}
@@ -74,7 +76,7 @@ const FavoritesPage = () => {
                                 : "text-gray-600 hover:text-gray-900"
                         }`}
                     >
-                        Programs ({favorites.programs.length})
+                        {t("favorites.programs")} ({favorites.programs.length})
                     </button>
                 </div>
 
@@ -91,17 +93,16 @@ const FavoritesPage = () => {
                             </svg>
                         </div>
                         <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                            No favorites yet
+                            {t("favorites.noFavorites")}
                         </h3>
                         <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
-                            Start exploring courses and programs to add them to
-                            your favorites!
+                            {t("favorites.startExploring")}
                         </p>
                         <Link
                             to="/Courses"
                             className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                         >
-                            Browse Courses
+                            {t("favorites.browseCourses")}
                         </Link>
                     </div>
                 ) : (
@@ -135,6 +136,7 @@ const FavoritesPage = () => {
 };
 
 const FavoriteCard = ({ item, type }) => {
+    const { t } = useTranslation();
     const isProgram = type === "program";
     const [fullData, setFullData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -275,7 +277,9 @@ const FavoriteCard = ({ item, type }) => {
                                 : "bg-blue-500/90 text-white"
                         }`}
                     >
-                        {isProgram ? "Program" : "Course"}
+                        {isProgram
+                            ? t("favorites.programs")
+                            : t("favorites.courses")}
                     </span>
                 </div>
 
@@ -356,7 +360,7 @@ const FavoriteCard = ({ item, type }) => {
                                 </>
                             ) : price === 0 ? (
                                 <span className="text-xl font-bold text-green-600">
-                                    Free
+                                    {t("favorites.free")}
                                 </span>
                             ) : (
                                 <span className="text-xl font-bold text-gray-900">
@@ -374,7 +378,9 @@ const FavoriteCard = ({ item, type }) => {
                     }
                     className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >
-                    View {isProgram ? "Program" : "Course"}
+                    {isProgram
+                        ? t("favorites.viewProgram")
+                        : t("favorites.viewCourse")}
                 </Link>
             </div>
         </div>

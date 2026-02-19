@@ -36,8 +36,7 @@ function OurServices({ cms }) {
                     </h1>
                     <div className="h-1.5 w-40 mx-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full"></div>
                     <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-                        {t("ServicesSubtitle") ||
-                            "Discover our comprehensive services designed to help you achieve your educational goals"}
+                        {t("ServicesSubtitle")}
                     </p>
                 </div>
 
