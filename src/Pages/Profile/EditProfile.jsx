@@ -6,7 +6,9 @@ import { StudyFields, StudyDomains } from "../../data/fields";
 import { Countries } from "../../data/Countries";
 import { User } from "lucide-react";
 import axios from "axios";
-import { useTranslation } from "react-i18next"; // Add this import
+import { useTranslation } from "react-i18next";
+import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
+import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
 
 const EditProfile = () => {
     const { user, updateUserProfile } = useAppContext();
@@ -14,6 +16,12 @@ const EditProfile = () => {
     const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
+    const {
+        errors: validationErrors,
+        showPanel,
+        validate,
+        hidePanel,
+    } = useFormValidation();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -54,13 +62,30 @@ const EditProfile = () => {
 
         // Validate file type
         if (!ProfilePic.type.startsWith("image/")) {
-            toast.error("Please select a valid Image file");
+            validate([
+                {
+                    field: "Profile Picture",
+                    message:
+                        "Please select a valid image file (JPG, PNG, etc.)",
+                    section: "Profile Picture",
+                    scrollToId: "profile-pic-input",
+                    condition: true,
+                },
+            ]);
             return;
         }
 
         // Validate file size (5MB max)
         if (ProfilePic.size > 5 * 1024 * 1024) {
-            toast.error("Image size should be less than 5MB");
+            validate([
+                {
+                    field: "Profile Picture",
+                    message: "Image size must be less than 5MB",
+                    section: "Profile Picture",
+                    scrollToId: "profile-pic-input",
+                    condition: true,
+                },
+            ]);
             return;
         }
 
@@ -75,7 +100,7 @@ const EditProfile = () => {
                 formDataImage,
                 {
                     withCredentials: true,
-                }
+                },
             );
 
             const data = response.data;
@@ -103,19 +128,50 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const isValid = validate([
+            {
+                field: "First Name",
+                message: "First Name is required (min 3 characters)",
+                section: "Personal Information",
+                scrollToId: "firstName",
+                condition:
+                    !formData.firstName?.trim() ||
+                    formData.firstName.trim().length < 3,
+            },
+            {
+                field: "Last Name",
+                message: "Last Name is required (min 3 characters)",
+                section: "Personal Information",
+                scrollToId: "lastName",
+                condition:
+                    !formData.lastName?.trim() ||
+                    formData.lastName.trim().length < 3,
+            },
+            {
+                field: "Email",
+                message: "Please enter a valid email address",
+                section: "Personal Information",
+                scrollToId: "email",
+                condition:
+                    !formData.email?.trim() ||
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()),
+            },
+            {
+                field: "Phone Number",
+                message: "Invalid phone number format",
+                section: "Personal Information",
+                scrollToId: "phoneNumber",
+                condition:
+                    !!formData.phoneNumber?.trim() &&
+                    !/^[+]?[\d\s\-().]{6,20}$/.test(
+                        formData.phoneNumber.trim(),
+                    ),
+            },
+        ]);
+        if (!isValid) return;
+
         setLoading(true);
-
-        // Validate phone number if provided
-        if (formData.phoneNumber && formData.phoneNumber.trim() !== "") {
-            const phone = formData.phoneNumber.trim();
-            const phoneRegex = /^[+]?[\d\s\-().]{6,20}$/;
-
-            if (!phoneRegex.test(phone)) {
-                toast.error("Invalid phone number format");
-                setLoading(false);
-                return;
-            }
-        }
 
         try {
             const response = await axios.put(
@@ -126,7 +182,7 @@ const EditProfile = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                }
+                },
             );
 
             const data = response;
@@ -159,7 +215,7 @@ const EditProfile = () => {
                 `${import.meta.env.VITE_API_URL}/Users/${user.id}/Profile`,
                 {
                     withCredentials: true,
-                }
+                },
             );
 
             const data = response.data;
@@ -183,7 +239,6 @@ const EditProfile = () => {
             fetch_data();
         }
         if (user) {
-
             setFormData({
                 firstName: user.firstName || "",
                 lastName: user.lastName || "",
@@ -201,6 +256,12 @@ const EditProfile = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
+            <ValidationErrorPanel
+                errors={validationErrors}
+                isVisible={showPanel}
+                onClose={hidePanel}
+                title="Please fix profile errors"
+            />
             <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <div className="flex items-center justify-between mb-6">
@@ -412,7 +473,7 @@ const EditProfile = () => {
                                     >
                                         <option value="">
                                             {t(
-                                                "editProfile.selectStudyField"
+                                                "editProfile.selectStudyField",
                                             ) || "Select Study Field"}
                                         </option>
                                         {StudyFields.map((field) => (
@@ -450,7 +511,7 @@ const EditProfile = () => {
                                     >
                                         <option value="">
                                             {t(
-                                                "editProfile.selectStudyDomain"
+                                                "editProfile.selectStudyDomain",
                                             ) || "Select Study Domain"}
                                         </option>
                                         {StudyDomains.map((domain) => (

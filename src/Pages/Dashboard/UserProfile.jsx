@@ -14,6 +14,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
+import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
+import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
 
 const UserProfile = () => {
     const { t, i18n } = useTranslation();
@@ -27,6 +29,12 @@ const UserProfile = () => {
     const [imagePreview, setImagePreview] = useState(null);
 
     const isRTL = i18n.language === "ar";
+    const {
+        errors: validationErrors,
+        showPanel,
+        validate,
+        hidePanel,
+    } = useFormValidation();
 
     useEffect(() => {
         if (user?.id) {
@@ -69,17 +77,72 @@ const UserProfile = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+            validate([
+                {
+                    field: "Profile Image",
+                    message:
+                        "Please select a valid image file (JPG, PNG, etc.)",
+                    section: "Profile Picture",
+                    scrollToId: "profile-image-input",
+                    condition: true,
+                },
+            ]);
+            return;
         }
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            validate([
+                {
+                    field: "Profile Image",
+                    message: "Image must be smaller than 5MB",
+                    section: "Profile Picture",
+                    scrollToId: "profile-image-input",
+                    condition: true,
+                },
+            ]);
+            return;
+        }
+
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSave = async () => {
+        const isValid = validate([
+            {
+                field: "First Name",
+                message: "First Name is required",
+                section: "Personal Information",
+                scrollToId: "field-firstname",
+                condition: !formData.FirstName?.trim(),
+            },
+            {
+                field: "Last Name",
+                message: "Last Name is required",
+                section: "Personal Information",
+                scrollToId: "field-lastname",
+                condition: !formData.LastName?.trim(),
+            },
+            {
+                field: "Email",
+                message: "Please enter a valid email address",
+                section: "Personal Information",
+                scrollToId: "field-email",
+                condition:
+                    formData.Email &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.Email.trim()),
+            },
+        ]);
+        if (!isValid) return;
+
         try {
             setUpdating(true);
 
@@ -101,7 +164,7 @@ const UserProfile = () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                }
+                },
             );
 
             if (response.data.success) {
@@ -149,6 +212,12 @@ const UserProfile = () => {
 
     return (
         <div className={`max-w-4xl mx-auto p-6 ${isRTL ? "rtl" : "ltr"}`}>
+            <ValidationErrorPanel
+                errors={validationErrors}
+                isVisible={showPanel}
+                onClose={hidePanel}
+                title="Fix profile errors"
+            />
             {/* Header */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <div className="flex items-center justify-between">
@@ -160,7 +229,7 @@ const UserProfile = () => {
                         <p className="mt-1 text-gray-600">
                             {t(
                                 "profile.subtitle",
-                                "Manage your personal information"
+                                "Manage your personal information",
                             )}
                         </p>
                     </div>
@@ -227,6 +296,7 @@ const UserProfile = () => {
                                 <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors">
                                     <CameraIcon className="h-4 w-4" />
                                     <input
+                                        id="profile-image-input"
                                         type="file"
                                         accept="image/*"
                                         onChange={handleImageChange}
@@ -260,7 +330,7 @@ const UserProfile = () => {
                                 <div className="text-xs text-gray-600">
                                     {t(
                                         "profile.coursesCompleted",
-                                        "Courses Completed"
+                                        "Courses Completed",
                                     )}
                                 </div>
                             </div>
@@ -292,6 +362,7 @@ const UserProfile = () => {
                                 </label>
                                 {editing ? (
                                     <input
+                                        id="field-firstname"
                                         type="text"
                                         name="FirstName"
                                         value={formData.FirstName}
@@ -303,7 +374,7 @@ const UserProfile = () => {
                                         {profile?.FirstName ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -317,6 +388,7 @@ const UserProfile = () => {
                                 </label>
                                 {editing ? (
                                     <input
+                                        id="field-lastname"
                                         type="text"
                                         name="LastName"
                                         value={formData.LastName}
@@ -328,7 +400,7 @@ const UserProfile = () => {
                                         {profile?.LastName ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -342,6 +414,7 @@ const UserProfile = () => {
                                 </label>
                                 {editing ? (
                                     <input
+                                        id="field-email"
                                         type="email"
                                         name="Email"
                                         value={formData.Email}
@@ -353,7 +426,7 @@ const UserProfile = () => {
                                         {profile?.Email ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -378,7 +451,7 @@ const UserProfile = () => {
                                         {profile?.PhoneNumber ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -403,7 +476,7 @@ const UserProfile = () => {
                                         {profile?.Country ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -428,7 +501,7 @@ const UserProfile = () => {
                                         {profile?.City ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
@@ -447,7 +520,7 @@ const UserProfile = () => {
                                         value={
                                             formData.DateOfBirth
                                                 ? formData.DateOfBirth.split(
-                                                      "T"
+                                                      "T",
                                                   )[0]
                                                 : ""
                                         }
@@ -458,11 +531,11 @@ const UserProfile = () => {
                                     <p className="p-3 bg-gray-50 rounded-md text-gray-900">
                                         {profile?.DateOfBirth
                                             ? new Date(
-                                                  profile.DateOfBirth
+                                                  profile.DateOfBirth,
                                               ).toLocaleDateString()
                                             : t(
                                                   "profile.notProvided",
-                                                  "Not provided"
+                                                  "Not provided",
                                               )}
                                     </p>
                                 )}
@@ -483,7 +556,7 @@ const UserProfile = () => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder={t(
                                             "profile.bioPlaceholder",
-                                            "Tell us about yourself..."
+                                            "Tell us about yourself...",
                                         )}
                                     />
                                 ) : (
@@ -491,7 +564,7 @@ const UserProfile = () => {
                                         {profile?.Bio ||
                                             t(
                                                 "profile.notProvided",
-                                                "Not provided"
+                                                "Not provided",
                                             )}
                                     </p>
                                 )}
