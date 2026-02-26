@@ -25,6 +25,7 @@ import { CourseDetails } from "./components/course/CourseDetails";
 import AllContentVideosCourse from "./components/course/courseVideosContent/AllContentVideosCourse";
 import CourseVideosContent from "./components/course/courseVideosContent/CourseVideosContent";
 import Certificate from "./Pages/Certificate";
+import VerifyCertificate from "./Pages/VerifyCertificate";
 import Course from "./Pages/Course";
 import CourseResources from "./Pages/CourseResources";
 import CourseVideos from "./Pages/CourseVideos";
@@ -222,6 +223,11 @@ const Routers = createBrowserRouter([
                 caseSensitive: false,
                 loader: protectedLoader,
                 element: <Certificate />,
+            },
+            {
+                path: "verify/certificate/:certificateId",
+                caseSensitive: false,
+                element: <VerifyCertificate />,
             },
             {
                 path: "Courses/:courseId/watch/resources",

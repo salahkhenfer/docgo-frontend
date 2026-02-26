@@ -1,5 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { RotateCcw, DollarSign, BookOpen, Star, Clock } from "lucide-react";
+import {
+    RotateCcw,
+    DollarSign,
+    BookOpen,
+    Star,
+    Clock,
+    Sparkles,
+} from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
@@ -52,6 +59,18 @@ export function FilterSidebar({
         { value: "true", label: t("With Certificate") || "With Certificate" },
         { value: "false", label: t("No Certificate") || "No Certificate" },
     ];
+
+    const isFreeFilter = filters.maxPrice === "0" && filters.minPrice === "0";
+
+    const handleFreeToggle = (value) => {
+        if (value === "free") {
+            onFilterChange("maxPrice", "0");
+            onFilterChange("minPrice", "0");
+        } else {
+            onFilterChange("maxPrice", "");
+            onFilterChange("minPrice", "");
+        }
+    };
 
     const hasActiveFilters =
         filters.category ||
@@ -116,7 +135,7 @@ export function FilterSidebar({
                                     onChange={(e) =>
                                         onFilterChange(
                                             "featured",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="text-yellow-600 focus:ring-yellow-500"
@@ -245,11 +264,65 @@ export function FilterSidebar({
                                     onChange={(e) =>
                                         onFilterChange(
                                             "certificate",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
                                     className="text-teal-600 focus:ring-teal-500"
                                 />
+                                <span className="text-sm font-medium text-gray-700">
+                                    {option.label}
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Free Courses Filter */}
+                <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                        <Sparkles className="w-5 h-5 text-green-600" />
+                        {t("Price Type") || "Price Type"}
+                    </label>
+                    <div className="space-y-2">
+                        {[
+                            {
+                                value: "all",
+                                label: t("All Courses") || "All Courses",
+                                icon: "📚",
+                            },
+                            {
+                                value: "free",
+                                label: t("Free Only") || "Free Only",
+                                icon: "🆓",
+                            },
+                        ].map((option) => (
+                            <label
+                                key={option.value}
+                                className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors ${
+                                    (
+                                        option.value === "free"
+                                            ? isFreeFilter
+                                            : !isFreeFilter
+                                    )
+                                        ? "bg-green-200 border border-green-400"
+                                        : "hover:bg-green-100"
+                                }`}
+                            >
+                                <input
+                                    type="radio"
+                                    name="priceType"
+                                    value={option.value}
+                                    checked={
+                                        option.value === "free"
+                                            ? isFreeFilter
+                                            : !isFreeFilter
+                                    }
+                                    onChange={() =>
+                                        handleFreeToggle(option.value)
+                                    }
+                                    className="text-green-600 focus:ring-green-500"
+                                />
+                                <span className="text-lg">{option.icon}</span>
                                 <span className="text-sm font-medium text-gray-700">
                                     {option.label}
                                 </span>

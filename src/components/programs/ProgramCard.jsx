@@ -1,4 +1,4 @@
-import { BookOpen, Clock, MapPin, Star, Tag } from "lucide-react";
+﻿import { BookOpen, Clock, MapPin, Star, Tag } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,8 +10,6 @@ export function ProgramCard({ program, onClick, language = "en" }) {
     const { t } = useTranslation();
     const [hasImageError, setHasImageError] = useState(false);
 
-    // Use the favorite hook - call with optional chaining so the hook
-    // is invoked in the same order regardless of `program` being present.
     const {
         isFavorited,
         loading: favoriteLoading,
@@ -25,11 +23,9 @@ export function ProgramCard({ program, onClick, language = "en" }) {
     const handleToggleFavorite = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // Create item object for local storage
         const programItem = {
             id: program.id,
-            title: title,
+            title,
             short_description: shortDescription,
             Price: program.Price,
             discountPrice: program.discountPrice,
@@ -38,7 +34,6 @@ export function ProgramCard({ program, onClick, language = "en" }) {
             location: locationText,
             Image: program.Image || defaultThumbnail,
         };
-
         toggleFavorite(programItem);
     };
 
@@ -64,26 +59,21 @@ export function ProgramCard({ program, onClick, language = "en" }) {
             ? program.location_ar
             : program.location;
 
-    // Normalize tags: backend may return an array, a comma-separated string,
-    // or even a JSON-stringified array. Ensure we always work with an array.
     const tags = (() => {
         if (!program.tags) return [];
         if (Array.isArray(program.tags)) return program.tags;
         if (typeof program.tags === "string") {
-            // Try parsing JSON first (in case it's a stringified array)
             try {
                 const parsed = JSON.parse(program.tags);
                 if (Array.isArray(parsed)) return parsed;
             } catch {
-                // not JSON, continue
+                /* not JSON */
             }
-            // Fallback: split comma-separated string
             return program.tags
                 .split(",")
                 .map((s) => s.trim())
                 .filter(Boolean);
         }
-        // Unknown shape -> return empty array to be safe
         return [];
     })();
 
@@ -99,100 +89,119 @@ export function ProgramCard({ program, onClick, language = "en" }) {
         );
     };
 
-    const formatPrice = (price) => {
-        if (!price || price === 0) return t("free") || "Free";
-        // Format the price with proper number formatting
-        const formattedNumber = Number(price).toLocaleString("en-US", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-        });
-        return `${formattedNumber} DZD`;
+    const formatPrice = (p) => {
+        if (!p || p === 0) return t("free") || "Free";
+        return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${program.currency || "DZD"}`;
     };
+
+    const isFree =
+        program.discountPrice !== undefined && program.discountPrice !== null
+            ? program.discountPrice === 0
+            : !program.Price || program.Price === 0;
 
     const getStatusColor = (status) => {
         switch (status?.toLowerCase()) {
             case "open":
-                return "bg-green-100 text-green-700";
+                return "bg-emerald-100 text-emerald-700 border-emerald-200";
             case "closed":
-                return "bg-red-100 text-red-700";
+                return "bg-red-100 text-red-700 border-red-200";
             case "upcoming":
-                return "bg-blue-100 text-blue-700";
+                return "bg-blue-100 text-blue-700 border-blue-200";
             default:
-                return "bg-gray-100 text-gray-700";
+                return "bg-gray-100 text-gray-600 border-gray-200";
         }
     };
 
     const getProgramTypeColor = (type) => {
         switch (type?.toLowerCase()) {
             case "scholarship":
-                return "bg-purple-100 text-purple-800";
+                return "bg-purple-100 text-purple-700";
             case "exchange":
-                return "bg-blue-100 text-blue-800";
+                return "bg-blue-100 text-blue-700";
             case "grant":
-                return "bg-green-100 text-green-800";
+                return "bg-emerald-100 text-emerald-700";
             case "training":
-                return "bg-orange-100 text-orange-800";
+                return "bg-orange-100 text-orange-700";
             case "internship":
-                return "bg-teal-100 text-teal-800";
+                return "bg-teal-100 text-teal-700";
             default:
-                return "bg-gray-100 text-gray-800";
+                return "bg-gray-100 text-gray-600";
         }
     };
 
     const getProgramTypeIcon = (type) => {
         switch (type?.toLowerCase()) {
             case "scholarship":
-                return "🎓";
+                return "ðŸŽ“";
             case "exchange":
-                return "🌍";
+                return "ðŸŒ";
             case "grant":
-                return "💰";
+                return "ðŸ’°";
             case "training":
-                return "📚";
+                return "ðŸ“š";
             case "internship":
-                return "💼";
+                return "ðŸ’¼";
             default:
-                return "📋";
+                return "ðŸ“‹";
         }
     };
 
+    const gradientMap = {
+        scholarship: "from-purple-500 to-indigo-600",
+        exchange: "from-blue-500 to-cyan-600",
+        grant: "from-emerald-500 to-teal-600",
+        training: "from-orange-500 to-amber-600",
+        internship: "from-teal-500 to-green-600",
+    };
+    const gradientClass =
+        gradientMap[program.programType?.toLowerCase()] ||
+        "from-blue-500 to-purple-600";
+
     return (
-        <article className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden relative group max-w-sm mx-auto">
-            {/* Featured Badge */}
-            {program.isFeatured && (
-                <div className="absolute top-4 right-4 z-20">
-                    <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                        <Star className="w-3 h-3" />
-                        <span className="text-xs font-semibold">
+        <article className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden relative group flex flex-col h-full">
+            {/* Top badges */}
+            <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between">
+                <button
+                    onClick={handleToggleFavorite}
+                    className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm transition-all duration-200 ${favoriteLoading ? "opacity-50" : "hover:bg-black/50"}`}
+                    title={
+                        isFavorited
+                            ? "Remove from favorites"
+                            : "Add to favorites"
+                    }
+                >
+                    {isFavorited ? (
+                        <BsHeartFill className="w-4 h-4 text-red-400" />
+                    ) : (
+                        <BsHeart className="w-4 h-4 text-white" />
+                    )}
+                </button>
+                <div className="flex gap-1.5 flex-wrap justify-end">
+                    {isFree && (
+                        <span className="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                            FREE
+                        </span>
+                    )}
+                    {program.isFeatured && (
+                        <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                            <Star className="w-3 h-3 fill-amber-900" />
                             {t("Featured") || "Featured"}
                         </span>
-                    </div>
+                    )}
+                    {program.status && (
+                        <span
+                            className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${getStatusColor(program.status)}`}
+                        >
+                            {t(program.status) || program.status}
+                        </span>
+                    )}
                 </div>
-            )}
-
-            {/* Heart Icon */}
-            <div className="absolute top-4 left-4 z-20">
-                {isFavorited ? (
-                    <BsHeartFill
-                        onClick={handleToggleFavorite}
-                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-red-600 drop-shadow-sm ${
-                            favoriteLoading ? "opacity-50" : "hover:scale-110"
-                        }`}
-                        title="Remove from favorites"
-                    />
-                ) : (
-                    <BsHeart
-                        onClick={handleToggleFavorite}
-                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-white drop-shadow-lg hover:text-red-500 ${
-                            favoriteLoading ? "opacity-50" : "hover:scale-110"
-                        }`}
-                        title="Add to favorites"
-                    />
-                )}
             </div>
 
             {/* Program Image */}
-            <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+            <div
+                className={`h-44 bg-gradient-to-br ${gradientClass} flex items-center justify-center relative overflow-hidden flex-shrink-0`}
+            >
                 {!hasImageError && program.Image ? (
                     <img
                         src={import.meta.env.VITE_API_URL + program.Image}
@@ -201,154 +210,137 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="text-white text-4xl">
-                        <BookOpen className="w-16 h-16" />
+                    <div className="flex flex-col items-center gap-2 text-white/80">
+                        <BookOpen className="w-12 h-12" />
+                        {program.programType && (
+                            <span className="text-2xl">
+                                {getProgramTypeIcon(program.programType)}
+                            </span>
+                        )}
                     </div>
                 )}
             </div>
 
             {/* Program Info */}
-            <div className="p-6">
-                {/* Title & Description */}
-                <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
-                        {title}
-                    </h3>
-                    {organizationText && (
-                        <p className="text-blue-600 text-sm font-medium mb-2">
-                            {organizationText}
-                        </p>
-                    )}
-                    {shortDescription && (
-                        <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
-                            {shortDescription}
-                        </p>
-                    )}
-                </div>
+            <div className="p-5 flex flex-col flex-1">
+                {/* Organization */}
+                {organizationText && (
+                    <p className="text-blue-600 text-xs font-semibold uppercase tracking-wide mb-1">
+                        {organizationText}
+                    </p>
+                )}
 
-                {/* Price Section */}
-                <div className="mb-4">
-                    {program.discountPrice !== undefined &&
-                    program.discountPrice !== null ? (
-                        <div className="flex items-center gap-2">
-                            <span
-                                className={`text-2xl font-bold ${
-                                    program.discountPrice === 0
-                                        ? "text-green-600"
-                                        : "text-blue-600"
-                                }`}
-                            >
-                                {formatPrice(program.discountPrice)}
-                            </span>
-                            {program.Price > 0 && (
-                                <span className="text-lg text-gray-500 line-through">
-                                    {formatPrice(program.Price)}
-                                </span>
-                            )}
-                        </div>
-                    ) : (
-                        <div
-                            className={`text-2xl font-bold ${
-                                program.Price === 0 || !program.Price
-                                    ? "text-green-600"
-                                    : "text-blue-600"
-                            }`}
-                        >
-                            {formatPrice(program.Price)}
-                        </div>
-                    )}
-                </div>
+                {/* Title */}
+                <h3 className="text-base font-semibold text-gray-900 mb-1.5 line-clamp-2 leading-snug">
+                    {title}
+                </h3>
 
-                {/* Tags/Badges */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {program.status && (
-                        <span
-                            className={`px-3 py-1 text-xs rounded-full font-medium ${getStatusColor(
-                                program.status,
-                            )}`}
-                        >
-                            {t(program.status) || program.status}
-                        </span>
-                    )}
+                {/* Description */}
+                {shortDescription && (
+                    <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed mb-3">
+                        {shortDescription}
+                    </p>
+                )}
+
+                {/* Tags row */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
                     {program.programType && (
                         <span
-                            className={`px-3 py-1 text-xs rounded-full font-medium ${getProgramTypeColor(
-                                program.programType,
-                            )}`}
+                            className={`px-2 py-0.5 text-xs rounded-full font-medium ${getProgramTypeColor(program.programType)}`}
                         >
                             {getProgramTypeIcon(program.programType)}{" "}
                             {program.programType}
                         </span>
                     )}
                     {categoryText && (
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
                             {categoryText}
                         </span>
                     )}
                     {locationText && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">
-                            <MapPin className="w-3 h-3 inline mr-1" />
+                        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium flex items-center gap-1">
+                            <MapPin className="w-2.5 h-2.5" />
                             {locationText}
                         </span>
                     )}
                     {program.isRemote && (
-                        <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">
-                            🌐 {t("Remote") || "Remote"}
+                        <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
+                            ðŸŒ {t("Remote") || "Remote"}
                         </span>
                     )}
                 </div>
 
-                {/* Additional Info */}
-                <div className="space-y-2 mb-4">
-                    {/* Deadline */}
+                {/* Meta info */}
+                <div className="space-y-1.5 mb-3">
                     {program.applicationDeadline && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Clock className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-500">
-                                {t("Deadline") || "Deadline"}:
-                            </span>
-                            <span className="font-medium">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                            <Clock className="w-3.5 h-3.5 text-gray-400" />
+                            <span>{t("Deadline") || "Deadline"}:</span>
+                            <span className="font-medium text-gray-700">
                                 {formatDate(program.applicationDeadline)}
                             </span>
                         </div>
                     )}
-
-                    {/* Scholarship Amount */}
                     {program.scholarshipAmount && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <span className="text-gray-500">
-                                {t("Amount") || "Amount"}:
-                            </span>
-                            <span className="font-medium text-green-600">
-                                {program.scholarshipAmount} {program.currency}
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                            <span className="text-emerald-600 font-semibold">
+                                ðŸ’° {program.scholarshipAmount}{" "}
+                                {program.currency}
                             </span>
                         </div>
                     )}
                 </div>
 
-                {/* Tags */}
+                {/* Tags chips */}
                 {tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        {tags.slice(0, 3).map((tag, index) => (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                        {tags.slice(0, 3).map((tag, i) => (
                             <span
-                                key={index}
-                                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                                key={i}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-50 text-indigo-700 text-xs rounded-full"
                             >
-                                <Tag className="w-3 h-3" />
+                                <Tag className="w-2.5 h-2.5" />
                                 {tag}
                             </span>
                         ))}
                         {tags.length > 3 && (
-                            <span className="text-xs text-gray-500 px-2 py-1">
-                                +{tags.length - 3} more
+                            <span className="text-xs text-gray-400 px-1 py-0.5">
+                                +{tags.length - 3}
                             </span>
                         )}
                     </div>
                 )}
 
+                {/* Spacer */}
+                <div className="flex-1" />
+
+                {/* Price */}
+                <div className="flex items-center gap-2 mb-3">
+                    {isFree ? (
+                        <span className="text-xl font-bold text-emerald-600">
+                            {t("free") || "Free"}
+                        </span>
+                    ) : program.discountPrice !== undefined &&
+                      program.discountPrice !== null ? (
+                        <>
+                            <span className="text-xl font-bold text-blue-600">
+                                {formatPrice(program.discountPrice)}
+                            </span>
+                            {program.Price > 0 && (
+                                <span className="text-sm text-gray-400 line-through">
+                                    {formatPrice(program.Price)}
+                                </span>
+                            )}
+                        </>
+                    ) : (
+                        <span className="text-xl font-bold text-blue-600">
+                            {formatPrice(program.Price)}
+                        </span>
+                    )}
+                </div>
+
                 {/* Action Button */}
                 {(() => {
-                    // Determine program price (discount > price > Price)
                     const pDiscount =
                         program.discountPrice !== undefined &&
                         program.discountPrice !== null
@@ -356,46 +348,35 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                             : 0;
                     const pPrice = Number(program.Price || program.price || 0);
                     const effectivePrice = pDiscount > 0 ? pDiscount : pPrice;
-
-                    // Try to find linked course id on program object
                     const courseId =
                         program.courseId ||
                         program.CourseId ||
-                        (program.linkedCourse && program.linkedCourse.id) ||
-                        (program.Course && program.Course.id) ||
+                        program.linkedCourse?.id ||
+                        program.Course?.id ||
                         null;
 
-                    // If program is free and has a linked course, go directly to course
                     if (effectivePrice === 0 && courseId) {
                         return (
                             <Link
                                 to={`/Courses/${courseId}`}
                                 onClick={() => {
                                     window.scrollTo(0, 0);
-                                    console.log(
-                                        "Free program - redirecting to course:",
-                                        courseId,
-                                    );
                                     if (onClick) onClick(program.id);
                                 }}
-                                className="w-full text-center px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
+                                className="w-full text-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold text-sm transition-all duration-200 shadow-sm"
                             >
                                 {t("Go to Course") || "Go to Course"}
                             </Link>
                         );
                     }
-
-                    // Default: go to program details
                     return (
                         <Link
                             to={`/Programs/${program.id}`}
                             onClick={() => {
                                 window.scrollTo(0, 0);
-                                if (onClick) {
-                                    onClick(program.id);
-                                }
+                                if (onClick) onClick(program.id);
                             }}
-                            className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+                            className="w-full text-center px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold text-sm transition-all duration-200"
                         >
                             {t("View Details") || "View Details"}
                         </Link>
@@ -413,8 +394,6 @@ ProgramCard.propTypes = {
         title_ar: PropTypes.string,
         short_description: PropTypes.string,
         short_description_ar: PropTypes.string,
-        description: PropTypes.string,
-        description_ar: PropTypes.string,
         organization: PropTypes.string,
         organization_ar: PropTypes.string,
         category: PropTypes.string,
@@ -434,9 +413,7 @@ ProgramCard.propTypes = {
             PropTypes.number,
             PropTypes.string,
         ]),
-        totalSlots: PropTypes.number,
-        availableSlots: PropTypes.number,
-        tags: PropTypes.array,
+        tags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
     }).isRequired,
     onClick: PropTypes.func,
     language: PropTypes.string,

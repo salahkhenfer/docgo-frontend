@@ -1,10 +1,20 @@
 import jsPDF from "jspdf";
-import { Award, Calendar, Download, Eye, Star, User } from "lucide-react";
+import {
+    Award,
+    Calendar,
+    Download,
+    Eye,
+    Link as LinkIcon,
+    QrCode,
+    Star,
+    User,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
-import EnrollmentAPI from "../API/Enrollment";
+import { QRCodeSVG } from "qrcode.react";
+import { EnrollmentAPI } from "../API/Enrollment";
 import { useAppContext } from "../AppContext";
 import generatePDFCertificate from "../components/certificate/generatePDFCertificate";
 import { useCourse } from "../hooks/useCourse";
@@ -20,6 +30,11 @@ export default function Certificate() {
     const { user } = useAppContext();
     const { courseData, loading } = useCourse(courseId);
 
+    // DB-issued certificate state
+    const [dbCertificate, setDbCertificate] = useState(null);
+    const [isIssuingCertificate, setIsIssuingCertificate] = useState(false);
+    const [certError, setCertError] = useState(null);
+
     // Redirect if quiz score is not enough to unlock certificate
     useEffect(() => {
         // Try to get score from localStorage (most recent)
@@ -27,9 +42,11 @@ export default function Certificate() {
             `course_${courseId}_quiz_score`,
         );
         const score = storedScore ? parseInt(storedScore) : quizScore;
-        if (score < 50) {
-            // Not enough score, redirect to course videos
-            navigate(`/Courses/${courseId}/watch`, { replace: true });
+        // Only redirect if score < 50 AND we haven't loaded yet (first check)
+        // For section-based courses, allow access even without quiz
+        if (score < 50 && !storedScore) {
+            // Don't redirect if this is a section-based course (no quiz required)
+            // Just stay on the page
         }
     }, [courseId, quizScore, navigate]);
 
@@ -70,6 +87,47 @@ export default function Certificate() {
         }
     }, [courseId]);
 
+    // Issue certificate via backend (idempotent — safe to call multiple times)
+    useEffect(() => {
+        const issueCert = async () => {
+            if (!courseId || !user) return;
+
+            const studentName =
+                user.firstName && user.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user.FirstName
+                      ? `${user.FirstName} ${user.LastName || ""}`.trim()
+                      : user.name || "";
+
+            if (!studentName) return; // Can't issue without a name
+
+            try {
+                setIsIssuingCertificate(true);
+                setCertError(null);
+                const response = await EnrollmentAPI.issueCertificate(
+                    courseId,
+                    studentName,
+                );
+                if (response.success && response.data) {
+                    setDbCertificate(response.data);
+                } else {
+                    setCertError(
+                        response.message || "Could not issue certificate",
+                    );
+                }
+            } catch (err) {
+                console.error("Certificate issue error:", err);
+                setCertError("Failed to connect to certificate service");
+            } finally {
+                setIsIssuingCertificate(false);
+            }
+        };
+
+        if (courseId && user && courseData?.course) {
+            issueCert();
+        }
+    }, [courseId, user, courseData]);
+
     // Build certificate data from real course and user data
     const certificateData = {
         studentName:
@@ -103,7 +161,7 @@ export default function Certificate() {
             }
 
             let totalSeconds = 0;
-            videos.forEach((video, index) => {
+            videos.forEach((video) => {
                 // Video duration might be in different formats: "HH:MM:SS", "MM:SS", or seconds
                 const duration =
                     video.duration ||
@@ -138,9 +196,12 @@ export default function Certificate() {
             const hours = (totalSeconds / 3600).toFixed(1);
             return hours;
         })(),
-        certificateId: `CERT-${new Date().getFullYear()}-${courseId}-${
-            user?.id || "000"
-        }`,
+        certificateId:
+            dbCertificate?.certificateId ||
+            `CERT-${new Date().getFullYear()}-${courseId}-${user?.id || "000"}`,
+        verificationUrl:
+            dbCertificate?.verificationUrl ||
+            `${window.location.origin}/verify/certificate/${dbCertificate?.certificateId || ""}`,
         institution: "DocGo",
         quizScore: quizScore, // Add quiz score to certificate data
     };
@@ -369,9 +430,39 @@ export default function Certificate() {
                                 </div>
                             </div>
 
-                            {/* Certificate ID */}
-                            <div className="text-xs text-gray-500 text-right mt-2 md:mt-4">
-                                ID: {certificateData.certificateId}
+                            {/* Certificate ID + QR Code */}
+                            <div className="flex items-end justify-between mt-2 md:mt-4 gap-2">
+                                <div className="flex flex-col items-center gap-1">
+                                    {certificateData.verificationUrl ? (
+                                        <>
+                                            <QRCodeSVG
+                                                value={
+                                                    certificateData.verificationUrl
+                                                }
+                                                size={60}
+                                                level="M"
+                                                className="border border-gray-200 rounded p-0.5"
+                                            />
+                                            <span className="text-xs text-gray-400">
+                                                Scan to verify
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
+                                            <QrCode className="w-6 h-6 text-gray-400" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xs text-gray-500">
+                                        ID: {certificateData.certificateId}
+                                    </div>
+                                    {certificateData.verificationUrl && (
+                                        <div className="text-xs text-gray-400 mt-0.5 max-w-[180px] truncate">
+                                            {certificateData.verificationUrl}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -428,6 +519,42 @@ export default function Certificate() {
                                     : "Voir les Détails du Certificat"}
                             </span>
                         </button>
+
+                        {/* Verification Link */}
+                        {dbCertificate?.verificationUrl && (
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        dbCertificate.verificationUrl,
+                                    );
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Lien copié !",
+                                        toast: true,
+                                        position: "top-end",
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                    });
+                                }}
+                                className="flex gap-2 md:gap-3 justify-center items-center px-4 py-2 md:px-8 md:py-3 text-green-600 hover:text-green-700 underline font-semibold transition-colors duration-300 text-sm md:text-base"
+                            >
+                                <LinkIcon className="w-4 h-4 md:w-5 md:h-5" />
+                                <span>Copier le lien de vérification</span>
+                            </button>
+                        )}
+
+                        {/* Certificate issuance status */}
+                        {isIssuingCertificate && (
+                            <p className="text-center text-sm text-gray-400 animate-pulse">
+                                Enregistrement du certificat...
+                            </p>
+                        )}
+                        {certError && (
+                            <p className="text-center text-sm text-red-400">
+                                {certError}
+                            </p>
+                        )}
                     </div>
                 </div>
 

@@ -19,6 +19,7 @@ import { courseService } from "../services/courseService";
 import Certificate from "./Certificate";
 import CourseResources from "./CourseResources";
 import QuizContent from "./QuizContent";
+import Swal from "sweetalert2";
 
 export function CourseVideos() {
     const { t } = useTranslation();
@@ -46,6 +47,9 @@ export function CourseVideos() {
 
     // Certificate unlock state - MUST be declared before any conditional logic
     const [isCertificateUnlocked, setIsCertificateUnlocked] = useState(false);
+    // Per-item completion tracking (SectionItem IDs)
+    const [completedItems, setCompletedItems] = useState(new Set());
+    const [totalSectionItems, setTotalSectionItems] = useState(0);
 
     const { courseData, loading, error, hasError, isEnrolled, hasData } =
         useCourse(courseId);
@@ -118,7 +122,6 @@ export function CourseVideos() {
         const quizCompleted = localStorage.getItem(
             `course_${courseId}_quiz_completed`,
         );
-        const quizScore = localStorage.getItem(`course_${courseId}_quiz_score`);
 
         // Certificate is unlocked only if quiz is passed (localStorage value is 'true')
         if (quizCompleted === "true") {
@@ -146,6 +149,31 @@ export function CourseVideos() {
 
         return () => window.removeEventListener("storage", handleStorageChange);
     }, [courseId]);
+
+    // Load per-item completion status from backend
+    useEffect(() => {
+        const loadItemProgress = async () => {
+            try {
+                const response =
+                    await EnrollmentAPI.getCourseProgress(courseId);
+                if (response.success && response.data) {
+                    const ids = response.data.completedItemIds || [];
+                    setCompletedItems(new Set(ids));
+                    setTotalSectionItems(response.data.totalItems || 0);
+                    // If all items done, unlock certificate
+                    if (
+                        response.data.totalItems > 0 &&
+                        ids.length >= response.data.totalItems
+                    ) {
+                        setIsCertificateUnlocked(true);
+                    }
+                }
+            } catch {
+                // silent — expected 404 for new users
+            }
+        };
+        if (courseId && user) loadItemProgress();
+    }, [courseId, user]);
 
     // Redirect if not enrolled
     useEffect(() => {
@@ -326,6 +354,7 @@ export function CourseVideos() {
 
     // Fix: Quiz data is an array, check if it has items
     const hasQuiz = Array.isArray(course.quiz) && course.quiz.length > 0;
+    const hasCertificate = course?.certificate === true;
 
     // Debounced function to update video progress to backend
     const updateVideoProgressDebounced = (() => {
@@ -408,6 +437,29 @@ export function CourseVideos() {
                     },
                     videos.length,
                 );
+
+                // Also mark as completed on the server (SectionItem-based)
+                const currentVid = videos[currentVideoIndex];
+                if (currentVid?.source === "SectionItem" && currentVid?.id) {
+                    EnrollmentAPI.markItemComplete(courseId, currentVid.id, {
+                        watchedDuration: Math.round(current),
+                        timeSpent: Math.round(current),
+                    }).then((res) => {
+                        if (res.success) {
+                            setCompletedItems(
+                                (prev) => new Set([...prev, currentVid.id]),
+                            );
+                            const newTotal =
+                                res.data?.totalItems || totalSectionItems;
+                            const newDone =
+                                res.data?.completedItems ||
+                                completedItems.size + 1;
+                            if (newTotal > 0 && newDone >= newTotal) {
+                                setIsCertificateUnlocked(true);
+                            }
+                        }
+                    });
+                }
             }
         }
     };
@@ -455,12 +507,31 @@ export function CourseVideos() {
     // Handle video ended - auto play next
     const handleVideoEnded = () => {
         const videoId = videos[currentVideoIndex]?.id || currentVideoIndex;
+        const video = videos[currentVideoIndex];
 
         // Mark as completed
         const newCompleted = new Set(completedVideos);
         newCompleted.add(videoId);
         setCompletedVideos(newCompleted);
         saveProgress(newCompleted, videoProgress, videos.length);
+
+        // Also mark as completed on the server (SectionItem-based)
+        if (video?.source === "SectionItem" && video?.id) {
+            EnrollmentAPI.markItemComplete(courseId, video.id, {
+                watchedDuration: Math.round(videoRef.current?.duration || 0),
+                timeSpent: Math.round(videoRef.current?.duration || 0),
+            }).then((res) => {
+                if (res.success) {
+                    setCompletedItems((prev) => new Set([...prev, video.id]));
+                    const newTotal = res.data?.totalItems || totalSectionItems;
+                    const newDone =
+                        res.data?.completedItems || completedItems.size + 1;
+                    if (newTotal > 0 && newDone >= newTotal) {
+                        setIsCertificateUnlocked(true);
+                    }
+                }
+            });
+        }
 
         // Auto play next video
         if (currentVideoIndex < videos.length - 1) {
@@ -471,6 +542,46 @@ export function CourseVideos() {
     // Check if all videos are completed
     const allVideosCompleted =
         videos.length > 0 && completedVideos.size >= videos.length;
+
+    // Certificate click handler — shows real-name warning then navigates
+    const handleCertificateClick = async () => {
+        const studentName =
+            user?.firstName && user?.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : user?.name || user?.FirstName
+                  ? `${user.FirstName} ${user.LastName}`
+                  : "";
+
+        const result = await Swal.fire({
+            title: t("certificate.realNameTitle") || "⚠️ Certificate Name",
+            html: `
+                <p style="margin-bottom:10px;color:#374151">
+                    ${t("certificate.realNameWarning") || "Your certificate will be issued under your real name. This cannot be changed later."}
+                </p>
+                <p style="font-weight:700;font-size:1.1em;color:#7c3aed;padding:8px 16px;background:#f3e8ff;border-radius:8px;display:inline-block">
+                    ${studentName || t("certificate.noName") || "Name not set"}
+                </p>
+                ${
+                    !studentName
+                        ? `<p style="margin-top:10px;color:#dc2626;font-size:0.9em">${t("certificate.goSetName") || "Please update your profile with your real name first."}</p>`
+                        : ""
+                }
+            `,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#7c3aed",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: t("certificate.proceed") || "Get Certificate",
+            cancelButtonText: t("certificate.cancel") || "Cancel",
+            focusCancel: !studentName,
+        });
+
+        if (result.isConfirmed && studentName) {
+            navigate(`/Courses/${courseId}/watch/certificate`);
+        } else if (result.isConfirmed && !studentName) {
+            navigate("/profile/edit");
+        }
+    };
 
     // Check if quiz is unlocked - unlock when all videos completed
     const isQuizUnlocked = allVideosCompleted;
@@ -777,37 +888,35 @@ export function CourseVideos() {
                                     </div>
                                 )}
 
-                                <div
-                                    className={`p-4 rounded-xl border-2 transition-all ${
-                                        isCertificateUnlocked
-                                            ? "border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 hover:shadow-md"
-                                            : "border-gray-200 bg-gray-50"
-                                    }`}
-                                >
-                                    {isCertificateUnlocked ? (
-                                        <button
-                                            onClick={() => {
-                                                setShowCertificate(true);
-                                                setShowQuiz(false);
-                                                setShowResources(false);
-                                            }}
-                                            className="w-full flex items-center gap-3 text-purple-700 hover:text-purple-800 font-semibold"
-                                        >
-                                            <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                                            <span className="flex-1">
-                                                {t("Certificate")}
-                                            </span>
-                                            <ChevronRight className="w-4 h-4" />
-                                        </button>
-                                    ) : (
-                                        <div className="flex items-center gap-3 text-gray-400">
-                                            <FaLock className="w-5 h-5" />
-                                            <span className="flex-1 text-sm">
-                                                {t("Certificate (locked)")}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
+                                {hasCertificate && (
+                                    <div
+                                        className={`p-4 rounded-xl border-2 transition-all ${
+                                            isCertificateUnlocked
+                                                ? "border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 hover:shadow-md"
+                                                : "border-gray-200 bg-gray-50"
+                                        }`}
+                                    >
+                                        {isCertificateUnlocked ? (
+                                            <button
+                                                onClick={handleCertificateClick}
+                                                className="w-full flex items-center gap-3 text-purple-700 hover:text-purple-800 font-semibold"
+                                            >
+                                                <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
+                                                <span className="flex-1">
+                                                    {t("Certificate")}
+                                                </span>
+                                                <ChevronRight className="w-4 h-4" />
+                                            </button>
+                                        ) : (
+                                            <div className="flex items-center gap-3 text-gray-400">
+                                                <FaLock className="w-5 h-5" />
+                                                <span className="flex-1 text-sm">
+                                                    {t("Certificate (locked)")}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </section>
                         </div>
                     </aside>
@@ -1013,12 +1122,7 @@ export function CourseVideos() {
                                 >
                                     {isCertificateUnlocked ? (
                                         <button
-                                            onClick={() => {
-                                                setShowCertificate(true);
-                                                setShowQuiz(false);
-                                                setShowResources(false);
-                                                setSidebarOpen(false);
-                                            }}
+                                            onClick={handleCertificateClick}
                                             className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                                         >
                                             <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
@@ -1268,18 +1372,9 @@ export function CourseVideos() {
                                             >
                                                 {isCertificateUnlocked ? (
                                                     <button
-                                                        onClick={() => {
-                                                            setShowCertificate(
-                                                                true,
-                                                            );
-                                                            setShowQuiz(false);
-                                                            setShowResources(
-                                                                false,
-                                                            );
-                                                            setSidebarOpen(
-                                                                false,
-                                                            );
-                                                        }}
+                                                        onClick={
+                                                            handleCertificateClick
+                                                        }
                                                         className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                                                     >
                                                         <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
@@ -1366,10 +1461,12 @@ export function CourseVideos() {
                                         quizData={course.quiz}
                                         onQuizResult={(passed) => {
                                             if (passed) {
-                                                setShowCertificate(true);
+                                                setIsCertificateUnlocked(true);
                                                 setShowQuiz(false);
                                                 setShowResources(false);
                                                 setSidebarOpen(false);
+                                                // Navigate to certificate page with warning
+                                                handleCertificateClick();
                                             } else {
                                                 setShowCertificate(false);
                                                 setShowQuiz(false);

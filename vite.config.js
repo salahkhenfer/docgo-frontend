@@ -13,8 +13,25 @@ export default defineConfig({
             "/check_Auth": "http://localhost:3000",
 
             "/Users": "http://localhost:3000",
-            "/Courses": "http://localhost:3000",
-            "/Programs": "http://localhost:3000",
+
+            // /Courses and /Programs are BOTH frontend pages and API endpoints.
+            // bypass: let the browser navigate to them via React Router (serve index.html);
+            // only proxy fetch/XHR requests (non-HTML Accept headers) to the backend.
+            "/Courses": {
+                target: "http://localhost:3000",
+                bypass(req) {
+                    if (req.headers.accept?.includes("text/html"))
+                        return "/index.html";
+                },
+            },
+            "/Programs": {
+                target: "http://localhost:3000",
+                bypass(req) {
+                    if (req.headers.accept?.includes("text/html"))
+                        return "/index.html";
+                },
+            },
+
             "/Favorites": "http://localhost:3000",
             "/notifications": "http://localhost:3000",
             "/enrollment": "http://localhost:3000",

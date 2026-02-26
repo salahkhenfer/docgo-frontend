@@ -3,7 +3,7 @@ import { useState } from "react";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
-import { Star, BookOpen } from "lucide-react";
+import { Award, Star, BookOpen, PlayCircle } from "lucide-react";
 import PropTypes from "prop-types";
 export function CourseCard({
     course,
@@ -26,7 +26,6 @@ export function CourseCard({
     const defaultThumbnail =
         "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
 
-    // Use the favorite hook
     const {
         isFavorited,
         loading: favoriteLoading,
@@ -36,8 +35,6 @@ export function CourseCard({
     const handleToggleFavorite = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // Create item object for local storage
         const courseItem = {
             id,
             title,
@@ -49,73 +46,93 @@ export function CourseCard({
             Image: Image || defaultThumbnail,
             hasImage,
         };
-
         toggleFavorite(courseItem);
     };
 
-    const formatPrice = (price) => {
-        if (!price || price === 0) return t("free") || "Free";
-        // Format the price with proper number formatting
-        const formattedNumber = Number(price).toLocaleString("en-US", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-        });
-        return `${formattedNumber} DZD`;
+    const isFree =
+        discountPrice !== undefined && discountPrice !== null
+            ? discountPrice === 0
+            : price === 0 || !price;
+
+    const formatPrice = (p) => {
+        if (!p || p === 0) return t("free") || "Free";
+        return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${currency}`;
     };
 
-    const getEnrollmentStatusText = () => {
-        if (!isEnrolled) return null;
+    const enrollmentLabel = !isEnrolled
+        ? null
+        : enrollmentStatus === "pending"
+          ? t("ApplicationPending") || "Pending"
+          : enrollmentStatus === "approved"
+            ? t("Enrolled") || "Enrolled"
+            : enrollmentStatus === "rejected"
+              ? t("ApplicationRejected") || "Rejected"
+              : null;
 
-        switch (enrollmentStatus) {
-            case "pending":
-                return t("ApplicationPending") || "Application Pending";
-            case "approved":
-                return t("Enrolled") || "Enrolled";
-            case "rejected":
-                return t("ApplicationRejected") || "Application Rejected";
-            default:
-                return null;
-        }
-    };
+    const enrollmentColor =
+        enrollmentStatus === "approved"
+            ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+            : enrollmentStatus === "pending"
+              ? "bg-amber-100 text-amber-700 border-amber-200"
+              : "bg-red-100 text-red-700 border-red-200";
 
     const shouldShowProgress =
         isEnrolled && enrollmentStatus === "approved" && progress > 0;
 
     return (
-        <article className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden relative group max-w-sm mx-auto">
-            {/* Featured Badge */}
-            {course.isFeatured && (
-                <div className="absolute top-4 right-4 z-20">
-                    <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                        <Star className="w-3 h-3" />
-                        <span className="text-xs font-semibold">Featured</span>
-                    </div>
+        <article className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden relative group flex flex-col h-full">
+            {/* Enrollment ribbon */}
+            {isEnrolled && enrollmentStatus === "approved" && (
+                <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
+                    ✓ {t("Enrolled") || "Enrolled"}
                 </div>
             )}
 
-            {/* Heart Icon */}
-            <div className="absolute top-4 left-4 z-20">
-                {isFavorited ? (
-                    <BsHeartFill
-                        onClick={handleToggleFavorite}
-                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-red-600 drop-shadow-sm ${
-                            favoriteLoading ? "opacity-50" : "hover:scale-110"
-                        }`}
-                        title="Remove from favorites"
-                    />
-                ) : (
-                    <BsHeart
-                        onClick={handleToggleFavorite}
-                        className={`w-8 h-8 cursor-pointer transition-all duration-300 text-white drop-shadow-lg hover:text-red-500 ${
-                            favoriteLoading ? "opacity-50" : "hover:scale-110"
-                        }`}
-                        title="Add to favorites"
-                    />
-                )}
+            {/* Top badges row */}
+            <div
+                className={`absolute z-20 flex items-start gap-2 ${isEnrolled && enrollmentStatus === "approved" ? "top-7" : "top-3"} left-3 right-3 justify-between`}
+            >
+                {/* Heart */}
+                <button
+                    onClick={handleToggleFavorite}
+                    className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm transition-all duration-200 ${favoriteLoading ? "opacity-50" : "hover:bg-black/50"}`}
+                    title={
+                        isFavorited
+                            ? "Remove from favorites"
+                            : "Add to favorites"
+                    }
+                >
+                    {isFavorited ? (
+                        <BsHeartFill className="w-4 h-4 text-red-400" />
+                    ) : (
+                        <BsHeart className="w-4 h-4 text-white" />
+                    )}
+                </button>
+                <div className="flex gap-1.5">
+                    {isFree && (
+                        <span className="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                            FREE
+                        </span>
+                    )}
+                    {course.isFeatured && (
+                        <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                            <Star className="w-3 h-3 fill-amber-900" />
+                            Featured
+                        </span>
+                    )}
+                    {course.certificate && (
+                        <span className="bg-purple-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                            <Award className="w-3 h-3" />
+                            {t("certificate") || "Certificate"}
+                        </span>
+                    )}
+                </div>
             </div>
 
             {/* Course Image */}
-            <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+            <div
+                className={`${isEnrolled && enrollmentStatus === "approved" ? "mt-6" : ""} h-44 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden flex-shrink-0`}
+            >
                 {hasImage && !hasImageError && Image ? (
                     <img
                         src={
@@ -127,155 +144,127 @@ export function CourseCard({
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="text-white text-4xl">
-                        <BookOpen className="w-16 h-16" />
-                    </div>
+                    <BookOpen className="w-14 h-14 text-white/70" />
                 )}
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                    <PlayCircle className="w-12 h-12 text-white opacity-0 group-hover:opacity-90 transition-all duration-300 drop-shadow-lg" />
+                </div>
             </div>
 
             {/* Course Info */}
-            <div className="p-6">
-                {/* Title & Description */}
-                <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 leading-tight">
-                        {title}
-                    </h3>
-                    {description && (
-                        <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
-                            {description}
-                        </p>
-                    )}
-                </div>
+            <div className="p-5 flex flex-col flex-1">
+                {/* Title */}
+                <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 leading-snug">
+                    {title}
+                </h3>
 
-                {/* Price Section */}
-                <div className="mb-4">
-                    {discountPrice !== undefined && discountPrice !== null ? (
-                        <div className="flex items-center gap-2">
-                            <span
-                                className={`text-2xl font-bold ${
-                                    discountPrice === 0
-                                        ? "text-green-600"
-                                        : "text-blue-600"
-                                }`}
-                            >
-                                {formatPrice(discountPrice)}
-                            </span>
-                            {price > 0 && (
-                                <span className="text-lg text-gray-500 line-through">
-                                    {formatPrice(price)}
-                                </span>
-                            )}
-                        </div>
-                    ) : (
-                        <div
-                            className={`text-2xl font-bold ${
-                                price === 0 || !price
-                                    ? "text-green-600"
-                                    : "text-blue-600"
-                            }`}
-                        >
-                            {formatPrice(price)}
-                        </div>
-                    )}
-                </div>
+                {/* Description */}
+                {description && (
+                    <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed mb-3">
+                        {description}
+                    </p>
+                )}
 
-                {/* Tags/Badges */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                {/* Rating */}
+                {averageRating !== undefined && averageRating !== null && (
+                    <div className="flex items-center gap-1.5 mb-3">
+                        <div className="flex items-center">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                    key={star}
+                                    className={`w-3.5 h-3.5 ${
+                                        star <= Math.floor(averageRating)
+                                            ? "text-amber-400 fill-amber-400"
+                                            : star ===
+                                                    Math.ceil(averageRating) &&
+                                                averageRating % 1 !== 0
+                                              ? "text-amber-400 fill-amber-200"
+                                              : "text-gray-300 fill-gray-200"
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">
+                            {averageRating.toFixed(1)}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                            ({totalReviews || 0})
+                        </span>
+                    </div>
+                )}
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
                     {level && (
-                        <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
-                            📊 {level}
+                        <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
+                            {level}
                         </span>
                     )}
                     {course.Category && (
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
                             {course.Category}
                         </span>
                     )}
-                    {course.Specialty && (
-                        <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">
-                            {course.Specialty}
-                        </span>
-                    )}
                     {course.certificate && (
-                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-medium">
-                            🏆 {t("Certificate") || "Certificate"}
+                        <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
+                            🏆 {t("Certificate") || "Cert"}
                         </span>
                     )}
                     {course.Language && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">
+                        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
                             🌐 {course.Language}
                         </span>
                     )}
                 </div>
 
-                {/* Rating Section */}
-                {averageRating !== undefined && averageRating !== null && (
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <div className="flex items-center">
-                                {[1, 2, 3, 4, 5].map((star) => {
-                                    const isFullStar =
-                                        star <= Math.floor(averageRating);
-                                    const isHalfStar =
-                                        star === Math.ceil(averageRating) &&
-                                        averageRating % 1 !== 0;
+                {/* Spacer to push price/button down */}
+                <div className="flex-1" />
 
-                                    return (
-                                        <Star
-                                            key={star}
-                                            className={`w-4 h-4 ${
-                                                isFullStar
-                                                    ? "text-yellow-400 fill-yellow-400"
-                                                    : isHalfStar
-                                                      ? "text-yellow-400 fill-yellow-200"
-                                                      : "text-gray-300 fill-gray-200"
-                                            } transition-colors`}
-                                        />
-                                    );
-                                })}
-                            </div>
-                            <span className="text-sm font-semibold text-gray-700">
-                                {averageRating.toFixed(1)}
+                {/* Price */}
+                <div className="flex items-center gap-2 mb-3">
+                    {isFree ? (
+                        <span className="text-xl font-bold text-emerald-600">
+                            {t("free") || "Free"}
+                        </span>
+                    ) : discountPrice !== undefined &&
+                      discountPrice !== null ? (
+                        <>
+                            <span className="text-xl font-bold text-blue-600">
+                                {formatPrice(discountPrice)}
                             </span>
-                        </div>
-                        <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
-                            {totalReviews || 0}{" "}
-                            {totalReviews === 1 ? "review" : "reviews"}
+                            {price > 0 && (
+                                <span className="text-sm text-gray-400 line-through">
+                                    {formatPrice(price)}
+                                </span>
+                            )}
+                        </>
+                    ) : (
+                        <span className="text-xl font-bold text-blue-600">
+                            {formatPrice(price)}
                         </span>
-                    </div>
-                )}
-
-                {/* Enrollment Status */}
-                {getEnrollmentStatusText() && (
-                    <div className="mb-4">
+                    )}
+                    {enrollmentLabel && (
                         <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                enrollmentStatus === "approved"
-                                    ? "bg-green-100 text-green-700"
-                                    : enrollmentStatus === "pending"
-                                      ? "bg-yellow-100 text-yellow-700"
-                                      : "bg-red-100 text-red-700"
-                            }`}
+                            className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full border ${enrollmentColor}`}
                         >
-                            {getEnrollmentStatusText()}
+                            {enrollmentLabel}
                         </span>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 {/* Progress Bar */}
                 {shouldShowProgress && (
-                    <div className="mb-4">
-                        <div className="flex justify-between text-xs text-gray-600 mb-2">
-                            <span className="font-medium">
-                                {t("Progress") || "Progress"}
-                            </span>
-                            <span className="font-semibold">
+                    <div className="mb-3">
+                        <div className="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>{t("Progress") || "Progress"}</span>
+                            <span className="font-semibold text-blue-600">
                                 {Math.round(progress)}%
                             </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
                             <div
-                                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                                className="bg-gradient-to-r from-blue-500 to-teal-500 h-1.5 rounded-full transition-all duration-500"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
@@ -286,7 +275,11 @@ export function CourseCard({
                 <Link
                     to={`/Courses/${id}`}
                     onClick={() => window.scrollTo(0, 0)}
-                    className="w-full text-center px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+                    className={`w-full text-center px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                        isEnrolled && enrollmentStatus === "approved"
+                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 shadow-sm"
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
                 >
                     {isEnrolled && enrollmentStatus === "approved"
                         ? t("ContinueCourse") || "Continue Course"
@@ -304,7 +297,7 @@ CourseCard.propTypes = {
         Specialty: PropTypes.string,
         certificate: PropTypes.bool,
         Language: PropTypes.string,
-    }),
+    }).isRequired,
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     Image: PropTypes.string,
     title: PropTypes.string.isRequired,
