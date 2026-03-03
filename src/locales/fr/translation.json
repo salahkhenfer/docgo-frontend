@@ -24,7 +24,8 @@
         "priorityUrgent": "Urgente",
         "errorSending": "Échec de l'envoi du message. Veuillez réessayer.",
         "richTextEnabled": "Formatage de texte enrichi disponible",
-        "phone": "Téléphone"
+        "phone": "Téléphone",
+        "address": "Adresse"
     },
 
     "faq_data": {

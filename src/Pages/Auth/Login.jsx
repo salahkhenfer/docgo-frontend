@@ -185,7 +185,7 @@ const Login = () => {
                         <p className="mt-4 text-sm text-gray-600">
                             Vous n'avez pas de compte?
                             <a
-                                href="/Register"
+                                href="/register"
                                 className="text-blue-500 hover:underline ml-1"
                             >
                                 S'inscrire

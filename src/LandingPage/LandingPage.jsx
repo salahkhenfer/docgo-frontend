@@ -149,15 +149,13 @@ function LandingPage() {
                                     />
                                 </Reveal>
                             )}
-                            {show("showFAQSection") &&
-                                homeData?.faqs &&
-                                homeData.faqs.length > 0 && (
-                                    <Reveal>
-                                        <FrequentlyAskedQuestions
-                                            faqs={homeData.faqs}
-                                        />
-                                    </Reveal>
-                                )}
+                            {show("showFAQSection") && (
+                                <Reveal>
+                                    <FrequentlyAskedQuestions
+                                        faqs={homeData?.faqs}
+                                    />
+                                </Reveal>
+                            )}
                             <Reveal>
                                 <HelpSection
                                     contactInfo={homeData?.contactInfo}

@@ -24,7 +24,8 @@
         "priorityUrgent": "Urgent",
         "errorSending": "Failed to send message. Please try again.",
         "richTextEnabled": "Rich text formatting available",
-        "phone": "Phone"
+        "phone": "Phone",
+        "address": "Address"
     },
 
     "faq_data": {
@@ -377,7 +378,7 @@
     "OtherSpecialties": "Other Specialties",
     "OurServicesLink": "Our Services",
     "AboutUsLink": "About Us",
-    "BeingAstudent": "Being a Student",
+    "BeingAstudent": "Be a Student",
     "Pharmacist": "Pharmacist",
     "Medicine": "Medicine",
     "Midwife": "Midwife",

@@ -7,12 +7,32 @@ import {
     Instagram,
     Linkedin,
     Youtube,
+    Twitter,
+    MessageCircle,
+    Send,
     Mail,
     Phone,
+    MapPin,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { clientProgramsAPI } from "../../API/Programs";
 
 function Footer({ contactInfo, branding = null }) {
     const { t } = useTranslation();
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        clientProgramsAPI
+            .getProgramCategories()
+            .then((res) => {
+                if (res?.success && Array.isArray(res.data?.categories)) {
+                    setCategories(
+                        res.data.categories.filter(Boolean).slice(0, 8),
+                    );
+                }
+            })
+            .catch(() => {});
+    }, []);
 
     const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
     const brandName = branding?.brandName || "";
@@ -29,71 +49,67 @@ function Footer({ contactInfo, branding = null }) {
     const getSocialLink = (type) => contactInfo?.[type] || "#";
     const getEmail = () => contactInfo?.email || null;
     const getPhone = () => contactInfo?.phone || null;
-
+    const getAddress = () => contactInfo?.address || null;
     return (
         <footer className="bg-gray-50 px-4 py-12 md:px-8 lg:px-16 max-lg:text-center">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-28 md:gap-20 sm-sm:gap-8">
+                    {/* Dynamic program categories */}
                     <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-gray-900">
                             {t("Specialites")}
                         </h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("Pharmacist")}
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("Medicine")}
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("Midwife")}
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("Nurse")}
-                                </a>
-                            </li>
-                        </ul>
+                        {categories.length > 0 ? (
+                            <ul className="space-y-2">
+                                {categories.slice(0, 4).map((cat) => (
+                                    <li key={cat}>
+                                        <a
+                                            href={`/programs?status=open&category=${encodeURIComponent(cat)}`}
+                                            className="text-gray-600 hover:text-gray-900"
+                                        >
+                                            {cat}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            // Skeleton while loading
+                            <ul className="space-y-2">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <li key={i}>
+                                        <div className="h-4 w-28 bg-gray-200 rounded animate-pulse" />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
 
-                        <h3 className="text-lg font-semibold text-gray-900 pt-6">
-                            {t("OtherSpecialties")}
-                        </h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("CampusFrance")}
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/programs?status=open"
-                                    className="text-gray-600 hover:text-gray-900"
-                                >
-                                    {t("PrivateSchools")}
-                                </a>
-                            </li>
-                        </ul>
+                        {categories.length > 4 && (
+                            <>
+                                <h3 className="text-lg font-semibold text-gray-900 pt-6">
+                                    {t("OtherSpecialties")}
+                                </h3>
+                                <ul className="space-y-2">
+                                    {categories.slice(4).map((cat) => (
+                                        <li key={cat}>
+                                            <a
+                                                href={`/programs?status=open&category=${encodeURIComponent(cat)}`}
+                                                className="text-gray-600 hover:text-gray-900"
+                                            >
+                                                {cat}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+
+                        {/* View all link */}
+                        <a
+                            href="/programs?status=open"
+                            className="inline-block pt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                            {t("StudyAbroad")} →
+                        </a>
                     </div>
 
                     <div className="space-y-4">
@@ -208,13 +224,14 @@ function Footer({ contactInfo, branding = null }) {
                         </div>
                         <p className="text-gray-600">{t("OurPlatform")}</p>
 
-                        <div className="flex space-x-4 max-lg:justify-center">
+                        <div className="flex flex-wrap gap-3 max-lg:justify-center">
                             {contactInfo?.facebook && (
                                 <a
                                     href={getSocialLink("facebook")}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-gray-600 hover:text-blue-600 transition-colors"
+                                    title="Facebook"
                                 >
                                     <Facebook className="w-6 h-6" />
                                 </a>
@@ -225,6 +242,7 @@ function Footer({ contactInfo, branding = null }) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-gray-600 hover:text-pink-600 transition-colors"
+                                    title="Instagram"
                                 >
                                     <Instagram className="w-6 h-6" />
                                 </a>
@@ -235,6 +253,7 @@ function Footer({ contactInfo, branding = null }) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-gray-600 hover:text-blue-700 transition-colors"
+                                    title="LinkedIn"
                                 >
                                     <Linkedin className="w-6 h-6" />
                                 </a>
@@ -245,8 +264,42 @@ function Footer({ contactInfo, branding = null }) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-gray-600 hover:text-red-600 transition-colors"
+                                    title="YouTube"
                                 >
                                     <Youtube className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.twitter && (
+                                <a
+                                    href={getSocialLink("twitter")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                                    title="X / Twitter"
+                                >
+                                    <Twitter className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.whatsapp && (
+                                <a
+                                    href={getSocialLink("whatsapp")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-green-600 transition-colors"
+                                    title="WhatsApp"
+                                >
+                                    <MessageCircle className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.telegram && (
+                                <a
+                                    href={getSocialLink("telegram")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-sky-500 transition-colors"
+                                    title="Telegram"
+                                >
+                                    <Send className="w-6 h-6" />
                                 </a>
                             )}
                         </div>
@@ -269,6 +322,15 @@ function Footer({ contactInfo, branding = null }) {
                                 >
                                     <Phone className="w-4 h-4" />
                                     <span>{getPhone()}</span>
+                                </a>
+                            )}
+                            {getAddress() && (
+                                <a
+                                    href={`${getAddress()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
+                                >
+                                    <MapPin className="w-4 h-4" />
+                                    <span>{getAddress()}</span>
                                 </a>
                             )}
                         </div>

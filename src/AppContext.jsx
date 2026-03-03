@@ -151,18 +151,25 @@ export const AppProvider = ({ children }) => {
             setLoading(true);
 
             // Serve cached site data instantly so navbar/footer render immediately
+            // Cache TTL: 2 minutes — re-fetch after that so dashboard changes propagate
+            const SITE_CACHE_TTL_MS = 2 * 60 * 1000;
             let cachedSiteRaw = null;
+            let cacheIsValid = false;
             try {
                 cachedSiteRaw = sessionStorage.getItem("_appSiteData");
             } catch {}
             if (cachedSiteRaw) {
                 try {
                     const cached = JSON.parse(cachedSiteRaw);
-                    setAppData({
-                        siteSettings: cached.siteSettings,
-                        contactInfo: cached.contactInfo,
-                        homePageContent: cached.homePageContent,
-                    });
+                    const age = Date.now() - (cached._fetchedAt || 0);
+                    cacheIsValid = age < SITE_CACHE_TTL_MS;
+                    if (cacheIsValid) {
+                        setAppData({
+                            siteSettings: cached.siteSettings,
+                            contactInfo: cached.contactInfo,
+                            homePageContent: cached.homePageContent,
+                        });
+                    }
                 } catch {}
             }
 
@@ -172,8 +179,8 @@ export const AppProvider = ({ children }) => {
                     withCredentials: true,
                     validateStatus: () => true,
                 }),
-                // Only refetch if not already cached
-                cachedSiteRaw
+                // Only skip refetch if cache is still fresh
+                cacheIsValid
                     ? Promise.resolve(null)
                     : axios.get(API_URL + "/public/site-settings", {
                           validateStatus: () => true,
@@ -211,7 +218,7 @@ export const AppProvider = ({ children }) => {
                     const contactInfo = s.contact || {};
                     const homePageContent = sd.homePageContent || null;
                     setAppData({ siteSettings, contactInfo, homePageContent });
-                    // Cache so next navigate doesn't re-fetch
+                    // Cache so next navigate doesn't re-fetch (TTL applied on read)
                     try {
                         sessionStorage.setItem(
                             "_appSiteData",
@@ -219,6 +226,7 @@ export const AppProvider = ({ children }) => {
                                 siteSettings,
                                 contactInfo,
                                 homePageContent,
+                                _fetchedAt: Date.now(),
                             }),
                         );
                     } catch {}

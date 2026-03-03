@@ -1,18 +1,40 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import FaqElement from "../../components/FaqElement";
 import BackgroundImage from "../../../src/assets/three monochrome plastic spheres.png";
 import Container from "../../components/Container";
 import GeometricShapes from "../../../src/assets/geometric shapes.png";
+import api from "../../services/apiClient";
 
-function FrequentlyAskedQuestions({ faqs }) {
+function FrequentlyAskedQuestions({ faqs: propFaqs }) {
     const { t, i18n } = useTranslation();
     const currentLanguage = i18n.language;
+    const [fetchedFaqs, setFetchedFaqs] = useState([]);
+
+    // Self-fetch FAQs when the parent didn't supply any
+    useEffect(() => {
+        if (propFaqs && propFaqs.length > 0) return; // parent already provided data
+        api.get("/faqs?isActive=true&limit=50&sortBy=createdAt&sortOrder=desc")
+            .then((res) => {
+                const data = res.data;
+                if (data?.success && Array.isArray(data?.faqs)) {
+                    setFetchedFaqs(data.faqs);
+                }
+            })
+            .catch(() => {
+                // silently fall back to static translations
+            });
+    }, [propFaqs]);
+
+    // Prefer parent-provided FAQs, then self-fetched, then static fallback
+    const dynamicFaqs =
+        propFaqs && propFaqs.length > 0 ? propFaqs : fetchedFaqs;
 
     // Use dynamic FAQs or fallback to static translations
     const displayFAQs =
-        faqs && faqs.length > 0
-            ? faqs.slice(0, 3) // Display first 3 FAQs
+        dynamicFaqs.length > 0
+            ? dynamicFaqs
             : [
                   { question: t("faqQuestion1"), answer: t("faqAnswer1") },
                   { question: t("faqQuestion2"), answer: t("faqAnswer2") },

@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { Mail, MessageSquare, Phone, Sparkles } from "lucide-react";
+import { Mail, MessageSquare, Phone, Sparkles, MapPin } from "lucide-react";
 import PropTypes from "prop-types";
 import contactus from "../../../src/assets/beautiful girl contact us.png";
 import Container from "../../components/Container";
 import ContactForm from "../../components/contact/ContactForm";
-
 function HelpSection({ contactInfo }) {
     const { t } = useTranslation();
     return (
@@ -86,6 +85,24 @@ function HelpSection({ contactInfo }) {
                                                 className="text-white hover:text-blue-200 transition-colors font-medium"
                                             >
                                                 {contactInfo.phone}
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                                {contactInfo?.address && (
+                                    <div className="group flex items-start space-x-4 text-white bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:translate-x-2">
+                                        <div className="bg-gradient-to-br from-indigo-400 to-purple-500 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                            <MapPin className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold mb-1 text-blue-100">
+                                                {t("contact.address")}
+                                            </p>
+                                            <a
+                                                href={`tel:${contactInfo.address}`}
+                                                className="text-white hover:text-blue-200 transition-colors font-medium"
+                                            >
+                                                {contactInfo.address}
                                             </a>
                                         </div>
                                     </div>

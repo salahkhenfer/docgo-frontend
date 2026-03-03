@@ -1,7 +1,10 @@
 // Centralized API base URL resolution for Vite dev/prod.
 //
-// In development, we prefer same-origin (""), so Vite's proxy can forward
-// requests to the backend while keeping cookies first-party on localhost.
+// In development, use same-origin ("") so Vite's proxy forwards API calls
+// to the backend while keeping cookies first-party on localhost.
+// The spaFallbackPlugin in vite.config.js ensures browser navigations to
+// /Courses/* and /Programs/* are served as index.html (React SPA) instead
+// of being proxied to the backend.
 //
 // In production, VITE_API_URL should point to the backend origin.
 
@@ -18,7 +21,7 @@ const isLocalhostUrl = (value) => {
 export const getApiBaseUrl = () => {
     const configured = import.meta.env.VITE_API_URL;
 
-    // Dev: default to same-origin, unless explicitly pointing at a non-localhost backend.
+    // Dev: default to same-origin so Vite proxy handles routing.
     if (import.meta.env.DEV) {
         if (configured && !isLocalhostUrl(configured)) return configured;
         return "";

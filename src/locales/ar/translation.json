@@ -24,7 +24,8 @@
         "priorityUrgent": "عاجلة",
         "errorSending": "فشل في إرسال الرسالة. يرجى المحاولة مرة أخرى.",
         "richTextEnabled": "تنسيق نص منسق متاح",
-        "phone": "الهاتف"
+        "phone": "الهاتف",
+        "address": "العنوان"
     },
     "faq_data": {
         "title": "الأسئلة المتكررة",

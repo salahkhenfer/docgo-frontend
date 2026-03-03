@@ -15,7 +15,15 @@ i18n.use(LanguageDetector)
             fr: { translation: frTranslation, dir: "ltr" },
         },
         supportedLngs: ["en", "fr", "ar"],
-        fallbackLng: ["en", "fr"],
+        // French is the platform default.
+        // Only restore a previously saved choice from localStorage;
+        // ignore the browser's navigator language.
+        fallbackLng: "fr",
+        detection: {
+            order: ["localStorage"],
+            lookupLocalStorage: "i18nextLng",
+            caches: ["localStorage"],
+        },
         interpolation: {
             escapeValue: false,
         },
