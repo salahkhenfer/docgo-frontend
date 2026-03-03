@@ -43,7 +43,8 @@
             "courseApplications": "Course applications",
             "support": "Need help?",
             "supportText": "Contact our support team",
-            "sendMessage": "Send a message"
+            "sendMessage": "Send a message",
+            "settings": "Settings"
         },
         "pendingApplications": "Pending applications",
         "enrolledCourses": "My enrolled courses",

@@ -124,6 +124,12 @@ function HeroSection({ statistics, cms }) {
                                 ? cms.filterStudyFields
                                 : null
                         }
+                        customLocations={
+                            Array.isArray(cms?.filterStudyLocations) &&
+                            cms.filterStudyLocations.length > 0
+                                ? cms.filterStudyLocations
+                                : null
+                        }
                     />
                 </motion.div>
             </div>

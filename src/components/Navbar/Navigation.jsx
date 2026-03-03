@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsBell, BsBellFill } from "react-icons/bs";
 import { useAppContext } from "../../AppContext";
 import { useFavorites } from "../../hooks/useFavorite";
 import { useUserNavigation } from "../../context/UserNavigationContext";
@@ -11,6 +11,7 @@ import LanguageDropdown from "../../components/LanguageDropdown";
 import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import NavigationMobile from "./NavigationMobile";
 import NavBarDropDown from "./NavBarDropDown";
+import apiClient from "../../services/apiClient";
 
 function Navigation({ branding = null }) {
     const { t } = useTranslation();
@@ -41,6 +42,27 @@ function Navigation({ branding = null }) {
 
     // Add favorites hook
     const { totalCount } = useFavorites();
+
+    // Unread notification count badge
+    const [unreadNotifications, setUnreadNotifications] = useState(0);
+    useEffect(() => {
+        if (!isAuth || !user) {
+            setUnreadNotifications(0);
+            return;
+        }
+        let cancelled = false;
+        apiClient
+            .get("/notifications/unread-count")
+            .then((res) => {
+                if (!cancelled && res.data?.success) {
+                    setUnreadNotifications(res.data.unreadCount || 0);
+                }
+            })
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
+    }, [isAuth, user]);
 
     // Scroll detection for navbar background
     useEffect(() => {
@@ -342,6 +364,42 @@ function Navigation({ branding = null }) {
                             )}
                         </div>
                     </Link>
+
+                    {/* Notification Bell — shown only when logged in */}
+                    {isAuth && user && (
+                        <Link
+                            to="/notifications"
+                            className={`relative p-3 rounded-full transition-all duration-300 group
+                                ${
+                                    location.pathname === "/notifications" ||
+                                    location.pathname.startsWith(
+                                        "/dashboard/notifications",
+                                    )
+                                        ? "bg-blue-100 text-blue-600"
+                                        : "text-gray-600 hover:text-blue-500 hover:bg-blue-50"
+                                }`}
+                            title={t("notifications.title", "Notifications")}
+                        >
+                            <div className="relative">
+                                {unreadNotifications > 0 ? (
+                                    <BsBellFill className="w-6 h-6 text-blue-500" />
+                                ) : (
+                                    <BsBell className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
+                                )}
+                                {unreadNotifications > 0 && (
+                                    <span
+                                        className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs rounded-full
+                                        w-5 h-5 flex items-center justify-center min-w-[20px] font-bold shadow-lg
+                                        ring-2 ring-white"
+                                    >
+                                        {unreadNotifications > 99
+                                            ? "99+"
+                                            : unreadNotifications}
+                                    </span>
+                                )}
+                            </div>
+                        </Link>
+                    )}
 
                     {isAuth && user ? (
                         <NavBarDropDown

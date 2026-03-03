@@ -42,7 +42,8 @@
             "courseApplications": "Candidatures aux cours",
             "support": "Besoin d'aide ?",
             "supportText": "Contactez notre équipe d'assistance",
-            "sendMessage": "Envoyer un message"
+            "sendMessage": "Envoyer un message",
+            "settings": "Paramètres"
         },
         "pendingApplications": "Candidatures en attente",
         "enrolledCourses": "Mes cours inscrits",

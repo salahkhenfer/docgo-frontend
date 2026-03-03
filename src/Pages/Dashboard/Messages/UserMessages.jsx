@@ -114,7 +114,7 @@ const UserMessages = () => {
                         <p className="mt-1 text-gray-600">
                             {t(
                                 "messages.subtitle",
-                                "voir votre messagerie avec notre équipe de support"
+                                "voir votre messagerie avec notre équipe de support",
                             )}
                         </p>
                     </div>
@@ -139,6 +139,7 @@ const UserMessages = () => {
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="p-8 text-center">
+                        
                         <EnvelopeIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                         <h3 className="text-lg font-medium text-gray-900 mb-2">
                             {t("messages.noMessages", "No messages yet")}
@@ -146,7 +147,7 @@ const UserMessages = () => {
                         <p className="text-gray-600 mb-4">
                             {t(
                                 "messages.noMessagesText",
-                                "You haven't sent any messages to our support team yet."
+                                "You haven't sent any messages to our support team yet.",
                             )}
                         </p>
                         <Link
@@ -156,7 +157,7 @@ const UserMessages = () => {
                             <PlusIcon className="h-4 w-4 mr-2" />
                             {t(
                                 "messages.sendFirst",
-                                "Envoyer votre premier message"
+                                "Envoyer votre premier message",
                             )}
                         </Link>
                     </div>
@@ -179,12 +180,12 @@ const UserMessages = () => {
                                                 {message.subject ||
                                                     t(
                                                         "messages.generalInquiry",
-                                                        "General Inquiry"
+                                                        "General Inquiry",
                                                     )}
                                             </h3>
                                             <span
                                                 className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(
-                                                    message.priority
+                                                    message.priority,
                                                 )}`}
                                             >
                                                 {message.priority}
@@ -208,14 +209,14 @@ const UserMessages = () => {
                                             <span>
                                                 {t("messages.sent", "Sent")}:{" "}
                                                 {new Date(
-                                                    message.createdAt
+                                                    message.createdAt,
                                                 ).toLocaleDateString()}
                                             </span>
                                             {message.context && (
                                                 <span className="capitalize">
                                                     {t(
                                                         "messages.context",
-                                                        "Context"
+                                                        "Context",
                                                     )}
                                                     : {message.context}
                                                 </span>
@@ -224,11 +225,11 @@ const UserMessages = () => {
                                                 <span className="text-green-600">
                                                     {t(
                                                         "messages.respondedAt",
-                                                        "Responded"
+                                                        "Responded",
                                                     )}
                                                     :{" "}
                                                     {new Date(
-                                                        message.respondedAt
+                                                        message.respondedAt,
                                                     ).toLocaleDateString()}
                                                 </span>
                                             )}
@@ -261,7 +262,7 @@ const UserMessages = () => {
                                     <span className="ml-2">
                                         {t(
                                             "messages.messageDetails",
-                                            "Message Details"
+                                            "Message Details",
                                         )}
                                     </span>
                                 </h3>
@@ -292,16 +293,16 @@ const UserMessages = () => {
                                             selectedMessage.status === "unread"
                                                 ? "bg-yellow-100 text-yellow-800"
                                                 : selectedMessage.status ===
-                                                  "read"
-                                                ? "bg-blue-100 text-blue-800"
-                                                : "bg-green-100 text-green-800"
+                                                    "read"
+                                                  ? "bg-blue-100 text-blue-800"
+                                                  : "bg-green-100 text-green-800"
                                         }`}
                                     >
                                         {getStatusText(selectedMessage.status)}
                                     </span>
                                     <span
                                         className={`px-3 py-1 text-sm font-medium rounded-full ${getPriorityColor(
-                                            selectedMessage.priority
+                                            selectedMessage.priority,
                                         )}`}
                                     >
                                         {selectedMessage.priority} priority
@@ -312,7 +313,7 @@ const UserMessages = () => {
                                     <label className="block text-sm font-medium text-gray-700">
                                         {t(
                                             "messages.yourMessage",
-                                            "Your Message"
+                                            "Your Message",
                                         )}
                                     </label>
                                     <div className="mt-1 p-3 border border-gray-300 rounded-md bg-gray-50">
@@ -333,7 +334,7 @@ const UserMessages = () => {
                                         </label>
                                         <p className="mt-1 text-sm text-gray-900">
                                             {new Date(
-                                                selectedMessage.createdAt
+                                                selectedMessage.createdAt,
                                             ).toLocaleString()}
                                         </p>
                                     </div>
@@ -352,7 +353,7 @@ const UserMessages = () => {
                                         <label className="block text-sm font-medium text-gray-700">
                                             {t(
                                                 "messages.ourResponse",
-                                                "Our Response"
+                                                "Our Response",
                                             )}
                                         </label>
                                         <div className="mt-1 p-3 border border-green-300 rounded-md bg-green-50">
@@ -369,10 +370,10 @@ const UserMessages = () => {
                                                 <p className="text-xs text-gray-500 mt-2">
                                                     {t(
                                                         "messages.respondedOn",
-                                                        "Responded on"
+                                                        "Responded on",
                                                     )}{" "}
                                                     {new Date(
-                                                        selectedMessage.respondedAt
+                                                        selectedMessage.respondedAt,
                                                     ).toLocaleString()}
                                                 </p>
                                             )}
@@ -396,7 +397,7 @@ const UserMessages = () => {
                                     >
                                         {t(
                                             "messages.another_one",
-                                            "Send another one"
+                                            "Send another one",
                                         )}
                                     </Link>
                                 )}

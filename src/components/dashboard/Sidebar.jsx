@@ -1,11 +1,13 @@
 import {
     AcademicCapIcon,
+    BellIcon,
     BookOpenIcon,
     ChatBubbleLeftRightIcon,
     DocumentTextIcon,
     EnvelopeIcon,
     ExclamationCircleIcon,
     UserIcon,
+    CogIcon,
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
@@ -23,12 +25,12 @@ const UserSidebar = ({ isOpen, onClose }) => {
         unread: 0,
         pending: 0,
     });
+    const [notificationCount, setNotificationCount] = useState(0);
 
     const isRTL = i18n.language === "ar";
 
     const fetchContactStats = useCallback(async () => {
         try {
-            // This would be a new endpoint to get user's contact message stats
             const response = await apiClient.get(
                 `/contact/user/${user.id}/stats`,
             );
@@ -40,11 +42,23 @@ const UserSidebar = ({ isOpen, onClose }) => {
         }
     }, [user?.id]);
 
+    const fetchNotificationCount = useCallback(async () => {
+        try {
+            const response = await apiClient.get("/notifications/unread-count");
+            if (response.data.success) {
+                setNotificationCount(response.data.unreadCount || 0);
+            }
+        } catch (error) {
+            // silently ignore — badge simply won't show
+        }
+    }, []);
+
     useEffect(() => {
         if (user?.id) {
             fetchContactStats();
+            fetchNotificationCount();
         }
-    }, [user?.id, fetchContactStats]);
+    }, [user?.id, fetchContactStats, fetchNotificationCount]);
 
     const sidebarItems = [
         {
@@ -76,14 +90,14 @@ const UserSidebar = ({ isOpen, onClose }) => {
             badge: contactStats.unread > 0 ? contactStats.unread : null,
             badgeColor: "bg-blue-500",
         },
-        // Notifications removed from sidebar
-        // {
-        //     id: "favorites",
-        //     name: t("dashboard.sidebar.favorites", "Favorites"),
-        //     icon: HeartIcon,
-        //     path: "/dashboard/favorites",
-        //     badge: null,
-        // },
+        {
+            id: "notifications",
+            name: t("dashboard.sidebar.notifications", "Notifications"),
+            icon: BellIcon,
+            path: "/dashboard/notifications",
+            badge: notificationCount > 0 ? notificationCount : null,
+            badgeColor: "bg-red-500",
+        },
         {
             id: "applications-programs",
             name: t(
@@ -102,6 +116,16 @@ const UserSidebar = ({ isOpen, onClose }) => {
             ),
             icon: DocumentTextIcon,
             path: "/dashboard/applications/courses",
+            badge: null,
+        },
+        {
+            id: "Settings",
+            name: t(
+                "dashboard.sidebar.settings",
+                "Settings",
+            ),
+            icon: CogIcon,
+            path: "/dashboard/settings",
             badge: null,
         },
         // {

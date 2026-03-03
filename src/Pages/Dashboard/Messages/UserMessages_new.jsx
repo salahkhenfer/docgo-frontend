@@ -5,16 +5,50 @@ import {
     PaperAirplaneIcon,
     ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
+import {
+    Facebook,
+    Instagram,
+    Linkedin,
+    Youtube,
+    Twitter,
+    MessageCircle,
+    Send,
+    Mail,
+    Phone,
+    MapPin,
+} from "lucide-react";
+import logo from "../../../assets/Logo.png";
 import { useAppContext } from "../../../AppContext";
 import ContactForm from "../../../components/contact/ContactForm";
 import Swal from "sweetalert2";
 
 function UserMessages_new() {
     const { t, i18n } = useTranslation();
-    const { user } = useAppContext();
+    const { user, contactInfo, siteSettings } = useAppContext();
     const navigate = useNavigate();
 
     const isRTL = i18n.language === "ar";
+
+    // Branding helpers (same pattern as Footer)
+    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const brandName = siteSettings?.brandName || "";
+    const brandLogoSrc = (() => {
+        const logoUrl = siteSettings?.logoUrl;
+        if (!logoUrl) return logo;
+        const base = `${apiBase}${logoUrl}`;
+        const updatedAt = siteSettings?.logoUpdatedAt;
+        if (!updatedAt) return base;
+        return `${base}?v=${new Date(updatedAt).getTime()}`;
+    })();
+    const normalizeUrl = (url) => {
+        if (!url || url === "#") return "#";
+        if (/^(https?:\/\/|\/\/|mailto:|tel:)/i.test(url)) return url;
+        return `https://${url}`;
+    };
+    const getSocialLink = (type) => normalizeUrl(contactInfo?.[type]);
+    const getEmail = () => contactInfo?.email || null;
+    const getPhone = () => contactInfo?.phone || null;
+    const getAddress = () => contactInfo?.address || null;
 
     const handleSuccess = () => {
         // Navigate back to messages list after successful submission
@@ -170,6 +204,138 @@ function UserMessages_new() {
                                     "Other questions or feedback about our services",
                                 )}
                             </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Contact Info */}
+                <div className="mt-8 border-t border-gray-200 pt-6">
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={brandLogoSrc}
+                                alt="Logo"
+                                className="w-12 h-12 rounded-xl object-cover shadow-sm"
+                            />
+                            {brandName ? (
+                                <div className="flex flex-col">
+                                    <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
+                                        {brandName}
+                                    </span>
+                                    <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                        e-learning
+                                    </span>
+                                </div>
+                            ) : null}
+                        </div>
+                        <p className="text-gray-600">{t("OurPlatform")}</p>
+
+                        <div className="flex flex-wrap gap-3">
+                            {contactInfo?.facebook && (
+                                <a
+                                    href={getSocialLink("facebook")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                                    title="Facebook"
+                                >
+                                    <Facebook className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.instagram && (
+                                <a
+                                    href={getSocialLink("instagram")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-pink-600 transition-colors"
+                                    title="Instagram"
+                                >
+                                    <Instagram className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.linkedin && (
+                                <a
+                                    href={getSocialLink("linkedin")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-blue-700 transition-colors"
+                                    title="LinkedIn"
+                                >
+                                    <Linkedin className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.youtube && (
+                                <a
+                                    href={getSocialLink("youtube")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-red-600 transition-colors"
+                                    title="YouTube"
+                                >
+                                    <Youtube className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.twitter && (
+                                <a
+                                    href={getSocialLink("twitter")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                                    title="X / Twitter"
+                                >
+                                    <Twitter className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.whatsapp && (
+                                <a
+                                    href={getSocialLink("whatsapp")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-green-600 transition-colors"
+                                    title="WhatsApp"
+                                >
+                                    <MessageCircle className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.telegram && (
+                                <a
+                                    href={getSocialLink("telegram")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-sky-500 transition-colors"
+                                    title="Telegram"
+                                >
+                                    <Send className="w-6 h-6" />
+                                </a>
+                            )}
+                        </div>
+
+                        {/* Contact Details */}
+                        <div className="space-y-2 text-sm text-gray-600">
+                            {getEmail() && (
+                                <a
+                                    href={`mailto:${getEmail()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900"
+                                >
+                                    <Mail className="w-4 h-4" />
+                                    <span>{getEmail()}</span>
+                                </a>
+                            )}
+                            {getPhone() && (
+                                <a
+                                    href={`tel:${getPhone()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900"
+                                >
+                                    <Phone className="w-4 h-4" />
+                                    <span>{getPhone()}</span>
+                                </a>
+                            )}
+                            {getAddress() && (
+                                <div className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4" />
+                                    <span>{getAddress()}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

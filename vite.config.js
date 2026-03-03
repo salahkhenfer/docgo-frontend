@@ -1,19 +1,44 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// Intercepts /Courses/* and /Programs/* browser navigations BEFORE the proxy
-// so Vite serves index.html (React SPA). Axios/fetch API calls that send
-// Accept: application/json are NOT intercepted and pass through to the backend.
+// Frontend SPA routes that share a prefix with backend proxy paths.
+// On refresh the browser sends Accept: text/html — intercept before the proxy
+// and serve index.html so React Router handles the route client-side.
+// API calls (fetch/axios with Accept: application/json) are NOT intercepted.
+const SPA_ROUTE_PREFIXES = [
+    "/Courses",
+    "/Programs",
+    "/Login",
+    "/login",
+    "/Register",
+    "/register",
+    "/Favorites",
+    "/favorites",
+    "/notifications",
+    "/payments",
+    "/payment",
+    "/home",
+    "/faqs",
+    "/faq",
+    "/contact",
+    "/dashboard",
+    "/profile",
+    "/myapplications",
+    "/my-applications",
+    "/media",
+];
+
 const spaFallbackPlugin = {
     name: "spa-fallback-for-shared-routes",
     configureServer(server) {
         server.middlewares.use((req, _res, next) => {
             const url = req.url?.split("?")[0] ?? "";
-            if (
-                /^\/(Courses|Programs|Login|Register|register|login)(\/|$)/i.test(
-                    url,
-                )
-            ) {
+            const isSpaRoute = SPA_ROUTE_PREFIXES.some(
+                (p) =>
+                    url.toLowerCase() === p.toLowerCase() ||
+                    url.toLowerCase().startsWith(p.toLowerCase() + "/"),
+            );
+            if (isSpaRoute) {
                 const accept = req.headers["accept"] || "";
                 const contentType = req.headers["content-type"] || "";
                 const isApiCall =

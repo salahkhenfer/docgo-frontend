@@ -1,141 +1,224 @@
 import { ChevronDown, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { clientProgramsAPI } from "../API/Programs";
 
-const StudyForm = ({ customFields }) => {
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+const recordSearch = async (what, where, lang) => {
+    try {
+        await fetch(`${API_BASE}/home/search`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                what: what || null,
+                where: where || null,
+                lang,
+            }),
+        });
+    } catch {
+        // Non-critical — silent failure
+    }
+};
+
+const StudyForm = ({ customFields, customLocations }) => {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedCountry, setSelectedCountry] = useState("");
-    const [categories, setCategories] = useState([]);
-    const [countries, setCountries] = useState([]);
-    const [filteredCountries, setFilteredCountries] = useState([]);
-    const [loading, setLoading] = useState(!customFields);
+    // API fallback state (used when customFields / customLocations is absent)
+    const [apiCategories, setApiCategories] = useState([]);
+    const [apiCountries, setApiCountries] = useState([]);
+    const [apiFilteredCountries, setApiFilteredCountries] = useState([]);
+    // loading only required when BOTH CMS sources are absent
+    const [loading, setLoading] = useState(!customFields && !customLocations);
     const { t, i18n } = useTranslation();
     const isRTL = i18n.dir() === "rtl";
     const navigate = useNavigate();
+    const lang = i18n.language?.split("-")[0] || "en";
 
+    // ── API fallback: only fetch what's missing ─────────────────────────
     useEffect(() => {
-        if (customFields) return; // skip API fetch when CMS provides them
+        if (customFields && customLocations) return; // fully CMS — skip API
         fetchData();
-    }, [customFields]);
+    }, [customFields, customLocations]);
 
     const fetchData = async () => {
         try {
             setLoading(true);
-            // Fetch categories and locations in parallel
-            const [categoriesRes, locationsRes] = await Promise.all([
-                clientProgramsAPI.getProgramCategories(),
-                clientProgramsAPI.getProgramLocations(),
+            const [catsRes, locsRes] = await Promise.all([
+                customFields
+                    ? Promise.resolve(null)
+                    : clientProgramsAPI.getProgramCategories(),
+                customLocations
+                    ? Promise.resolve(null)
+                    : clientProgramsAPI.getProgramLocations(),
             ]);
-
-            // Handle categories response
-            if (categoriesRes) {
+            if (catsRes) {
                 const cats =
-                    categoriesRes.data?.categories ||
-                    categoriesRes.categories ||
-                    [];
-                setCategories(Array.isArray(cats) ? cats : []);
+                    catsRes.data?.categories || catsRes.categories || [];
+                setApiCategories(Array.isArray(cats) ? cats : []);
             }
-
-            // Handle locations response
-            if (locationsRes) {
-                const locs =
-                    locationsRes.data?.locations ||
-                    locationsRes.locations ||
-                    [];
-                setCountries(Array.isArray(locs) ? locs : []);
-                setFilteredCountries(Array.isArray(locs) ? locs : []);
+            if (locsRes) {
+                const locs = locsRes.data?.locations || locsRes.locations || [];
+                setApiCountries(Array.isArray(locs) ? locs : []);
+                setApiFilteredCountries(Array.isArray(locs) ? locs : []);
             }
-        } catch (error) {
-            console.error("Error fetching form data:", error);
-            // Set empty arrays on error to prevent crashes
-            setCategories([]);
-            setCountries([]);
-            setFilteredCountries([]);
+        } catch {
+            setApiCategories([]);
+            setApiCountries([]);
+            setApiFilteredCountries([]);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCategoryChange = async (categoryValue) => {
-        setSelectedCategory(categoryValue);
-        setSelectedCountry(""); // Reset country selection
+    // ── CMS mode: both custom sources provided ──────────────────────────
+    const isCmsMode = !!(customFields && customLocations);
 
-        if (!categoryValue) {
-            setFilteredCountries(countries);
-            return;
+    // All items (unfiltered) — memoized to avoid re-running on every render
+    const allFieldItems = useMemo(
+        () =>
+            customFields
+                ? customFields.map((f) => ({
+                      label: f[lang] || f.en || f.fr || f.ar || "",
+                      value: f.en || f[lang] || "",
+                  }))
+                : apiCategories.map((c) => ({ label: c, value: c })),
+        [customFields, apiCategories, lang],
+    );
+
+    const allLocationItems = useMemo(
+        () =>
+            customLocations
+                ? customLocations.map((f) => ({
+                      label: f[lang] || f.en || f.fr || f.ar || "",
+                      value: f.en || f[lang] || "",
+                      // fields[] links this location to specific study fields
+                      linkedFields: Array.isArray(f.fields) ? f.fields : [],
+                  }))
+                : apiFilteredCountries.map((c) => ({
+                      label: c,
+                      value: c,
+                      linkedFields: [],
+                  })),
+        [customLocations, apiFilteredCountries, lang],
+    );
+
+    // ── Bidirectional smart filtering ────────────────────────────────────
+    // "Where" options filtered by selected "What"
+    const filteredLocationItems = useMemo(() => {
+        if (!isCmsMode || !selectedCategory) return allLocationItems;
+        return allLocationItems.filter(
+            (loc) =>
+                !loc.linkedFields.length || // unlinked = shows always
+                loc.linkedFields.includes(selectedCategory),
+        );
+    }, [allLocationItems, selectedCategory, isCmsMode]);
+
+    // "What" options filtered by selected "Where"
+    const filteredFieldItems = useMemo(() => {
+        if (!isCmsMode || !selectedCountry) return allFieldItems;
+        const selLoc = allLocationItems.find(
+            (l) => l.value === selectedCountry,
+        );
+        if (!selLoc || !selLoc.linkedFields.length) return allFieldItems;
+        return allFieldItems.filter((f) =>
+            selLoc.linkedFields.includes(f.value),
+        );
+    }, [allFieldItems, allLocationItems, selectedCountry, isCmsMode]);
+
+    // ── Handlers with cross-reset ────────────────────────────────────────
+    const handleCategoryChange = async (value) => {
+        setSelectedCategory(value);
+
+        if (isCmsMode) {
+            // Reset "where" if it's no longer in filtered list
+            if (selectedCountry) {
+                const available = value
+                    ? allLocationItems.filter(
+                          (l) =>
+                              !l.linkedFields.length ||
+                              l.linkedFields.includes(value),
+                      )
+                    : allLocationItems;
+                if (!available.some((l) => l.value === selectedCountry)) {
+                    setSelectedCountry("");
+                }
+            }
+            return; // no API call in CMS mode
         }
 
+        // API fallback: filter countries by selected category
+        setSelectedCountry("");
+        if (!value) {
+            setApiFilteredCountries(apiCountries);
+            return;
+        }
         try {
-            // Fetch programs for selected category to get available countries
             const response = await clientProgramsAPI.searchPrograms({
-                category: categoryValue,
+                category: value,
             });
-
-            // Handle different response structures
-            let programs = [];
-            if (response) {
-                programs = response.data?.programs || response.programs || [];
-            }
-
+            const programs =
+                response?.data?.programs || response?.programs || [];
             if (programs.length > 0) {
-                // Extract unique countries from programs
-                const uniqueCountries = [
+                const unique = [
                     ...new Set(
                         programs
                             .map((p) => p.Location || p.location)
                             .filter(Boolean),
                     ),
                 ];
-
-                // Filter countries list based on available countries for this category
-                const filtered = countries.filter((country) =>
-                    uniqueCountries.includes(country),
-                );
-
-                setFilteredCountries(
-                    filtered.length > 0 ? filtered : countries,
+                const filtered = apiCountries.filter((c) => unique.includes(c));
+                setApiFilteredCountries(
+                    filtered.length > 0 ? filtered : apiCountries,
                 );
             } else {
-                // If no programs found, show all countries
-                setFilteredCountries(countries);
+                setApiFilteredCountries(apiCountries);
             }
-        } catch (error) {
-            console.error("Error filtering countries:", error);
-            setFilteredCountries(countries);
+        } catch {
+            setApiFilteredCountries(apiCountries);
         }
     };
 
-    const handleSubmit = () => {
-        // Navigate to programs page with filters
+    const handleCountryChange = (value) => {
+        setSelectedCountry(value);
+        if (isCmsMode && selectedCategory && value) {
+            const selLoc = allLocationItems.find((l) => l.value === value);
+            if (
+                selLoc &&
+                selLoc.linkedFields.length &&
+                !selLoc.linkedFields.includes(selectedCategory)
+            ) {
+                // Selected "where" doesn't support current "what" — reset what
+                setSelectedCategory("");
+            }
+        }
+    };
+
+    // ── Submit ────────────────────────────────────────────────────────────
+    const handleSubmit = async () => {
+        const whatLabel =
+            filteredFieldItems.find((o) => o.value === selectedCategory)
+                ?.label ||
+            selectedCategory ||
+            null;
+        const whereLabel =
+            filteredLocationItems.find((o) => o.value === selectedCountry)
+                ?.label ||
+            selectedCountry ||
+            null;
+        if (whatLabel || whereLabel) recordSearch(whatLabel, whereLabel, lang);
         const params = new URLSearchParams();
-
-        console.log("StudyForm - Navigating with:", {
-            category: selectedCategory,
-            location: selectedCountry,
-        });
-
-        if (selectedCategory) {
-            params.append("category", selectedCategory);
-        }
-        if (selectedCountry) {
-            params.append("location", selectedCountry);
-        }
-
+        if (selectedCategory) params.append("category", selectedCategory);
+        if (selectedCountry) params.append("location", selectedCountry);
         navigate(
             `/Programs${params.toString() ? `?${params.toString()}` : ""}`,
         );
     };
 
-    // Build category options: prefer CMS-managed list
-    const lang = i18n.language?.split("-")[0] || "en";
-    const categoryOptions = customFields
-        ? customFields.map((f) => ({
-              label: f[lang] || f.en || f.fr || f.ar || "",
-              value: f.en || f[lang] || "",
-          }))
-        : categories.map((cat) => ({ label: cat, value: cat }));
+    // In CMS mode the "where" is always interactive; API mode requires a category first
+    const locationDisabled =
+        !isCmsMode && !customLocations && !selectedCategory;
 
     if (loading) {
         return (
@@ -147,6 +230,7 @@ const StudyForm = ({ customFields }) => {
 
     return (
         <div className="w-full max-w-md mx-auto p-4 sm:p-6 space-y-3 sm:space-y-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            {/* What — Study Field */}
             <div className="relative">
                 <select
                     value={selectedCategory}
@@ -157,12 +241,8 @@ const StudyForm = ({ customFields }) => {
                     <option value="" disabled>
                         {t("WhatDoYouWantToStudy")}
                     </option>
-                    {categoryOptions.map((opt) => (
-                        <option
-                            key={opt.value}
-                            value={opt.value}
-                            className="text-sm sm:text-base"
-                        >
+                    {filteredFieldItems.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
                             {opt.label}
                         </option>
                     ))}
@@ -175,24 +255,21 @@ const StudyForm = ({ customFields }) => {
                 />
             </div>
 
+            {/* Where — Location */}
             <div className="relative">
                 <select
                     value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full p-3 sm:p-4 bg-white border-2 border-gray-200 rounded-xl appearance-none cursor-pointer hover:border-blue-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-sm sm:text-base transition-all duration-200"
+                    onChange={(e) => handleCountryChange(e.target.value)}
+                    disabled={locationDisabled}
+                    className="w-full p-3 sm:p-4 bg-white border-2 border-gray-200 rounded-xl appearance-none cursor-pointer hover:border-blue-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-sm sm:text-base transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     dir={i18n.dir()}
-                    disabled={!selectedCategory}
                 >
                     <option value="" disabled>
                         {t("WhereDoYouwantToStudy?")}
                     </option>
-                    {filteredCountries.map((country) => (
-                        <option
-                            key={country}
-                            value={country}
-                            className="text-sm sm:text-base"
-                        >
-                            {country}
+                    {filteredLocationItems.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                            {opt.label}
                         </option>
                     ))}
                 </select>
@@ -206,7 +283,7 @@ const StudyForm = ({ customFields }) => {
 
             <button
                 onClick={handleSubmit}
-                disabled={!selectedCategory}
+                disabled={!selectedCategory && !selectedCountry}
                 className="w-full p-3 sm:p-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base disabled:cursor-not-allowed disabled:opacity-60"
             >
                 {t("ToRegister")}

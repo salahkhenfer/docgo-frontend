@@ -156,6 +156,14 @@ const Login = () => {
                                 className="w-full p-3 border rounded-lg"
                                 required
                             />
+                            <div className="text-right mt-1">
+                                <a
+                                    href="/forgot-password"
+                                    className="text-sm text-blue-500 hover:underline"
+                                >
+                                    Mot de passe oublié ?
+                                </a>
+                            </div>
                         </div>
                         <button
                             type="submit"

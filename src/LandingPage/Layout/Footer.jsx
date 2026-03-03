@@ -46,7 +46,12 @@ function Footer({ contactInfo, branding = null }) {
         return `${base}?v=${v}`;
     })();
 
-    const getSocialLink = (type) => contactInfo?.[type] || "#";
+    const normalizeUrl = (url) => {
+        if (!url || url === "#") return "#";
+        if (/^(https?:\/\/|\/\/|mailto:|tel:)/i.test(url)) return url;
+        return `https://${url}`;
+    };
+    const getSocialLink = (type) => normalizeUrl(contactInfo?.[type]);
     const getEmail = () => contactInfo?.email || null;
     const getPhone = () => contactInfo?.phone || null;
     const getAddress = () => contactInfo?.address || null;
@@ -54,6 +59,137 @@ function Footer({ contactInfo, branding = null }) {
         <footer className="bg-gray-50 px-4 py-12 md:px-8 lg:px-16 max-lg:text-center">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-28 md:gap-20 sm-sm:gap-8">
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 max-lg:justify-center">
+                            <img
+                                src={brandLogoSrc}
+                                alt="Logo"
+                                className="w-12 h-12 rounded-xl object-cover shadow-sm"
+                            />
+                            {brandName ? (
+                                <div className="flex flex-col">
+                                    <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
+                                        {brandName}
+                                    </span>
+                                    <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                        e-learning
+                                    </span>
+                                </div>
+                            ) : null}
+                        </div>
+                        <p className="text-gray-600">{t("OurPlatform")}</p>
+
+                        <div className="flex flex-wrap gap-3 max-lg:justify-center">
+                            {contactInfo?.facebook && (
+                                <a
+                                    href={getSocialLink("facebook")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                                    title="Facebook"
+                                >
+                                    <Facebook className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.instagram && (
+                                <a
+                                    href={getSocialLink("instagram")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-pink-600 transition-colors"
+                                    title="Instagram"
+                                >
+                                    <Instagram className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.linkedin && (
+                                <a
+                                    href={getSocialLink("linkedin")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-blue-700 transition-colors"
+                                    title="LinkedIn"
+                                >
+                                    <Linkedin className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.youtube && (
+                                <a
+                                    href={getSocialLink("youtube")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-red-600 transition-colors"
+                                    title="YouTube"
+                                >
+                                    <Youtube className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.twitter && (
+                                <a
+                                    href={getSocialLink("twitter")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                                    title="X / Twitter"
+                                >
+                                    <Twitter className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.whatsapp && (
+                                <a
+                                    href={getSocialLink("whatsapp")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-green-600 transition-colors"
+                                    title="WhatsApp"
+                                >
+                                    <MessageCircle className="w-6 h-6" />
+                                </a>
+                            )}
+                            {contactInfo?.telegram && (
+                                <a
+                                    href={getSocialLink("telegram")}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-sky-500 transition-colors"
+                                    title="Telegram"
+                                >
+                                    <Send className="w-6 h-6" />
+                                </a>
+                            )}
+                        </div>
+
+                        {/* Contact Details */}
+                        <div className="space-y-2 text-sm text-gray-600">
+                            {getEmail() && (
+                                <a
+                                    href={`mailto:${getEmail()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
+                                >
+                                    <Mail className="w-4 h-4" />
+                                    <span>{getEmail()}</span>
+                                </a>
+                            )}
+                            {getPhone() && (
+                                <a
+                                    href={`tel:${getPhone()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
+                                >
+                                    <Phone className="w-4 h-4" />
+                                    <span>{getPhone()}</span>
+                                </a>
+                            )}
+                            {getAddress() && (
+                                <a
+                                    href={`${getAddress()}`}
+                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
+                                >
+                                    <MapPin className="w-4 h-4" />
+                                    <span>{getAddress()}</span>
+                                </a>
+                            )}
+                        </div>
+                    </div>
                     {/* Dynamic program categories */}
                     <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -202,138 +338,6 @@ function Footer({ contactInfo, branding = null }) {
                                 </a>
                             </li>
                         </ul>
-                    </div>
-
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-3 max-lg:justify-center">
-                            <img
-                                src={brandLogoSrc}
-                                alt="Logo"
-                                className="w-12 h-12 rounded-xl object-cover shadow-sm"
-                            />
-                            {brandName ? (
-                                <div className="flex flex-col">
-                                    <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
-                                        {brandName}
-                                    </span>
-                                    <span className="text-xs text-blue-600 font-medium tracking-wide">
-                                        e-learning
-                                    </span>
-                                </div>
-                            ) : null}
-                        </div>
-                        <p className="text-gray-600">{t("OurPlatform")}</p>
-
-                        <div className="flex flex-wrap gap-3 max-lg:justify-center">
-                            {contactInfo?.facebook && (
-                                <a
-                                    href={getSocialLink("facebook")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-blue-600 transition-colors"
-                                    title="Facebook"
-                                >
-                                    <Facebook className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.instagram && (
-                                <a
-                                    href={getSocialLink("instagram")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-pink-600 transition-colors"
-                                    title="Instagram"
-                                >
-                                    <Instagram className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.linkedin && (
-                                <a
-                                    href={getSocialLink("linkedin")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-blue-700 transition-colors"
-                                    title="LinkedIn"
-                                >
-                                    <Linkedin className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.youtube && (
-                                <a
-                                    href={getSocialLink("youtube")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-red-600 transition-colors"
-                                    title="YouTube"
-                                >
-                                    <Youtube className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.twitter && (
-                                <a
-                                    href={getSocialLink("twitter")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-gray-900 transition-colors"
-                                    title="X / Twitter"
-                                >
-                                    <Twitter className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.whatsapp && (
-                                <a
-                                    href={getSocialLink("whatsapp")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-green-600 transition-colors"
-                                    title="WhatsApp"
-                                >
-                                    <MessageCircle className="w-6 h-6" />
-                                </a>
-                            )}
-                            {contactInfo?.telegram && (
-                                <a
-                                    href={getSocialLink("telegram")}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-gray-600 hover:text-sky-500 transition-colors"
-                                    title="Telegram"
-                                >
-                                    <Send className="w-6 h-6" />
-                                </a>
-                            )}
-                        </div>
-
-                        {/* Contact Details */}
-                        <div className="space-y-2 text-sm text-gray-600">
-                            {getEmail() && (
-                                <a
-                                    href={`mailto:${getEmail()}`}
-                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
-                                >
-                                    <Mail className="w-4 h-4" />
-                                    <span>{getEmail()}</span>
-                                </a>
-                            )}
-                            {getPhone() && (
-                                <a
-                                    href={`tel:${getPhone()}`}
-                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
-                                >
-                                    <Phone className="w-4 h-4" />
-                                    <span>{getPhone()}</span>
-                                </a>
-                            )}
-                            {getAddress() && (
-                                <a
-                                    href={`${getAddress()}`}
-                                    className="flex items-center gap-2 hover:text-gray-900 max-lg:justify-center"
-                                >
-                                    <MapPin className="w-4 h-4" />
-                                    <span>{getAddress()}</span>
-                                </a>
-                            )}
-                        </div>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,7 @@ export const validateFirstStep = async (userData) => {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true,
                 validateStatus: () => true,
-            }
+            },
         );
 
         return {
@@ -73,13 +73,19 @@ const handleRegister = async ({
                     message: "Login failed after registration",
                 };
             }
+
+            // Update React context so the user is immediately seen as logged in
+            // without needing a page refresh
+            if (setAuth) setAuth(true);
+            if (setUser) setUser(loginResult?.data?.user || null);
+
             localStorage.setItem(
                 "user",
-                JSON.stringify(loginResult?.data?.user || {})
+                JSON.stringify(loginResult?.data?.user || {}),
             );
             sessionStorage.setItem(
                 "user",
-                JSON.stringify(loginResult?.data?.user || {})
+                JSON.stringify(loginResult?.data?.user || {}),
             );
 
             return loginResult;

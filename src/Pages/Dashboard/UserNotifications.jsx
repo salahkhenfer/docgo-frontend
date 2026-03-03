@@ -1,4 +1,5 @@
 import {
+    ArrowTopRightOnSquareIcon,
     BellIcon,
     CheckCircleIcon,
     ClockIcon,
@@ -9,6 +10,8 @@ import {
     XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../AppContext";
 import notificationService from "../../services/notificationService";
@@ -71,6 +74,7 @@ const inferType = (title, message) => {
 
 const UserNotifications = () => {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const { user } = useAppContext();
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -151,15 +155,71 @@ const UserNotifications = () => {
         }
     };
 
+    // Click a notification: mark as read then follow its link or show popup
+    const handleNotificationClick = async (notification) => {
+        if (!notification.read) {
+            await handleMarkAsRead(notification.id);
+        }
+
+        if (notification.link) {
+            if (notification.link.startsWith("/")) {
+                navigate(notification.link);
+            } else {
+                window.open(notification.link, "_blank", "noopener,noreferrer");
+            }
+            return;
+        }
+
+        // No link — show a detail popup
+        const formattedDate = notification.createdAt
+            ? new Date(notification.createdAt).toLocaleString(i18n.language, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+              })
+            : "";
+
+        const iconMap = {
+            success: "success",
+            error: "error",
+            warning: "warning",
+            info: "info",
+        };
+
+        await Swal.fire({
+            title: notification.title,
+            html: `
+                <p style="text-align:start;color:#374151;line-height:1.6;margin-bottom:12px">
+                    ${notification.message}
+                </p>
+                ${formattedDate ? `<p style="font-size:0.75rem;color:#9ca3af;text-align:start">${formattedDate}</p>` : ""}
+            `,
+            icon: iconMap[notification.type] || "info",
+            confirmButtonText: t("common.close", "Close"),
+            confirmButtonColor: "#2563eb",
+            customClass: {
+                htmlContainer: "text-left",
+            },
+        });
+    };
+
     const handleDelete = async (notificationId) => {
-        if (
-            window.confirm(
-                t(
-                    "notifications.confirmDelete",
-                    "Are you sure you want to delete this notification?",
-                ),
-            )
-        ) {
+        const result = await Swal.fire({
+            title: t(
+                "notifications.confirmDeleteTitle",
+                "Delete notification?",
+            ),
+            text: t(
+                "notifications.confirmDelete",
+                "This notification will be permanently removed.",
+            ),
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: t("common.delete", "Delete"),
+            cancelButtonText: t("common.cancel", "Cancel"),
+        });
+        if (result.isConfirmed) {
             try {
                 await notificationService.deleteNotification(notificationId);
                 setNotifications((prev) =>
@@ -300,11 +360,14 @@ const UserNotifications = () => {
                         {notifications.map((notification) => (
                             <div
                                 key={notification.id}
-                                className={`p-6 border-l-4 hover:bg-gray-50 transition-colors ${
+                                className={`p-6 border-l-4 transition-colors cursor-pointer ${
                                     !notification.read
                                         ? getTypeColor(notification.type)
                                         : "border-l-gray-300"
-                                }`}
+                                } hover:bg-blue-50/40`}
+                                onClick={() =>
+                                    handleNotificationClick(notification)
+                                }
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start space-x-3 flex-1">
@@ -312,13 +375,20 @@ const UserNotifications = () => {
                                         <div className="flex-1">
                                             <div className="flex items-center space-x-2">
                                                 <h3
-                                                    className={`text-sm font-medium ${
+                                                    className={`text-sm font-medium flex items-center gap-1 ${
                                                         !notification.read
                                                             ? "text-gray-900"
                                                             : "text-gray-700"
+                                                    } ${
+                                                        notification.link
+                                                            ? "group-hover:text-blue-600"
+                                                            : ""
                                                     }`}
                                                 >
                                                     {notification.title}
+                                                    {notification.link && (
+                                                        <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-blue-400 flex-shrink-0 inline-block" />
+                                                    )}
                                                 </h3>
                                                 {!notification.read && (
                                                     <div className="w-2 h-2 bg-blue-600 rounded-full"></div>

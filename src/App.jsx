@@ -11,12 +11,34 @@ import MainLoading from "./MainLoading";
 import Seo from "./components/SEO/Seo";
 import { useTranslation } from "react-i18next";
 
+const API_URL_FALLBACK =
+    import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 function App() {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     // Auth state + pre-fetched site data (fetched in parallel on startup by AppContext)
     const { loading: authLoading, siteSettings, contactInfo } = useAppContext();
     const { i18n } = useTranslation();
+
+    // Keep favicon in sync with the logo saved by the admin
+    useEffect(() => {
+        if (!siteSettings?.logoUrl) return;
+        const base = siteSettings.logoUrl.startsWith("http")
+            ? siteSettings.logoUrl
+            : `${API_URL_FALLBACK}${siteSettings.logoUrl}`;
+        const v = siteSettings.logoUpdatedAt
+            ? `?v=${new Date(siteSettings.logoUpdatedAt).getTime()}`
+            : "";
+        let link = document.querySelector("link[rel='icon']");
+        if (!link) {
+            link = document.createElement("link");
+            link.rel = "icon";
+            document.head.appendChild(link);
+        }
+        link.type = "image/png";
+        link.href = `${base}${v}`;
+    }, [siteSettings?.logoUrl, siteSettings?.logoUpdatedAt]);
 
     // Check if we're in auth routes that shouldn't have navbar/footer
     const pathname = location.pathname.toLowerCase();

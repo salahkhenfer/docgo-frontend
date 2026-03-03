@@ -41,7 +41,8 @@
             "courseApplications": "طلبات الدورات",
             "support": "هل تحتاج مساعدة؟",
             "supportText": "تواصل مع فريق الدعم لدينا",
-            "sendMessage": "إرسال رسالة"
+            "sendMessage": "إرسال رسالة",
+            "settings": "الإعدادات"
         },
         "pendingApplications": "طلبات قيد الانتظار",
         "enrolledCourses": "دوراتي المسجلة",

@@ -11,6 +11,7 @@ import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import Blocked from "./Pages/Auth/Blocked";
+import ForgotPassword from "./Pages/Auth/ForgotPassword";
 import Courses from "./Pages/Courses";
 import FAQPage from "./Pages/FAQPage";
 import FavoritesPage from "./Pages/FavoritesPage";
@@ -398,6 +399,15 @@ const Routers = createBrowserRouter([
         element: (
             <ProtectedRoute requireAuth={false}>
                 <Register />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "forgot-password",
+        caseSensitive: false,
+        element: (
+            <ProtectedRoute requireAuth={false}>
+                <ForgotPassword />
             </ProtectedRoute>
         ),
     },
