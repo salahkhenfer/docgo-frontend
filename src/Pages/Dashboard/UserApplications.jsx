@@ -1,4 +1,4 @@
-import {
+﻿import {
   AcademicCapIcon,
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -66,7 +66,6 @@ const UserApplications = () => {
         setApplications({ programs: [], courses: [] });
       }
     } catch (error) {
-      console.error("Error fetching applications:", error);
       setApplications({ programs: [], courses: [] });
     } finally {
       setLoading(false);

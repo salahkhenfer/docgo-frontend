@@ -1,4 +1,4 @@
-import apiClient from "../services/apiClient";
+﻿import apiClient from "../services/apiClient";
 
 // Enrollment API for managing course and program applications and enrollments
 export const EnrollmentAPI = {
@@ -20,7 +20,6 @@ export const EnrollmentAPI = {
                 message: "Course application submitted successfully",
             };
         } catch (error) {
-            console.error("Course application error:", error);
             return {
                 success: false,
                 message:
@@ -45,7 +44,6 @@ export const EnrollmentAPI = {
                 message: "Successfully enrolled in free course",
             };
         } catch (error) {
-            console.error("Free course enrollment error:", error);
             return {
                 success: false,
                 message:
@@ -71,7 +69,6 @@ export const EnrollmentAPI = {
         } catch (error) {
             // 404 is expected when no progress exists yet
             if (error.response?.status !== 404) {
-                console.error("Get course progress error:", error);
             }
             return {
                 success: false,
@@ -97,7 +94,6 @@ export const EnrollmentAPI = {
                 message: "Course progress updated successfully",
             };
         } catch (error) {
-            console.error("Update course progress error:", error);
             return {
                 success: false,
                 message:
@@ -122,7 +118,6 @@ export const EnrollmentAPI = {
                 message: "Quiz results submitted successfully",
             };
         } catch (error) {
-            console.error("Submit quiz results error:", error);
             return {
                 success: false,
                 message:
@@ -151,7 +146,6 @@ export const EnrollmentAPI = {
                 message: "Program application submitted successfully",
             };
         } catch (error) {
-            console.error("Program application error:", error);
             return {
                 success: false,
                 message:
@@ -176,7 +170,6 @@ export const EnrollmentAPI = {
                 message: "Successfully enrolled in free program",
             };
         } catch (error) {
-            console.error("Free program enrollment error:", error);
             return {
                 success: false,
                 message:
@@ -200,7 +193,6 @@ export const EnrollmentAPI = {
                 message: "Program progress fetched successfully",
             };
         } catch (error) {
-            console.error("Get program progress error:", error);
             return {
                 success: false,
                 message:
@@ -226,7 +218,6 @@ export const EnrollmentAPI = {
                 message: "Dashboard overview fetched successfully",
             };
         } catch (error) {
-            console.error("Get dashboard overview error:", error);
             return {
                 success: false,
                 message:
@@ -251,7 +242,6 @@ export const EnrollmentAPI = {
                 message: "Course applications fetched successfully",
             };
         } catch (error) {
-            console.error("Get course applications error:", error);
             return {
                 success: false,
                 message:
@@ -276,7 +266,6 @@ export const EnrollmentAPI = {
                 message: "Program applications fetched successfully",
             };
         } catch (error) {
-            console.error("Get program applications error:", error);
             return {
                 success: false,
                 message:
@@ -301,7 +290,6 @@ export const EnrollmentAPI = {
                 message: "Program enrollments fetched successfully",
             };
         } catch (error) {
-            console.error("Get program enrollments error:", error);
             return {
                 success: false,
                 message:
@@ -329,7 +317,6 @@ export const EnrollmentAPI = {
                 message: "Item marked as completed",
             };
         } catch (error) {
-            console.error("Mark item complete error:", error);
             return {
                 success: false,
                 message:
@@ -354,7 +341,6 @@ export const EnrollmentAPI = {
                 alreadyIssued: response.data.alreadyIssued || false,
             };
         } catch (error) {
-            console.error("Issue certificate error:", error);
             return {
                 success: false,
                 message:
@@ -375,7 +361,6 @@ export const EnrollmentAPI = {
                 message: "Certificates fetched successfully",
             };
         } catch (error) {
-            console.error("Get my certificates error:", error);
             return {
                 success: false,
                 message:
@@ -398,7 +383,6 @@ export const EnrollmentAPI = {
                 valid: response.data.valid,
             };
         } catch (error) {
-            console.error("Verify certificate error:", error);
             return {
                 success: false,
                 valid: false,

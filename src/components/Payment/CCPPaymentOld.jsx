@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FaUpload, FaSpinner, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaClock, FaUser, FaPhone, FaEnvelope, FaCreditCard, FaReceipt } from "react-icons/fa";
 import RichTextDisplay from "../Common/RichTextDisplay";
@@ -47,7 +47,6 @@ const CCPPayment = ({
                     setExistingApplication(response.data);
                 }
             } catch (error) {
-                console.error("Error checking application:", error);
             } finally {
                 setCheckingApplication(false);
             }
@@ -202,7 +201,6 @@ const CCPPayment = ({
 
             onSuccess(successPayment);
         } catch (error) {
-            console.error("CCP payment error:", error);
 
             // If payment upload failed, attempt cleanup to remove any uploaded file
             if (itemData?.id) {
@@ -212,10 +210,6 @@ const CCPPayment = ({
                         itemId: itemData.id,
                     });
                 } catch (cleanupError) {
-                    console.warn(
-                        "Payment cleanup failed (may be normal if file wasn't uploaded):",
-                        cleanupError.message
-                    );
                 }
             }
 
@@ -254,19 +248,19 @@ const CCPPayment = ({
                             <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
                                 <li>Transfer the amount to our CCP account</li>
                                 <li>
-                                    Prenez une photo ou scannez votre reçu de
+                                    Prenez une photo ou scannez votre reÃ§u de
                                     paiement
                                 </li>
                                 <li>
-                                    Remplissez le formulaire ci-dessous et téléchargez votre
-                                    reçu
+                                    Remplissez le formulaire ci-dessous et tÃ©lÃ©chargez votre
+                                    reÃ§u
                                 </li>
                                 <li>
-                                    Nous vérifierons votre paiement dans les 24 heures
+                                    Nous vÃ©rifierons votre paiement dans les 24 heures
                                 </li>
                                 <li>
-                                    Vous recevrez l'accès au cours après
-                                    vérification
+                                    Vous recevrez l'accÃ¨s au cours aprÃ¨s
+                                    vÃ©rification
                                 </li>
                             </ol>
                         )}
@@ -474,7 +468,7 @@ const CCPPayment = ({
             {/* Security Notice */}
             <div className="text-xs text-gray-500 text-center">
                 <p>
-                    🔒 Your payment information is secure and will be verified
+                    ðŸ”’ Your payment information is secure and will be verified
                     within 24 hours
                 </p>
             </div>

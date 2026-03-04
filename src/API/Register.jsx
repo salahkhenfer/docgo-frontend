@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 import handleLogin from "./Login";
 
 export const validateFirstStep = async (userData) => {
@@ -110,7 +110,6 @@ const handleRegister = async ({
             };
         }
     } catch (error) {
-        console.error("Registration error:", error);
 
         const errorMessage =
             error.response?.data?.message ||

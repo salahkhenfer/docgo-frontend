@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+﻿import { useCallback, useMemo, useState } from "react";
 import { useFavorites as useFavoritesContext } from "../context/FavoritesContext";
 
 export const useFavorite = (itemId, itemType = "course") => {
@@ -30,7 +30,6 @@ export const useFavorite = (itemId, itemType = "course") => {
                     await addToFavorites(item, itemType);
                 }
             } catch (err) {
-                console.error("Error toggling favorite:", err);
                 setError(err?.message || "Failed to update favorite");
             } finally {
                 setLoading(false);

@@ -1,4 +1,4 @@
-import api from "./apiClient";
+﻿import api from "./apiClient";
 
 export const courseService = {
   // Get all courses with pagination and filters (works for both authenticated and guest users)
@@ -35,7 +35,6 @@ export const courseService = {
       const response = await api.get(`/Courses?${queryParams}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching courses:", error);
       throw error;
     }
   },
@@ -47,7 +46,6 @@ export const courseService = {
       const response = await api.get(`/Courses/${courseId}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching course:", error);
       throw error;
     }
   },
@@ -58,7 +56,6 @@ export const courseService = {
       const response = await api.post(`/enrollment/courses/apply`, courseData);
       return response.data;
     } catch (error) {
-      console.error("Error applying for course:", error);
       throw error;
     }
   },
@@ -72,7 +69,6 @@ export const courseService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error enrolling in free course:", error);
       throw error;
     }
   },
@@ -83,7 +79,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/applications`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching user applications:", error);
       throw error;
     }
   },
@@ -94,7 +89,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/${courseId}/progress`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching course progress:", error);
       throw error;
     }
   },
@@ -108,7 +102,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error updating video progress:", error);
       throw error;
     }
   },
@@ -119,7 +112,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/progress`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching user progress:", error);
       throw error;
     }
   },
@@ -133,7 +125,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error adding review:", error);
       throw error;
     }
   },
@@ -146,7 +137,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching course course_reviews:", error);
       throw error;
     }
   },
@@ -160,7 +150,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error updating review:", error);
       throw error;
     }
   },
@@ -173,7 +162,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting review:", error);
       throw error;
     }
   },
@@ -184,7 +172,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/certificates`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching certificates:", error);
       throw error;
     }
   },
@@ -198,7 +185,6 @@ export const courseService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error issuing certificate:", error);
       throw error;
     }
   },
@@ -214,7 +200,6 @@ export const courseService = {
       );
       return response;
     } catch (error) {
-      console.error("Error downloading certificate:", error);
       throw error;
     }
   },
@@ -225,7 +210,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/meets`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching user meets:", error);
       throw error;
     }
   },
@@ -236,7 +220,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/${courseId}/meets`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching course meets:", error);
       throw error;
     }
   },
@@ -247,7 +230,6 @@ export const courseService = {
       const response = await api.get(`/Users/Courses/meets/${meetId}/join`);
       return response.data;
     } catch (error) {
-      console.error("Error joining meet:", error);
       throw error;
     }
   },

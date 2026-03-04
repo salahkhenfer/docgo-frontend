@@ -1,4 +1,4 @@
-import api from "./apiClient";
+﻿import api from "./apiClient";
 
 // Local storage keys
 const FAVORITES_STORAGE_KEY = "docgo_favorites";
@@ -11,7 +11,6 @@ export const getFavoritesFromStorage = () => {
             ? JSON.parse(favorites)
             : { courses: [], programs: [] };
     } catch (error) {
-        console.error("Error getting favorites from storage:", error);
         return { courses: [], programs: [] };
     }
 };
@@ -20,7 +19,6 @@ export const saveFavoritesToStorage = (favorites) => {
     try {
         localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
     } catch (error) {
-        console.error("Error saving favorites to storage:", error);
     }
 };
 
@@ -32,7 +30,6 @@ export const addToLocalFavorites = (item, type) => {
     const itemId = item.id || item.ID || item.Id;
 
     if (!itemId) {
-        console.warn("addToLocalFavorites: Missing item ID", { item, type });
         return favorites;
     }
 

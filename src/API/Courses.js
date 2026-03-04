@@ -1,4 +1,4 @@
-import apiClient from "../services/apiClient";
+﻿import apiClient from "../services/apiClient";
 
 // Client-side Courses API (for public access)
 export const clientCoursesAPI = {
@@ -14,7 +14,6 @@ export const clientCoursesAPI = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error submitting quiz result:", error);
       return {
         success: false,
         message:
@@ -36,7 +35,6 @@ export const clientCoursesAPI = {
         message: "Courses fetched successfully",
       };
     } catch (error) {
-      console.error("Error fetching courses:", error);
       return {
         success: false,
         data: null,
@@ -58,7 +56,6 @@ export const clientCoursesAPI = {
         message: "Course details fetched successfully",
       };
     } catch (error) {
-      console.error("Error fetching course details:", error);
       return {
         success: false,
         data: null,
@@ -82,7 +79,6 @@ export const clientCoursesAPI = {
         message: "Featured courses fetched successfully",
       };
     } catch (error) {
-      console.error("Error fetching featured courses:", error);
       return {
         success: false,
         data: null,
@@ -104,7 +100,6 @@ export const clientCoursesAPI = {
         message: "Course filters fetched successfully",
       };
     } catch (error) {
-      console.error("Error fetching course filters:", error);
       return {
         success: false,
         data: null,
@@ -128,7 +123,6 @@ export const clientCoursesAPI = {
         message: "Courses searched successfully",
       };
     } catch (error) {
-      console.error("Error searching courses:", error);
       return {
         success: false,
         data: null,

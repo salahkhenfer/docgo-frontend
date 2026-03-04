@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+﻿import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star, Play, Pause } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -183,9 +183,9 @@ export function CourseVideosContent() {
         thumbnail:
             "https://Images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
         duration: 1800,
-        title: "Introduction au Développement Web",
+        title: "Introduction au DÃ©veloppement Web",
         description:
-            "Apprenez les fondamentaux du développement web avec ce cours complet",
+            "Apprenez les fondamentaux du dÃ©veloppement web avec ce cours complet",
 
         statistics: {
             totalViews: 15420,
@@ -198,9 +198,9 @@ export function CourseVideosContent() {
             {
                 id: 1,
                 testimonial:
-                    "Grâce à un accompagnement personnalisé, je me sens accompagné à chaque étape du processus. Le contenu est très bien structuré et facile à suivre.",
+                    "GrÃ¢ce Ã  un accompagnement personnalisÃ©, je me sens accompagnÃ© Ã  chaque Ã©tape du processus. Le contenu est trÃ¨s bien structurÃ© et facile Ã  suivre.",
                 author: "Mohamed Yan",
-                role: "Étudiante en France",
+                role: "Ã‰tudiante en France",
                 avatar: "https://Images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-15",
@@ -209,9 +209,9 @@ export function CourseVideosContent() {
             {
                 id: 2,
                 testimonial:
-                    "Le service m'a énormément aidé à comprendre les démarches d'admission et visa. Les explications sont claires et détaillées.",
+                    "Le service m'a Ã©normÃ©ment aidÃ© Ã  comprendre les dÃ©marches d'admission et visa. Les explications sont claires et dÃ©taillÃ©es.",
                 author: "Fatima Zohra",
-                role: "Étudiante en Allemagne",
+                role: "Ã‰tudiante en Allemagne",
                 avatar: "https://Images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
                 rating: 4,
                 date: "2024-01-10",
@@ -220,9 +220,9 @@ export function CourseVideosContent() {
             {
                 id: 3,
                 testimonial:
-                    "Excellent accompagnement ! Je recommande pour toute personne qui veut étudier à l'étranger. L'équipe est très professionnelle.",
+                    "Excellent accompagnement ! Je recommande pour toute personne qui veut Ã©tudier Ã  l'Ã©tranger. L'Ã©quipe est trÃ¨s professionnelle.",
                 author: "Karim Belkacem",
-                role: "Étudiant au Canada",
+                role: "Ã‰tudiant au Canada",
                 avatar: "https://Images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-08",
@@ -231,9 +231,9 @@ export function CourseVideosContent() {
             {
                 id: 4,
                 testimonial:
-                    "Simple, rapide et efficace. L'équipe est disponible à tout moment. Les ressources fournies sont de grande qualité.",
+                    "Simple, rapide et efficace. L'Ã©quipe est disponible Ã  tout moment. Les ressources fournies sont de grande qualitÃ©.",
                 author: "Lina Haddad",
-                role: "Étudiante en Belgique",
+                role: "Ã‰tudiante en Belgique",
                 avatar: "https://Images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
                 rating: 4,
                 date: "2024-01-05",
@@ -242,9 +242,9 @@ export function CourseVideosContent() {
             {
                 id: 5,
                 testimonial:
-                    "Formation complète avec beaucoup d'exemples pratiques. J'ai pu appliquer directement ce que j'ai appris.",
+                    "Formation complÃ¨te avec beaucoup d'exemples pratiques. J'ai pu appliquer directement ce que j'ai appris.",
                 author: "Ahmed Bouali",
-                role: "Développeur Full Stack",
+                role: "DÃ©veloppeur Full Stack",
                 avatar: "https://Images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-01",
@@ -253,7 +253,7 @@ export function CourseVideosContent() {
             {
                 id: 6,
                 testimonial:
-                    "Interface intuitive et contenu de qualité. Support technique très réactif en cas de problème.",
+                    "Interface intuitive et contenu de qualitÃ©. Support technique trÃ¨s rÃ©actif en cas de problÃ¨me.",
                 author: "Yasmine Alami",
                 role: "Designer UX/UI",
                 avatar: "https://Images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
@@ -272,7 +272,6 @@ export function CourseVideosContent() {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 setCourseData(mockBackendData);
             } catch (error) {
-                console.error("Error fetching course data:", error);
             } finally {
                 setLoading(false);
             }
@@ -334,14 +333,13 @@ export function CourseVideosContent() {
             alert(
                 `${t("course_data.thankYou")}\n${t(
                     "course.rating"
-                )}: ${rating} ★\n${t("course_data.comment")}: ${comment}`
+                )}: ${rating} â˜…\n${t("course_data.comment")}: ${comment}`
             );
             setComment("");
             setRating(0);
             setShowFeedbackForm(false);
         } catch (error) {
-            console.error("Error submitting feedback:", error);
-            alert("Erreur lors de la soumission. Veuillez réessayer.");
+            alert("Erreur lors de la soumission. Veuillez rÃ©essayer.");
         }
     };
 
@@ -368,8 +366,8 @@ export function CourseVideosContent() {
                 <div className="flex flex-col w-full max-md:mt-8 max-md:max-w-full">
                     <div className="text-center py-8">
                         <p className="text-red-600">
-                            Erreur lors du chargement des données. Veuillez
-                            réessayer.
+                            Erreur lors du chargement des donnÃ©es. Veuillez
+                            rÃ©essayer.
                         </p>
                     </div>
                 </div>
@@ -400,7 +398,7 @@ export function CourseVideosContent() {
                                 {t("course_data.students")}
                             </span>
                             <span>
-                                ★ {courseData.statistics.averageRating} (
+                                â˜… {courseData.statistics.averageRating} (
                                 {courseData.statistics.totalReviews}{" "}
                                 {t("course_data.course_reviews")})
                             </span>
@@ -523,7 +521,7 @@ export function CourseVideosContent() {
                                                 : "text-gray-300 hover:text-yellow-200"
                                         }`}
                                     >
-                                        ★
+                                        â˜…
                                     </button>
                                 ))}
                                 {rating > 0 && (
@@ -588,7 +586,7 @@ export function CourseVideosContent() {
                                 <div className="text-center py-8 text-gray-500">
                                     <p>
                                         Aucun avis pour le moment. Soyez le
-                                        premier à laisser un avis !
+                                        premier Ã  laisser un avis !
                                     </p>
                                 </div>
                             )}

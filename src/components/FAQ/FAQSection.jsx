@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useAppContext } from "../../AppContext";
 import RichTextDisplay from "../Common/RichTextDisplay";
@@ -99,7 +99,6 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                 setFaqs(response.data.faqs);
             }
         } catch (error) {
-            console.error("Error fetching FAQs:", error);
             setError("Failed to load FAQs");
         } finally {
             setLoading(false);
@@ -140,7 +139,6 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
             });
             setVoteStates(newVoteStates);
         } catch (error) {
-            console.error("Error checking vote statuses:", error);
         }
     }, [isAuth, faqs]);
 
@@ -197,7 +195,6 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                 }));
             }
         } catch (error) {
-            console.error("Error marking FAQ as helpful:", error);
 
             if (error.response?.status === 401) {
                 alert(t("faq.pleaseLoginToVote"));

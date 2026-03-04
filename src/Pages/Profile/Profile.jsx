@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -56,7 +56,6 @@ const Profile = () => {
                 );
             }
         } catch (error) {
-            console.error("Error fetching profile:", error);
             setError(getApiErrorMessage(error, t));
         } finally {
             setLoading(false);
@@ -267,7 +266,7 @@ const Profile = () => {
                                 <p className="text-gray-600 mb-6">
                                     {t(
                                         "profile_data.noCoursesDescription",
-                                        "Commencez votre parcours d’apprentissage en vous inscrivant à nos incroyables cours !",
+                                        "Commencez votre parcours dâ€™apprentissage en vous inscrivant Ã  nos incroyables coursÂ !",
                                     )}
                                 </p>
                             </div>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
@@ -45,7 +45,6 @@ export const useCourse = (courseId) => {
                 setPaymentStatus(null);
             }
         } catch (error) {
-            console.error("Error checking payment status:", error);
             setPaymentStatus(null);
         }
     }, [isAuth, courseId]);
@@ -76,7 +75,7 @@ export const useCourse = (courseId) => {
                     signal: abortControllerRef.current.signal,
                 });
 
-                // Normaliser les données pour s'assurer que objectives est un tableau
+                // Normaliser les donnÃ©es pour s'assurer que objectives est un tableau
                 if (response && response.course) {
                     if (response.course.objectives) {
                         if (typeof response.course.objectives === "string") {
@@ -85,7 +84,7 @@ export const useCourse = (courseId) => {
                                     response.course.objectives,
                                 );
                             } catch {
-                                // Si le parsing JSON échoue, on traite comme un seul objectif
+                                // Si le parsing JSON Ã©choue, on traite comme un seul objectif
                                 response.course.objectives = [
                                     response.course.objectives,
                                 ];
@@ -112,7 +111,6 @@ export const useCourse = (courseId) => {
                     return;
                 }
 
-                console.error("Error fetching course:", err);
 
                 // More specific error messages
                 let errorMessage =
@@ -170,7 +168,6 @@ export const useCourse = (courseId) => {
             // Navigate to course watch page
             navigate(`/Courses/${courseId}/watch`);
         } catch (error) {
-            console.error("Free enrollment error:", error);
 
             let errorMessage =
                 "Failed to enroll in the course. Please try again.";

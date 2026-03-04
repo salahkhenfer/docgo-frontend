@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+﻿import { useState, useRef, useEffect, useCallback } from "react";
 import {
     PlayIcon,
     PauseIcon,
@@ -109,7 +109,6 @@ const VideoPlayer = ({
     const handleError = (e) => {
         setError("Error loading video. Please check the video source.");
         setIsLoading(false);
-        console.error("Video error:", e);
     };
 
     // Control functions
@@ -119,7 +118,6 @@ const VideoPlayer = ({
                 videoRef.current.pause();
             } else {
                 videoRef.current.play().catch((err) => {
-                    console.error("Error playing video:", err);
                     setError("Unable to play video");
                 });
             }

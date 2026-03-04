@@ -1,4 +1,4 @@
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+﻿import { BsHeart, BsHeartFill } from "react-icons/bs";
 import PropTypes from "prop-types";
 import { useFavorite } from "../hooks/useFavorite";
 
@@ -11,10 +11,6 @@ const FavoriteButton = ({ item, type, className = "", size = "w-6 h-6" }) => {
 
     // Don't render if we don't have a valid item or ID
     if (!item || !itemId) {
-        console.warn("FavoriteButton: Missing item or item ID", {
-            item,
-            itemId,
-        });
         return null;
     }
 

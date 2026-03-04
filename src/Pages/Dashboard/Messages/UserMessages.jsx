@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -37,7 +37,6 @@ const UserMessages = () => {
                     setMessages(response.data.data.messages || []);
                 }
             } catch (error) {
-                console.error("Error fetching user messages:", error);
                 // For now, use empty array if endpoint doesn't exist yet
                 setMessages([]);
             } finally {
@@ -114,7 +113,7 @@ const UserMessages = () => {
                         <p className="mt-1 text-gray-600">
                             {t(
                                 "messages.subtitle",
-                                "voir votre messagerie avec notre équipe de support",
+                                "voir votre messagerie avec notre Ã©quipe de support",
                             )}
                         </p>
                     </div>

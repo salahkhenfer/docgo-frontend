@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -39,7 +39,6 @@ const UserFavorites = () => {
                 setFavorites(response.data.data.favorites);
             }
         } catch (error) {
-            console.error("Error fetching favorites:", error);
             setFavorites({ courses: [], programs: [] });
         } finally {
             setLoading(false);
@@ -71,7 +70,6 @@ const UserFavorites = () => {
                     ].filter((item) => item.id !== itemId),
                 }));
             } catch (error) {
-                console.error("Error removing favorite:", error);
             }
         }
     };

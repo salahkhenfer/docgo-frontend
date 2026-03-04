@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle } from "lucide-react";
+﻿import { CheckCircle, XCircle } from "lucide-react";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -188,12 +188,12 @@ const QuizResults = ({ results, onRetry, score }) => {
                                 </h4>
                                 <div className="text-sm text-gray-600 space-y-1">
                                     <p>
-                                        <strong>Votre réponse:</strong>{" "}
+                                        <strong>Votre rÃ©ponse:</strong>{" "}
                                         {result.userAnswer}
                                     </p>
                                     {!result.isCorrect && (
                                         <p>
-                                            <strong>Réponse correcte:</strong>{" "}
+                                            <strong>RÃ©ponse correcte:</strong>{" "}
                                             {result.correctAnswer}
                                         </p>
                                     )}
@@ -264,16 +264,16 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
         normalizedQuizData = {
             sections: [
                 {
-                    title: "1) Choisissez la bonne réponse",
+                    title: "1) Choisissez la bonne rÃ©ponse",
                     type: "multiple-choice",
                     questions: [
                         {
                             id: "q1",
-                            text: "Lequel des éléments suivants N'EST PAS un principe clé du design ?",
+                            text: "Lequel des Ã©lÃ©ments suivants N'EST PAS un principe clÃ© du design ?",
                             correctAnswer: "D",
                             options: [
                                 { id: "A", label: "Contraste" },
-                                { id: "B", label: "Répétition" },
+                                { id: "B", label: "RÃ©pÃ©tition" },
                                 { id: "C", label: "Alignement" },
                                 { id: "D", label: "Dissonance" },
                             ],
@@ -284,42 +284,42 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                     title: "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
                     type: "checkbox",
                     instructions:
-                        "Vous pouvez sélectionner plus de deux options",
+                        "Vous pouvez sÃ©lectionner plus de deux options",
                     questions: [
                         {
                             id: "q2",
                             text: "Pourquoi la recherche utilisateur est-elle importante dans le processus de design ?",
                             correctAnswer: ["B", "D"],
                             options: [
-                                { id: "A", label: "Elle est coûteuse" },
+                                { id: "A", label: "Elle est coÃ»teuse" },
                                 {
                                     id: "B",
-                                    label: "Elle permet de comprendre les besoins réels",
+                                    label: "Elle permet de comprendre les besoins rÃ©els",
                                 },
                                 { id: "C", label: "Elle remplace les tests" },
                                 {
                                     id: "D",
-                                    label: "Elle améliore la satisfaction utilisateur",
+                                    label: "Elle amÃ©liore la satisfaction utilisateur",
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    title: "2) Répondez brièvement à ces questions",
+                    title: "2) RÃ©pondez briÃ¨vement Ã  ces questions",
                     type: "text",
                     questions: [
                         {
                             id: "q3",
                             text: "Qu'est-ce que le design thinking ?",
                             correctAnswer:
-                                "Une approche centrée sur l'utilisateur pour résoudre des problèmes",
+                                "Une approche centrÃ©e sur l'utilisateur pour rÃ©soudre des problÃ¨mes",
                         },
                         {
                             id: "q4",
-                            text: "Citez deux avantages clés du prototypage dans le processus de design ?",
+                            text: "Citez deux avantages clÃ©s du prototypage dans le processus de design ?",
                             correctAnswer:
-                                "Permet de tester rapidement les idées et d'identifier les problèmes tôt",
+                                "Permet de tester rapidement les idÃ©es et d'identifier les problÃ¨mes tÃ´t",
                         },
                     ],
                 },
@@ -347,8 +347,8 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                 if (section.type === "multiple-choice") {
                     isCorrect = userAnswer === correctAnswer;
                     feedback = isCorrect
-                        ? "Bonne réponse !"
-                        : `La bonne réponse était "${correctAnswer}".`;
+                        ? "Bonne rÃ©ponse !"
+                        : `La bonne rÃ©ponse Ã©tait "${correctAnswer}".`;
                 } else if (section.type === "true-false") {
                     // Accept both English and French values for true/false
                     const normalizeTF = (val) => {
@@ -361,8 +361,8 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                     isCorrect =
                         normalizeTF(userAnswer) === normalizeTF(correctAnswer);
                     feedback = isCorrect
-                        ? "Bonne réponse !"
-                        : `La bonne réponse était \"${correctAnswer}\".`;
+                        ? "Bonne rÃ©ponse !"
+                        : `La bonne rÃ©ponse Ã©tait \"${correctAnswer}\".`;
                 } else if (section.type === "checkbox") {
                     // Ensure both are arrays
                     const userArr = Array.isArray(userAnswer) ? userAnswer : [];
@@ -375,8 +375,8 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                         userSet.size === correctSet.size &&
                         [...userSet].every((x) => correctSet.has(x));
                     feedback = isCorrect
-                        ? "Bonne réponse !"
-                        : `Les bonnes réponses étaient: ${correctArr.join(", ")}.`;
+                        ? "Bonne rÃ©ponse !"
+                        : `Les bonnes rÃ©ponses Ã©taient: ${correctArr.join(", ")}.`;
                 } else if (section.type === "text") {
                     // Robust text comparison: trim, lowercase, ignore accents, require 70% similarity
                     const normalize = (str) =>
@@ -400,8 +400,8 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                             : 0;
                     isCorrect = similarity >= 0.7;
                     feedback = isCorrect
-                        ? "Bonne réponse !"
-                        : `Votre réponse pourrait être améliorée. Réponse attendue : ${correctAnswer}`;
+                        ? "Bonne rÃ©ponse !"
+                        : `Votre rÃ©ponse pourrait Ãªtre amÃ©liorÃ©e. RÃ©ponse attendue : ${correctAnswer}`;
                 }
 
                 results.push({
@@ -409,7 +409,7 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                     questionText: question.text,
                     userAnswer: Array.isArray(userAnswer)
                         ? userAnswer.join(", ")
-                        : userAnswer || "Pas de réponse",
+                        : userAnswer || "Pas de rÃ©ponse",
                     correctAnswer: Array.isArray(correctAnswer)
                         ? correctAnswer.join(", ")
                         : correctAnswer,
@@ -477,10 +477,6 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                     completedAt: new Date().toISOString(),
                 });
             } catch (error) {
-                console.error(
-                    "Error submitting quiz results to backend:",
-                    error,
-                );
                 // Don't block the user if backend save fails
             }
 

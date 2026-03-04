@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
     UserIcon,
@@ -61,7 +61,6 @@ const UserProfile = () => {
                 });
             }
         } catch (error) {
-            console.error("Error fetching profile:", error);
         } finally {
             setLoading(false);
         }
@@ -175,7 +174,6 @@ const UserProfile = () => {
                 setImagePreview(null);
             }
         } catch (error) {
-            console.error("Error updating profile:", error);
         } finally {
             setUpdating(false);
         }

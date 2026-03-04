@@ -1,4 +1,4 @@
-import { Star, ThumbsUp } from "lucide-react";
+﻿import { Star, ThumbsUp } from "lucide-react";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,7 +29,6 @@ const ProgramReviews = ({ programId }) => {
         );
       }
     } catch (error) {
-      console.error("Error fetching reviews:", error);
       // Don't show error to user, just show empty state
     } finally {
       setLoading(false);

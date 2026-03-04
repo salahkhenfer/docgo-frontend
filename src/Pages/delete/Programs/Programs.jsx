@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     Search,
@@ -79,7 +79,6 @@ const Programs = () => {
                 throw new Error(response.message || "Failed to fetch programs");
             }
         } catch (err) {
-            console.error("Error fetching programs:", err);
             setError(err.message);
             setPrograms([]);
         } finally {
@@ -96,7 +95,6 @@ const Programs = () => {
                 setOrganizations(response.data.organizations || []);
             }
         } catch (err) {
-            console.error("Error fetching filter data:", err);
         }
     };
 
@@ -317,7 +315,7 @@ const Programs = () => {
                                 }
                                 className="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
                             >
-                                {sortOrder === "asc" ? "↑" : "↓"}
+                                {sortOrder === "asc" ? "â†‘" : "â†“"}
                             </button>
                         </div>
 

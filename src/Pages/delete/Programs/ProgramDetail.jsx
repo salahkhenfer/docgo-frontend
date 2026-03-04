@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
     ArrowLeft,
@@ -63,7 +63,6 @@ const ProgramDetail = () => {
                 throw new Error(response.message || "Program not found");
             }
         } catch (err) {
-            console.error("Error fetching program:", err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -610,7 +609,7 @@ const ProgramDetail = () => {
                                 onClick={() => setIsVideoModalOpen(false)}
                                 className="text-gray-500 hover:text-gray-700"
                             >
-                                ×
+                                Ã—
                             </button>
                         </div>
                         <div className="p-4">

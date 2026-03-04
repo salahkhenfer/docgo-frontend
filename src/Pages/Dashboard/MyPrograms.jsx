@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
@@ -31,7 +31,6 @@ const MyPrograms = () => {
                     response.data?.data?.applications?.programs || [];
                 setApplications(Array.isArray(programs) ? programs : []);
             } catch (error) {
-                console.error("Error fetching program applications:", error);
                 setApplications([]);
             } finally {
                 setLoading(false);

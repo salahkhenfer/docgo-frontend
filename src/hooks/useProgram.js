@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
@@ -39,7 +39,6 @@ export const useProgram = (programId) => {
                 setPaymentStatus(null);
             }
         } catch (error) {
-            console.error("Error checking payment status:", error);
             setPaymentStatus(null);
         }
     }, [isAuth, programId]);
@@ -96,7 +95,6 @@ export const useProgram = (programId) => {
                     }
                 }
             } catch (err) {
-                console.error("Error checking enrollment status:", err);
             }
         },
         [isAuth, programId],
@@ -209,7 +207,6 @@ export const useProgram = (programId) => {
                     return;
                 }
 
-                console.error("Error fetching program:", err);
 
                 // More specific error messages
                 let errorMessage =
@@ -302,7 +299,6 @@ export const useProgram = (programId) => {
             // Navigate to applications page
             navigate("/my-applications");
         } catch (error) {
-            console.error("Free program application error:", error);
 
             let errorMessage =
                 "Failed to submit application for the program. Please try again.";

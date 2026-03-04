@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -66,7 +66,6 @@ export const authService = {
         try {
             await authApi.post("/Logout");
         } catch (error) {
-            console.error("Logout error:", error);
         } finally {
             // Clear local storage regardless of API call success
             localStorage.removeItem("user");

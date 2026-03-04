@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import { toast } from "react-toastify";
@@ -121,7 +121,6 @@ const EditProfile = () => {
                 toast.error(getApiErrorMessage({ response: { data } }, t));
             }
         } catch (error) {
-            console.error("Error uploading Image:", error);
             toast.error(getApiErrorMessage(error, t));
         } finally {
             setUploadingImage(false);
@@ -213,7 +212,6 @@ const EditProfile = () => {
                 toast.error(getApiErrorMessage({ response: { data } }, t));
             }
         } catch (error) {
-            console.error("Error updating profile:", error);
             toast.error(getApiErrorMessage(error, t));
         } finally {
             setLoading(false);
@@ -239,7 +237,6 @@ const EditProfile = () => {
                 toast.error(t("apiErrors.failedToLoad"));
             }
         } catch (error) {
-            console.error("Error fetching profile data:", error);
             toast.error(getApiErrorMessage(error, t));
         } finally {
             setLoading(false);

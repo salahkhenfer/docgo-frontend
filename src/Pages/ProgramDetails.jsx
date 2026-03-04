@@ -1,4 +1,4 @@
-import {
+﻿import {
     ArrowLeft,
     Clock,
     GraduationCap,
@@ -130,7 +130,6 @@ export const ProgramDetails = () => {
                 });
             }
         } catch (error) {
-            console.error("Error sending message:", error);
             toast.error(getApiErrorMessage(error, tGlobal));
         } finally {
             setIsSubmittingContact(false);
@@ -150,7 +149,6 @@ export const ProgramDetails = () => {
             try {
                 await navigator.share(shareData);
             } catch (error) {
-                console.error("Error sharing:", error);
                 navigator.clipboard
                     .writeText(window.location.href)
                     .then(() => {
@@ -210,7 +208,7 @@ export const ProgramDetails = () => {
                 />
                 <div className="min-h-screen flex items-center justify-center bg-gray-50">
                     <div className="text-center max-w-md mx-auto p-8">
-                        <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                        <div className="text-red-500 text-6xl mb-4">âš ï¸</div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">
                             {t("Something went wrong") ||
                                 "Something went wrong"}
@@ -255,7 +253,7 @@ export const ProgramDetails = () => {
                 />
                 <div className="min-h-screen flex items-center justify-center bg-gray-50">
                     <div className="text-center max-w-md mx-auto p-8">
-                        <div className="text-gray-400 text-6xl mb-4">📋</div>
+                        <div className="text-gray-400 text-6xl mb-4">ðŸ“‹</div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">
                             {t("Program not found") || "Program not found"}
                         </h2>
@@ -504,14 +502,6 @@ export const ProgramDetails = () => {
                                                         }
                                                         className="w-full h-full object-contain"
                                                         onError={(e) => {
-                                                            console.error(
-                                                                "Video load error:",
-                                                                e,
-                                                            );
-                                                            console.error(
-                                                                "Attempted video URL:",
-                                                                fullVideoUrl,
-                                                            );
                                                         }}
                                                     >
                                                         <source
@@ -689,11 +679,11 @@ export const ProgramDetails = () => {
                                                 >
                                                     {applicationStatus ===
                                                     "approved"
-                                                        ? "✅"
+                                                        ? "âœ…"
                                                         : applicationStatus ===
                                                             "rejected"
-                                                          ? "❌"
-                                                          : "⏳"}
+                                                          ? "âŒ"
+                                                          : "â³"}
                                                 </div>
                                                 <h3 className="font-semibold text-gray-900 mb-1">
                                                     {applicationStatus ===
@@ -964,7 +954,7 @@ export const ProgramDetails = () => {
                                         }
                                         className="text-gray-400 hover:text-gray-600 transition-colors"
                                     >
-                                        ✕
+                                        âœ•
                                     </button>
                                 </div>
                             </div>

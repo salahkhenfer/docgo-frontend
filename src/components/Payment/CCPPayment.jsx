@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+﻿import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -67,7 +67,6 @@ const CCPPayment = ({
                     setExistingApplication(response.data);
                 }
             } catch (error) {
-                console.error("Error checking application:", error);
             } finally {
                 setCheckingApplication(false);
             }
@@ -283,7 +282,6 @@ const CCPPayment = ({
 
             onSuccess(successPayment);
         } catch (error) {
-            console.error("CCP payment error:", error);
 
             // If payment upload failed, attempt cleanup to remove any uploaded file
             if (itemData?.id) {
@@ -293,10 +291,6 @@ const CCPPayment = ({
                         itemId: itemData.id,
                     });
                 } catch (cleanupError) {
-                    console.warn(
-                        "Payment cleanup failed (may be normal if file wasn't uploaded):",
-                        cleanupError.message,
-                    );
                 }
             }
 

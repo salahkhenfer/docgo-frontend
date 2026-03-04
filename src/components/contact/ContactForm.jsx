@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
@@ -81,7 +81,6 @@ const ContactForm = ({
             // Hide success message after 5 seconds
             setTimeout(() => setSuccess(false), 5000);
         } catch (error) {
-            console.error("Error sending contact message:", error);
             setError(
                 error.response?.data?.message ||
                     t(

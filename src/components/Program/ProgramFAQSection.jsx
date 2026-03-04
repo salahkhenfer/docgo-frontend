@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     ChevronDownIcon,
@@ -90,7 +90,6 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                 alert(result.message || t("faq.failedToVote"));
             }
         } catch (error) {
-            console.error("Error voting on FAQ:", error);
             alert(t("faq.failedToVote"));
         } finally {
             setVoteStates((prev) => ({

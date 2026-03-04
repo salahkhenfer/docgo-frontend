@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import {
@@ -52,7 +52,6 @@ const MyApplications = () => {
                 );
             }
         } catch (error) {
-            console.error("Error fetching applications:", error);
             toast.error("Failed to load applications");
         } finally {
             setLoading(false);
@@ -388,7 +387,7 @@ const MyApplications = () => {
                                 </span>
                             </p>
                             <p className="text-xs text-gray-400 mb-4">
-                                Ce message sera marqué comme support
+                                Ce message sera marquÃ© comme support
                                 candidature.
                             </p>
                             <ContactForm

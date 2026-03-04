@@ -1,4 +1,4 @@
-import api from "./apiClient";
+﻿import api from "./apiClient";
 
 const notificationService = {
     // Get current user's notifications
@@ -10,7 +10,6 @@ const notificationService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching notifications:", error);
             throw error;
         }
     },
@@ -22,7 +21,6 @@ const notificationService = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error marking notification as read:", error);
             throw error;
         }
     },
@@ -32,7 +30,6 @@ const notificationService = {
             const response = await api.patch(`/notifications/read-all`);
             return response.data;
         } catch (error) {
-            console.error("Error marking all notifications as read:", error);
             throw error;
         }
     },
@@ -43,7 +40,6 @@ const notificationService = {
             const response = await api.get(`/notifications/unread-count`);
             return response.data;
         } catch (error) {
-            console.error("Error fetching unread count:", error);
             throw error;
         }
     },
@@ -55,7 +51,6 @@ const notificationService = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error deleting notification:", error);
             throw error;
         }
     },

@@ -1,4 +1,4 @@
-import { Bars3Icon } from "@heroicons/react/24/outline";
+﻿import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
@@ -45,7 +45,6 @@ const UserDashboard = () => {
                 );
             }
         } catch (error) {
-            console.error("Error fetching dashboard data:", error);
             setError(
                 error.response?.data?.message ||
                     error.message ||

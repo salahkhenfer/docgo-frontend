@@ -1,4 +1,4 @@
-// Example of how to create any new service using the shared API client
+﻿// Example of how to create any new service using the shared API client
 
 import api from "./apiClient";
 
@@ -9,7 +9,6 @@ export const exampleService = {
             const response = await api.get(`/some-endpoint/${id}`);
             return response.data;
         } catch (error) {
-            console.error("Error fetching data:", error);
             throw error;
         }
     },
@@ -20,7 +19,6 @@ export const exampleService = {
             const response = await api.post("/some-endpoint", data);
             return response.data;
         } catch (error) {
-            console.error("Error creating data:", error);
             throw error;
         }
     },
@@ -31,7 +29,6 @@ export const exampleService = {
             const response = await api.put(`/some-endpoint/${id}`, data);
             return response.data;
         } catch (error) {
-            console.error("Error updating data:", error);
             throw error;
         }
     },
@@ -42,7 +39,6 @@ export const exampleService = {
             const response = await api.delete(`/some-endpoint/${id}`);
             return response.data;
         } catch (error) {
-            console.error("Error deleting data:", error);
             throw error;
         }
     },
@@ -57,7 +53,6 @@ export const exampleService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error uploading file:", error);
             throw error;
         }
     },
@@ -70,7 +65,6 @@ export const exampleService = {
             });
             return response;
         } catch (error) {
-            console.error("Error downloading file:", error);
             throw error;
         }
     },

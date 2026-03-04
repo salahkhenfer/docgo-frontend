@@ -1,4 +1,4 @@
-import {
+﻿import {
     ArrowTopRightOnSquareIcon,
     BellIcon,
     CheckCircleIcon,
@@ -49,23 +49,23 @@ const inferType = (title, message) => {
     const raw = `${title || ""} ${message || ""}`.toLowerCase();
     if (
         raw.includes("approved") ||
-        raw.includes("approuvé") ||
+        raw.includes("approuvÃ©") ||
         raw.includes("approuve") ||
-        raw.includes("تمت الموافقة")
+        raw.includes("ØªÙ…Øª Ø§Ù„Ù…ÙˆØ§ÙÙ‚Ø©")
     ) {
         return "success";
     }
     if (
         raw.includes("rejected") ||
         raw.includes("rejet") ||
-        raw.includes("رفض")
+        raw.includes("Ø±ÙØ¶")
     ) {
         return "error";
     }
     if (
         raw.includes("action required") ||
         raw.includes("requise") ||
-        raw.includes("مطلوب")
+        raw.includes("Ù…Ø·Ù„ÙˆØ¨")
     ) {
         return "warning";
     }
@@ -126,7 +126,6 @@ const UserNotifications = () => {
 
             setNotifications(normalized);
         } catch (error) {
-            console.error("Error fetching notifications:", error);
             setNotifications([]);
         } finally {
             setLoading(false);
@@ -142,7 +141,6 @@ const UserNotifications = () => {
                 ),
             );
         } catch (error) {
-            console.error("Error marking notification as read:", error);
         }
     };
 
@@ -151,7 +149,6 @@ const UserNotifications = () => {
             await notificationService.markAllAsRead();
             setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
         } catch (error) {
-            console.error("Error marking all notifications as read:", error);
         }
     };
 
@@ -170,7 +167,7 @@ const UserNotifications = () => {
             return;
         }
 
-        // No link — show a detail popup
+        // No link â€” show a detail popup
         const formattedDate = notification.createdAt
             ? new Date(notification.createdAt).toLocaleString(i18n.language, {
                   dateStyle: "medium",
@@ -226,7 +223,6 @@ const UserNotifications = () => {
                     prev.filter((n) => n.id !== notificationId),
                 );
             } catch (error) {
-                console.error("Error deleting notification:", error);
             }
         }
     };

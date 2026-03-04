@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChevronDown,
     Filter,
     Grid,
@@ -306,7 +306,6 @@ export function Programs() {
 
                 setError(null);
             } catch (error) {
-                console.error("Error fetching programs:", error);
                 setError("Failed to load programs. Please try again.");
                 toast.error(t("Failed to load programs"));
                 setPrograms([]);
@@ -370,7 +369,6 @@ export function Programs() {
                 : [];
             setLocations(locations);
         } catch (error) {
-            console.error("Error fetching locations:", error);
             setLocations([]);
         }
     };
@@ -400,7 +398,6 @@ export function Programs() {
                 organizations: organizations.length || 0,
             }));
         } catch (error) {
-            console.error("Error fetching filter data:", error);
             // Set empty arrays on error to prevent crashes
             setCategories([]);
             setOrganizations([]);
@@ -455,7 +452,6 @@ export function Programs() {
                     setEnrolledPrograms(programs);
                 }
             } catch (error) {
-                console.error("Error fetching enrolled programs:", error);
             } finally {
                 setEnrolledProgramsLoading(false);
             }
@@ -736,7 +732,7 @@ export function Programs() {
                 </div>
             </div>
 
-            {/* ─── Enrolled Programs Section ─────────────────────────────── */}
+            {/* â”€â”€â”€ Enrolled Programs Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {isAuth &&
                 (enrolledProgramsLoading || enrolledPrograms.length > 0) && (
                     <div className="bg-gradient-to-r from-purple-700 to-indigo-700 border-b border-indigo-800">
@@ -826,7 +822,7 @@ export function Programs() {
                                                     </h4>
                                                     <div className="mt-2 flex items-center gap-1.5">
                                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
-                                                            ✓{" "}
+                                                            âœ“{" "}
                                                             {t("Enrolled") ||
                                                                 "Enrolled"}
                                                         </span>

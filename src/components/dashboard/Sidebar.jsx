@@ -1,4 +1,4 @@
-import {
+﻿import {
     AcademicCapIcon,
     BellIcon,
     BookOpenIcon,
@@ -38,7 +38,6 @@ const UserSidebar = ({ isOpen, onClose }) => {
                 setContactStats(response.data.data);
             }
         } catch (error) {
-            console.error("Error fetching contact stats:", error);
         }
     }, [user?.id]);
 
@@ -49,7 +48,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
                 setNotificationCount(response.data.unreadCount || 0);
             }
         } catch (error) {
-            // silently ignore — badge simply won't show
+            // silently ignore â€” badge simply won't show
         }
     }, []);
 

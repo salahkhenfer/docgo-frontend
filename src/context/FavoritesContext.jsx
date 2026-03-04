@@ -1,4 +1,4 @@
-import {
+﻿import {
     createContext,
     useContext,
     useState,
@@ -65,7 +65,6 @@ export const FavoritesProvider = ({ children }) => {
                 setFavorites(localFavorites);
             }
         } catch (error) {
-            console.error("Error loading favorites:", error);
             // Fallback to local storage on error
             if (!user) {
                 const localFavorites = getFavoritesFromStorage();
@@ -114,7 +113,6 @@ export const FavoritesProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
-            console.error("Error adding to favorites:", error);
             return {
                 success: false,
                 error: error.message || "Failed to add to favorites",
@@ -150,7 +148,6 @@ export const FavoritesProvider = ({ children }) => {
 
             return { success: true };
         } catch (error) {
-            console.error("Error removing from favorites:", error);
             return {
                 success: false,
                 error: error.message || "Failed to remove from favorites",

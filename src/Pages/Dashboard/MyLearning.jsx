@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
@@ -30,7 +30,6 @@ const MyLearning = () => {
                 const courses = response.data?.data?.enrollments?.courses || [];
                 setEnrollments(Array.isArray(courses) ? courses : []);
             } catch (error) {
-                console.error("Error fetching enrollments:", error);
                 setEnrollments([]);
             } finally {
                 setLoading(false);

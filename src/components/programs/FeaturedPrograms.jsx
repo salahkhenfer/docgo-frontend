@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Star,
@@ -48,7 +48,6 @@ const FeaturedPrograms = ({
                 );
             }
         } catch (err) {
-            console.error("Error fetching featured programs:", err);
             setError(err.message);
             setPrograms([]);
         } finally {

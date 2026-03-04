@@ -1,4 +1,4 @@
-import api from "./apiClient";
+﻿import api from "./apiClient";
 
 class VisitService {
   constructor() {
@@ -33,7 +33,6 @@ class VisitService {
         return response.data.visitId;
       }
     } catch (error) {
-      console.error("Error registering visit:", error);
     }
     return null;
   }
@@ -54,7 +53,6 @@ class VisitService {
     } catch (error) {
       // Only log non-400 errors (400 means visit already processed or invalid)
       if (error.response?.status !== 400) {
-        console.error("Error updating visit duration:", error);
       }
       // Clear the visit ID even on error to prevent retry loops
       this.currentVisitId = null;

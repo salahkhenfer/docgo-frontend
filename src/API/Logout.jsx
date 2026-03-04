@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 import Swal from "sweetalert2";
 import i18n from "../i18n";
 
@@ -22,7 +22,6 @@ const handleLogout = async ({
             },
         );
     } catch (error) {
-        console.error("Logout error:", error);
     } finally {
         // Close dropdown if function was provided
         if (setIsDropdownOpen) {

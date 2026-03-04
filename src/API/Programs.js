@@ -1,4 +1,4 @@
-import apiClient from "../services/apiClient";
+﻿import apiClient from "../services/apiClient";
 
 // Client-side Programs API (for public access)
 export const clientProgramsAPI = {
@@ -10,7 +10,6 @@ export const clientProgramsAPI = {
       // Server now returns programs directly
       return response.data;
     } catch (error) {
-      console.error("Error fetching programs:", error);
       throw error;
     }
   },
@@ -21,7 +20,6 @@ export const clientProgramsAPI = {
       const response = await apiClient.get(`/Programs/${programId}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching program details:", error);
       throw error;
     }
   },
@@ -34,7 +32,6 @@ export const clientProgramsAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching featured programs:", error);
       throw error;
     }
   },
@@ -44,7 +41,6 @@ export const clientProgramsAPI = {
       const response = await apiClient.get("/programs/locations");
       return response.data;
     } catch (error) {
-      console.error("Error fetching program locations:", error);
       throw error;
     }
   },
@@ -55,7 +51,6 @@ export const clientProgramsAPI = {
       const response = await apiClient.get("/Programs/categories");
       return response.data;
     } catch (error) {
-      console.error("Error fetching program categories:", error);
       throw error;
     }
   },
@@ -68,7 +63,6 @@ export const clientProgramsAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error("Error searching programs:", error);
       throw error;
     }
   },

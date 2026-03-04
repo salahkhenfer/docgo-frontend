@@ -1,4 +1,4 @@
-import {
+﻿import {
     ChevronLeft,
     ChevronRight,
     FileText,
@@ -97,10 +97,6 @@ export function CourseVideos() {
             } catch (error) {
                 // Note: 404 errors are normal for first-time course visits
                 if (error.response?.status !== 404) {
-                    console.warn(
-                        "Error loading progress from backend:",
-                        error.message,
-                    );
                 }
                 // Fallback to localStorage
                 const savedProgress = localStorage.getItem(
@@ -169,7 +165,7 @@ export function CourseVideos() {
                     }
                 }
             } catch {
-                // silent — expected 404 for new users
+                // silent â€” expected 404 for new users
             }
         };
         if (courseId && user) loadItemProgress();
@@ -216,7 +212,6 @@ export function CourseVideos() {
                     setLastSyncTime(new Date().toISOString());
                 }
             } catch (error) {
-                console.error("Error syncing progress to backend:", error);
             } finally {
                 setIsSyncing(false);
             }
@@ -296,10 +291,8 @@ export function CourseVideos() {
             hls.loadSource(url);
             hls.attachMedia(videoEl);
             hls.on(Hls.Events.ERROR, (_evt, data) => {
-                console.error("HLS error:", data);
             });
         } else {
-            console.warn("HLS not supported in this browser");
         }
 
         return () => {
@@ -371,7 +364,6 @@ export function CourseVideos() {
                         timestamp: new Date().toISOString(),
                     });
                 } catch (error) {
-                    console.error("Error updating video progress:", error);
                 }
             }, 2000); // Send update 2 seconds after last change
         };
@@ -543,7 +535,7 @@ export function CourseVideos() {
     const allVideosCompleted =
         videos.length > 0 && completedVideos.size >= videos.length;
 
-    // Certificate click handler — shows real-name warning then navigates
+    // Certificate click handler â€” shows real-name warning then navigates
     const handleCertificateClick = async () => {
         const studentName =
             user?.firstName && user?.lastName
@@ -553,7 +545,7 @@ export function CourseVideos() {
                   : "";
 
         const result = await Swal.fire({
-            title: t("certificate.realNameTitle") || "⚠️ Certificate Name",
+            title: t("certificate.realNameTitle") || "âš ï¸ Certificate Name",
             html: `
                 <p style="margin-bottom:10px;color:#374151">
                     ${t("certificate.realNameWarning") || "Your certificate will be issued under your real name. This cannot be changed later."}
@@ -1519,20 +1511,6 @@ export function CourseVideos() {
                                                             handleVideoEnded
                                                         }
                                                         onError={(e) => {
-                                                            console.error(
-                                                                "Video error:",
-                                                                e,
-                                                            );
-                                                            console.error(
-                                                                "Video source:",
-                                                                getVideoUrl(
-                                                                    currentVideo,
-                                                                ),
-                                                            );
-                                                            console.error(
-                                                                "Current video object:",
-                                                                currentVideo,
-                                                            );
                                                         }}
                                                     />
 
@@ -1561,7 +1539,7 @@ export function CourseVideos() {
                                                 <div className="w-full aspect-video flex items-center justify-center bg-gray-900 text-white">
                                                     <div className="text-center p-8">
                                                         <div className="text-6xl mb-4">
-                                                            🎥
+                                                            ðŸŽ¥
                                                         </div>
                                                         <h3 className="text-xl font-semibold mb-2">
                                                             {t(

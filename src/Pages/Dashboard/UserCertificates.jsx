@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -37,7 +37,6 @@ const UserCertificates = () => {
                 setCertificates(response.data.certificates || []);
             }
         } catch (error) {
-            console.error("Error fetching certificates:", error);
             setCertificates([]);
         } finally {
             setLoading(false);
@@ -50,7 +49,6 @@ const UserCertificates = () => {
             // Navigate to the certificate page to download from there
             window.open(`/verify/certificate/${certificateId}`, "_blank");
         } catch (error) {
-            console.error("Error opening certificate:", error);
         } finally {
             setDownloadingId(null);
         }

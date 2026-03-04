@@ -1,4 +1,4 @@
-import apiClient from "../services/apiClient";
+﻿import apiClient from "../services/apiClient";
 
 // Payment API (CCP screenshot payments only for now)
 export const PaymentAPI = {
@@ -18,7 +18,6 @@ export const PaymentAPI = {
                 data: response.data,
             };
         } catch (error) {
-            console.error("Check payment application error:", error);
             return {
                 success: false,
                 message:
@@ -38,7 +37,6 @@ export const PaymentAPI = {
                 data: response.data.data,
             };
         } catch (error) {
-            console.error("Get my payments error:", error);
             return {
                 success: false,
                 message:
@@ -135,7 +133,6 @@ export const PaymentAPI = {
                     "CCP payment submitted successfully",
             };
         } catch (error) {
-            console.error("Create CCP payment error:", error);
             return {
                 success: false,
                 message:
@@ -173,7 +170,6 @@ export const PaymentAPI = {
                 message: response.data.message || "Payment cleanup successful",
             };
         } catch (error) {
-            console.error("CCP payment cleanup error:", error);
             return {
                 success: false,
                 message:
@@ -202,7 +198,6 @@ export const PaymentAPI = {
                 message: "Payment history fetched successfully",
             };
         } catch (error) {
-            console.error("Get user payments error:", error);
             return {
                 success: false,
                 message:
@@ -224,7 +219,6 @@ export const PaymentAPI = {
                 message: "Payment details fetched successfully",
             };
         } catch (error) {
-            console.error("Get payment details error:", error);
             return {
                 success: false,
                 message:
@@ -248,7 +242,6 @@ export const PaymentAPI = {
                 message: "Payment cancelled successfully",
             };
         } catch (error) {
-            console.error("Cancel payment error:", error);
             return {
                 success: false,
                 message:
