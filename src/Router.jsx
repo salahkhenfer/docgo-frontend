@@ -1,7 +1,7 @@
 import {
-    createBrowserRouter,
-    redirect,
-    ScrollRestoration,
+  createBrowserRouter,
+  redirect,
+  ScrollRestoration,
 } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
@@ -30,6 +30,7 @@ import VerifyCertificate from "./Pages/VerifyCertificate";
 import Course from "./Pages/Course";
 import CourseResources from "./Pages/CourseResources";
 import CourseVideos from "./Pages/CourseVideos";
+import CourseSections from "./Pages/CourseSections";
 import UserDashboard from "./Pages/Dashboard/UserDashboard";
 import NotFound from "./pages/NotFound";
 import EditProfile from "./Pages/Profile/EditProfile";
@@ -52,366 +53,360 @@ import ProgramApplicationStatus from "./Pages/ProgramApplicationStatus";
 
 // Auth protection loader
 const protectedLoader = async ({ request }) => {
-    const API_URL = getApiBaseUrl();
+  const API_URL = getApiBaseUrl();
 
-    const userRaw =
-        localStorage.getItem("user") || sessionStorage.getItem("user");
-    let hasValidUser = false;
-    if (userRaw) {
-        try {
-            const parsed = JSON.parse(userRaw);
-            hasValidUser = !!parsed?.id;
-        } catch {
-            hasValidUser = false;
-        }
+  const userRaw =
+    localStorage.getItem("user") || sessionStorage.getItem("user");
+  let hasValidUser = false;
+  if (userRaw) {
+    try {
+      const parsed = JSON.parse(userRaw);
+      hasValidUser = !!parsed?.id;
+    } catch {
+      hasValidUser = false;
     }
+  }
 
-    // If we don't have a cached user, check cookie auth with the backend.
-    // This prevents the login<->dashboard bounce on hard refresh.
-    if (!hasValidUser) {
-        try {
-            const resp = await fetch(`${API_URL}/check_Auth`, {
-                method: "GET",
-                credentials: "include",
-                headers: { Accept: "application/json" },
-            });
+  // If we don't have a cached user, check cookie auth with the backend.
+  // This prevents the login<->dashboard bounce on hard refresh.
+  if (!hasValidUser) {
+    try {
+      const resp = await fetch(`${API_URL}/check_Auth`, {
+        method: "GET",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
 
-            if (resp.ok) {
-                const data = await resp.json().catch(() => null);
-                const authedUser = data?.user;
-                if (authedUser?.id) {
-                    try {
-                        localStorage.setItem(
-                            "user",
-                            JSON.stringify(authedUser),
-                        );
-                        sessionStorage.setItem(
-                            "user",
-                            JSON.stringify(authedUser),
-                        );
-                    } catch {
-                        // ignore storage errors
-                    }
-                    hasValidUser = true;
-                }
-            }
-        } catch {
-            // ignore network errors; will fall back to redirect below
-        }
-    }
-
-    if (!hasValidUser) {
-        const url = new URL(request.url);
-        const next = `${url.pathname}${url.search}${url.hash}`;
-        try {
-            if (next && !next.toLowerCase().startsWith("/login")) {
-                sessionStorage.setItem("postLoginRedirect", next);
-            }
-        } catch {
+      if (resp.ok) {
+        const data = await resp.json().catch(() => null);
+        const authedUser = data?.user;
+        if (authedUser?.id) {
+          try {
+            localStorage.setItem("user", JSON.stringify(authedUser));
+            sessionStorage.setItem("user", JSON.stringify(authedUser));
+          } catch {
             // ignore storage errors
+          }
+          hasValidUser = true;
         }
-        return redirect(`/login?next=${encodeURIComponent(next)}`);
+      }
+    } catch {
+      // ignore network errors; will fall back to redirect below
     }
-    return null;
+  }
+
+  if (!hasValidUser) {
+    const url = new URL(request.url);
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    try {
+      if (next && !next.toLowerCase().startsWith("/login")) {
+        sessionStorage.setItem("postLoginRedirect", next);
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return redirect(`/login?next=${encodeURIComponent(next)}`);
+  }
+  return null;
 };
 
 const Routers = createBrowserRouter([
-    {
-        path: "/",
-        element: (
-            <>
-                <App />
-                <ScrollRestoration />
-            </>
-        ),
-        errorElement: <ErrorElement />,
+  {
+    path: "/",
+    element: (
+      <>
+        <App />
+        <ScrollRestoration />
+      </>
+    ),
+    errorElement: <ErrorElement />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "blocked",
+        caseSensitive: false,
+        element: <Blocked />,
+      },
+      {
+        path: "Programs",
+        caseSensitive: false,
+        element: <Programs />,
+      },
+      {
+        path: "Programs/:programId",
+        caseSensitive: false,
+        element: <ProgramDetails />,
+      },
+      {
+        path: "Programs/:programId/status",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <ProgramApplicationStatus />,
+      },
+      {
+        path: "program/:programId/status",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <ProgramApplicationStatus />,
+      },
+      {
+        path: "myapplications",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <MyApplications />,
+      },
+      {
+        path: "my-applications",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <MyApplications />,
+      },
+      {
+        path: "Courses",
+        caseSensitive: false,
+        element: <Courses />,
+      },
+      {
+        path: "faq",
+        caseSensitive: false,
+        element: <FAQPage />,
+      },
+      {
+        path: "favorites",
+        caseSensitive: false,
+        element: <FavoritesPage />,
+      },
+      {
+        path: "notifications",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <UserNotifications />,
+      },
+      {
+        path: "Courses/:courseId",
+        caseSensitive: false,
+        element: <Course />,
         children: [
-            {
-                index: true,
-                element: <Home />,
-            },
-            {
-                path: "blocked",
-                caseSensitive: false,
-                element: <Blocked />,
-            },
-            {
-                path: "Programs",
-                caseSensitive: false,
-                element: <Programs />,
-            },
-            {
-                path: "Programs/:programId",
-                caseSensitive: false,
-                element: <ProgramDetails />,
-            },
-            {
-                path: "Programs/:programId/status",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <ProgramApplicationStatus />,
-            },
-            {
-                path: "program/:programId/status",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <ProgramApplicationStatus />,
-            },
-            {
-                path: "myapplications",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <MyApplications />,
-            },
-            {
-                path: "my-applications",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <MyApplications />,
-            },
-            {
-                path: "Courses",
-                caseSensitive: false,
-                element: <Courses />,
-            },
-            {
-                path: "faq",
-                caseSensitive: false,
-                element: <FAQPage />,
-            },
-            {
-                path: "favorites",
-                caseSensitive: false,
-                element: <FavoritesPage />,
-            },
-            {
-                path: "notifications",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <UserNotifications />,
-            },
-            {
-                path: "Courses/:courseId",
-                caseSensitive: false,
-                element: <Course />,
-                children: [
-                    {
-                        index: true,
-                        element: <CourseDetails />,
-                    },
-                ],
-            },
-            {
-                path: "Courses/:courseId/watch",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <CourseVideos />,
-            },
-            {
-                path: "Courses/:courseId/watch/quiz",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <AllContentVideosCourse />,
-                children: [
-                    {
-                        index: true,
-                        element: <QuizContent />,
-                    },
-                ],
-            },
-            {
-                path: "Courses/:courseId/watch/certificate",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <Certificate />,
-            },
-            {
-                path: "verify/certificate/:certificateId",
-                caseSensitive: false,
-                element: <VerifyCertificate />,
-            },
-            {
-                path: "Courses/:courseId/watch/resources",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <CourseResources />,
-            },
-            {
-                path: "Courses/:courseId/videos",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <AllContentVideosCourse />,
-                children: [
-                    {
-                        index: true,
-                        element: <CourseVideosContent />,
-                    },
-                    {
-                        path: ":videoId",
-                        caseSensitive: false,
-                        element: <CourseVideosContent />,
-                    },
-                    {
-                        path: "quiz",
-                        caseSensitive: false,
-                        element: <QuizContent />,
-                    },
-                    {
-                        path: "certificate",
-                        caseSensitive: false,
-                        element: <Certificate />,
-                    },
-                ],
-            },
-            {
-                path: "profile",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <Profile />,
-            },
-            {
-                path: "profile/edit",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <EditProfile />,
-            },
-            {
-                path: "payment/course/:courseId",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <PaymentPage />,
-            },
-            {
-                path: "payment/program/:programId",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <PaymentPage />,
-            },
-            {
-                path: "payment/success/course/:courseId",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <PaymentSuccessPage />,
-            },
-            {
-                path: "payment/success/program/:programId",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <PaymentSuccessPage />,
-            },
-            {
-                path: "dashboard",
-                caseSensitive: false,
-                loader: protectedLoader,
-                element: <UserDashboard />,
-                children: [
-                    {
-                        index: true,
-                        element: <div />, // This will be handled by the UserDashboard component
-                    },
-                    {
-                        path: "my-learning",
-                        caseSensitive: false,
-                        element: <MyLearning />,
-                    },
-                    {
-                        path: "my-programs",
-                        caseSensitive: false,
-                        element: <MyPrograms />,
-                    },
-                    {
-                        path: "messages",
-                        caseSensitive: false,
-                        element: <UserMessages_Default />,
-                        children: [
-                            {
-                                index: true,
-                                element: <UserMessages />,
-                            },
-                            {
-                                path: "new",
-                                caseSensitive: false,
-                                element: <UserMessages_new />,
-                            },
-                        ],
-                    },
-
-                    {
-                        path: "notifications",
-                        caseSensitive: false,
-                        element: <UserNotifications />,
-                    },
-
-                    {
-                        path: "settings",
-                        caseSensitive: false,
-                        element: <UserSettings />,
-                    },
-                    {
-                        path: "favorites",
-                        caseSensitive: false,
-                        element: <UserFavorites />,
-                    },
-                    {
-                        path: "applications/:type",
-                        caseSensitive: false,
-                        element: <UserApplications />,
-                    },
-                    {
-                        path: "certificates",
-                        caseSensitive: false,
-                        element: <UserCertificates />,
-                    },
-                ],
-            },
+          {
+            index: true,
+            element: <CourseDetails />,
+          },
         ],
-    },
-    {
-        path: "login",
+      },
+      {
+        path: "Courses/:courseId/watch",
         caseSensitive: false,
-        element: (
-            <ProtectedRoute requireAuth={false}>
-                <Login />
-            </ProtectedRoute>
-        ),
-    },
-    {
-        path: "Login",
+        loader: protectedLoader,
+        element: <CourseSections />,
+      },
+      {
+        path: "Courses/:courseId/watch/quiz",
         caseSensitive: false,
-        element: (
-            <ProtectedRoute requireAuth={false}>
-                <Login />
-            </ProtectedRoute>
-        ),
-    },
-    {
-        path: "register",
+        loader: protectedLoader,
+        element: <AllContentVideosCourse />,
+        children: [
+          {
+            index: true,
+            element: <QuizContent />,
+          },
+        ],
+      },
+      {
+        path: "Courses/:courseId/watch/certificate",
         caseSensitive: false,
-        element: (
-            <ProtectedRoute requireAuth={false}>
-                <Register />
-            </ProtectedRoute>
-        ),
-    },
-    {
-        path: "Register",
+        loader: protectedLoader,
+        element: <Certificate />,
+      },
+      {
+        path: "verify/certificate/:certificateId",
         caseSensitive: false,
-        element: (
-            <ProtectedRoute requireAuth={false}>
-                <Register />
-            </ProtectedRoute>
-        ),
-    },
-    {
-        path: "forgot-password",
+        element: <VerifyCertificate />,
+      },
+      {
+        path: "Courses/:courseId/watch/resources",
         caseSensitive: false,
-        element: (
-            <ProtectedRoute requireAuth={false}>
-                <ForgotPassword />
-            </ProtectedRoute>
-        ),
-    },
-    { path: "*", element: <NotFound /> },
+        loader: protectedLoader,
+        element: <CourseResources />,
+      },
+      {
+        path: "Courses/:courseId/videos",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <AllContentVideosCourse />,
+        children: [
+          {
+            index: true,
+            element: <CourseVideosContent />,
+          },
+          {
+            path: ":videoId",
+            caseSensitive: false,
+            element: <CourseVideosContent />,
+          },
+          {
+            path: "quiz",
+            caseSensitive: false,
+            element: <QuizContent />,
+          },
+          {
+            path: "certificate",
+            caseSensitive: false,
+            element: <Certificate />,
+          },
+        ],
+      },
+      {
+        path: "profile",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <Profile />,
+      },
+      {
+        path: "profile/edit",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <EditProfile />,
+      },
+      {
+        path: "payment/course/:courseId",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <PaymentPage />,
+      },
+      {
+        path: "payment/program/:programId",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <PaymentPage />,
+      },
+      {
+        path: "payment/success/course/:courseId",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <PaymentSuccessPage />,
+      },
+      {
+        path: "payment/success/program/:programId",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <PaymentSuccessPage />,
+      },
+      {
+        path: "dashboard",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <UserDashboard />,
+        children: [
+          {
+            index: true,
+            element: <div />, // This will be handled by the UserDashboard component
+          },
+          {
+            path: "my-learning",
+            caseSensitive: false,
+            element: <MyLearning />,
+          },
+          {
+            path: "my-programs",
+            caseSensitive: false,
+            element: <MyPrograms />,
+          },
+          {
+            path: "messages",
+            caseSensitive: false,
+            element: <UserMessages_Default />,
+            children: [
+              {
+                index: true,
+                element: <UserMessages />,
+              },
+              {
+                path: "new",
+                caseSensitive: false,
+                element: <UserMessages_new />,
+              },
+            ],
+          },
+
+          {
+            path: "notifications",
+            caseSensitive: false,
+            element: <UserNotifications />,
+          },
+
+          {
+            path: "settings",
+            caseSensitive: false,
+            element: <UserSettings />,
+          },
+          {
+            path: "favorites",
+            caseSensitive: false,
+            element: <UserFavorites />,
+          },
+          {
+            path: "applications/:type",
+            caseSensitive: false,
+            element: <UserApplications />,
+          },
+          {
+            path: "certificates",
+            caseSensitive: false,
+            element: <UserCertificates />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "login",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <Login />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "Login",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <Login />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "register",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <Register />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "Register",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <Register />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "forgot-password",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <ForgotPassword />
+      </ProtectedRoute>
+    ),
+  },
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default Routers;
