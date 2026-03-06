@@ -132,17 +132,17 @@ export function ProgramCard({ program, onClick, language = "en" }) {
     const getProgramTypeIcon = (type) => {
         switch (type?.toLowerCase()) {
             case "scholarship":
-                return "ðŸŽ“";
+                return "🎓";
             case "exchange":
-                return "ðŸŒ";
+                return "🌍";
             case "grant":
-                return "ðŸ’°";
+                return "💰";
             case "training":
-                return "ðŸ“š";
+                return "📚";
             case "internship":
-                return "ðŸ’¼";
+                return "💼";
             default:
-                return "ðŸ“‹";
+                return "📋";
         }
     };
 
@@ -265,7 +265,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                     )}
                     {program.isRemote && (
                         <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
-                            ðŸŒ {t("Remote") || "Remote"}
+                            🌍 {t("Remote") || "Remote"}
                         </span>
                     )}
                 </div>
@@ -284,7 +284,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                     {program.scholarshipAmount && (
                         <div className="flex items-center gap-1.5 text-xs text-gray-500">
                             <span className="text-emerald-600 font-semibold">
-                                ðŸ’° {program.scholarshipAmount}{" "}
+                                💰 {program.scholarshipAmount}{" "}
                                 {program.currency}
                             </span>
                         </div>
