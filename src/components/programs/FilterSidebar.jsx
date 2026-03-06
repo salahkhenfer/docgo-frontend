@@ -80,7 +80,7 @@ const FilterSidebar = ({
                             },
                             {
                                 value: "free",
-                                label: t("Free Only") || "🆓 Free Only",
+                                label: t("Free Only") || " Free Only",
                             },
                         ].map((option) => (
                             <label
@@ -110,7 +110,7 @@ const FilterSidebar = ({
                                     className="w-3 h-3 text-green-600"
                                 />
                                 <span>
-                                    {option.value === "free" ? "🆓 " : "💻 "}
+                                    {option.value === "free" ? " " : " "}
                                     {option.label}
                                 </span>
                             </label>

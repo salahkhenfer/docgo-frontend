@@ -12,7 +12,7 @@ const NotFound = () => {
                     <h1 className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse">
                         404
                     </h1>
-                    <div className="text-6xl mb-4">🤔</div>
+                    <div className="text-6xl mb-4"></div>
                 </div>
 
                 {/* Error Message */}
@@ -25,7 +25,7 @@ const NotFound = () => {
                         working or doesn&apos;t exist.
                     </p>
                     <p className="text-sm text-gray-500">
-                        Don&apos;t worry, it happens to the best of us! 🚀
+                        Don&apos;t worry, it happens to the best of us! 
                     </p>
                 </div>
 
@@ -64,25 +64,25 @@ const NotFound = () => {
                     className="fixed top-20 left-10 text-blue-300 text-4xl animate-bounce"
                     style={{ animationDelay: "0s" }}
                 >
-                    ✨
+                    
                 </div>
                 <div
                     className="fixed top-40 right-20 text-purple-300 text-3xl animate-bounce"
                     style={{ animationDelay: "1s" }}
                 >
-                    🌟
+                    
                 </div>
                 <div
                     className="fixed bottom-40 left-20 text-indigo-300 text-2xl animate-bounce"
                     style={{ animationDelay: "2s" }}
                 >
-                    💫
+                    
                 </div>
                 <div
                     className="fixed bottom-20 right-10 text-blue-300 text-3xl animate-bounce"
                     style={{ animationDelay: "1.5s" }}
                 >
-                    ⭐
+                    
                 </div>
             </div>
         </div>

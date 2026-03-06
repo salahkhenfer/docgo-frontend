@@ -1,4 +1,4 @@
-﻿import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertCircle,
     AlertTriangle,
@@ -273,7 +273,7 @@ function ErrorItem({ item, onDismiss, onScrollTo }) {
                                 : "text-yellow-600 bg-yellow-100"
                         }`}
                     >
-                        ↗ Go
+                        Go
                     </span>
                 )}
                 <button
@@ -468,8 +468,7 @@ export function FileUploadZone({
                                 <Icon className="w-10 h-10 text-gray-400" />
                             ) : (
                                 <div className="w-10 h-10 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400">
-                                    ↑
-                                </div>
+                                    </div>
                             )}
                             <p className="text-sm font-semibold text-gray-700">
                                 {label}

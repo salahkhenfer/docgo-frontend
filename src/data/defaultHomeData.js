@@ -1,6 +1,6 @@
-﻿/**
+/**
  * staticDefaultHomeData
- * ─────────────────────
+ * 
  * Used as a fallback when the API is unreachable or returns an error.
  * All text exists in three languages so sections can pick the right one
  * exactly the same way they do with live CMS data.
@@ -9,7 +9,7 @@
  */
 
 export const defaultHomePageContent = {
-    // ── Visibility toggles (all on by default) ───────────────────────────
+    //  Visibility toggles (all on by default) 
     showFeaturedCourses: true,
     showFeaturedPrograms: true,
     showFAQSection: true,
@@ -17,7 +17,7 @@ export const defaultHomePageContent = {
     showServicesSection: true,
     showStepsSection: true,
 
-    // ── Hero ─────────────────────────────────────────────────────────────
+    //  Hero 
     heroBadge_en: "Explore Opportunities",
     heroBadge_fr: "Explorez les opportunités",
     heroBadge_ar: "استكشف الفرص",
@@ -36,7 +36,7 @@ export const defaultHomePageContent = {
     heroCta_fr: "Découvrir les programmes",
     heroCta_ar: "اكتشف البرامج",
 
-    // ── About Us ─────────────────────────────────────────────────────────
+    //  About Us 
     aboutTitle_en: "About Us",
     aboutTitle_fr: "À propos de nous",
     aboutTitle_ar: "من نحن",
@@ -48,7 +48,7 @@ export const defaultHomePageContent = {
     aboutDescription_ar:
         "DocGo منصة مخصصة لمساعدة الطلاب على الدراسة في الخارج. نربطك بالجامعات الشريكة، ونرشدك خلال إجراءات التأشيرة، وندعم رحلتك الأكاديمية في كل خطوة.",
 
-    // ── Steps ────────────────────────────────────────────────────────────
+    //  Steps 
     stepsTitle_en: "What To Do To Study Abroad?",
     stepsTitle_fr: "Que faire pour étudier à l'étranger ?",
     stepsTitle_ar: "ماذا تفعل للدراسة في الخارج؟",
@@ -85,7 +85,7 @@ export const defaultHomePageContent = {
         "Recevez la confirmation et préparez-vous pour votre voyage à l'étranger.",
     step4Desc_ar: "استلم التأكيد وابدأ التحضير لرحلتك في الخارج.",
 
-    // ── Services ─────────────────────────────────────────────────────────
+    //  Services 
     servicesTitle_en: "Our Services",
     servicesTitle_fr: "Nos Services",
     servicesTitle_ar: "خدماتنا",
@@ -112,7 +112,7 @@ export const defaultHomePageContent = {
     service2Cta_fr: "Découvrir tous les cours",
     service2Cta_ar: "اكتشف جميع الدورات",
 
-    // ── Filter study fields ───────────────────────────────────────────────
+    //  Filter study fields 
     filterStudyFields: [
         { id: "1", en: "Medicine", fr: "Médecine", ar: "الطب" },
         { id: "2", en: "Engineering", fr: "Ingénierie", ar: "الهندسة" },
@@ -132,7 +132,7 @@ export const defaultHomePageContent = {
 
 /**
  * Full default home payload returned when the API call fails.
- * Mirrors the shape of homeService.getHomePageData() → response.data
+ * Mirrors the shape of homeService.getHomePageData() response.data
  */
 const defaultHomeData = {
     success: true,

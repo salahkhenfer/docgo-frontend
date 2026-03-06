@@ -1,4 +1,4 @@
-﻿import {
+import {
     AcademicCapIcon,
     BellIcon,
     BookOpenIcon,
@@ -48,7 +48,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
                 setNotificationCount(response.data.unreadCount || 0);
             }
         } catch (error) {
-            // silently ignore â€ badge simply won't show
+            // silently ignore - badge simply won't show
         }
     }, []);
 

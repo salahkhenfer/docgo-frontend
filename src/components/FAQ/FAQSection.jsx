@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useAppContext } from "../../AppContext";
 import RichTextDisplay from "../Common/RichTextDisplay";

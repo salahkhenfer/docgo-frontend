@@ -71,10 +71,10 @@ const AuthRequired = ({
                             Why create an account?
                         </h3>
                         <ul className="text-sm text-gray-600 space-y-1">
-                            <li>• Track your learning progress</li>
-                            <li>• Access exclusive content</li>
-                            <li>• Earn certificates</li>
-                            <li>• Save your favorite courses</li>
+                            <li> Track your learning progress</li>
+                            <li> Access exclusive content</li>
+                            <li> Earn certificates</li>
+                            <li> Save your favorite courses</li>
                         </ul>
                     </div>
                 </div>

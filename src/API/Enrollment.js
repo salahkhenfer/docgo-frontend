@@ -1,4 +1,4 @@
-﻿import apiClient from "../services/apiClient";
+import apiClient from "../services/apiClient";
 
 // Enrollment API for managing course and program applications and enrollments
 export const EnrollmentAPI = {

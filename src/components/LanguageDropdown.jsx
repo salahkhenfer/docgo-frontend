@@ -72,7 +72,7 @@ const LanguageDropdown = () => {
                             {lang.name || "Français"}
                             {selectedLanguage === lang.code && (
                                 <span className="text-green-500 text-sm">
-                                    ✔
+                                    
                                 </span>
                             )}
                         </li>

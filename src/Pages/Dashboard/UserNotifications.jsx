@@ -1,4 +1,4 @@
-﻿import {
+import {
     ArrowTopRightOnSquareIcon,
     BellIcon,
     CheckCircleIcon,
@@ -51,21 +51,21 @@ const inferType = (title, message) => {
         raw.includes("approved") ||
         raw.includes("approuvé") ||
         raw.includes("approuve") ||
-        raw.includes("ØªÙ...Øª Ø§Ù„Ù...ÙˆØ§ÙÙ‚Ø©")
+        raw.includes("approbation")
     ) {
         return "success";
     }
     if (
         raw.includes("rejected") ||
         raw.includes("rejet") ||
-        raw.includes("Ø±ÙØ¶")
+        
     ) {
         return "error";
     }
     if (
         raw.includes("action required") ||
         raw.includes("requise") ||
-        raw.includes("Ù...Ø·Ù„ÙˆØ¨")
+        raw.includes("requise")
     ) {
         return "warning";
     }

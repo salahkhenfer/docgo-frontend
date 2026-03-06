@@ -1,4 +1,4 @@
-﻿import apiClient from "../services/apiClient";
+import apiClient from "../services/apiClient";
 
 // Client-side Courses API (for public access)
 export const clientCoursesAPI = {

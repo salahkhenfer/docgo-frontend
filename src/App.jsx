@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./LandingPage/Layout/Footer";

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
                 </div>
 
                 {submitted ? (
-                    /* ── Success state ─────────────────────────────── */
+                    /*  Success state  */
                     <div className="text-center space-y-4">
                         <div className="flex justify-center">
                             <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
@@ -100,11 +100,11 @@ const ForgotPassword = () => {
                             to="/Login"
                             className="inline-block mt-2 text-sm text-blue-600 hover:underline"
                         >
-                            ← Retour à la connexion
+                            Retour à la connexion
                         </Link>
                     </div>
                 ) : (
-                    /* ── Form state ────────────────────────────────── */
+                    /*  Form state  */
                     <>
                         <h2 className="text-2xl font-bold text-gray-900 mb-1 text-center">
                             Mot de passe oublié

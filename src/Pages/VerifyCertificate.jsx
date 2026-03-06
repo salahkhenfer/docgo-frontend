@@ -108,7 +108,7 @@ export default function VerifyCertificate() {
                                         <p className="text-xs text-gray-500 mt-0.5">
                                             {certificate.category}{" "}
                                             {certificate.level
-                                                ? `· ${certificate.level}`
+                                                ? ` ${certificate.level}`
                                                 : ""}
                                         </p>
                                     )}

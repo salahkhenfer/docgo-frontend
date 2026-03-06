@@ -49,7 +49,7 @@ const generatePDFCertificate = async (certificateData) => {
   ctx.font = "60px 'Poppins', sans-serif"; // Reduced from 80px
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
-  ctx.fillText("🏆", 2200, 280); // Adjusted position
+  ctx.fillText("", 2200, 280); // Adjusted position
 
   // Main title with adjusted size
   ctx.font = "bold 90px 'Poppins', sans-serif"; // Reduced from 120px

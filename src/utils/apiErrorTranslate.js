@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Maps raw server error message strings to i18n translation keys.
  * Keys must match `apiErrors.*` in all locale files.
  *
@@ -7,7 +7,7 @@
  *   toast.error(translateApiError(error.response?.data?.message, t));
  */
 
-// Maps server message (lowercase) → translation key
+// Maps server message (lowercase) translation key
 const ERROR_KEY_MAP = {
     // Generic
     "server error": "apiErrors.serverError",
@@ -98,7 +98,7 @@ export function translateApiError(rawMessage, t) {
 
 /**
  * Extracts the best error message string from an axios error object.
- * Checks response.data.message → response.data.error → error.message → generic key.
+ * Checks response.data.message response.data.error error.message generic key.
  *
  * @param {Error} error - The caught axios error
  * @param {Function} t - The react-i18next `t` function

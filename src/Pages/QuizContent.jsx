@@ -1,4 +1,4 @@
-﻿import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -306,7 +306,7 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                     ],
                 },
                 {
-                    title: "2) Répondez brièvement À  ces questions",
+                    title: "2) Répondez brièvement à ces questions",
                     type: "text",
                     questions: [
                         {

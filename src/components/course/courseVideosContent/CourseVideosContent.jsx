@@ -1,4 +1,4 @@
-﻿import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star, Play, Pause } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -198,7 +198,7 @@ export function CourseVideosContent() {
             {
                 id: 1,
                 testimonial:
-                    "Grâce À  un accompagnement personnalisé, je me sens accompagné À  chaque étape du processus. Le contenu est très bien structuré et facile À  suivre.",
+                    "Grâce à un accompagnement personnalisé, je me sens accompagné à chaque étape du processus. Le contenu est très bien structuré et facile à suivre.",
                 author: "Mohamed Yan",
                 role: "Étudiante en France",
                 avatar: "https://Images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
@@ -209,7 +209,7 @@ export function CourseVideosContent() {
             {
                 id: 2,
                 testimonial:
-                    "Le service m'a énormément aidé À  comprendre les démarches d'admission et visa. Les explications sont claires et détaillées.",
+                    "Le service m'a énormément aidé à comprendre les démarches d'admission et visa. Les explications sont claires et détaillées.",
                 author: "Fatima Zohra",
                 role: "Étudiante en Allemagne",
                 avatar: "https://Images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
@@ -220,7 +220,7 @@ export function CourseVideosContent() {
             {
                 id: 3,
                 testimonial:
-                    "Excellent accompagnement ! Je recommande pour toute personne qui veut étudier À  l'étranger. L'équipe est très professionnelle.",
+                    "Excellent accompagnement ! Je recommande pour toute personne qui veut étudier à l'étranger. L'équipe est très professionnelle.",
                 author: "Karim Belkacem",
                 role: "Étudiant au Canada",
                 avatar: "https://Images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
@@ -231,7 +231,7 @@ export function CourseVideosContent() {
             {
                 id: 4,
                 testimonial:
-                    "Simple, rapide et efficace. L'équipe est disponible À  tout moment. Les ressources fournies sont de grande qualité.",
+                    "Simple, rapide et efficace. L'équipe est disponible à tout moment. Les ressources fournies sont de grande qualité.",
                 author: "Lina Haddad",
                 role: "Étudiante en Belgique",
                 avatar: "https://Images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
@@ -333,7 +333,7 @@ export function CourseVideosContent() {
             alert(
                 `${t("course_data.thankYou")}\n${t(
                     "course.rating"
-                )}: ${rating} â˜...\n${t("course_data.comment")}: ${comment}`
+                )}: ${rating} â...\n${t("course_data.comment")}: ${comment}`
             );
             setComment("");
             setRating(0);
@@ -398,7 +398,7 @@ export function CourseVideosContent() {
                                 {t("course_data.students")}
                             </span>
                             <span>
-                                â˜... {courseData.statistics.averageRating} (
+                                â... {courseData.statistics.averageRating} (
                                 {courseData.statistics.totalReviews}{" "}
                                 {t("course_data.course_reviews")})
                             </span>
@@ -521,7 +521,7 @@ export function CourseVideosContent() {
                                                 : "text-gray-300 hover:text-yellow-200"
                                         }`}
                                     >
-                                        â˜...
+                                        â...
                                     </button>
                                 ))}
                                 {rating > 0 && (
@@ -586,7 +586,7 @@ export function CourseVideosContent() {
                                 <div className="text-center py-8 text-gray-500">
                                     <p>
                                         Aucun avis pour le moment. Soyez le
-                                        premier À  laisser un avis !
+                                        premier à laisser un avis !
                                     </p>
                                 </div>
                             )}

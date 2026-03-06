@@ -1,4 +1,4 @@
-﻿import axios from "axios";
+import axios from "axios";
 import Swal from "sweetalert2";
 import i18n from "../i18n";
 

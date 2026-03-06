@@ -1,4 +1,4 @@
-﻿import { BookOpen, Clock, MapPin, Star, Tag } from "lucide-react";
+import { BookOpen, Clock, MapPin, Star, Tag } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -132,17 +132,17 @@ export function ProgramCard({ program, onClick, language = "en" }) {
     const getProgramTypeIcon = (type) => {
         switch (type?.toLowerCase()) {
             case "scholarship":
-                return "🎓";
+                return "";
             case "exchange":
-                return "🌍";
+                return "";
             case "grant":
-                return "💰";
+                return "";
             case "training":
-                return "📚";
+                return "";
             case "internship":
-                return "💼";
+                return "";
             default:
-                return "📋";
+                return "";
         }
     };
 
@@ -265,7 +265,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                     )}
                     {program.isRemote && (
                         <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
-                            🌍 {t("Remote") || "Remote"}
+                             {t("Remote") || "Remote"}
                         </span>
                     )}
                 </div>
@@ -284,7 +284,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
                     {program.scholarshipAmount && (
                         <div className="flex items-center gap-1.5 text-xs text-gray-500">
                             <span className="text-emerald-600 font-semibold">
-                                💰 {program.scholarshipAmount}{" "}
+                                 {program.scholarshipAmount}{" "}
                                 {program.currency}
                             </span>
                         </div>

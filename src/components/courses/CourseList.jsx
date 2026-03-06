@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import {
@@ -92,14 +92,14 @@ function CourseListItem({ course }) {
             {/* Enrolled top ribbon */}
             {isEnrolled && enrollmentStatus === "approved" && (
                 <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-                    ✓ {t("Enrolled") || "Enrolled"}
+                     {t("Enrolled") || "Enrolled"}
                 </div>
             )}
 
             <div
                 className={`flex flex-col sm:flex-row ${isEnrolled && enrollmentStatus === "approved" ? "pt-6" : ""}`}
             >
-                {/* ── Image ── */}
+                {/*  Image  */}
                 <div className="relative sm:w-52 sm:flex-shrink-0 h-44 sm:h-auto bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden">
                     {Image && !hasImageError ? (
                         <img
@@ -150,7 +150,7 @@ function CourseListItem({ course }) {
                     </div>
                 </div>
 
-                {/* ── Content ── */}
+                {/*  Content  */}
                 <div className="flex-1 p-5 flex flex-col sm:flex-row gap-4">
                     {/* Left: main info */}
                     <div className="flex-1 flex flex-col">
@@ -217,7 +217,7 @@ function CourseListItem({ course }) {
                             )}
                             {course.Language && (
                                 <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                                    🌐 {course.Language}
+                                     {course.Language}
                                 </span>
                             )}
                         </div>
@@ -342,7 +342,7 @@ export function CourseList({
     if (courses.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center mt-12 p-12 bg-white rounded-2xl shadow-sm">
-                <div className="text-6xl mb-4">📚</div>
+                <div className="text-6xl mb-4"></div>
                 <p className="text-gray-600 text-xl font-medium mb-2">
                     {t("NoCoursesFound") || "No courses found"}
                 </p>

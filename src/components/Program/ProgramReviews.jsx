@@ -1,4 +1,4 @@
-﻿import { Star, ThumbsUp } from "lucide-react";
+import { Star, ThumbsUp } from "lucide-react";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

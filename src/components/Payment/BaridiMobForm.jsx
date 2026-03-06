@@ -108,7 +108,7 @@ const BaridiMobForm = ({ onSubmit }) => {
 
                     {receiptFile ? (
                         <p className="mt-2 text-emerald-700 font-semibold text-sm break-all max-w-[280px]">
-                            ✓ {fileName}
+                             {fileName}
                         </p>
                     ) : (
                         <img
@@ -136,13 +136,13 @@ const BaridiMobForm = ({ onSubmit }) => {
                             : "sélectionnez le fichier"}
                     </button>
                     <p className="mt-1 text-xs text-gray-500">
-                        JPG, PNG ou PDF · max {MAX_SIZE_MB}MB
+                        JPG, PNG ou PDF  max {MAX_SIZE_MB}MB
                     </p>
                 </section>
 
                 {fileError && (
                     <p className="text-sm text-red-600 flex items-center gap-1.5">
-                        <span>⚠</span> {fileError}
+                        <span></span> {fileError}
                     </p>
                 )}
 

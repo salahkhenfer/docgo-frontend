@@ -1,4 +1,4 @@
-﻿import {
+import {
     ArrowRight,
     BookOpen,
     Clock,
@@ -14,7 +14,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 
-// â€â€ helpers (mirrors ProgramCard) â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€
+// - helpers (mirrors ProgramCard) -
 
 const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -53,13 +53,13 @@ const getProgramTypeIcon = (type) => {
         case "exchange":
             return "";
         case "grant":
-            return "'°";
+            return "";
         case "training":
             return "";
         case "internship":
-            return "'¼";
+            return "";
         default:
-            return "‹";
+            return "";
     }
 };
 
@@ -71,7 +71,7 @@ const gradientMap = {
     internship: "from-teal-500 to-green-600",
 };
 
-// â€â€ Single list row â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€
+// - Single list row -
 
 function ProgramListItem({ program, onProgramClick, language = "en" }) {
     const { t } = useTranslation();
@@ -85,7 +85,7 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
 
     if (!program) return null;
 
-    // Multi-language fields â€ same logic as ProgramCard
+    // Multi-language fields - same logic as ProgramCard
     const title =
         language === "ar" && program.title_ar
             ? program.title_ar
@@ -163,7 +163,7 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
         });
     };
 
-    // Action button â€ same smart routing as ProgramCard
+    // Action button - same smart routing as ProgramCard
     const pDiscount =
         program.discountPrice !== undefined && program.discountPrice !== null
             ? Number(program.discountPrice)
@@ -195,7 +195,7 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
             className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group"
         >
             <div className="flex flex-col sm:flex-row">
-                {/* â€â€ Image â€â€ */}
+                {/* - Image - */}
                 <div
                     className={`relative sm:w-52 sm:flex-shrink-0 h-44 sm:h-auto bg-gradient-to-br ${gradientClass} overflow-hidden`}
                 >
@@ -250,7 +250,7 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
                     </div>
                 </div>
 
-                {/* â€â€ Content â€â€ */}
+                {/* - Content - */}
                 <div className="flex-1 p-5 flex flex-col sm:flex-row gap-4">
                     {/* Left: main info */}
                     <div className="flex-1 flex flex-col min-w-0">
@@ -325,7 +325,7 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
                             )}
                             {program.scholarshipAmount && (
                                 <span className="text-emerald-600 font-semibold">
-                                    '° {program.scholarshipAmount}{" "}
+                                     {program.scholarshipAmount}{" "}
                                     {program.currency || "DZD"}
                                 </span>
                             )}
@@ -417,7 +417,7 @@ ProgramListItem.propTypes = {
     language: PropTypes.string,
 };
 
-// â€â€ Container â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€
+// - Container -
 
 const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
     const { t } = useTranslation();

@@ -244,8 +244,7 @@ function Footer({ contactInfo, branding = null }) {
                             href="/programs?status=open"
                             className="inline-block pt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
                         >
-                            {t("StudyAbroad")} →
-                        </a>
+                            {t("StudyAbroad")} </a>
                     </div>
 
                     <div className="space-y-4">

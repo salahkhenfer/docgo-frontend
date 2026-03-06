@@ -66,7 +66,7 @@ export const CourseDetails = () => {
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6">
                     <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
                         <div className="text-red-500 text-4xl sm:text-5xl mb-4">
-                            ❌
+                            
                         </div>
                         <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                             Unable to Load Course
@@ -86,7 +86,7 @@ export const CourseDetails = () => {
                             to="/Courses"
                             className="inline-block mt-4 text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
                         >
-                            ← Back to Courses
+                            Back to Courses
                         </Link>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ export const CourseDetails = () => {
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6">
                     <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
                         <div className="text-gray-400 text-4xl sm:text-5xl mb-4">
-                            📚
+                            
                         </div>
                         <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                             Course Not Found

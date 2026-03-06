@@ -46,7 +46,7 @@ export function CourseGrid({
     if (courses.length === 0 && !loading) {
         return (
             <div className="flex flex-col items-center justify-center mt-12 p-12 bg-white rounded-2xl shadow-sm">
-                <div className="text-6xl mb-4">📚</div>
+                <div className="text-6xl mb-4"></div>
                 <p className="text-gray-600 text-xl font-medium mb-2">
                     {t("NoCoursesFound") || "No courses found"}
                 </p>

@@ -1,4 +1,4 @@
-﻿import apiClient from "../services/apiClient";
+import apiClient from "../services/apiClient";
 
 // Payment API (CCP screenshot payments only for now)
 export const PaymentAPI = {

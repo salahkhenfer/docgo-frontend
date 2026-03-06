@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FaUpload, FaSpinner, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaClock, FaUser, FaPhone, FaEnvelope, FaCreditCard, FaReceipt } from "react-icons/fa";
 import RichTextDisplay from "../Common/RichTextDisplay";

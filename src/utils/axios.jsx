@@ -1,4 +1,4 @@
-﻿import axios from "axios";
+import axios from "axios";
 
 // Set base URL if needed
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;

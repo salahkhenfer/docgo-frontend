@@ -84,7 +84,7 @@ export function CourseCard({
             {/* Enrollment ribbon */}
             {isEnrolled && enrollmentStatus === "approved" && (
                 <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-                    ✓ {t("Enrolled") || "Enrolled"}
+                     {t("Enrolled") || "Enrolled"}
                 </div>
             )}
 
@@ -208,12 +208,12 @@ export function CourseCard({
                     )}
                     {course.certificate && (
                         <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
-                            🏆 {t("Certificate") || "Cert"}
+                             {t("Certificate") || "Cert"}
                         </span>
                     )}
                     {course.Language && (
                         <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                            🌐 {course.Language}
+                             {course.Language}
                         </span>
                     )}
                 </div>

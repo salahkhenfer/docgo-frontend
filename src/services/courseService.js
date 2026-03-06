@@ -1,4 +1,4 @@
-﻿import api from "./apiClient";
+import api from "./apiClient";
 
 export const courseService = {
   // Get all courses with pagination and filters (works for both authenticated and guest users)

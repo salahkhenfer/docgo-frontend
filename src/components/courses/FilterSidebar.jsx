@@ -115,12 +115,12 @@ export function FilterSidebar({
                             {
                                 value: "",
                                 label: t("All Courses") || "All Courses",
-                                icon: "📚",
+                                icon: "",
                             },
                             {
                                 value: "true",
                                 label: t("Featured Only") || "Featured Only",
-                                icon: "⭐",
+                                icon: "",
                             },
                         ].map((option) => (
                             <label
@@ -288,12 +288,12 @@ export function FilterSidebar({
                             {
                                 value: "all",
                                 label: t("All Courses") || "All Courses",
-                                icon: "📚",
+                                icon: "",
                             },
                             {
                                 value: "free",
                                 label: t("Free Only") || "Free Only",
-                                icon: "🆓",
+                                icon: "",
                             },
                         ].map((option) => (
                             <label
@@ -364,7 +364,7 @@ export function FilterSidebar({
                                 </label>
                                 <input
                                     type="number"
-                                    placeholder="∞"
+                                    placeholder=""
                                     value={localMaxPrice}
                                     onChange={(e) =>
                                         setLocalMaxPrice(e.target.value)

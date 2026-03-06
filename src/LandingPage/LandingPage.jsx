@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FeaturedPrograms from "../components/Programs/FeaturedPrograms";
 import Reveal from "../components/Reveal";
 import MainLoading from "../MainLoading";
@@ -81,7 +81,7 @@ function LandingPage() {
             {/* Offline / static-fallback banner */}
             {isOffline && (
                 <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-center gap-2 bg-amber-400/90 backdrop-blur-sm text-amber-900 text-xs font-medium py-1.5 px-4 text-center">
-                    <span>⚠️</span>
+                    <span></span>
                     <span>
                         Connexion au serveur indisponible - affichage du contenu
                         par défaut

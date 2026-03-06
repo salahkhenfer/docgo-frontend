@@ -138,7 +138,7 @@ const CourseCard = ({ course }) => {
             )}
             {enrollmentProgress >= 100 && (
               <span className="text-xs text-green-600 font-medium">
-                ✓ {t("profile_data.completed")}
+                 {t("profile_data.completed")}
               </span>
             )}
           </div>

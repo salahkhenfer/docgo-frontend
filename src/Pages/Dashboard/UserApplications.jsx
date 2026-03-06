@@ -1,4 +1,4 @@
-﻿import {
+import {
   AcademicCapIcon,
   CalendarDaysIcon,
   CheckCircleIcon,

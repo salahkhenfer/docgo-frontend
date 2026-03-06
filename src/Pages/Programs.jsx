@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChevronDown,
     Filter,
     Grid,
@@ -732,7 +732,7 @@ export function Programs() {
                 </div>
             </div>
 
-            {/* â€â€â€ Enrolled Programs Section â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€ */}
+            {/* - Enrolled Programs Section - */}
             {isAuth &&
                 (enrolledProgramsLoading || enrolledPrograms.length > 0) && (
                     <div className="bg-gradient-to-r from-purple-700 to-indigo-700 border-b border-indigo-800">

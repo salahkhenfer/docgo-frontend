@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     Search,
@@ -315,7 +315,7 @@ const Programs = () => {
                                 }
                                 className="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
                             >
-                                {sortOrder === "asc" ? "â†'" : ""
+                                {sortOrder === "asc" ? "â'" : ""
                             </button>
                         </div>
 

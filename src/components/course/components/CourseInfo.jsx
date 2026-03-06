@@ -64,7 +64,7 @@ const CourseSidebar = ({
                             {t("courseInfo.averageRating")}
                         </span>
                         <span className="font-semibold text-yellow-600">
-                            {courseStats?.averageRating?.toFixed(1) || "0.0"} ⭐
+                            {courseStats?.averageRating?.toFixed(1) || "0.0"} 
                         </span>
                     </div>
 
@@ -99,7 +99,7 @@ const CourseSidebar = ({
                                     {meet.title || `Session ${index + 1}`}
                                 </div>
                                 <div className="text-sm text-green-600">
-                                    📅{" "}
+                                    {" "}
                                     {formatDate(
                                         meet.scheduledTime || meet.date,
                                     )}
@@ -164,7 +164,7 @@ const CourseSidebar = ({
                     </div>
 
                     <div className="flex items-center">
-                        <span className="text-gray-400 mr-3">📊</span>
+                        <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
                             {t("courseInfo.level")}:
                         </span>
@@ -174,7 +174,7 @@ const CourseSidebar = ({
                     </div>
 
                     <div className="flex items-center">
-                        <span className="text-gray-400 mr-3">🏷️</span>
+                        <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
                             {t("courseInfo.category")}:
                         </span>
@@ -184,7 +184,7 @@ const CourseSidebar = ({
                     </div>
 
                     <div className="flex items-center">
-                        <span className="text-gray-400 mr-3">🎯</span>
+                        <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
                             {t("courseInfo.field")}:
                         </span>
@@ -195,7 +195,7 @@ const CourseSidebar = ({
 
                     {course.lastUpdated && (
                         <div className="flex items-center">
-                            <span className="text-gray-400 mr-3">🔄</span>
+                            <span className="text-gray-400 mr-3"></span>
                             <span className="text-gray-600">
                                 {t("courseInfo.lastUpdated")}:
                             </span>
@@ -213,7 +213,7 @@ const CourseSidebar = ({
             {course.instructor && (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center mb-4">
-                        <span className="text-indigo-500 text-xl mr-3">👨‍🏫</span>
+                        <span className="text-indigo-500 text-xl mr-3"></span>
                         <h3 className="text-lg font-bold text-gray-900">
                             {t("courseInfo.instructor")}
                         </h3>
@@ -248,7 +248,7 @@ const CourseSidebar = ({
             {/* {userStatus && (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center mb-4">
-                        <span className="text-red-500 text-xl mr-3">🔐</span>
+                        <span className="text-red-500 text-xl mr-3"></span>
                         <h3 className="text-lg font-bold text-gray-900">
                             Your Access
                         </h3>
@@ -265,8 +265,8 @@ const CourseSidebar = ({
                                 }`}
                             >
                                 {userStatus.hasVideoAccess
-                                    ? "✓ Granted"
-                                    : "✗ Restricted"}
+                                    ? " Granted"
+                                    : " Restricted"}
                             </span>
                         </div>
 
@@ -282,8 +282,8 @@ const CourseSidebar = ({
                                 }`}
                             >
                                 {userStatus.hasDownloadAccess
-                                    ? "✓ Granted"
-                                    : "✗ Restricted"}
+                                    ? " Granted"
+                                    : " Restricted"}
                             </span>
                         </div>
 

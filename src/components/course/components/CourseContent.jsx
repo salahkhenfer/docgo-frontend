@@ -48,7 +48,7 @@ const CourseContent = ({
           <div className="grid md:grid-cols-2 gap-3">
             {course.objectives.map((objective, index) => (
               <div key={index} className="flex items-start">
-                <span className="text-green-500 mr-3 mt-1">✓</span>
+                <span className="text-green-500 mr-3 mt-1"></span>
                 <span className="text-gray-700">{objective}</span>
               </div>
             ))}
@@ -193,7 +193,7 @@ const CourseContent = ({
           </div>
         ) : (
           <div className="text-center py-8">
-            <div className="text-gray-400 text-4xl mb-4">📹</div>
+            <div className="text-gray-400 text-4xl mb-4"></div>
             <p className="text-gray-500">
               {t("course_data.noVideos") || "No videos available yet"}
             </p>
@@ -205,7 +205,7 @@ const CourseContent = ({
       {course.materials && course.materials.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center mb-4">
-            <span className="text-purple-500 text-xl mr-3">📚</span>
+            <span className="text-purple-500 text-xl mr-3"></span>
             <h3 className="text-xl font-bold text-gray-900">
               {t("course_data.materials") || "Course Materials"}
             </h3>
@@ -216,7 +216,7 @@ const CourseContent = ({
                 key={index}
                 className="flex items-center p-3 border border-gray-200 rounded-lg"
               >
-                <span className="text-purple-500 mr-3">📄</span>
+                <span className="text-purple-500 mr-3"></span>
                 <span className="text-gray-700">{material}</span>
               </div>
             ))}

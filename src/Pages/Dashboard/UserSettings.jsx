@@ -1,4 +1,4 @@
-﻿import {
+import {
     ExclamationTriangleIcon,
     KeyIcon,
     ShieldCheckIcon,
@@ -13,7 +13,7 @@ import apiClient from "../../services/apiClient";
 import { Countries } from "../../data/Countries";
 import { StudyFields, StudyDomains } from "../../data/fields";
 
-// ─── helpers ──────────────────────────────────────────────────────────────────
+//  helpers 
 const InputRow = ({ label, required, children }) => (
     <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,7 +71,7 @@ const Spinner = () => (
         />
     </svg>
 );
-// ─────────────────────────────────────────────────────────────────────────────
+// 
 
 const UserSettings = () => {
     const { t, i18n } = useTranslation();
@@ -79,7 +79,7 @@ const UserSettings = () => {
     const { user, set_user, store_logout } = useAppContext();
     const isRTL = i18n.language === "ar";
 
-    // ── profile ───────────────────────────────────────────────────────────
+    //  profile 
     const [profile, setProfile] = useState({
         firstName: "",
         lastName: "",
@@ -91,7 +91,7 @@ const UserSettings = () => {
     });
     const [profileSaving, setProfileSaving] = useState(false);
 
-    // ── password ──────────────────────────────────────────────────────────
+    //  password 
     const [pwd, setPwd] = useState({
         currentPassword: "",
         newPassword: "",
@@ -104,11 +104,11 @@ const UserSettings = () => {
         confirm: false,
     });
 
-    // ── delete ────────────────────────────────────────────────────────────
+    //  delete 
     const [deleteConfirmText, setDeleteConfirmText] = useState("");
     const [deleting, setDeleting] = useState(false);
 
-    // ── i18n helper ───────────────────────────────────────────────────────
+    //  i18n helper 
     const localized = (str) => {
         if (!str || !str.includes(" / ")) return str || "";
         const [fr, ar] = str.split(" / ");
@@ -130,7 +130,7 @@ const UserSettings = () => {
         }
     }, [user]);
 
-    // ── profile save ──────────────────────────────────────────────────────
+    //  profile save 
     const handleProfileChange = (e) => {
         const { name, value } = e.target;
         setProfile((p) => ({ ...p, [name]: value }));
@@ -203,7 +203,7 @@ const UserSettings = () => {
         }
     };
 
-    // ── password change ───────────────────────────────────────────────────
+    //  password change 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         if (!pwd.currentPassword)
@@ -273,7 +273,7 @@ const UserSettings = () => {
         }
     };
 
-    // ── delete account request ────────────────────────────────────────────
+    //  delete account request 
     const handleDeleteAccount = async () => {
         if (deleteConfirmText !== "DELETE")
             return Swal.fire({
@@ -353,7 +353,7 @@ const UserSettings = () => {
         }
     };
 
-    // ── password strength ─────────────────────────────────────────────────
+    //  password strength 
     const pwdStrength = (() => {
         const p = pwd.newPassword;
         if (!p) return null;
@@ -388,7 +388,7 @@ const UserSettings = () => {
         };
     })();
 
-    // ─────────────────────────────────────────────────────────────────────
+    // 
     return (
         <div
             className={`max-w-2xl mx-auto px-4 py-8 space-y-6 ${isRTL ? "rtl" : "ltr"}`}
@@ -405,7 +405,7 @@ const UserSettings = () => {
                 </p>
             </div>
 
-            {/* ── Profile ─────────────────────────────────────────────── */}
+            {/*  Profile  */}
             <SectionCard
                 icon={UserCircleIcon}
                 title={t("settings.profileSection", "Profile Information")}
@@ -551,7 +551,7 @@ const UserSettings = () => {
                 </form>
             </SectionCard>
 
-            {/* ── Security ─────────────────────────────────────────────── */}
+            {/*  Security  */}
             <SectionCard
                 icon={KeyIcon}
                 title={t("settings.securitySection", "Security")}
@@ -718,7 +718,7 @@ const UserSettings = () => {
                 </form>
             </SectionCard>
 
-            {/* ── Danger Zone ──────────────────────────────────────────── */}
+            {/*  Danger Zone  */}
             <SectionCard
                 icon={ExclamationTriangleIcon}
                 title={t("settings.dangerZone", "Danger Zone")}

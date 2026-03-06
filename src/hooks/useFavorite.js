@@ -1,4 +1,4 @@
-﻿import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useFavorites as useFavoritesContext } from "../context/FavoritesContext";
 
 export const useFavorite = (itemId, itemType = "course") => {

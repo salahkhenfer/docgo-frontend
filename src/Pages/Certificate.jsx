@@ -1,4 +1,4 @@
-﻿import jsPDF from "jspdf";
+import jsPDF from "jspdf";
 import {
     Award,
     Calendar,
@@ -305,8 +305,7 @@ export default function Certificate() {
                                     <Award className="w-6 h-6 md:w-12 md:h-12 text-yellow-800" />
                                 </div>
                             </div>
-                            <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2">
-                                ‰ Félicitations Exceptionnelles!
+                            <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2"> Félicitations Exceptionnelles!
                             </h1>
                             <p className="text-sm md:text-xl mb-2 md:mb-4">
                                 Vous avez brillamment terminé votre formation
@@ -361,7 +360,7 @@ export default function Certificate() {
                                 </h1>
                                 <div className="w-16 h-0.5 md:w-32 md:h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-2 md:mb-4"></div>
                                 <p className="text-sm md:text-xl text-gray-600 font-medium">
-                                    est décerné À 
+                                    est décerné à
                                 </p>
                             </div>
 

@@ -1,4 +1,4 @@
-﻿// Example of how to create any new service using the shared API client
+// Example of how to create any new service using the shared API client
 
 import api from "./apiClient";
 

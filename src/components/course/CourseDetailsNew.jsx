@@ -1,4 +1,4 @@
-﻿import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { IoMdRefresh } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -198,7 +198,7 @@ export const CourseDetails = () => {
                         to="/Courses"
                         className="inline-block mt-4 text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
                     >
-                        â† {t("Back to Courses") || "Back to Courses"}
+                        â{t("Back to Courses") || "Back to Courses"}
                     </Link>
                 </div>
             </div>

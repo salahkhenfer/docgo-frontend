@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaArrowLeft, FaCheckCircle, FaLock } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -344,9 +344,9 @@ const PaymentPage = () => {
 
     const getItemLevel = () => {
         if (itemType === "course") {
-            return `${itemData.Level} â€¢ ${itemData.language}`;
+            return `${itemData.Level}  ${itemData.language}`;
         } else if (itemType === "program") {
-            return `${itemData.Category || itemData.category || "Program"} â€¢ ${
+            return `${itemData.Category || itemData.category || "Program"}  ${
                 itemData.language || "Multiple"
             }`;
         }
@@ -659,7 +659,7 @@ const PaymentPage = () => {
                                                 </div>
                                                 <div className="mt-4 p-3 bg-red-100 rounded-lg">
                                                     <p className="text-sm text-red-800">
-                                                        '¡ <strong>Tip:</strong>{" "}
+                                                         <strong>Tip:</strong>{" "}
                                                         Please make sure to
                                                         upload a clear
                                                         screenshot of your
@@ -681,7 +681,6 @@ const PaymentPage = () => {
                                             <div className="flex-shrink-0">
                                                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                                                     <span className="text-2xl">
-                                                        -'ï¸
                                                     </span>
                                                 </div>
                                             </div>
@@ -735,7 +734,6 @@ const PaymentPage = () => {
                                                 </div>
                                                 <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                                                     <p className="text-sm text-gray-800">
-                                                        â„¹ï¸{" "}
                                                         <strong>Note:</strong>{" "}
                                                         Your previous payment
                                                         was removed by the

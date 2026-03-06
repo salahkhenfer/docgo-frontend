@@ -1,4 +1,4 @@
-﻿import api from "./apiClient";
+import api from "./apiClient";
 
 // Local storage keys
 const FAVORITES_STORAGE_KEY = "docgo_favorites";

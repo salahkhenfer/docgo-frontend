@@ -45,7 +45,7 @@ const CourseReviews = ({ courseStats, course }) => {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center mb-6">
-                <span className="text-yellow-500 text-xl mr-3">⭐</span>
+                <span className="text-yellow-500 text-xl mr-3"></span>
                 <h3 className="text-xl font-bold text-gray-900">
                     {t("course_data.studentReviews") || "Student Reviews"}
                 </h3>
@@ -149,7 +149,7 @@ const CourseReviews = ({ courseStats, course }) => {
 
                                 {review.helpful && (
                                     <div className="flex items-center mt-3 text-sm text-gray-500">
-                                        <span className="mr-1">👍</span>
+                                        <span className="mr-1"></span>
                                         <span>
                                             {review.helpful}{" "}
                                             {t("course_data.foundHelpful") ||
@@ -173,7 +173,7 @@ const CourseReviews = ({ courseStats, course }) => {
                 </div>
             ) : (
                 <div className="text-center py-8">
-                    <div className="text-gray-400 text-4xl mb-4">⭐</div>
+                    <div className="text-gray-400 text-4xl mb-4"></div>
                     <p className="text-gray-500 mb-2">
                         {t("course_data.noReviewsYet") || "No reviews yet"}
                     </p>

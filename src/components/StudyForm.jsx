@@ -1,4 +1,4 @@
-﻿import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,7 @@ const StudyForm = ({ customFields, customLocations }) => {
     const navigate = useNavigate();
     const lang = i18n.language?.split("-")[0] || "en";
 
-    // ── API fallback: only fetch what's missing ─────────────────────────
+    //  API fallback: only fetch what's missing 
     useEffect(() => {
         if (customFields && customLocations) return; // fully CMS - skip API
         fetchData();
@@ -72,7 +72,7 @@ const StudyForm = ({ customFields, customLocations }) => {
         }
     };
 
-    // ── CMS mode: both custom sources provided ──────────────────────────
+    //  CMS mode: both custom sources provided 
     const isCmsMode = !!(customFields && customLocations);
 
     // All items (unfiltered) - memoized to avoid re-running on every render
@@ -104,7 +104,7 @@ const StudyForm = ({ customFields, customLocations }) => {
         [customLocations, apiFilteredCountries, lang],
     );
 
-    // ── Bidirectional smart filtering ────────────────────────────────────
+    //  Bidirectional smart filtering 
     // "Where" options filtered by selected "What"
     const filteredLocationItems = useMemo(() => {
         if (!isCmsMode || !selectedCategory) return allLocationItems;
@@ -127,7 +127,7 @@ const StudyForm = ({ customFields, customLocations }) => {
         );
     }, [allFieldItems, allLocationItems, selectedCountry, isCmsMode]);
 
-    // ── Handlers with cross-reset ────────────────────────────────────────
+    //  Handlers with cross-reset 
     const handleCategoryChange = async (value) => {
         setSelectedCategory(value);
 
@@ -195,7 +195,7 @@ const StudyForm = ({ customFields, customLocations }) => {
         }
     };
 
-    // ── Submit ────────────────────────────────────────────────────────────
+    //  Submit 
     const handleSubmit = async () => {
         const whatLabel =
             filteredFieldItems.find((o) => o.value === selectedCategory)

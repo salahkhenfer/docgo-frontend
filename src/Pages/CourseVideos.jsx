@@ -1,4 +1,4 @@
-﻿import {
+import {
     ChevronLeft,
     ChevronRight,
     FileText,
@@ -165,7 +165,7 @@ export function CourseVideos() {
                     }
                 }
             } catch {
-                // silent â€ expected 404 for new users
+                // silent - expected 404 for new users
             }
         };
         if (courseId && user) loadItemProgress();
@@ -535,7 +535,7 @@ export function CourseVideos() {
     const allVideosCompleted =
         videos.length > 0 && completedVideos.size >= videos.length;
 
-    // Certificate click handler â€ shows real-name warning then navigates
+    // Certificate click handler - shows real-name warning then navigates
     const handleCertificateClick = async () => {
         const studentName =
             user?.firstName && user?.lastName
@@ -545,7 +545,7 @@ export function CourseVideos() {
                   : "";
 
         const result = await Swal.fire({
-            title: t("certificate.realNameTitle") || "¸ Certificate Name",
+            title: t("certificate.realNameTitle") || "Certificate Name",
             html: `
                 <p style="margin-bottom:10px;color:#374151">
                     ${t("certificate.realNameWarning") || "Your certificate will be issued under your real name. This cannot be changed later."}

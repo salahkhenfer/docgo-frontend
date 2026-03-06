@@ -1,4 +1,4 @@
-﻿import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -286,7 +286,7 @@ const FavoriteCard = ({ item, type }) => {
                 {item.isFeatured && (
                     <div className="absolute bottom-3 left-3">
                         <span className="px-3 py-1 text-xs font-semibold bg-yellow-400/90 text-yellow-900 rounded-full backdrop-blur-sm">
-                            â­ Featured
+                            â Featured
                         </span>
                     </div>
                 )}

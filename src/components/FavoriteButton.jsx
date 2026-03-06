@@ -1,4 +1,4 @@
-﻿import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import PropTypes from "prop-types";
 import { useFavorite } from "../hooks/useFavorite";
 
