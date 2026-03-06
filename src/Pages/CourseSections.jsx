@@ -1,4 +1,3 @@
-import Hls from "hls.js";
 import {
   BookOpen,
   ChevronDown,
@@ -7,7 +6,6 @@ import {
   ChevronUp,
   FileText,
   HelpCircle,
-  Pause,
   Play,
   Video,
   X,
@@ -19,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { EnrollmentAPI } from "../API/Enrollment";
+import VideoPlayer from "../components/Common/VideoPlayer";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
@@ -62,29 +61,143 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
   const [score, setScore] = useState(null);
   const [attempts, setAttempts] = useState(0);
 
-  const quizData = item.quizData;
+  let quizData = item.quizData;
+  if (typeof quizData === "string") {
+    try {
+      quizData = JSON.parse(quizData);
+    } catch {
+      quizData = null;
+    }
+  }
+
   const questions =
     quizData?.questions || (Array.isArray(quizData) ? quizData : []);
   const passingScore = item.quizPassingScore ?? 80;
   const maxAttempts = item.maxAttempts ?? 3;
+
+  const getCorrectAnswer = (q) =>
+    q?.correctAnswer ?? q?.correct_answer ?? q?.correctOptionId ?? null;
+
+  const normalizeQuestionType = (q) => {
+    const raw = q?.type || q?.questionType || q?.question_type || null;
+    if (raw === "multiple-choice" || raw === "multiple_choice")
+      return "multiple_choice";
+    if (raw === "true-false" || raw === "true_false") return "true_false";
+    if (raw === "short-answer" || raw === "short_answer") return "short_answer";
+
+    // Heuristics for older data
+    const opts = q?.options;
+    if (Array.isArray(opts)) {
+      const labels = opts.map((o) =>
+        typeof o === "string"
+          ? o
+          : o?.label || o?.text || o?.value || o?.id || "",
+      );
+      const normalized = labels.map((s) => String(s).toLowerCase());
+      if (
+        normalized.includes("true") ||
+        normalized.includes("false") ||
+        normalized.includes("vrai") ||
+        normalized.includes("faux")
+      ) {
+        return "true_false";
+      }
+      return "multiple_choice";
+    }
+    return "true_false";
+  };
+
+  const getOptionId = (opt) => {
+    if (opt && typeof opt === "object") {
+      return opt.id || opt.value || opt.label || opt.text || null;
+    }
+    return opt ?? null;
+  };
+
+  const getOptionLabel = (opt) => {
+    if (opt && typeof opt === "object") {
+      return opt.label || opt.text || opt.value || opt.id || "";
+    }
+    return String(opt ?? "");
+  };
 
   const handleAnswer = (questionId, value) => {
     if (submitted) return;
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  const toggleCheckboxAnswer = (questionId, optId) => {
+    if (submitted) return;
+    setAnswers((prev) => {
+      const prevVal = prev[questionId];
+      const arr = Array.isArray(prevVal) ? [...prevVal] : [];
+      const idx = arr.indexOf(optId);
+      if (idx >= 0) arr.splice(idx, 1);
+      else arr.push(optId);
+      return { ...prev, [questionId]: arr };
+    });
+  };
+
+  const normalizeBoolFr = (val) => {
+    if (val === true || val === "true" || val === "True") return "Vrai";
+    if (val === false || val === "false" || val === "False") return "Faux";
+    if (val === "Vrai" || val === "Faux") return val;
+    return val;
+  };
+
+  const normalizeText = (val) =>
+    String(val ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+
   const handleSubmit = async () => {
     if (questions.length === 0) return;
 
     let correct = 0;
-    questions.forEach((q) => {
-      const qId = q.id || q._id || String(q.order ?? questions.indexOf(q));
-      if (
-        answers[qId] === q.correctAnswer ||
-        answers[qId] === q.correct_answer
-      ) {
-        correct++;
+    questions.forEach((q, idx) => {
+      const qId = q.id || q._id || String(q.order ?? idx);
+      const qType = normalizeQuestionType(q);
+
+      if (qType === "short_answer") {
+        const expected = normalizeText(getCorrectAnswer(q));
+        const actual = normalizeText(answers[qId]);
+        if (expected && actual && expected === actual) correct++;
+        return;
       }
+
+      if (qType === "true_false") {
+        const expected = normalizeBoolFr(getCorrectAnswer(q));
+        const actual = normalizeBoolFr(answers[qId]);
+        if (expected && actual && String(expected) === String(actual))
+          correct++;
+        return;
+      }
+
+      // multiple_choice (supports multi-correct)
+      const expectedMulti = Array.isArray(q?.correctAnswers)
+        ? q.correctAnswers.map((x) => String(x))
+        : null;
+      const expectedSingle = getCorrectAnswer(q);
+      const expected =
+        expectedMulti && expectedMulti.length > 0
+          ? expectedMulti
+          : expectedSingle
+            ? [String(expectedSingle)]
+            : [];
+      const actualVal = answers[qId];
+      const actual = Array.isArray(actualVal)
+        ? actualVal.map((x) => String(x))
+        : actualVal
+          ? [String(actualVal)]
+          : [];
+
+      const expSorted = [...new Set(expected)].sort();
+      const actSorted = [...new Set(actual)].sort();
+      const sameLength = expSorted.length === actSorted.length;
+      const same =
+        sameLength && expSorted.every((v, i2) => v === actSorted[i2]);
+      if (same && expSorted.length > 0) correct++;
     });
     const pct = Math.round((correct / questions.length) * 100);
     setScore(pct);
@@ -162,6 +275,7 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
         <div className="space-y-6">
           {questions.map((q, idx) => {
             const qId = q.id || q._id || String(q.order ?? idx);
+            const qType = normalizeQuestionType(q);
             return (
               <div
                 key={qId}
@@ -170,38 +284,19 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
                 <p className="font-semibold text-gray-800 mb-4">
                   {idx + 1}. {q.text || q.question}
                 </p>
-                {Array.isArray(q.options) ? (
-                  <div className="space-y-2">
-                    {q.options.map((opt) => {
-                      const optId = opt.id || opt.value || opt.label;
-                      return (
-                        <label
-                          key={optId}
-                          className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                            answers[qId] === optId
-                              ? "border-purple-500 bg-purple-50"
-                              : "border-gray-200 hover:bg-gray-50"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name={`q_${qId}`}
-                            value={optId}
-                            checked={answers[qId] === optId}
-                            onChange={() => handleAnswer(qId, optId)}
-                            className="text-purple-600"
-                          />
-                          <span className="text-gray-700">
-                            {opt.label || opt.text || opt.value}
-                          </span>
-                        </label>
-                      );
-                    })}
+                {qType === "short_answer" ? (
+                  <div>
+                    <input
+                      type="text"
+                      value={answers[qId] || ""}
+                      onChange={(e) => handleAnswer(qId, e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder=""
+                    />
                   </div>
-                ) : (
-                  // True/False
+                ) : qType === "true_false" ? (
                   <div className="flex gap-4">
-                    {["True", "False"].map((val) => (
+                    {["Vrai", "Faux"].map((val) => (
                       <label
                         key={val}
                         className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${
@@ -222,6 +317,45 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
                       </label>
                     ))}
                   </div>
+                ) : Array.isArray(q.options) ? (
+                  <div className="space-y-2">
+                    {q.options.map((opt, optIndex) => {
+                      const optId =
+                        getOptionId(opt) ?? `${qId}_opt_${optIndex}`;
+                      const optLabel = getOptionLabel(opt);
+                      const displayedLabel =
+                        optLabel === "True" || optLabel === "False"
+                          ? t(optLabel)
+                          : optLabel;
+                      const checked = Array.isArray(answers[qId])
+                        ? answers[qId].includes(optId)
+                        : answers[qId] === optId;
+                      return (
+                        <label
+                          key={optId}
+                          className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                            checked
+                              ? "border-purple-500 bg-purple-50"
+                              : "border-gray-200 hover:bg-gray-50"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            name={`q_${qId}_${optId}`}
+                            value={optId}
+                            checked={checked}
+                            onChange={() => toggleCheckboxAnswer(qId, optId)}
+                            className="text-purple-600"
+                          />
+                          <span className="text-gray-700">
+                            {displayedLabel}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500" />
                 )}
               </div>
             );
@@ -229,7 +363,15 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
 
           <button
             onClick={handleSubmit}
-            disabled={Object.keys(answers).length < questions.length}
+            disabled={questions.some((q, idx) => {
+              const qId = q.id || q._id || String(q.order ?? idx);
+              const qType = normalizeQuestionType(q);
+              const val = answers[qId];
+              if (qType === "short_answer") return !String(val || "").trim();
+              if (qType === "true_false") return !val;
+              // multiple_choice
+              return !Array.isArray(val) || val.length === 0;
+            })}
             className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
             {t("Submit Quiz")}
@@ -355,7 +497,7 @@ function TextReader({ item, onComplete, isCompleted }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Video Player (HLS-aware)
+// Video Player
 // ─────────────────────────────────────────────────────────────────────────────
 VideoItemPlayer.propTypes = {
   item: PropTypes.object.isRequired,
@@ -365,10 +507,6 @@ VideoItemPlayer.propTypes = {
 };
 function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
   const { t } = useTranslation();
-  const videoRef = useRef(null);
-  const hlsRef = useRef(null);
-  const [isPlaying, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const completedRef = useRef(isCompleted);
   completedRef.current = isCompleted;
@@ -379,79 +517,35 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
       ? `${import.meta.env.VITE_API_URL}${item.videoUrl}`
       : null;
 
-  // Attach HLS
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el || !url) return;
+  const markCompleteOnce = useCallback(
+    (watchedSeconds) => {
+      if (completedRef.current) return;
+      completedRef.current = true;
+      EnrollmentAPI.markItemComplete(courseId, item.id, {
+        watchedDuration: Math.round(watchedSeconds || 0),
+        timeSpent: Math.round(watchedSeconds || 0),
+      })
+        .then((res) => {
+          if (res.success) onComplete(item.id);
+        })
+        .catch(() => {});
+    },
+    [courseId, item.id, onComplete],
+  );
 
-    if (hlsRef.current) {
-      hlsRef.current.destroy();
-      hlsRef.current = null;
-    }
-
-    const isHls = url.includes(".m3u8");
-    if (!isHls) {
-      el.src = url;
-      return;
-    }
-
-    if (el.canPlayType("application/vnd.apple.mpegurl")) {
-      el.src = url;
-      return;
-    }
-
-    if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true, lowLatencyMode: false });
-      hlsRef.current = hls;
-      hls.loadSource(url);
-      hls.attachMedia(el);
-    }
-
-    return () => {
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
+  const handleTimeUpdate = useCallback(
+    (cur) => {
+      if (!duration || duration <= 0) return;
+      if ((cur / duration) * 100 >= 90) {
+        markCompleteOnce(cur);
       }
-    };
-  }, [url]);
+    },
+    [duration, markCompleteOnce],
+  );
 
-  const handleTimeUpdate = (e) => {
-    const cur = e.target.currentTime;
-    const total = e.target.duration;
-    setCurrentTime(cur);
-    if (total > 0 && (cur / total) * 100 >= 90 && !completedRef.current) {
-      completedRef.current = true;
-      EnrollmentAPI.markItemComplete(courseId, item.id, {
-        watchedDuration: Math.round(cur),
-        timeSpent: Math.round(cur),
-      })
-        .then((res) => {
-          if (res.success) onComplete(item.id);
-        })
-        .catch(() => {});
-    }
-  };
-
-  const handleEnded = () => {
-    if (!completedRef.current) {
-      completedRef.current = true;
-      EnrollmentAPI.markItemComplete(courseId, item.id, {
-        watchedDuration: Math.round(videoRef.current?.duration || 0),
-        timeSpent: Math.round(videoRef.current?.duration || 0),
-      })
-        .then((res) => {
-          if (res.success) onComplete(item.id);
-        })
-        .catch(() => {});
-    }
-  };
-
-  const formatTime = (s) => {
-    if (isNaN(s)) return "0:00";
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${sec < 10 ? "0" : ""}${sec}`;
-  };
+  const handleEnded = useCallback(() => {
+    markCompleteOnce(duration || 0);
+  }, [duration, markCompleteOnce]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -469,37 +563,14 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
 
       <div className="relative mx-auto w-full max-w-[860px] overflow-hidden rounded-2xl bg-black shadow-2xl border border-gray-200">
         {url ? (
-          <>
-            <video
-              ref={videoRef}
-              className="w-full aspect-video object-contain"
-              src={url}
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={(e) => setDuration(e.target.duration)}
-              onPlay={() => setPlaying(true)}
-              onPause={() => setPlaying(false)}
-              onEnded={handleEnded}
-            />
-            <div
-              role="button"
-              onClick={() =>
-                isPlaying ? videoRef.current?.pause() : videoRef.current?.play()
-              }
-              className="absolute inset-0 flex items-center justify-center cursor-pointer bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity hover:from-black/50"
-            >
-              <div
-                className={`z-20 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white transition-all duration-300 hover:scale-110 shadow-2xl ${
-                  isPlaying ? "invisible select-none opacity-0" : ""
-                }`}
-              >
-                {isPlaying ? (
-                  <Pause className="h-10 w-10" />
-                ) : (
-                  <Play className="h-10 w-10" />
-                )}
-              </div>
-            </div>
-          </>
+          <VideoPlayer
+            src={url}
+            title={item.title}
+            className="aspect-video"
+            onDurationChange={(d) => setDuration(d)}
+            onTimeUpdate={(cur) => handleTimeUpdate(cur)}
+            onEnded={handleEnded}
+          />
         ) : (
           <div className="w-full aspect-video flex items-center justify-center bg-gray-900 text-white">
             <div className="text-center p-8">
@@ -509,54 +580,6 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Controls */}
-      <div className="w-full max-w-[860px] mx-auto">
-        <div className="p-5 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl shadow-md border border-gray-100">
-          <div className="mb-4">
-            <input
-              type="range"
-              min={0}
-              max={duration || 0}
-              step={0.1}
-              value={currentTime}
-              onChange={(e) => {
-                const t2 = parseFloat(e.target.value);
-                if (videoRef.current && !isNaN(t2)) {
-                  videoRef.current.currentTime = t2;
-                  setCurrentTime(t2);
-                }
-              }}
-              className="w-full h-2 bg-gray-300 rounded-full appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, #3b82f6 0%, #9333ea ${
-                  duration ? (currentTime / duration) * 100 : 0
-                }%, #d1d5db ${
-                  duration ? (currentTime / duration) * 100 : 0
-                }%, #d1d5db 100%)`,
-              }}
-            />
-            <div className="flex justify-between text-sm text-gray-600 font-medium mt-2">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
-          <div className="flex items-center justify-center gap-6">
-            <button
-              onClick={() =>
-                isPlaying ? videoRef.current?.pause() : videoRef.current?.play()
-              }
-              className="p-5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all hover:scale-110 active:scale-95 shadow-xl"
-            >
-              {isPlaying ? (
-                <Pause className="w-8 h-8 text-white" />
-              ) : (
-                <Play className="w-8 h-8 text-white" />
-              )}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
