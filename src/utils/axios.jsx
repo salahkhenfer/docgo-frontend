@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 
 // Set base URL if needed
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -6,7 +6,7 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 // Enable credentials for all requests
 axios.defaults.withCredentials = true;
 
-// Global 401 handler — fires only when the server returns 401 AND the call was
+// Global 401 handler - fires only when the server returns 401 AND the call was
 // NOT made with validateStatus:()=>true (which is used for intentional error
 // handling like checkAuthStatus).
 // A 401 here means BOTH the access token AND the refresh token have expired

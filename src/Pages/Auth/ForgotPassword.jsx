@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -163,7 +163,7 @@ const ForgotPassword = () => {
                                     </svg>
                                 )}
                                 {loading
-                                    ? "Envoi en cours…"
+                                    ? "Envoi en cours..."
                                     : "Envoyer la demande"}
                             </button>
                         </form>

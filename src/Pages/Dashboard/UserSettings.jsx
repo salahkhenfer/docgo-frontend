@@ -1,4 +1,4 @@
-import {
+﻿import {
     ExclamationTriangleIcon,
     KeyIcon,
     ShieldCheckIcon,
@@ -544,7 +544,7 @@ const UserSettings = () => {
                         >
                             {profileSaving && <Spinner />}
                             {profileSaving
-                                ? t("settings.saving", "Saving…")
+                                ? t("settings.saving", "Saving...")
                                 : t("editProfile.saveChanges", "Save Changes")}
                         </button>
                     </div>
@@ -708,7 +708,7 @@ const UserSettings = () => {
                         >
                             {pwdSaving && <Spinner />}
                             {pwdSaving
-                                ? t("settings.saving", "Saving…")
+                                ? t("settings.saving", "Saving...")
                                 : t(
                                       "settings.changePassword",
                                       "Change Password",
@@ -738,7 +738,7 @@ const UserSettings = () => {
                     <p className="text-xs text-red-600 leading-relaxed">
                         {t(
                             "settings.deleteAccountDesc",
-                            "Submitting this request will notify an administrator. Your account stays active until the admin reviews and approves the request. Once approved, all your data — enrollments, certificates and progress — will be permanently removed.",
+                            "Submitting this request will notify an administrator. Your account stays active until the admin reviews and approves the request. Once approved, all your data - enrollments, certificates and progress - will be permanently removed.",
                         )}
                     </p>
                     <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
@@ -774,7 +774,7 @@ const UserSettings = () => {
                     >
                         {deleting && <Spinner />}
                         {deleting
-                            ? t("settings.submitting", "Submitting…")
+                            ? t("settings.submitting", "Submitting...")
                             : t(
                                   "settings.deleteAccountBtn",
                                   "Request Account Deletion",

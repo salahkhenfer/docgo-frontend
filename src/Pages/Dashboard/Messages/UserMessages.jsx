@@ -113,7 +113,7 @@ const UserMessages = () => {
                         <p className="mt-1 text-gray-600">
                             {t(
                                 "messages.subtitle",
-                                "voir votre messagerie avec notre Ã©quipe de support",
+                                "voir votre messagerie avec notre équipe de support",
                             )}
                         </p>
                     </div>

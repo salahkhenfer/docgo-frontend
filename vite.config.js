@@ -26,6 +26,7 @@ const SPA_ROUTE_PREFIXES = [
     "/myapplications",
     "/my-applications",
     "/media",
+    "/forgot-password",
 ];
 
 const spaFallbackPlugin = {
@@ -66,6 +67,7 @@ export default defineConfig({
             "/register": "http://localhost:3000",
             "/Logout": "http://localhost:3000",
             "/check_Auth": "http://localhost:3000",
+            "/forgot-password": "http://localhost:3000",
 
             "/Users": "http://localhost:3000",
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -365,7 +365,7 @@ function Navigation({ branding = null }) {
                         </div>
                     </Link>
 
-                    {/* Notification Bell — shown only when logged in */}
+                    {/* Notification Bell - shown only when logged in */}
                     {isAuth && user && (
                         <Link
                             to="/notifications"

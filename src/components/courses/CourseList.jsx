@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import {
@@ -13,7 +13,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 
-// Individual list-row item — mirrors CourseCard logic in a horizontal layout
+// Individual list-row item - mirrors CourseCard logic in a horizontal layout
 function CourseListItem({ course }) {
     const { t } = useTranslation();
     const [hasImageError, setHasImageError] = useState(false);

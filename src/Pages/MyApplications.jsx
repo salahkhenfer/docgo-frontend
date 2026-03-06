@@ -387,7 +387,7 @@ const MyApplications = () => {
                                 </span>
                             </p>
                             <p className="text-xs text-gray-400 mb-4">
-                                Ce message sera marquÃ© comme support
+                                Ce message sera marqué comme support
                                 candidature.
                             </p>
                             <ContactForm

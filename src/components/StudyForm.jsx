@@ -1,4 +1,4 @@
-import { ChevronDown, Loader2 } from "lucide-react";
+﻿import { ChevronDown, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const recordSearch = async (what, where, lang) => {
             }),
         });
     } catch {
-        // Non-critical — silent failure
+        // Non-critical - silent failure
     }
 };
 
@@ -38,7 +38,7 @@ const StudyForm = ({ customFields, customLocations }) => {
 
     // ── API fallback: only fetch what's missing ─────────────────────────
     useEffect(() => {
-        if (customFields && customLocations) return; // fully CMS — skip API
+        if (customFields && customLocations) return; // fully CMS - skip API
         fetchData();
     }, [customFields, customLocations]);
 
@@ -75,7 +75,7 @@ const StudyForm = ({ customFields, customLocations }) => {
     // ── CMS mode: both custom sources provided ──────────────────────────
     const isCmsMode = !!(customFields && customLocations);
 
-    // All items (unfiltered) — memoized to avoid re-running on every render
+    // All items (unfiltered) - memoized to avoid re-running on every render
     const allFieldItems = useMemo(
         () =>
             customFields
@@ -189,7 +189,7 @@ const StudyForm = ({ customFields, customLocations }) => {
                 selLoc.linkedFields.length &&
                 !selLoc.linkedFields.includes(selectedCategory)
             ) {
-                // Selected "where" doesn't support current "what" — reset what
+                // Selected "where" doesn't support current "what" - reset what
                 setSelectedCategory("");
             }
         }
@@ -230,7 +230,7 @@ const StudyForm = ({ customFields, customLocations }) => {
 
     return (
         <div className="w-full max-w-md mx-auto p-4 sm:p-6 space-y-3 sm:space-y-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            {/* What — Study Field */}
+            {/* What - Study Field */}
             <div className="relative">
                 <select
                     value={selectedCategory}
@@ -255,7 +255,7 @@ const StudyForm = ({ customFields, customLocations }) => {
                 />
             </div>
 
-            {/* Where — Location */}
+            {/* Where - Location */}
             <div className="relative">
                 <select
                     value={selectedCountry}

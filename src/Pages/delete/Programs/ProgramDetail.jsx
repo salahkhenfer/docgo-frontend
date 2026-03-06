@@ -609,7 +609,7 @@ const ProgramDetail = () => {
                                 onClick={() => setIsVideoModalOpen(false)}
                                 className="text-gray-500 hover:text-gray-700"
                             >
-                                Ã—
+                                À-
                             </button>
                         </div>
                         <div className="p-4">

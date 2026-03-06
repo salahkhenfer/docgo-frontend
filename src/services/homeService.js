@@ -2,7 +2,7 @@
 import defaultHomeData from "../data/defaultHomeData";
 
 const homeService = {
-    // Get all home page data â€” always resolves (falls back to static defaults on error)
+    // Get all home page data â€ always resolves (falls back to static defaults on error)
     getHomePageData: async () => {
         try {
             const response = await api.get("/home");

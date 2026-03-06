@@ -1,4 +1,4 @@
-// export const Countries = [
+﻿// export const Countries = [
 //     "France",
 //     "Canada",
 //     "Belgique",
@@ -177,7 +177,7 @@ export const Countries = [
     "Sainte-Lucie / سانت لوسيا",
     "Salvador / السلفادور",
     "Samoa / ساموا",
-    "São Tomé-et-Principe / ساو تومي وبرينسيبي",
+    "SÀo Tomé-et-Principe / ساو تومي وبرينسيبي",
     "Sénégal / السنغال",
     "Serbie / صربيا",
     "Seychelles / سيشل",

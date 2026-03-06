@@ -601,7 +601,7 @@ const PaymentPage = () => {
                                             <div className="flex-shrink-0">
                                                 <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                                                     <span className="text-2xl">
-                                                        âŒ
+                                                        
                                                     </span>
                                                 </div>
                                             </div>
@@ -659,7 +659,7 @@ const PaymentPage = () => {
                                                 </div>
                                                 <div className="mt-4 p-3 bg-red-100 rounded-lg">
                                                     <p className="text-sm text-red-800">
-                                                        ðŸ’¡ <strong>Tip:</strong>{" "}
+                                                        '¡ <strong>Tip:</strong>{" "}
                                                         Please make sure to
                                                         upload a clear
                                                         screenshot of your
@@ -681,7 +681,7 @@ const PaymentPage = () => {
                                             <div className="flex-shrink-0">
                                                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                                                     <span className="text-2xl">
-                                                        ðŸ—‘ï¸
+                                                        -'ï¸
                                                     </span>
                                                 </div>
                                             </div>
@@ -735,7 +735,7 @@ const PaymentPage = () => {
                                                 </div>
                                                 <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                                                     <p className="text-sm text-gray-800">
-                                                        â„¹ï¸{" "}
+                                                        â„¹ï¸{" "}
                                                         <strong>Note:</strong>{" "}
                                                         Your previous payment
                                                         was removed by the

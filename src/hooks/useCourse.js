@@ -75,7 +75,7 @@ export const useCourse = (courseId) => {
                     signal: abortControllerRef.current.signal,
                 });
 
-                // Normaliser les donnÃ©es pour s'assurer que objectives est un tableau
+                // Normaliser les données pour s'assurer que objectives est un tableau
                 if (response && response.course) {
                     if (response.course.objectives) {
                         if (typeof response.course.objectives === "string") {
@@ -84,7 +84,7 @@ export const useCourse = (courseId) => {
                                     response.course.objectives,
                                 );
                             } catch {
-                                // Si le parsing JSON Ã©choue, on traite comme un seul objectif
+                                // Si le parsing JSON échoue, on traite comme un seul objectif
                                 response.course.objectives = [
                                     response.course.objectives,
                                 ];

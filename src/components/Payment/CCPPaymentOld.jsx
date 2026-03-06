@@ -248,19 +248,19 @@ const CCPPayment = ({
                             <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
                                 <li>Transfer the amount to our CCP account</li>
                                 <li>
-                                    Prenez une photo ou scannez votre reÃ§u de
+                                    Prenez une photo ou scannez votre reçu de
                                     paiement
                                 </li>
                                 <li>
-                                    Remplissez le formulaire ci-dessous et tÃ©lÃ©chargez votre
-                                    reÃ§u
+                                    Remplissez le formulaire ci-dessous et téléchargez votre
+                                    reçu
                                 </li>
                                 <li>
-                                    Nous vÃ©rifierons votre paiement dans les 24 heures
+                                    Nous vérifierons votre paiement dans les 24 heures
                                 </li>
                                 <li>
-                                    Vous recevrez l'accÃ¨s au cours aprÃ¨s
-                                    vÃ©rification
+                                    Vous recevrez l'accès au cours après
+                                    vérification
                                 </li>
                             </ol>
                         )}
@@ -468,7 +468,7 @@ const CCPPayment = ({
             {/* Security Notice */}
             <div className="text-xs text-gray-500 text-center">
                 <p>
-                    ðŸ”’ Your payment information is secure and will be verified
+                    ' Your payment information is secure and will be verified
                     within 24 hours
                 </p>
             </div>

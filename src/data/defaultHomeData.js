@@ -1,4 +1,4 @@
-/**
+﻿/**
  * staticDefaultHomeData
  * ─────────────────────
  * Used as a fallback when the API is unreachable or returns an error.
@@ -105,9 +105,9 @@ export const defaultHomePageContent = {
     service2Title_en: "Online Courses",
     service2Title_fr: "Cours en ligne",
     service2Title_ar: "دورات عبر الإنترنت",
-    service2Desc_en: "Learn anything, anywhere — at your own pace.",
-    service2Desc_fr: "Apprenez n'importe quoi, n'importe où — à votre rythme.",
-    service2Desc_ar: "تعلّم أي شيء، في أي مكان — بالوتيرة التي تناسبك.",
+    service2Desc_en: "Learn anything, anywhere - at your own pace.",
+    service2Desc_fr: "Apprenez n'importe quoi, n'importe où - à votre rythme.",
+    service2Desc_ar: "تعلّم أي شيء، في أي مكان - بالوتيرة التي تناسبك.",
     service2Cta_en: "Discover All Courses",
     service2Cta_fr: "Découvrir tous les cours",
     service2Cta_ar: "اكتشف جميع الدورات",

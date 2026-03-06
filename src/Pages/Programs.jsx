@@ -732,7 +732,7 @@ export function Programs() {
                 </div>
             </div>
 
-            {/* â”€â”€â”€ Enrolled Programs Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* â€â€â€ Enrolled Programs Section â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€ */}
             {isAuth &&
                 (enrolledProgramsLoading || enrolledPrograms.length > 0) && (
                     <div className="bg-gradient-to-r from-purple-700 to-indigo-700 border-b border-indigo-800">
@@ -822,7 +822,7 @@ export function Programs() {
                                                     </h4>
                                                     <div className="mt-2 flex items-center gap-1.5">
                                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
-                                                            âœ“{" "}
+                                                            {" "}
                                                             {t("Enrolled") ||
                                                                 "Enrolled"}
                                                         </span>

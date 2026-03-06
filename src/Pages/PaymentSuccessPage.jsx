@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     FaArrowRight,
@@ -50,7 +50,7 @@ const PaymentSuccessPage = () => {
                     });
                 }
             } catch {
-                // fail silently — contact info is optional
+                // fail silently - contact info is optional
             }
         };
         fetchAdminContact();

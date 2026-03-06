@@ -266,7 +266,7 @@ const Profile = () => {
                                 <p className="text-gray-600 mb-6">
                                     {t(
                                         "profile_data.noCoursesDescription",
-                                        "Commencez votre parcours dâ€™apprentissage en vous inscrivant Ã  nos incroyables coursÂ !",
+                                        "Commencez votre parcours d'apprentissage en vous inscrivant À  nos incroyables cours!",
                                     )}
                                 </p>
                             </div>

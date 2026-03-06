@@ -49,23 +49,23 @@ const inferType = (title, message) => {
     const raw = `${title || ""} ${message || ""}`.toLowerCase();
     if (
         raw.includes("approved") ||
-        raw.includes("approuvÃ©") ||
+        raw.includes("approuvé") ||
         raw.includes("approuve") ||
-        raw.includes("ØªÙ…Øª Ø§Ù„Ù…ÙˆØ§ÙÙ‚Ø©")
+        raw.includes("ØªÙ...Øª Ø§Ù„Ù...ÙˆØ§ÙÙ‚Ø©")
     ) {
         return "success";
     }
     if (
         raw.includes("rejected") ||
         raw.includes("rejet") ||
-        raw.includes("Ø±ÙØ¶")
+        raw.includes("Ø±ÙØ¶")
     ) {
         return "error";
     }
     if (
         raw.includes("action required") ||
         raw.includes("requise") ||
-        raw.includes("Ù…Ø·Ù„ÙˆØ¨")
+        raw.includes("Ù...Ø·Ù„ÙˆØ¨")
     ) {
         return "warning";
     }
@@ -167,7 +167,7 @@ const UserNotifications = () => {
             return;
         }
 
-        // No link â€” show a detail popup
+        // No link  show a detail popup
         const formattedDate = notification.createdAt
             ? new Date(notification.createdAt).toLocaleString(i18n.language, {
                   dateStyle: "medium",

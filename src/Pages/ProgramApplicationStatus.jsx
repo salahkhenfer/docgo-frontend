@@ -24,9 +24,9 @@ const statusBadgeClass = (status) => {
 };
 
 const formatDateTime = (value) => {
-    if (!value) return "â€”";
+    if (!value) return "â€";
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "â€”";
+    if (Number.isNaN(date.getTime())) return "â€";
     return date.toLocaleString();
 };
 
@@ -226,7 +226,7 @@ export default function ProgramApplicationStatus() {
                                     {t("programStatus.paymentType", "Payment")}
                                 </div>
                                 <div className="mt-1 font-medium text-gray-900 capitalize">
-                                    {application?.paymentType || "â€”"}
+                                    {application?.paymentType || "â€"}
                                 </div>
                             </div>
 
@@ -263,7 +263,7 @@ export default function ProgramApplicationStatus() {
                                         ? String(application.Price)
                                         : application?.price != null
                                           ? String(application.price)
-                                          : "â€”"}
+                                          : "â€"}
                                 </div>
                             </div>
 
@@ -278,7 +278,7 @@ export default function ProgramApplicationStatus() {
                                     {(i18n.language === "ar" &&
                                     program?.organization_ar
                                         ? program.organization_ar
-                                        : program?.organization) || "â€”"}
+                                        : program?.organization) || "â€"}
                                 </div>
                             </div>
                         </div>

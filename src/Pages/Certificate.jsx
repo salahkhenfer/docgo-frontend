@@ -87,7 +87,7 @@ export default function Certificate() {
         }
     }, [courseId]);
 
-    // Issue certificate via backend (idempotent â€” safe to call multiple times)
+    // Issue certificate via backend (idempotent  safe to call multiple times)
     useEffect(() => {
         const issueCert = async () => {
             if (!courseId || !user) return;
@@ -134,7 +134,7 @@ export default function Certificate() {
             (user?.firstName && user?.lastName
                 ? user.firstName + " " + user.lastName
                 : "") ||
-            "Ã‰tudiant",
+            "Étudiant",
         courseName: courseData?.course?.title || "Formation",
         completionDate: new Date().toISOString().split("T")[0],
         instructor:
@@ -145,7 +145,7 @@ export default function Certificate() {
             quizScore >= 80
                 ? "Excellence"
                 : quizScore >= 65
-                  ? "TrÃ¨s Bien"
+                  ? "Très Bien"
                   : "Bien",
         courseHours: (() => {
             // Calculate total video duration
@@ -306,10 +306,10 @@ export default function Certificate() {
                                 </div>
                             </div>
                             <h1 className="text-xl md:text-4xl font-bold mb-1 md:mb-2">
-                                ðŸŽ‰ FÃ©licitations Exceptionnelles!
+                                ‰ Félicitations Exceptionnelles!
                             </h1>
                             <p className="text-sm md:text-xl mb-2 md:mb-4">
-                                Vous avez brillamment terminÃ© votre formation
+                                Vous avez brillamment terminé votre formation
                             </p>
                             <h2 className="text-lg md:text-2xl font-semibold mb-2 md:mb-4 text-yellow-200">
                                 {certificateData.courseName}
@@ -361,7 +361,7 @@ export default function Certificate() {
                                 </h1>
                                 <div className="w-16 h-0.5 md:w-32 md:h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-2 md:mb-4"></div>
                                 <p className="text-sm md:text-xl text-gray-600 font-medium">
-                                    est dÃ©cernÃ© Ã 
+                                    est décerné À 
                                 </p>
                             </div>
 
@@ -376,7 +376,7 @@ export default function Certificate() {
                             {/* Course Description */}
                             <div className="mb-4 md:mb-8">
                                 <p className="text-xs md:text-lg text-gray-700 mb-2 md:mb-4">
-                                    pour avoir terminÃ© avec succÃ¨s le programme
+                                    pour avoir terminé avec succès le programme
                                     de formation
                                 </p>
                                 <h2 className="text-lg md:text-3xl font-bold text-gray-800 leading-tight">
@@ -391,7 +391,7 @@ export default function Certificate() {
                                         {quizScore}% - {certificateData.grade}
                                     </div>
                                     <div className="text-xs md:text-base text-gray-600 font-medium">
-                                        RÃ©sultat Obtenu
+                                        Résultat Obtenu
                                     </div>
                                 </div>
                                 <div className="bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-lg md:rounded-xl shadow-md md:shadow-lg">
@@ -414,7 +414,7 @@ export default function Certificate() {
                                         {certificateData.instructor}
                                     </div>
                                     <div className="text-xs md:text-sm text-gray-600">
-                                        Instructeur CertifiÃ©
+                                        Instructeur Certifié
                                     </div>
                                 </div>
                                 <div className="text-center">
@@ -495,12 +495,12 @@ export default function Certificate() {
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                         ></path>
                                     </svg>
-                                    <span>GÃ©nÃ©ration en cours...</span>
+                                    <span>Génération en cours...</span>
                                 </>
                             ) : (
                                 <>
                                     <Download className="w-4 h-4 md:w-5 md:h-5" />
-                                    <span>TÃ©lÃ©charger le Certificat PDF</span>
+                                    <span>Télécharger le Certificat PDF</span>
                                 </>
                             )}
                         </button>
@@ -513,8 +513,8 @@ export default function Certificate() {
                             <Eye className="w-4 h-4 md:w-5 md:h-5" />
                             <span>
                                 {showCertificate
-                                    ? "Masquer les DÃ©tails"
-                                    : "Voir les DÃ©tails du Certificat"}
+                                    ? "Masquer les Détails"
+                                    : "Voir les Détails du Certificat"}
                             </span>
                         </button>
 
@@ -527,7 +527,7 @@ export default function Certificate() {
                                     );
                                     Swal.fire({
                                         icon: "success",
-                                        title: "Lien copiÃ© !",
+                                        title: "Lien copié !",
                                         toast: true,
                                         position: "top-end",
                                         showConfirmButton: false,
@@ -538,7 +538,7 @@ export default function Certificate() {
                                 className="flex gap-2 md:gap-3 justify-center items-center px-4 py-2 md:px-8 md:py-3 text-green-600 hover:text-green-700 underline font-semibold transition-colors duration-300 text-sm md:text-base"
                             >
                                 <LinkIcon className="w-4 h-4 md:w-5 md:h-5" />
-                                <span>Copier le lien de vÃ©rification</span>
+                                <span>Copier le lien de vérification</span>
                             </button>
                         )}
 
@@ -561,13 +561,13 @@ export default function Certificate() {
                     <div className="bg-white rounded-lg md:rounded-2xl shadow-md md:shadow-lg p-4 md:p-6 mb-4 md:mb-8 border border-gray-100">
                         <h3 className="text-lg md:text-2xl font-bold text-gray-800 mb-3 md:mb-6 flex items-center gap-2 md:gap-3">
                             <User className="w-4 h-4 md:w-6 md:h-6 text-blue-600" />
-                            DÃ©tails Complets du Certificat
+                            Détails Complets du Certificat
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                             <div className="space-y-2 md:space-y-4">
                                 <div>
                                     <label className="font-semibold text-gray-700 text-sm md:text-base">
-                                        BÃ©nÃ©ficiaire:
+                                        Bénéficiaire:
                                     </label>
                                     <p className="text-gray-600 text-sm md:text-base">
                                         {certificateData.studentName}

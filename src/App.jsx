@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import "./index.css";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./LandingPage/Layout/Footer";
@@ -64,7 +64,7 @@ function App() {
         : "en";
     const seoLocale = seoLang === "ar" ? "ar_DZ" : "en_US";
 
-    // Dynamic brand name — falls back to "DocGo" until site settings load
+    // Dynamic brand name - falls back to "DocGo" until site settings load
     const brand = siteSettings?.brandName || "DocGo";
 
     const seo = (() => {

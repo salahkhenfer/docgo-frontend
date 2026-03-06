@@ -106,7 +106,7 @@ export const AppProvider = ({ children }) => {
             try {
                 localStorage.removeItem("user");
                 sessionStorage.removeItem("user");
-                // Keep _appSiteData â€” it's public data not tied to user session
+                // Keep _appSiteData â€ it's public data not tied to user session
             } catch {
                 // ignore storage errors
             }
@@ -150,7 +150,7 @@ export const AppProvider = ({ children }) => {
             setLoading(true);
 
             // Serve cached site data instantly so navbar/footer render immediately
-            // Cache TTL: 2 minutes â€” re-fetch after that so dashboard changes propagate
+            // Cache TTL: 2 minutes â€ re-fetch after that so dashboard changes propagate
             const SITE_CACHE_TTL_MS = 2 * 60 * 1000;
             let cachedSiteRaw = null;
             let cacheIsValid = false;
@@ -172,7 +172,7 @@ export const AppProvider = ({ children }) => {
                 } catch {}
             }
 
-            // Fire auth check AND site-settings in parallel â€” single round-trip cost
+            // Fire auth check AND site-settings in parallel â€ single round-trip cost
             const [authResult, siteResult] = await Promise.allSettled([
                 axios.get(API_URL + "/check_Auth", {
                     withCredentials: true,
@@ -186,7 +186,7 @@ export const AppProvider = ({ children }) => {
                       }),
             ]);
 
-            // â”€â”€ Auth â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // â€â€ Auth â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€
             if (authResult.status === "fulfilled") {
                 const r = authResult.value;
                 if (r?.status === 200 && r.data?.user) {
@@ -204,7 +204,7 @@ export const AppProvider = ({ children }) => {
                 sessionStorage.removeItem("user");
             }
 
-            // â”€â”€ Site / branding data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // â€â€ Site / branding data â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€
             if (siteResult.status === "fulfilled" && siteResult.value) {
                 const sd = siteResult.value?.data;
                 if (sd && sd.success !== false) {

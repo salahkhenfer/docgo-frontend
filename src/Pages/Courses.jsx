@@ -511,7 +511,7 @@ export default function Courses() {
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 <div className="text-center">
                     <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
-                        <div className="text-red-500 text-6xl mb-4">âš ï¸</div>
+                        <div className="text-red-500 text-6xl mb-4">¸</div>
                         <h3 className="text-xl font-semibold text-red-800 mb-2">
                             {t("Error Loading Courses") ||
                                 "Error Loading Courses"}
@@ -586,7 +586,7 @@ export default function Courses() {
                 </div>
             </div>
 
-            {/* â”€â”€â”€ Enrolled Courses Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* â€â€â€ Enrolled Courses Section â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€â€ */}
             {isAuth && (enrolledLoading || enrolledCourses.length > 0) && (
                 <div className="bg-gradient-to-r from-emerald-600 to-teal-600 border-b border-teal-700">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

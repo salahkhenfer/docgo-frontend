@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import FeaturedPrograms from "../components/Programs/FeaturedPrograms";
 import Reveal from "../components/Reveal";
 import MainLoading from "../MainLoading";
@@ -26,7 +26,7 @@ function LandingPage() {
             setLoading(true);
             const response = await homeService.getHomePageData();
             if (response._isStaticFallback) {
-                // API unavailable – use built-in defaults
+                // API unavailable - use built-in defaults
                 setIsOffline(true);
                 setHomeData(response.data);
             } else if (response.success) {
@@ -38,7 +38,7 @@ function LandingPage() {
                 }
                 setHomeData(data);
             } else {
-                // API responded but with failure – use defaults silently
+                // API responded but with failure - use defaults silently
                 setIsOffline(true);
                 setHomeData(defaultHomeData.data);
             }
@@ -83,7 +83,7 @@ function LandingPage() {
                 <div className="fixed top-0 inset-x-0 z-50 flex items-center justify-center gap-2 bg-amber-400/90 backdrop-blur-sm text-amber-900 text-xs font-medium py-1.5 px-4 text-center">
                     <span>⚠️</span>
                     <span>
-                        Connexion au serveur indisponible — affichage du contenu
+                        Connexion au serveur indisponible - affichage du contenu
                         par défaut
                     </span>
                     <button

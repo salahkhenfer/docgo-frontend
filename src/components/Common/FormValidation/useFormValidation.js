@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+﻿import { useCallback, useState } from "react";
 
 /**
- * useFormValidation — frontend hook
+ * useFormValidation - frontend hook
  *
  * Usage:
  *   const { errors, warnings, showPanel, showSuccess, validate, clearErrors, errorCount, hasErrors } = useFormValidation();
@@ -24,7 +24,7 @@ export function useFormValidation() {
 
     /**
      * Run validation rules.
-     * @param {Array} rules — array of { field, message, section, scrollToId, type, condition } objects
+     * @param {Array} rules - array of { field, message, section, scrollToId, type, condition } objects
      * @returns {boolean} true if valid, false if there are errors
      */
     const validate = useCallback((rules = []) => {

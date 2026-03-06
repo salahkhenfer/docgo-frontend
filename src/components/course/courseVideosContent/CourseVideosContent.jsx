@@ -183,9 +183,9 @@ export function CourseVideosContent() {
         thumbnail:
             "https://Images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
         duration: 1800,
-        title: "Introduction au DÃ©veloppement Web",
+        title: "Introduction au Développement Web",
         description:
-            "Apprenez les fondamentaux du dÃ©veloppement web avec ce cours complet",
+            "Apprenez les fondamentaux du développement web avec ce cours complet",
 
         statistics: {
             totalViews: 15420,
@@ -198,9 +198,9 @@ export function CourseVideosContent() {
             {
                 id: 1,
                 testimonial:
-                    "GrÃ¢ce Ã  un accompagnement personnalisÃ©, je me sens accompagnÃ© Ã  chaque Ã©tape du processus. Le contenu est trÃ¨s bien structurÃ© et facile Ã  suivre.",
+                    "Grâce À  un accompagnement personnalisé, je me sens accompagné À  chaque étape du processus. Le contenu est très bien structuré et facile À  suivre.",
                 author: "Mohamed Yan",
-                role: "Ã‰tudiante en France",
+                role: "Étudiante en France",
                 avatar: "https://Images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-15",
@@ -209,9 +209,9 @@ export function CourseVideosContent() {
             {
                 id: 2,
                 testimonial:
-                    "Le service m'a Ã©normÃ©ment aidÃ© Ã  comprendre les dÃ©marches d'admission et visa. Les explications sont claires et dÃ©taillÃ©es.",
+                    "Le service m'a énormément aidé À  comprendre les démarches d'admission et visa. Les explications sont claires et détaillées.",
                 author: "Fatima Zohra",
-                role: "Ã‰tudiante en Allemagne",
+                role: "Étudiante en Allemagne",
                 avatar: "https://Images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
                 rating: 4,
                 date: "2024-01-10",
@@ -220,9 +220,9 @@ export function CourseVideosContent() {
             {
                 id: 3,
                 testimonial:
-                    "Excellent accompagnement ! Je recommande pour toute personne qui veut Ã©tudier Ã  l'Ã©tranger. L'Ã©quipe est trÃ¨s professionnelle.",
+                    "Excellent accompagnement ! Je recommande pour toute personne qui veut étudier À  l'étranger. L'équipe est très professionnelle.",
                 author: "Karim Belkacem",
-                role: "Ã‰tudiant au Canada",
+                role: "Étudiant au Canada",
                 avatar: "https://Images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-08",
@@ -231,9 +231,9 @@ export function CourseVideosContent() {
             {
                 id: 4,
                 testimonial:
-                    "Simple, rapide et efficace. L'Ã©quipe est disponible Ã  tout moment. Les ressources fournies sont de grande qualitÃ©.",
+                    "Simple, rapide et efficace. L'équipe est disponible À  tout moment. Les ressources fournies sont de grande qualité.",
                 author: "Lina Haddad",
-                role: "Ã‰tudiante en Belgique",
+                role: "Étudiante en Belgique",
                 avatar: "https://Images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
                 rating: 4,
                 date: "2024-01-05",
@@ -242,9 +242,9 @@ export function CourseVideosContent() {
             {
                 id: 5,
                 testimonial:
-                    "Formation complÃ¨te avec beaucoup d'exemples pratiques. J'ai pu appliquer directement ce que j'ai appris.",
+                    "Formation complète avec beaucoup d'exemples pratiques. J'ai pu appliquer directement ce que j'ai appris.",
                 author: "Ahmed Bouali",
-                role: "DÃ©veloppeur Full Stack",
+                role: "Développeur Full Stack",
                 avatar: "https://Images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
                 rating: 5,
                 date: "2024-01-01",
@@ -253,7 +253,7 @@ export function CourseVideosContent() {
             {
                 id: 6,
                 testimonial:
-                    "Interface intuitive et contenu de qualitÃ©. Support technique trÃ¨s rÃ©actif en cas de problÃ¨me.",
+                    "Interface intuitive et contenu de qualité. Support technique très réactif en cas de problème.",
                 author: "Yasmine Alami",
                 role: "Designer UX/UI",
                 avatar: "https://Images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
@@ -333,13 +333,13 @@ export function CourseVideosContent() {
             alert(
                 `${t("course_data.thankYou")}\n${t(
                     "course.rating"
-                )}: ${rating} â˜…\n${t("course_data.comment")}: ${comment}`
+                )}: ${rating} â˜...\n${t("course_data.comment")}: ${comment}`
             );
             setComment("");
             setRating(0);
             setShowFeedbackForm(false);
         } catch (error) {
-            alert("Erreur lors de la soumission. Veuillez rÃ©essayer.");
+            alert("Erreur lors de la soumission. Veuillez réessayer.");
         }
     };
 
@@ -366,8 +366,8 @@ export function CourseVideosContent() {
                 <div className="flex flex-col w-full max-md:mt-8 max-md:max-w-full">
                     <div className="text-center py-8">
                         <p className="text-red-600">
-                            Erreur lors du chargement des donnÃ©es. Veuillez
-                            rÃ©essayer.
+                            Erreur lors du chargement des données. Veuillez
+                            réessayer.
                         </p>
                     </div>
                 </div>
@@ -398,7 +398,7 @@ export function CourseVideosContent() {
                                 {t("course_data.students")}
                             </span>
                             <span>
-                                â˜… {courseData.statistics.averageRating} (
+                                â˜... {courseData.statistics.averageRating} (
                                 {courseData.statistics.totalReviews}{" "}
                                 {t("course_data.course_reviews")})
                             </span>
@@ -521,7 +521,7 @@ export function CourseVideosContent() {
                                                 : "text-gray-300 hover:text-yellow-200"
                                         }`}
                                     >
-                                        â˜…
+                                        â˜...
                                     </button>
                                 ))}
                                 {rating > 0 && (
@@ -586,7 +586,7 @@ export function CourseVideosContent() {
                                 <div className="text-center py-8 text-gray-500">
                                     <p>
                                         Aucun avis pour le moment. Soyez le
-                                        premier Ã  laisser un avis !
+                                        premier À  laisser un avis !
                                     </p>
                                 </div>
                             )}

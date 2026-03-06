@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+﻿import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertCircle,
     AlertTriangle,
@@ -12,7 +12,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 /**
- * ValidationErrorPanel — frontend version
+ * ValidationErrorPanel - frontend version
  * Floating slide-in panel that shows all form validation errors + file upload issues.
  */
 export default function ValidationErrorPanel({
@@ -336,7 +336,7 @@ export function FieldError({ message, className = "" }) {
 }
 
 /**
- * FileUploadZone — enhanced drag-and-drop upload area with validation feedback
+ * FileUploadZone - enhanced drag-and-drop upload area with validation feedback
  */
 export function FileUploadZone({
     onFileSelect,

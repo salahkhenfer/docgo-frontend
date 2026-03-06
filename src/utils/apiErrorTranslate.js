@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Maps raw server error message strings to i18n translation keys.
  * Keys must match `apiErrors.*` in all locale files.
  *
@@ -85,14 +85,14 @@ export function translateApiError(rawMessage, t) {
         return t(ERROR_KEY_MAP[lower]);
     }
 
-    // Partial match — check if any known phrase is contained in the message
+    // Partial match - check if any known phrase is contained in the message
     for (const [phrase, key] of Object.entries(ERROR_KEY_MAP)) {
         if (lower.includes(phrase)) {
             return t(key);
         }
     }
 
-    // No match — return original (may be a specific/useful message not worth masking)
+    // No match - return original (may be a specific/useful message not worth masking)
     return rawMessage;
 }
 
