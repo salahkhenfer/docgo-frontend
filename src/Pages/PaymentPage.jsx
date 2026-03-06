@@ -680,8 +680,7 @@ const PaymentPage = () => {
                                         <div className="flex items-start gap-4">
                                             <div className="flex-shrink-0">
                                                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                                                    <span className="text-2xl">
-                                                    </span>
+                                                        
                                                 </div>
                                             </div>
                                             <div className="flex-1">
@@ -734,6 +733,7 @@ const PaymentPage = () => {
                                                 </div>
                                                 <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                                                     <p className="text-sm text-gray-800">
+                                                        â¹ï{" "}
                                                         <strong>Note:</strong>{" "}
                                                         Your previous payment
                                                         was removed by the
