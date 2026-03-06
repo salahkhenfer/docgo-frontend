@@ -57,8 +57,7 @@ const inferType = (title, message) => {
     }
     if (
         raw.includes("rejected") ||
-        raw.includes("rejet") ||
-        
+        raw.includes("rejet")
     ) {
         return "error";
     }
