@@ -64,12 +64,10 @@ export const ProgramDetails = () => {
     paymentStatus,
   } = useProgram(programId);
   const [applied, setApplied] = useState(hasApplied);
-  useEffect(() => {
-    console.log(applied);
-  }, [applied]);
+ 
 
   const formatCurrency = (amount, currencyCode) => {
-    if (!amount) return t("Free") || "Free";
+    if (!amount || parseFloat(amount) === 0) return t("Free") || "Free";
     return new Intl.NumberFormat(i18n.language === "ar" ? "ar-DZ" : "en-US", {
       style: "currency",
       currency: currencyCode || "DZD",

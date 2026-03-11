@@ -71,7 +71,7 @@ export const Course = () => {
   } = useCourse(courseId);
 
   const formatCurrency = (amount) => {
-    if (!amount) return t("Free") || "Free";
+    if (!amount || parseFloat(amount) === 0) return t("Free") || "Free";
     // eslint-disable-next-line no-undef
     return new Intl.NumberFormat(i18n.language === "ar" ? "ar-DZ" : "en-US", {
       style: "currency",
@@ -586,7 +586,7 @@ export const Course = () => {
                   {/* Price */}
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-100">
                     <div className="flex items-center gap-3">
-                      <DollarSign className="w-5 h-5 text-green-600" />
+                      {/* <DollarSign className="w-5 h-5 text-green-600" /> */}
                       <div>
                         <p className="text-sm text-green-700 font-medium">
                           {t("Price") || "Price"}
@@ -831,6 +831,7 @@ export const Course = () => {
                   enrolling={enrolling}
                   handleEnrollClick={handleEnrollClick}
                   paymentStatus={paymentStatus}
+                  formatCurrency={formatCurrency}
                 />
               </div>
 

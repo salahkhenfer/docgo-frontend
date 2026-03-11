@@ -32,20 +32,20 @@ const StatsOverview = ({
             color: "text-yellow-600",
             bgColor: "bg-yellow-100",
         },
-        {
-            icon: Globe,
-            label: t("Organizations") || "Organizations",
-            value: totalOrganizations || 0,
-            color: "text-purple-600",
-            bgColor: "bg-purple-100",
-        },
+        // {
+        //     icon: Globe,
+        //     label: t("Organizations") || "Organizations",
+        //     value: totalOrganizations || 0,
+        //     color: "text-purple-600",
+        //     bgColor: "bg-purple-100",
+        // },
     ];
 
     return (
         <div className="bg-white border-b border-gray-100 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-center">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-20 max-w-3xl">
+                    <div className="grid grid-cols-2  gap-6 md:gap-20 max-w-3xl">
                         {stats.map((stat, index) => (
                             <div key={index} className="text-center">
                                 <div

@@ -298,7 +298,10 @@
     "Deadline": "الموعد النهائي",
     "Amount": "المبلغ",
     "Slots": "الأماكن",
-    "View Details": "عرض التفاصيل"
+    "View Details": "عرض التفاصيل",
+    "My Programs": "برامجي",
+    "enrolled program": "برنامج مسجّل",
+    "Enrolled": "مسجّل"
   },
   "common": {
     "retry": "إعادة المحاولة",
@@ -1005,5 +1008,8 @@
     "validationError": "بيانات غير صحيحة. يرجى مراجعة مدخلاتك.",
     "noFileUploaded": "لم يتم تحديد ملف. يرجى اختيار ملف للرفع.",
     "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
-  }
+  },
+
+  "enrolled course": "دورة مسجّلة",
+  "Continue Learning": "مواصلة التعلّم"
 }

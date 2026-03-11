@@ -1,4 +1,4 @@
-{
+﻿{
   "contact": {
     "supportTitle": "Support",
     "supportDesc": "Disponible 7j/7 pour répondre à vos questions",
@@ -297,7 +297,10 @@
     "Deadline": "Date limite",
     "Amount": "Montant",
     "Slots": "Places",
-    "View Details": "Voir les détails"
+    "View Details": "Voir les détails",
+    "My Programs": "Mes programmes",
+    "enrolled program": "programme inscrit",
+    "Enrolled": "Inscrit"
   },
   "notifications": {
     "title": "Notifications",

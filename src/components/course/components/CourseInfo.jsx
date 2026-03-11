@@ -32,7 +32,7 @@ const CourseSidebar = ({
     return (
         <div className="space-y-6">
             {/* Course Statistics */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center mb-4">
                     <FaChartLine className="text-blue-500 text-xl mr-3" />
                     <h3 className="text-lg font-bold text-gray-900">
@@ -77,7 +77,7 @@ const CourseSidebar = ({
                         </span>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Upcoming Sessions */}
             {upcomingMeets && upcomingMeets.length > 0 && (

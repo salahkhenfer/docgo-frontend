@@ -1,4 +1,4 @@
-{
+﻿{
   "contact": {
     "supportTitle": "Support",
     "supportDesc": "Available 7 days a week to answer your questions",
@@ -309,7 +309,10 @@
     "Deadline": "Deadline",
     "Amount": "Amount",
     "Slots": "Slots",
-    "View Details": "View Details"
+    "View Details": "View Details",
+    "My Programs": "My Programs",
+    "enrolled program": "enrolled program",
+    "Enrolled": "Enrolled"
   },
 
   "notifications": {
@@ -837,7 +840,7 @@
 
   "alerts": {
     "enrollment": {
-      "successTitle": "Enrolled Successfully! 🎉",
+      "successTitle": "Enrolled Successfully! ðŸŽ‰",
       "successText": "You have successfully enrolled in this course. You can now access all the content.",
       "startLearning": "Start Learning",
       "failedTitle": "Enrollment Failed",
@@ -847,7 +850,7 @@
       "goToCourse": "Go to course"
     },
     "application": {
-      "successTitle": "Application Submitted! 🎉",
+      "successTitle": "Application Submitted! ðŸŽ‰",
       "successText": "Your application for this free program has been submitted successfully. You will receive a confirmation once approved.",
       "viewApplications": "View applications",
       "enrolledTitle": "Enrolled Successfully",
@@ -891,7 +894,7 @@
     "quiz": {
       "incompleteTitle": "Incomplete Questions",
       "incompleteText": "Please answer all questions before submitting.",
-      "successTitle": "Congratulations! 🎉",
+      "successTitle": "Congratulations! ðŸŽ‰",
       "passText": "You scored {{score}}%. You can now obtain your certificate.",
       "viewResults": "View my results",
       "failTitle": "Quiz Completed",
@@ -1052,5 +1055,8 @@
     "validationError": "Invalid data provided. Please check your input.",
     "noFileUploaded": "No file selected. Please choose a file to upload.",
     "unknown": "An unexpected error occurred. Please try again."
-  }
+  },
+
+  "enrolled course": "enrolled course",
+  "Continue Learning": "Continue Learning"
 }

@@ -37,9 +37,7 @@ const MyPrograms = () => {
 
     load();
   }, [user?.id]);
-  //   useEffect(() => {
-  //     console.log(applications);
-  //   }, [applications]);
+  
 
   if (loading) return <MainLoading />;
 

@@ -334,7 +334,7 @@ export function FilterSidebar({
                 {/* Price Range Filter */}
                 <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                        <DollarSign className="w-4 h-4 text-emerald-600" />
+                        {/* <DollarSign className="w-4 h-4 text-emerald-600" /> */}
                         {t("Price Range") || "Price Range"}
                     </label>
                     <div className="space-y-3">
@@ -382,7 +382,7 @@ export function FilterSidebar({
                             onClick={handlePriceSearch}
                             className="w-full px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
                         >
-                            <DollarSign className="w-4 h-4" />
+                            {/* <DollarSign className="w-4 h-4" /> */}
                             {t("Apply Price Filter") || "Apply Price Filter"}
                         </button>
                     </div>

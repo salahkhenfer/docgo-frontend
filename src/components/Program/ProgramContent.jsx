@@ -240,7 +240,7 @@ const ProgramContent = ({ program }) => {
             {(program.Price || program.scholarshipAmount) && (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center gap-3 mb-4">
-                        <DollarSign className="text-emerald-600 w-6 h-6" />
+                        {/* <DollarSign className="text-emerald-600 w-6 h-6" /> */}
                         <h3 className="text-xl font-bold text-gray-900">
                             {t("Financial Information") ||
                                 "Financial Information"}
@@ -250,7 +250,7 @@ const ProgramContent = ({ program }) => {
                         {program.Price && (
                             <div className="flex items-start gap-3 bg-gradient-to-br from-emerald-50 to-teal-50 p-4 rounded-lg border border-emerald-200">
                                 <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                                    {/* <DollarSign className="w-4 h-4 text-emerald-600" /> */}
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">

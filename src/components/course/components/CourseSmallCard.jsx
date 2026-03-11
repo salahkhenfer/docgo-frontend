@@ -15,6 +15,7 @@ const CourseSmallCard = ({
   currency,
   enrolling,
   handleEnrollClick,
+  formatCurrency,
   paymentStatus, // Add payment status prop
 }) => {
   const navigate = useNavigate();
@@ -53,8 +54,8 @@ const CourseSmallCard = ({
             <span className="text-green-600">Free</span>
           ) : (
             <span className="flex items-center justify-center">
-              <FaDollarSign className="text-2xl mr-1" />
-              {coursePrice} {currency}
+              {/* <FaDollarSign className="text-2xl mr-1" /> */}
+              {formatCurrency(coursePrice)}
             </span>
           )}
         </div>
@@ -228,7 +229,7 @@ const CourseSmallCard = ({
                 <span className="mr-2">{isFree ? "" : ""}</span>
                 {isFree
                   ? "Enroll for Free"
-                  : `Enroll for ${coursePrice} ${currency}`}
+                  : `Enroll for ${formatCurrency(coursePrice)}`}
               </>
             )}
           </button>
@@ -236,7 +237,7 @@ const CourseSmallCard = ({
       </div>
 
       {/* Course Features */}
-      <div className="space-y-3 text-sm text-gray-600">
+      {/* <div className="space-y-3 text-sm text-gray-600">
         <div className="flex items-center">
           <span className="mr-3"></span>
           <span>Lifetime access</span>
@@ -259,7 +260,7 @@ const CourseSmallCard = ({
             <span>Downloadable resources</span>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
