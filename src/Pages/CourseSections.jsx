@@ -205,17 +205,15 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
     setAttempts((a) => a + 1);
 
     const passed = pct >= passingScore;
-    try {
-      await EnrollmentAPI.markItemComplete(courseId, item.id, {
-        quizScore: pct,
-        quizPassed: passed,
-        timeSpent: 0,
-      });
-    } catch {
-      // silent
-    }
+    if (!passed) return;
 
-    if (passed) onComplete(item.id);
+    const res = await EnrollmentAPI.markItemComplete(courseId, item.id, {
+      quizScore: pct,
+      quizPassed: true,
+      timeSpent: 0,
+    });
+
+    if (res?.success) onComplete(item.id);
   };
 
   const handleRetry = () => {
@@ -401,10 +399,21 @@ PdfViewer.propTypes = {
 function PdfViewer({ item, onComplete, isCompleted }) {
   const { t } = useTranslation();
   const [marked, setMarked] = useState(isCompleted);
+  const [marking, setMarking] = useState(false);
+
+  useEffect(() => {
+    setMarked(isCompleted);
+  }, [isCompleted]);
 
   const handleMark = async () => {
-    setMarked(true);
-    onComplete(item.id);
+    if (marking || marked) return;
+    setMarking(true);
+    try {
+      const res = await onComplete(item.id);
+      if (res?.success) setMarked(true);
+    } finally {
+      setMarking(false);
+    }
   };
 
   const url = item.pdfUrl;
@@ -459,14 +468,25 @@ TextReader.propTypes = {
 function TextReader({ item, onComplete, isCompleted }) {
   const { t, i18n } = useTranslation();
   const [marked, setMarked] = useState(isCompleted);
+  const [marking, setMarking] = useState(false);
+
+  useEffect(() => {
+    setMarked(isCompleted);
+  }, [isCompleted]);
   const content =
     i18n.language === "ar" && item.textContent_ar
       ? item.textContent_ar
       : item.textContent || "";
 
-  const handleMark = () => {
-    setMarked(true);
-    onComplete(item.id);
+  const handleMark = async () => {
+    if (marking || marked) return;
+    setMarking(true);
+    try {
+      const res = await onComplete(item.id);
+      if (res?.success) setMarked(true);
+    } finally {
+      setMarking(false);
+    }
   };
 
   return (
@@ -509,6 +529,8 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
   const { t } = useTranslation();
   const [duration, setDuration] = useState(0);
   const completedRef = useRef(isCompleted);
+  const completingRef = useRef(false);
+  const lastAttemptRef = useRef(0);
   completedRef.current = isCompleted;
 
   const url = item.videoUrl?.startsWith("http")
@@ -519,16 +541,25 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
 
   const markCompleteOnce = useCallback(
     (watchedSeconds) => {
-      if (completedRef.current) return;
-      completedRef.current = true;
+      if (completedRef.current || completingRef.current) return;
+      const now = Date.now();
+      if (now - lastAttemptRef.current < 5000) return;
+      lastAttemptRef.current = now;
+      completingRef.current = true;
       EnrollmentAPI.markItemComplete(courseId, item.id, {
         watchedDuration: Math.round(watchedSeconds || 0),
         timeSpent: Math.round(watchedSeconds || 0),
       })
         .then((res) => {
-          if (res.success) onComplete(item.id);
+          if (res.success) {
+            completedRef.current = true;
+            onComplete(item.id);
+          }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          completingRef.current = false;
+        });
     },
     [courseId, item.id, onComplete],
   );
@@ -620,7 +651,7 @@ export function CourseSections() {
       .then((res) => {
         if (res.success && res.data) {
           const ids = res.data.completedItemIds || [];
-          setCompletedItems(new Set(ids));
+          setCompletedItems(new Set(ids.map((x) => String(x))));
           setTotalItems(res.data.totalItems || 0);
         }
       })
@@ -677,7 +708,8 @@ export function CourseSections() {
 
   const handleItemComplete = useCallback(async (itemId) => {
     setCompletedItems((prev) => {
-      const next = new Set([...prev, itemId]);
+      const next = new Set(prev);
+      next.add(String(itemId));
       return next;
     });
   }, []);
@@ -841,7 +873,7 @@ export function CourseSections() {
           const isExpanded = expandedSections[section.id] !== false;
           const sectionItems = section.items || [];
           const sectionDone = sectionItems.filter((i) =>
-            completedItems.has(i.id),
+            completedItems.has(String(i.id)),
           ).length;
 
           return (
@@ -879,7 +911,7 @@ export function CourseSections() {
                 <div className="divide-y divide-gray-100">
                   {sectionItems.map((item) => {
                     const isActive = currentItem?.id === item.id;
-                    const isDone = completedItems.has(item.id);
+                    const isDone = completedItems.has(String(item.id));
 
                     return (
                       <button
@@ -992,7 +1024,7 @@ export function CourseSections() {
       );
     }
 
-    const done = completedItems.has(currentItem.id);
+    const done = completedItems.has(String(currentItem.id));
 
     switch (currentItem.type) {
       case "video":
@@ -1010,15 +1042,13 @@ export function CourseSections() {
           <PdfViewer
             key={currentItem.id}
             item={currentItem}
-            onComplete={(id) =>
-              EnrollmentAPI.markItemComplete(courseId, id, {
+            onComplete={async (id) => {
+              const res = await EnrollmentAPI.markItemComplete(courseId, id, {
                 timeSpent: 0,
-              })
-                .then((res) => {
-                  if (res.success) handleItemComplete(id);
-                })
-                .catch(() => {})
-            }
+              });
+              if (res.success) handleItemComplete(id);
+              return res;
+            }}
             isCompleted={done}
           />
         );
@@ -1027,15 +1057,13 @@ export function CourseSections() {
           <TextReader
             key={currentItem.id}
             item={currentItem}
-            onComplete={(id) =>
-              EnrollmentAPI.markItemComplete(courseId, id, {
+            onComplete={async (id) => {
+              const res = await EnrollmentAPI.markItemComplete(courseId, id, {
                 timeSpent: 0,
-              })
-                .then((res) => {
-                  if (res.success) handleItemComplete(id);
-                })
-                .catch(() => {})
-            }
+              });
+              if (res.success) handleItemComplete(id);
+              return res;
+            }}
             isCompleted={done}
           />
         );

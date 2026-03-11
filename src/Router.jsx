@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
   redirect,
   ScrollRestoration,
 } from "react-router-dom";
@@ -348,6 +349,11 @@ const Routers = createBrowserRouter([
             element: <UserFavorites />,
           },
           {
+            path: "applications",
+            caseSensitive: false,
+            element: <UserApplications />,
+          },
+          {
             path: "applications/:type",
             caseSensitive: false,
             element: <UserApplications />,
@@ -407,6 +413,19 @@ const Routers = createBrowserRouter([
     ),
   },
   { path: "*", element: <NotFound /> },
+  // Redirects for legacy/incorrect URLs
+  {
+    path: "Enrollments",
+    caseSensitive: false,
+    loader: protectedLoader,
+    element: <Navigate to="/dashboard" replace />,
+  },
+  {
+    path: "Applications/Programs",
+    caseSensitive: false,
+    loader: protectedLoader,
+    element: <Navigate to="/dashboard/applications/programs" replace />,
+  },
 ]);
 
 export default Routers;

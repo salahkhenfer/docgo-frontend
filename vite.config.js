@@ -1,99 +1,132 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// Frontend SPA routes that share a prefix with backend proxy paths.
-// On refresh the browser sends Accept: text/html — intercept before the proxy
-// and serve index.html so React Router handles the route client-side.
-// API calls (fetch/axios with Accept: application/json) are NOT intercepted.
-const SPA_ROUTE_PREFIXES = [
-    "/Courses",
-    "/Programs",
-    "/Login",
-    "/login",
-    "/Register",
-    "/register",
-    "/Favorites",
-    "/favorites",
-    "/notifications",
-    "/payments",
-    "/payment",
-    "/home",
-    "/faqs",
-    "/faq",
-    "/contact",
-    "/dashboard",
-    "/profile",
-    "/myapplications",
-    "/my-applications",
-    "/media",
-    "/forgot-password",
-];
+// Bypass function for proxy entries that overlap with SPA routes.
+// When a browser navigates to e.g. /Programs/3 (Accept: text/html, GET),
+// Vite serves index.html so React Router handles it client-side.
+// Axios / fetch API calls carry Accept: application/json and are proxied normally.
+const spaBypass = (req) => {
+  const method = (req.method || "GET").toUpperCase();
+  // POST/PUT/PATCH/DELETE are always real API calls — never bypass
+  if (method !== "GET") return null;
 
-const spaFallbackPlugin = {
-    name: "spa-fallback-for-shared-routes",
-    configureServer(server) {
-        server.middlewares.use((req, _res, next) => {
-            const url = req.url?.split("?")[0] ?? "";
-            const isSpaRoute = SPA_ROUTE_PREFIXES.some(
-                (p) =>
-                    url.toLowerCase() === p.toLowerCase() ||
-                    url.toLowerCase().startsWith(p.toLowerCase() + "/"),
-            );
-            if (isSpaRoute) {
-                const accept = req.headers["accept"] || "";
-                const contentType = req.headers["content-type"] || "";
-                const isApiCall =
-                    accept.includes("application/json") ||
-                    contentType.includes("application/json") ||
-                    (req.headers["x-requested-with"] || "") ===
-                        "XMLHttpRequest";
-                if (!isApiCall) {
-                    req.url = "/index.html";
-                }
-            }
-            next();
-        });
-    },
+  // Static asset requests (images, video, fonts, etc.) must be proxied to the
+  // backend, not intercepted — an <img src="/Programs/3/img.jpg"> is a GET
+  // but should never be served index.html.
+  const urlPath = (req.url || "").split("?")[0];
+  const staticExts =
+    /\.(jpg|jpeg|png|gif|webp|avif|svg|ico|mp4|webm|mov|avi|mkv|pdf|woff2?|ttf|eot|otf)$/i;
+  if (staticExts.test(urlPath)) return null;
+
+  const accept = req.headers["accept"] || "";
+  const contentType = req.headers["content-type"] || "";
+  const isApiCall =
+    accept.includes("application/json") ||
+    contentType.includes("application/json") ||
+    (req.headers["x-requested-with"] || "") === "XMLHttpRequest";
+
+  // Browser GET navigation → serve SPA index.html
+  if (!isApiCall) return "/index.html";
+  return null; // API call → proxy normally
 };
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react(), spaFallbackPlugin],
-    server: {
-        // Dev proxy so cookies remain first-party (prevents SameSite issues on localhost)
-        proxy: {
-            "/Login": "http://localhost:3000",
-            "/Register": "http://localhost:3000",
-            "/register": "http://localhost:3000",
-            "/Logout": "http://localhost:3000",
-            "/check_Auth": "http://localhost:3000",
-            "/forgot-password": "http://localhost:3000",
+  plugins: [react()],
+  server: {
+    // Serve index.html for any path Vite doesn't recognise — the final safety net
+    // for routes that are purely SPA-only (no backend overlap).
+    historyApiFallback: true,
 
-            "/Users": "http://localhost:3000",
+    // Dev proxy so cookies remain first-party (prevents SameSite issues on localhost).
+    // Routes that are BOTH a React Router page AND a backend endpoint use spaBypass
+    // so browser GET navigations always get index.html, not the backend JSON.
+    proxy: {
+      // Auth — POST to backend, GET renders SPA login/register pages
+      "/Login": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/login": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/Register": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/register": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/forgot-password": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
 
-            // API calls to /Courses and /Programs come here only when they carry
-            // Accept: application/json (fetch/axios). Browser navigations are
-            // intercepted by spaFallbackPlugin above and never reach the proxy.
-            "/Courses": "http://localhost:3000",
-            "/Programs": "http://localhost:3000",
+      // Pure API — no SPA route with these exact paths
+      "/Logout": "http://localhost:3000",
+      "/check_Auth": "http://localhost:3000",
+      "/Users": "http://localhost:3000",
+      "/enrollment": "http://localhost:3000",
 
-            "/Favorites": "http://localhost:3000",
-            "/notifications": "http://localhost:3000",
-            "/enrollment": "http://localhost:3000",
+      // Shared prefix: SPA page + backend API
+      "/Courses": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/Programs": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/Favorites": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/favorites": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/notifications": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/payments": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/payment": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
+      "/faqs": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        bypass: spaBypass,
+      },
 
-            "/payments": "http://localhost:3000",
-            "/user-payments": "http://localhost:3000",
-            "/comprehensive-payments": "http://localhost:3000",
-            "/payment": "http://localhost:3000",
-            "/payment-status": "http://localhost:3000",
-
-            "/media": "http://localhost:3000",
-            "/public": "http://localhost:3000",
-            "/home": "http://localhost:3000",
-            "/faqs": "http://localhost:3000",
-            "/contact": "http://localhost:3000",
-            "/upload": "http://localhost:3000",
-            "/visit": "http://localhost:3000",
-        },
+      // Pure API — no SPA route
+      "/user-payments": "http://localhost:3000",
+      "/comprehensive-payments": "http://localhost:3000",
+      "/payment-status": "http://localhost:3000",
+      "/media": "http://localhost:3000",
+      "/public": "http://localhost:3000",
+      "/home": "http://localhost:3000",
+      "/contact": "http://localhost:3000",
+      "/upload": "http://localhost:3000",
+      "/visit": "http://localhost:3000",
     },
+  },
 });

@@ -69,9 +69,9 @@ function NavigationMobile({ branding = null }) {
                                 <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
                                     {brandName}
                                 </span>
-                                <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                {/* <span className="text-xs text-blue-600 font-medium tracking-wide">
                                     e-learning
-                                </span>
+                                </span> */}
                             </div>
                         ) : null}
                     </div>
@@ -208,6 +208,26 @@ function NavigationMobile({ branding = null }) {
                                 </span>
                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                             </Link>
+
+                            {user && isAuth && (
+                                <Link
+                                    to="/dashboard"
+                                    className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                        ${
+                                            location.pathname
+                                                .toLowerCase()
+                                                .startsWith("/dashboard")
+                                                ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                                : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                        }`}
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <span className="relative z-10">
+                                        {t("UserDashboard_nav", "My Dashboard")}
+                                    </span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                                </Link>
+                            )}
 
                             <Link
                                 to="/Programs"

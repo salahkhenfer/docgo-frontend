@@ -13,7 +13,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { IoMdRefresh } from "react-icons/io";
@@ -31,6 +31,8 @@ import CourseContent from "../components/course/components/CourseContent";
 import CourseFAQSection from "../components/course/components/CourseFAQSection";
 import CourseReviews from "../components/course/components/CourseReviews";
 import CourseSmallCard from "../components/course/components/CourseSmallCard";
+import ImageWithFallback from "../components/Common/ImageWithFallback";
+import RichTextDisplay from "../components/Common/RichTextEditor/RichTextDisplay";
 
 export const Course = () => {
   const { t, i18n } = useTranslation();
@@ -445,49 +447,43 @@ export const Course = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Course Image/Video */}
             <div className="h-96 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden relative rounded-xl mb-8">
-              {course.Image ? (
-                <>
-                  <img
-                    src={`${import.meta.env.VITE_API_URL}${course.Image}`}
-                    alt={courseTitle}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Video Play Button */}
-                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                    {isEnrolled ? (
-                      <button
-                        onClick={() => navigate(`/Courses/${courseId}/watch`)}
-                        className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
-                      >
-                        <PlayCircle className="w-16 h-16" />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          const el = document.getElementById(
-                            "course-enrollment-card",
-                          );
-                          if (el)
-                            el.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                            });
-                        }}
-                        className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
-                      >
-                        <PlayCircle className="w-12 h-12 text-blue-600" />
-                      </button>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <GraduationCap className="w-20 h-20 text-blue-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">
-                      {t("No image available") || "No image available"}
-                    </p>
-                  </div>
+              <ImageWithFallback
+                type="course"
+                src={
+                  course.Image
+                    ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                    : null
+                }
+                alt={courseTitle}
+                className="w-full h-full object-cover"
+              />
+              {/* Video Play Button */}
+              {course.Image && (
+                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  {isEnrolled ? (
+                    <button
+                      onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                      className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
+                    >
+                      <PlayCircle className="w-16 h-16" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById(
+                          "course-enrollment-card",
+                        );
+                        if (el)
+                          el.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                          });
+                      }}
+                      className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
+                    >
+                      <PlayCircle className="w-12 h-12 text-blue-600" />
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -502,12 +498,12 @@ export const Course = () => {
                   {courseTitle}
                 </h1>
                 {courseDescription && (
-                  <p
-                    className="text-xl text-gray-600 mb-6"
+                  <div
+                    className="text-gray-700 mb-6 prose prose-blue max-w-none"
                     dir={i18n.language === "ar" ? "rtl" : "ltr"}
                   >
-                    {courseDescription}
-                  </p>
+                    <RichTextDisplay content={courseDescription} />
+                  </div>
                 )}
 
                 {/* Watch Course Button for Enrolled Users */}
@@ -547,7 +543,26 @@ export const Course = () => {
                           {t("Duration") || "Duration"}
                         </p>
                         <p className="text-lg font-bold text-blue-800">
-                          {formatTotalDuration(courseStats?.totalDuration)}
+                          {(() => {
+                            // Sum videoDuration from all section items
+                            const sectionDuration = (
+                              course.sections || []
+                            ).reduce(
+                              (acc, s) =>
+                                acc +
+                                (s.items || []).reduce(
+                                  (a, i) =>
+                                    a + (i.videoDuration || i.duration || 0),
+                                  0,
+                                ),
+                              0,
+                            );
+                            return formatTotalDuration(
+                              sectionDuration ||
+                                courseStats?.totalDuration ||
+                                (course.duration ? course.duration * 60 : 0),
+                            );
+                          })()}
                         </p>
                       </div>
                     </div>
@@ -562,7 +577,9 @@ export const Course = () => {
                           {t("Students") || "Students"}
                         </p>
                         <p className="text-lg font-bold text-purple-800">
-                          {courseStats?.enrolledCount || 0}
+                          {course.Users_count ??
+                            courseStats?.enrolledCount ??
+                            0}
                         </p>
                       </div>
                     </div>
@@ -577,8 +594,8 @@ export const Course = () => {
                           {t("Rating") || "Rating"}
                         </p>
                         <p className="text-lg font-bold text-yellow-800">
-                          {courseStats?.averageRating
-                            ? `${courseStats.averageRating}/5`
+                          {courseStats?.averageRating || course.Rate
+                            ? `${courseStats?.averageRating ?? course.Rate}/5`
                             : "N/A"}
                         </p>
                       </div>

@@ -111,9 +111,9 @@ const MyApplicationCard = ({ program, status }) => {
                                                 "myApplicationsPage.description",
                                             )}
                                         </h3>
-                                        <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                                        {/* <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
                                             {program.description}
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </div>

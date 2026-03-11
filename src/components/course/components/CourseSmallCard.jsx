@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { FaCheckCircle, FaDollarSign, FaPlay } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import ImageWithFallback from "../../Common/ImageWithFallback";
 
 const CourseSmallCard = ({
   course,
@@ -24,18 +25,18 @@ const CourseSmallCard = ({
       {/* Course Thumbnail */}
       <div className="relative mb-6 group">
         <div className="aspect-video bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center overflow-hidden">
-          {course.thumbnail ? (
-            <img
-              src={
-                import.meta.env.VITE_API_URL + course.thumbnail ||
-                import.meta.env.VITE_API_URL + course.Image
-              }
-              alt={course.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="text-6xl text-blue-300"></div>
-          )}
+          <ImageWithFallback
+            type="course"
+            src={
+              course.thumbnail
+                ? import.meta.env.VITE_API_URL + course.thumbnail
+                : course.Image
+                  ? import.meta.env.VITE_API_URL + course.Image
+                  : null
+            }
+            alt={course.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
         </div>
         {/* Play Button Overlay */}
         <div className="absolute inset-0 bg-black/30 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -59,7 +60,7 @@ const CourseSmallCard = ({
         </div>
         {!isFree && (
           <div className="text-sm text-gray-500">
-            One-time payment  Lifetime access
+            One-time payment Lifetime access
           </div>
         )}
       </div>
@@ -212,8 +213,8 @@ const CourseSmallCard = ({
                               enrolling
                                 ? "bg-gray-400 cursor-not-allowed text-white"
                                 : isFree
-                                ? "bg-green-600 hover:bg-green-700 text-white"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
+                                  ? "bg-green-600 hover:bg-green-700 text-white"
+                                  : "bg-blue-600 hover:bg-blue-700 text-white"
                             }
                         `}
           >

@@ -1,12 +1,16 @@
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import ImageWithFallback from "../Common/ImageWithFallback";
 
 const PendingApplicationsSection = ({ applications }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Combine programs and courses applications
+  // Statuses that are visible in this section (pending/waiting + rejected so user can see outcome)
+  const PENDING_STATUSES = ["pending", "opened", "rejected"];
+
+  // Combine programs and courses applications — only truly pending ones
   const allApplications = [
     ...(applications.programs || []).map((app) => ({
       ...app,
@@ -16,7 +20,11 @@ const PendingApplicationsSection = ({ applications }) => {
       ...app,
       type: "course",
     })),
-  ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  ]
+    .filter((app) =>
+      PENDING_STATUSES.includes(String(app.status || "").toLowerCase()),
+    )
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   if (!allApplications || allApplications.length === 0) {
     return (
@@ -129,26 +137,28 @@ const PendingApplicationsSection = ({ applications }) => {
           return (
             <div
               key={`${application.type}-${application.id}`}
-              className="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow"
+              className={`rounded-lg p-2 sm:p-3 md:p-4 hover:shadow-md transition-shadow border-l-4 ${
+                application.status === "rejected"
+                  ? "bg-red-50 border-red-400"
+                  : "bg-amber-50 border-amber-400"
+              }`}
             >
               <div className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                <img
+                <ImageWithFallback
+                  type={application.type === "program" ? "program" : "course"}
                   src={
                     item?.Image
                       ? `${import.meta.env.VITE_API_URL}${item.Image}`
-                      : `/placeholder-${application.type}.png`
+                      : null
                   }
                   alt={item?.Title}
                   className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg object-cover flex-shrink-0"
-                  onError={(e) => {
-                    e.target.src = `/placeholder-${application.type}.png`;
-                  }}
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-1 sm:mb-2">
                     <div>
                       <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2">
-                        {item?.Title}
+                        {item?.title || item?.Title}
                       </h3>
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
                         <span
@@ -174,17 +184,19 @@ const PendingApplicationsSection = ({ applications }) => {
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
                         application.status === "pending"
                           ? "bg-yellow-100 text-yellow-800"
-                          : application.status === "under_review"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
+                          : application.status === "opened"
+                            ? "bg-purple-100 text-purple-800"
+                            : application.status === "rejected"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {application.status === "pending" &&
                         t("dashboard.pending", "Pending")}
-                      {application.status === "under_review" &&
-                        t("dashboard.underReview", "Under Review")}
-                      {application.status === "submitted" &&
-                        t("dashboard.submitted", "Submitted")}
+                      {application.status === "opened" &&
+                        t("dashboard.opened", "Opened")}
+                      {application.status === "rejected" &&
+                        t("dashboard.rejected", "Rejected")}
                     </span>
                   </div>
 
@@ -236,35 +248,37 @@ const PendingApplicationsSection = ({ applications }) => {
                     )}
                   </div>
 
-                  {/* Progress indicator for application processing */}
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                      <span>
-                        {t(
-                          "dashboard.applicationProgress",
-                          "Application Progress",
-                        )}
-                      </span>
-                      <span>
-                        {application.status === "submitted"
-                          ? "33%"
-                          : application.status === "under_review"
-                            ? "66%"
-                            : "10%"}
-                      </span>
+                  {application.status === "rejected" ? (
+                    <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-600 text-center font-medium">
+                      {t(
+                        "dashboard.applicationRejected",
+                        "This application was rejected",
+                      )}
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1">
-                      <div
-                        className={`h-1 rounded-full transition-all duration-300 ${
-                          application.status === "submitted"
-                            ? "bg-amber-500 w-1/3"
-                            : application.status === "under_review"
-                              ? "bg-blue-500 w-2/3"
-                              : "bg-yellow-500 w-1/12"
-                        }`}
-                      ></div>
+                  ) : (
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                        <span>
+                          {t(
+                            "dashboard.applicationProgress",
+                            "Application Progress",
+                          )}
+                        </span>
+                        <span>
+                          {application.status === "pending" ? "40%" : "10%"}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1">
+                        <div
+                          className={`h-1 rounded-full transition-all duration-300 ${
+                            application.status === "pending"
+                              ? "bg-yellow-500 w-2/5"
+                              : "bg-purple-500 w-1/12"
+                          }`}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -94,9 +94,9 @@ const CardCourse = ({ id, url, title, description, price }) => {
         </h3>
 
         {/* Description with better styling */}
-        <p className="text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed flex-1">
+        {/* <p className="text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed flex-1">
           {description || t("CourseDescription")}
-        </p>
+        </p> */}
 
         {/* Enhanced button with arrow */}
         <motion.div

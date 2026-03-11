@@ -167,6 +167,7 @@ function Navigation({ branding = null }) {
         const isProgramsActive = activeNavItem === "programs";
         const isCoursesActive = activeNavItem === "courses";
         const isFaqActive = activeNavItem === "faq";
+        const isDashboardActive = location.pathname.toLowerCase().startsWith("/dashboard");
 
         return (
             <div className="flex justify-center items-center gap-2 lg:gap-4">
@@ -174,6 +175,12 @@ function Navigation({ branding = null }) {
                     {t("Home_nav")}
                     <ActiveIndicator isActive={isHomeActive} />
                 </Link>
+                {isAuth && (
+                    <Link to="/dashboard" className={getNavLinkClass("dashboard")}>
+                        {t("UserDashboard_nav", "My Dashboard")}
+                        <ActiveIndicator isActive={isDashboardActive} />
+                    </Link>
+                )}
                 <Link to="/programs" className={getNavLinkClass("programs")}>
                     {t("Programs_nav")}
                     <ActiveIndicator isActive={isProgramsActive} />
@@ -300,9 +307,9 @@ function Navigation({ branding = null }) {
                                 <span className="font-extrabold text-xl tracking-tight text-gray-900 leading-tight">
                                     {brandName}
                                 </span>
-                                <span className="text-xs text-blue-600 font-medium tracking-wide uppercase">
+                                {/* <span className="text-xs text-blue-600 font-medium tracking-wide uppercase">
                                     Plateforme e-learning
-                                </span>
+                                </span> */}
                             </div>
                         ) : null}
                     </div>

@@ -71,9 +71,9 @@ function Footer({ contactInfo, branding = null }) {
                                     <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
                                         {brandName}
                                     </span>
-                                    <span className="text-xs text-blue-600 font-medium tracking-wide">
+                                    {/* <span className="text-xs text-blue-600 font-medium tracking-wide">
                                         e-learning
-                                    </span>
+                                    </span> */}
                                 </div>
                             ) : null}
                         </div>
