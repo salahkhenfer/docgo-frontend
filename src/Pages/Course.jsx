@@ -269,6 +269,7 @@ export const Course = () => {
     courseProgress,
     certificate,
     upcomingMeets,
+    userReview,
   } = courseData;
 
   const handleVideoClick = (video) => {
@@ -689,7 +690,12 @@ export const Course = () => {
               />
 
               {/* Reviews Section */}
-              <CourseReviews courseStats={courseStats} course={course} />
+              <CourseReviews
+                courseStats={courseStats}
+                course={course}
+                userStatus={userStatus}
+                userReview={userReview}
+              />
 
               {/* FAQ Section */}
               <CourseFAQSection faqs={course.RelatedFAQs || []} />

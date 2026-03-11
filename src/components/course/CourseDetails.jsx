@@ -130,6 +130,7 @@ export const CourseDetails = () => {
     courseProgress,
     certificate,
     upcomingMeets,
+    userReview,
   } = courseData;
 
   const courseTitle =
@@ -262,7 +263,12 @@ export const CourseDetails = () => {
               />
 
               {/* Reviews Section */}
-              <CourseReviews courseStats={courseStats} course={course} />
+              <CourseReviews
+                courseStats={courseStats}
+                course={course}
+                userStatus={userStatus}
+                userReview={userReview}
+              />
 
               {/* FAQ Section */}
               <CourseFAQSection faqs={course.RelatedFAQs || []} />

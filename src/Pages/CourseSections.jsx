@@ -12,11 +12,13 @@ import {
 } from "lucide-react";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaCheckCircle, FaLock } from "react-icons/fa";
+import { FaCheckCircle, FaLock, FaStar, FaRegStar } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import { EnrollmentAPI } from "../API/Enrollment";
+import reviewsAPI from "../API/Reviews";
 import VideoPlayer from "../components/Common/VideoPlayer";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
@@ -617,6 +619,125 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Inline review widget for the watch page
+// ─────────────────────────────────────────────────────────────────────────────
+CourseReviewWidget.propTypes = {
+  courseId: PropTypes.string,
+  courseData: PropTypes.object,
+};
+function CourseReviewWidget({ courseId, courseData }) {
+  const { t } = useTranslation();
+  const initial = courseData?.userReview || null;
+  const [userReview, setUserReview] = useState(initial);
+  const [rateValue, setRateValue] = useState(initial?.Rate || 0);
+  const [comment, setComment] = useState(initial?.Comment || "");
+  const [editMode, setEditMode] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const renderStars = (rating) => (
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <FaStar key={s} className={s <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"} />
+      ))}
+    </div>
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!rateValue) { toast.error("Please select a rating."); return; }
+    try {
+      setSubmitting(true);
+      const res = await reviewsAPI.submitCourseReview(courseId, { rate: rateValue, comment });
+      setUserReview(res.data.review);
+      setEditMode(false);
+      toast.success(res.data.message || "Review submitted!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to submit review.");
+    } finally { setSubmitting(false); }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("Delete your review?")) return;
+    try {
+      setDeleting(true);
+      await reviewsAPI.deleteCourseReview(courseId);
+      setUserReview(null); setRateValue(0); setComment("");
+      toast.success("Review deleted.");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to delete review.");
+    } finally { setDeleting(false); }
+  };
+
+  return (
+    <div className="max-w-[860px] mx-auto mt-10 mb-4">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h3 className="text-base font-bold text-gray-900 mb-4">{t("Rate this course") || "Rate this course"}</h3>
+
+        {userReview && !editMode ? (
+          <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
+            {renderStars(userReview.Rate)}
+            {userReview.Comment && <p className="text-sm text-gray-700 mt-2">{userReview.Comment}</p>}
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => { setRateValue(userReview.Rate); setComment(userReview.Comment || ""); setEditMode(true); }}
+                className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="px-3 py-1.5 text-xs font-medium bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 disabled:opacity-60 transition-colors"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Rating <span className="text-red-500">*</span></label>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button key={star} type="button" onClick={() => setRateValue(star)} className="text-2xl focus:outline-none">
+                    {star <= rateValue ? <FaStar className="text-yellow-400" /> : <FaRegStar className="text-gray-300 hover:text-yellow-300" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Comment (optional)</label>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={3}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                placeholder="Share your experience..."
+              />
+            </div>
+            <div className="flex gap-2">
+              <button type="submit" disabled={submitting}
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors"
+              >
+                {submitting ? "Saving..." : "Submit Review"}
+              </button>
+              {editMode && (
+                <button type="button" onClick={() => setEditMode(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Main CourseSections component
 // ─────────────────────────────────────────────────────────────────────────────
 export function CourseSections() {
@@ -1195,6 +1316,11 @@ export function CourseSections() {
                 </span>
               )}
             </div>
+          )}
+
+          {/* Review widget – always visible for enrolled users */}
+          {!showCertificate && (
+            <CourseReviewWidget courseId={courseId} courseData={courseData} />
           )}
         </main>
       </div>
