@@ -126,18 +126,20 @@ const MyPrograms = () => {
                           (i18n.language === "ar" && program?.location_ar
                             ? program.location_ar
                             : program?.location) || "";
-                        const parts = [org, loc].filter(Boolean);
+                        const capitalize = (s) =>
+                          s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+                        const parts = [org, loc]
+                          .filter(Boolean)
+                          .map(capitalize);
                         const subtitle =
                           parts.length > 0
                             ? parts.join(" \u2022 ")
                             : [program?.programType, program?.category]
                                 .filter(Boolean)
-                                .map(
-                                  (s) => s.charAt(0).toUpperCase() + s.slice(1),
-                                )
+                                .map(capitalize)
                                 .join(" \u2022 ");
                         return subtitle ? (
-                          <div className="text-sm text-gray-500 mt-0.5 truncate capitalize">
+                          <div className="text-sm text-gray-500 mt-0.5 truncate">
                             {subtitle}
                           </div>
                         ) : null;

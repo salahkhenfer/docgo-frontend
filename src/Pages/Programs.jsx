@@ -19,7 +19,7 @@ import Pagination from "../components/programs/Pagination";
 import ProgramCard from "../components/programs/ProgramCard";
 import ProgramsList from "../components/programs/ProgramsList";
 import StatsOverview from "../components/programs/StatsOverview";
-import axios from "../utils/axios";
+import apiClient from "../services/apiClient";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
 
 export function Programs() {
@@ -48,7 +48,6 @@ export function Programs() {
     featured: 0,
     organizations: 0,
   });
-
   // Debouncing state
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || "",
@@ -135,7 +134,6 @@ export function Programs() {
   // UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showSortMenu, setShowSortMenu] = useState(false);
-
   // Fetch all programs with filters and search
   const fetchPrograms = useCallback(
     async (page = 1, forceRefresh = false, isFilterChange = false) => {
@@ -233,15 +231,10 @@ export function Programs() {
           (Array.isArray(response?.data) ? response.data : []) ||
           (Array.isArray(response) ? response : []);
 
-        // Filter out enrolled programs
-        const unenrolledPrograms = programsData.filter(
-          (p) => !enrolledProgramIds.has(p.id),
-        );
-
         // Filter by location if specified
         const filteredPrograms = filters.location
-          ? unenrolledPrograms.filter((p) => p.location === filters.location)
-          : unenrolledPrograms;
+          ? programsData.filter((p) => p.location === filters.location)
+          : programsData;
 
         // If first page and no search/filters, get featured programs too
         if (page === 1 && !hasSearch && !hasFilters) {
@@ -422,22 +415,22 @@ export function Programs() {
       if (!isAuth) return;
       setEnrolledProgramsLoading(true);
       try {
-        const response = await axios.get("/enrollment/my-applications");
-        if (response?.data?.data?.applications) {
-          const apps = response.data.data.applications.filter(
-            (app) =>
-              app.status === "approved" || app.applicationStatus === "approved",
-          );
-          const enrolledIds = new Set(
-            apps.map((app) => app.ProgramId || app.Program?.id).filter(Boolean),
-          );
-          setEnrolledProgramIds(enrolledIds);
-          // Also store full program objects for the enrolled section
-          const programs = apps
-            .map((app) => app.Program || null)
-            .filter((p) => p && p.id);
-          setEnrolledPrograms(programs);
-        }
+        const response = await apiClient.get("/Users/programs/my-applications");
+        const apps = Array.isArray(response.data?.data)
+          ? response.data.data
+          : response.data?.data?.applications || [];
+        const validApps = apps.filter((app) => app.status !== "rejected");
+        const enrolledIds = new Set(
+          validApps
+            .map((app) => app.ProgramId || app.Program?.id)
+            .filter(Boolean),
+        );
+        setEnrolledProgramIds(enrolledIds);
+        // Also store full program objects for the enrolled section
+        const programs = validApps
+          .map((app) => app.Program || null)
+          .filter((p) => p && p.id);
+        setEnrolledPrograms(programs);
       } catch (error) {
       } finally {
         setEnrolledProgramsLoading(false);
@@ -1059,6 +1052,7 @@ export function Programs() {
                         program={program}
                         onClick={() => handleProgramClick(program.id)}
                         language={i18n.language}
+                        isEnrolled={enrolledProgramIds.has(program.id)}
                       />
                     ))}
                   </div>
@@ -1067,6 +1061,7 @@ export function Programs() {
                     programs={programs}
                     onProgramClick={handleProgramClick}
                     language={i18n.language}
+                    enrolledProgramIds={enrolledProgramIds}
                   />
                 )}
 

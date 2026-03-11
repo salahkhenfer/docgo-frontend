@@ -74,7 +74,12 @@ const gradientMap = {
 
 // - Single list row -
 
-function ProgramListItem({ program, onProgramClick, language = "en" }) {
+function ProgramListItem({
+  program,
+  onProgramClick,
+  language = "en",
+  isEnrolled = false,
+}) {
   const { t } = useTranslation();
 
   const {
@@ -174,25 +179,35 @@ function ProgramListItem({ program, onProgramClick, language = "en" }) {
     program.linkedCourse?.id ||
     program.Course?.id ||
     null;
-  const actionHref =
-    effectivePrice === 0 && courseId
+  const actionHref = isEnrolled
+    ? `/Programs/${program.id}/status`
+    : effectivePrice === 0 && courseId
       ? `/Courses/${courseId}`
       : `/Programs/${program.id}`;
-  const actionLabel =
-    effectivePrice === 0 && courseId
+  const actionLabel = isEnrolled
+    ? t("ViewProgram") || "View Program"
+    : effectivePrice === 0 && courseId
       ? t("Go to Course") || "Go to Course"
       : t("View Details") || "View Details";
-  const actionClass =
-    effectivePrice === 0 && courseId
+  const actionClass = isEnrolled
+    ? "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+    : effectivePrice === 0 && courseId
       ? "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
       : "bg-blue-600 hover:bg-blue-700";
 
   return (
     <article
       onClick={() => onProgramClick && onProgramClick(program.id)}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group"
+      className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group relative"
     >
-      <div className="flex flex-col sm:flex-row">
+      {/* Enrollment ribbon */}
+      {isEnrolled && (
+        <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
+          {t("Enrolled") || "Enrolled"}
+        </div>
+      )}
+
+      <div className={`flex flex-col sm:flex-row ${isEnrolled ? "pt-6" : ""}`}>
         {/* - Image - */}
         <div
           className={`relative sm:w-52 sm:flex-shrink-0 h-44 sm:h-auto bg-gradient-to-br ${gradientClass} overflow-hidden`}
@@ -399,11 +414,17 @@ ProgramListItem.propTypes = {
   program: PropTypes.object.isRequired,
   onProgramClick: PropTypes.func,
   language: PropTypes.string,
+  isEnrolled: PropTypes.bool,
 };
 
 // - Container -
 
-const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
+const ProgramsList = ({
+  programs,
+  onProgramClick,
+  language = "en",
+  enrolledProgramIds,
+}) => {
   const { t } = useTranslation();
 
   if (!programs || programs.length === 0) {
@@ -429,6 +450,7 @@ const ProgramsList = ({ programs, onProgramClick, language = "en" }) => {
           program={program}
           onProgramClick={onProgramClick}
           language={language}
+          isEnrolled={enrolledProgramIds?.has(program.id) || false}
         />
       ))}
     </div>
@@ -441,4 +463,5 @@ ProgramsList.propTypes = {
   programs: PropTypes.array.isRequired,
   onProgramClick: PropTypes.func,
   language: PropTypes.string,
+  enrolledProgramIds: PropTypes.instanceOf(Set),
 };

@@ -92,7 +92,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
           <div
             key={enrollment.id}
             className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer border border-green-100"
-            onClick={() => navigate(`/Programs/${enrollment.ProgramId}`)}
+            onClick={() => navigate(`/Programs/${enrollment.ProgramId}/status`)}
           >
             <div className="flex items-start gap-4">
               <ImageWithFallback
@@ -112,7 +112,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                     ? enrollment.Program.title_ar || enrollment.Program.Title_ar
                     : enrollment.Program?.title || enrollment.Program?.Title}
                 </h3>
-                <div className="flex items-center gap-2 mb-2">
+                {/* <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm text-gray-600">
                     {i18n.language === "ar" &&
                     enrollment.Program?.organization_ar
@@ -125,7 +125,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                       ? enrollment.Program.location_ar
                       : enrollment.Program?.location}
                   </span>
-                </div>
+                </div> */}
 
                 {/* Status and Scholarship Info */}
                 <div className="flex items-center justify-between mb-3">
@@ -214,7 +214,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
       </div>
 
       {/* View All Button */}
-      {enrollments.length > 4 && (
+      {/* {enrollments.length > 4 && (
         <div className="mt-6 text-center">
           <button
             onClick={() => navigate("/dashboard/my-programs")}
@@ -236,7 +236,7 @@ const EnrolledProgramsSection = ({ enrollments }) => {
             </svg>
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

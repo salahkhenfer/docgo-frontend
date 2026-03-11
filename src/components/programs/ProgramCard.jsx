@@ -7,7 +7,12 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 
-export function ProgramCard({ program, onClick, language = "en" }) {
+export function ProgramCard({
+  program,
+  onClick,
+  language = "en",
+  isEnrolled = false,
+}) {
   const { t } = useTranslation();
 
   const {
@@ -157,8 +162,17 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
   return (
     <article className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden relative group flex flex-col h-full">
+      {/* Enrollment ribbon */}
+      {isEnrolled && (
+        <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
+          {t("Enrolled") || "Enrolled"}
+        </div>
+      )}
+
       {/* Top badges */}
-      <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between">
+      <div
+        className={`absolute ${isEnrolled ? "top-7" : "top-3"} left-3 right-3 z-20 flex items-start justify-between`}
+      >
         <button
           onClick={handleToggleFavorite}
           className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm transition-all duration-200 ${favoriteLoading ? "opacity-50" : "hover:bg-black/50"}`}
@@ -194,7 +208,7 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
       {/* Program Image */}
       <div
-        className={`h-44 bg-gradient-to-br ${gradientClass} flex items-center justify-center relative overflow-hidden flex-shrink-0`}
+        className={`${isEnrolled ? "mt-6" : ""} h-44 bg-gradient-to-br ${gradientClass} flex items-center justify-center relative overflow-hidden flex-shrink-0`}
       >
         <ImageWithFallback
           type="program"
@@ -324,6 +338,21 @@ export function ProgramCard({ program, onClick, language = "en" }) {
 
         {/* Action Button */}
         {(() => {
+          if (isEnrolled) {
+            return (
+              <Link
+                to={`/Programs/${program.id}/status`}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  if (onClick) onClick(program.id);
+                }}
+                className="w-full text-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold text-sm transition-all duration-200 shadow-sm"
+              >
+                {t("ViewProgram") || "View Program"}
+              </Link>
+            );
+          }
+
           const pDiscount =
             program.discountPrice !== undefined &&
             program.discountPrice !== null
@@ -400,6 +429,7 @@ ProgramCard.propTypes = {
   }).isRequired,
   onClick: PropTypes.func,
   language: PropTypes.string,
+  isEnrolled: PropTypes.bool,
 };
 
 export default ProgramCard;

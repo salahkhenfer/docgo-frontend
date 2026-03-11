@@ -41,6 +41,7 @@ export const Course = () => {
   const location = useLocation();
   const { user } = useAppContext(); // Use context for auth
   const [showVideo, setShowVideo] = useState(false);
+  const [showIntroVideo, setShowIntroVideo] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [showContactForm, setShowContactForm] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -446,45 +447,108 @@ export const Course = () => {
         <div className="bg-white shadow-sm mb-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Course Image/Video */}
-            <div className="h-96 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden relative rounded-xl mb-8">
-              <ImageWithFallback
-                type="course"
-                src={
-                  course.Image
-                    ? `${import.meta.env.VITE_API_URL}${course.Image}`
-                    : null
-                }
-                alt={courseTitle}
-                className="w-full h-full object-cover"
-              />
-              {/* Video Play Button */}
-              {course.Image && (
-                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                  {isEnrolled ? (
-                    <button
-                      onClick={() => navigate(`/Courses/${courseId}/watch`)}
-                      className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
+            <div className="h-96 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden relative rounded-xl mb-8 group">
+              {course.videoUrl ? (
+                !showIntroVideo ? (
+                  <div
+                    className="relative w-full h-full cursor-pointer"
+                    onClick={() => setShowIntroVideo(true)}
+                  >
+                    <ImageWithFallback
+                      type="course"
+                      src={
+                        course.Image
+                          ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                          : null
+                      }
+                      alt={courseTitle}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 rounded-full bg-white opacity-30 animate-ping" />
+                        <button className="relative bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full p-6 shadow-2xl transform group-hover:scale-110 transition-all duration-300">
+                          <PlayCircle className="w-16 h-16" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-2">
+                      <PlayCircle className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm font-medium">
+                        {t("Watch Intro Video") || "Watch Intro Video"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative bg-black w-full h-full">
+                    <video
+                      key={`${import.meta.env.VITE_API_URL}${course.videoUrl}`}
+                      controls
+                      autoPlay
+                      controlsList="nodownload"
+                      poster={
+                        course.Image
+                          ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                          : undefined
+                      }
+                      className="w-full h-full object-contain"
                     >
-                      <PlayCircle className="w-16 h-16" />
-                    </button>
-                  ) : (
+                      <source
+                        src={`${import.meta.env.VITE_API_URL}${course.videoUrl}`}
+                        type="video/mp4"
+                      />
+                    </video>
                     <button
-                      onClick={() => {
-                        const el = document.getElementById(
-                          "course-enrollment-card",
-                        );
-                        if (el)
-                          el.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                          });
-                      }}
-                      className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
+                      onClick={() => setShowIntroVideo(false)}
+                      className="absolute top-2 right-2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-1.5 transition-all z-10"
                     >
-                      <PlayCircle className="w-12 h-12 text-blue-600" />
+                      <X className="w-5 h-5" />
                     </button>
+                  </div>
+                )
+              ) : (
+                <>
+                  <ImageWithFallback
+                    type="course"
+                    src={
+                      course.Image
+                        ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                        : null
+                    }
+                    alt={courseTitle}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Video Play Button */}
+                  {course.Image && (
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                      {isEnrolled ? (
+                        <button
+                          onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                          className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
+                        >
+                          <PlayCircle className="w-16 h-16" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const el = document.getElementById(
+                              "course-enrollment-card",
+                            );
+                            if (el)
+                              el.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                              });
+                          }}
+                          className="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all transform hover:scale-105"
+                        >
+                          <PlayCircle className="w-12 h-12 text-blue-600" />
+                        </button>
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
 

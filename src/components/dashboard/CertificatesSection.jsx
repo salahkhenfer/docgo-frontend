@@ -35,7 +35,7 @@ const CertificatesSection = ({ certificates }) => {
             </p>
           </div>
           <button
-            onClick={() => navigate("/courses")}
+            onClick={() => navigate("/dashboard/my-learning")}
             className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm sm:text-base"
           >
             <svg
