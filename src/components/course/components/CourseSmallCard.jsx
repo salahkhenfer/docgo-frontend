@@ -86,19 +86,21 @@ const CourseSmallCard = ({
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
                   <span>Progress</span>
-                  <span>{courseProgress.completionPercentage || 0}%</span>
+                  <span>
+                    {Math.round(courseProgress.OverallProgress || 0)}%
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
                     className="bg-blue-600 h-3 rounded-full transition-all duration-300"
                     style={{
-                      width: `${courseProgress.completionPercentage || 0}%`,
+                      width: `${courseProgress.OverallProgress || 0}%`,
                     }}
                   ></div>
                 </div>
                 <div className="text-xs text-gray-500 mt-2">
-                  {courseProgress.completedVideos || 0} of{" "}
-                  {course.videos?.length || 0} videos completed
+                  {courseProgress.CompletedVideos || 0} of{" "}
+                  {courseProgress.TotalVideos || 0} videos completed
                 </div>
               </div>
             )}

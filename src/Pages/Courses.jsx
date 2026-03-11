@@ -287,23 +287,22 @@ export default function Courses() {
     const fetchEnrolled = async () => {
       setEnrolledLoading(true);
       try {
-        const result = await EnrollmentAPI.getCourseApplications();
+        const result = await EnrollmentAPI.getCourseEnrollments();
         if (result.success) {
-          const apps = result.data?.applications || result.data || [];
-          const approved = apps
+          const enrollments = Array.isArray(result.data) ? result.data : [];
+          const mapped = enrollments
             .filter(
-              (app) =>
-                app.status === "approved" ||
-                app.enrollmentStatus === "approved",
+              (e) =>
+                e.Course && (e.status === "active" || e.status === "completed"),
             )
-            .map((app) => ({
-              ...(app.Course || {}),
-              progress: app.progress || 0,
-              enrollmentStatus: "approved",
+            .map((e) => ({
+              ...(e.Course || {}),
+              progress: parseFloat(e.progressPercentage) || 0,
+              enrollmentStatus: e.status,
               isEnrolled: true,
             }))
             .filter((c) => c.id);
-          setEnrolledCourses(approved);
+          setEnrolledCourses(mapped);
         }
       } catch (e) {
       } finally {
@@ -602,7 +601,7 @@ export default function Courses() {
                 {enrolledCourses.map((course) => (
                   <Link
                     key={course.id}
-                    to={`/Courses/${course.id}`}
+                    to={`/Courses/${course.id}/watch`}
                     onClick={() => window.scrollTo(0, 0)}
                     className="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
                   >
