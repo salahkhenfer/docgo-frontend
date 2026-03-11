@@ -25,7 +25,9 @@ import { useEffect } from "react";
 // Import component parts
 import ProgramContent from "../components/Program/ProgramContent";
 import ProgramFAQSection from "../components/Program/ProgramFAQSection";
+import ProgramReviews from "../components/Program/ProgramReviews";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
+import reviewsAPI from "../API/Reviews";
 
 export const ProgramDetails = () => {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
@@ -64,7 +66,25 @@ export const ProgramDetails = () => {
     paymentStatus,
   } = useProgram(programId);
   const [applied, setApplied] = useState(hasApplied);
- 
+  const [programReviews, setProgramReviews] = useState([]);
+  const [userProgramReview, setUserProgramReview] = useState(null);
+
+  useEffect(() => {
+    if (!programId) return;
+    reviewsAPI
+      .getProgramReviews(programId)
+      .then((res) => {
+        const reviews = res.data.reviews || [];
+        setProgramReviews(reviews);
+        if (user?.id) {
+          const mine = reviews.find(
+            (r) => r.UserId === user.id || r.user?.id === user.id,
+          );
+          if (mine) setUserProgramReview(mine);
+        }
+      })
+      .catch(() => {});
+  }, [programId, user?.id]);
 
   const formatCurrency = (amount, currencyCode) => {
     if (!amount || parseFloat(amount) === 0) return t("Free") || "Free";
@@ -596,6 +616,16 @@ export const ProgramDetails = () => {
               {/* FAQ Section */}
               <div className="mt-8">
                 <ProgramFAQSection programId={programId} />
+              </div>
+
+              {/* Reviews Section */}
+              <div className="mt-8">
+                <ProgramReviews
+                  programId={programId}
+                  reviews={programReviews}
+                  isEnrolled={isEnrolled}
+                  userReview={userProgramReview}
+                />
               </div>
             </div>
 

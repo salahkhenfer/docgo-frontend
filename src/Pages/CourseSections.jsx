@@ -638,23 +638,36 @@ function CourseReviewWidget({ courseId, courseData }) {
   const renderStars = (rating) => (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
-        <FaStar key={s} className={s <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"} />
+        <FaStar
+          key={s}
+          className={
+            s <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"
+          }
+        />
       ))}
     </div>
   );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!rateValue) { toast.error("Please select a rating."); return; }
+    if (!rateValue) {
+      toast.error("Please select a rating.");
+      return;
+    }
     try {
       setSubmitting(true);
-      const res = await reviewsAPI.submitCourseReview(courseId, { rate: rateValue, comment });
+      const res = await reviewsAPI.submitCourseReview(courseId, {
+        rate: rateValue,
+        comment,
+      });
       setUserReview(res.data.review);
       setEditMode(false);
       toast.success(res.data.message || "Review submitted!");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to submit review.");
-    } finally { setSubmitting(false); }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -662,25 +675,37 @@ function CourseReviewWidget({ courseId, courseData }) {
     try {
       setDeleting(true);
       await reviewsAPI.deleteCourseReview(courseId);
-      setUserReview(null); setRateValue(0); setComment("");
+      setUserReview(null);
+      setRateValue(0);
+      setComment("");
       toast.success("Review deleted.");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to delete review.");
-    } finally { setDeleting(false); }
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
     <div className="max-w-[860px] mx-auto mt-10 mb-4">
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-        <h3 className="text-base font-bold text-gray-900 mb-4">{t("Rate this course") || "Rate this course"}</h3>
+        <h3 className="text-base font-bold text-gray-900 mb-4">
+          {t("Rate this course") || "Rate this course"}
+        </h3>
 
         {userReview && !editMode ? (
           <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
             {renderStars(userReview.Rate)}
-            {userReview.Comment && <p className="text-sm text-gray-700 mt-2">{userReview.Comment}</p>}
+            {userReview.Comment && (
+              <p className="text-sm text-gray-700 mt-2">{userReview.Comment}</p>
+            )}
             <div className="flex gap-2 mt-3">
               <button
-                onClick={() => { setRateValue(userReview.Rate); setComment(userReview.Comment || ""); setEditMode(true); }}
+                onClick={() => {
+                  setRateValue(userReview.Rate);
+                  setComment(userReview.Comment || "");
+                  setEditMode(true);
+                }}
                 className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Edit
@@ -697,17 +722,30 @@ function CourseReviewWidget({ courseId, courseData }) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Rating <span className="text-red-500">*</span></label>
+              <label className="block text-sm text-gray-600 mb-1">
+                Rating <span className="text-red-500">*</span>
+              </label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <button key={star} type="button" onClick={() => setRateValue(star)} className="text-2xl focus:outline-none">
-                    {star <= rateValue ? <FaStar className="text-yellow-400" /> : <FaRegStar className="text-gray-300 hover:text-yellow-300" />}
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRateValue(star)}
+                    className="text-2xl focus:outline-none"
+                  >
+                    {star <= rateValue ? (
+                      <FaStar className="text-yellow-400" />
+                    ) : (
+                      <FaRegStar className="text-gray-300 hover:text-yellow-300" />
+                    )}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Comment (optional)</label>
+              <label className="block text-sm text-gray-600 mb-1">
+                Comment (optional)
+              </label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -717,13 +755,17 @@ function CourseReviewWidget({ courseId, courseData }) {
               />
             </div>
             <div className="flex gap-2">
-              <button type="submit" disabled={submitting}
+              <button
+                type="submit"
+                disabled={submitting}
                 className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors"
               >
                 {submitting ? "Saving..." : "Submit Review"}
               </button>
               {editMode && (
-                <button type="button" onClick={() => setEditMode(false)}
+                <button
+                  type="button"
+                  onClick={() => setEditMode(false)}
                   className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Cancel

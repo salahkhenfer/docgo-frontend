@@ -6,570 +6,347 @@ import toast from "react-hot-toast";
 import reviewsAPI from "../../../API/Reviews";
 
 const StarPicker = ({ value, onChange, disabled = false }) => (
-    <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-            <button
-                key={star}
-                type="button"
-                disabled={disabled}
-                onClick={() => onChange(star)}
-                className="text-2xl focus:outline-none disabled:cursor-not-allowed"
-                aria-label={`${star} star`}
-            >
-                {star <= value ? (
-                    <FaStar className="text-yellow-400" />
-                ) : (
-                    <FaRegStar className="text-gray-300 hover:text-yellow-300 transition-colors" />
-                )}
-            </button>
-        ))}
-    </div>
+  <div className="flex gap-1">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        type="button"
+        disabled={disabled}
+        onClick={() => onChange(star)}
+        className="text-2xl focus:outline-none disabled:cursor-not-allowed"
+        aria-label={`${star} star`}
+      >
+        {star <= value ? (
+          <FaStar className="text-yellow-400" />
+        ) : (
+          <FaRegStar className="text-gray-300 hover:text-yellow-300 transition-colors" />
+        )}
+      </button>
+    ))}
+  </div>
 );
-StarPicker.propTypes = { value: PropTypes.number, onChange: PropTypes.func, disabled: PropTypes.bool };
+StarPicker.propTypes = {
+  value: PropTypes.number,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool,
+};
 
-const CourseReviews = ({ courseStats, course, userStatus, userReview: initialUserReview }) => {
-    const { t } = useTranslation();
-    const reviews = course.course_reviews || [];
-    const averageRating = Number(courseStats?.averageRating) || 0;
-    const totalReviews = courseStats?.totalReviews || reviews.length || 0;
+const CourseReviews = ({
+  courseStats,
+  course,
+  userStatus,
+  userReview: initialUserReview,
+}) => {
+  const { t } = useTranslation();
+  const reviews = course.course_reviews || [];
+  const averageRating = Number(courseStats?.averageRating) || 0;
+  const totalReviews = courseStats?.totalReviews || reviews.length || 0;
 
-    const [showAllModal, setShowAllModal] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [userReview, setUserReview] = useState(initialUserReview || null);
-    const [rateValue, setRateValue] = useState(initialUserReview?.Rate || 0);
-    const [comment, setComment] = useState(initialUserReview?.Comment || "");
+  const [showAllModal, setShowAllModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [userReview, setUserReview] = useState(initialUserReview || null);
+  const [rateValue, setRateValue] = useState(initialUserReview?.Rate || 0);
+  const [comment, setComment] = useState(initialUserReview?.Comment || "");
 
-    const isEnrolled = userStatus?.isEnrolled || false;
+  const isEnrolled = userStatus?.isEnrolled || false;
 
-    const ratingDistribution = [5, 4, 3, 2, 1].map((rating) => {
-        const count = reviews.filter((r) => Math.round(r.Rate) === rating).length;
-        const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-        return { rating, count, percentage };
+  const ratingDistribution = [5, 4, 3, 2, 1].map((rating) => {
+    const count = reviews.filter((r) => Math.round(r.Rate) === rating).length;
+    const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
+    return { rating, count, percentage };
+  });
+
+  const renderStars = (rating, size = "text-sm") => (
+    <div className={`flex items-center ${size}`}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <FaStar
+          key={star}
+          className={
+            star <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"
+          }
+        />
+      ))}
+    </div>
+  );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
+  };
 
-    const renderStars = (rating, size = "text-sm") => (
-        <div className={`flex items-center ${size}`}>
-            {[1, 2, 3, 4, 5].map((star) => (
-                <FaStar
-                    key={star}
-                    className={star <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"}
-                />
-            ))}
-        </div>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!rateValue) {
+      toast.error("Please select a rating.");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      const res = await reviewsAPI.submitCourseReview(course.id, {
+        rate: rateValue,
+        comment,
+      });
+      setUserReview(res.data.review);
+      setEditMode(false);
+      toast.success(res.data.message || "Review submitted!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to submit review.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
-        return new Date(dateString).toLocaleDateString("en-US", {
-            year: "numeric", month: "short", day: "numeric",
-        });
-    };
+  const handleDelete = async () => {
+    if (!window.confirm("Delete your review?")) return;
+    try {
+      setDeleting(true);
+      await reviewsAPI.deleteCourseReview(course.id);
+      setUserReview(null);
+      setRateValue(0);
+      setComment("");
+      toast.success("Review deleted.");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to delete review.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!rateValue) {
-            toast.error("Please select a rating.");
-            return;
-        }
-        try {
-            setSubmitting(true);
-            const res = await reviewsAPI.submitCourseReview(course.id, { rate: rateValue, comment });
-            setUserReview(res.data.review);
-            setEditMode(false);
-            toast.success(res.data.message || "Review submitted!");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to submit review.");
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const handleDelete = async () => {
-        if (!window.confirm("Delete your review?")) return;
-        try {
-            setDeleting(true);
-            await reviewsAPI.deleteCourseReview(course.id);
-            setUserReview(null);
-            setRateValue(0);
-            setComment("");
-            toast.success("Review deleted.");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to delete review.");
-        } finally {
-            setDeleting(false);
-        }
-    };
-
-    const ReviewCard = ({ review }) => {
-        const fullName = review.user
-            ? `${review.user.firstName || ""} ${review.user.lastName || ""}`.trim() || "Anonymous"
-            : "Anonymous Student";
-        const initial = fullName.charAt(0).toUpperCase();
-        return (
-            <div className="border-b border-gray-100 pb-5 last:border-b-0">
-                <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0 overflow-hidden">
-                            {review.user?.profile_pic_link ? (
-                                <img
-                                    src={`${import.meta.env.VITE_API_URL || ""}${review.user.profile_pic_link}`}
-                                    alt={fullName}
-                                    className="w-full h-full object-cover"
-                                />
-                            ) : initial}
-                        </div>
-                        <div>
-                            <div className="font-medium text-gray-900 text-sm">{fullName}</div>
-                            <div className="text-xs text-gray-400">{formatDate(review.createdAt)}</div>
-                        </div>
-                    </div>
-                    {renderStars(review.Rate)}
-                </div>
-                {review.Comment && <p className="text-gray-700 text-sm leading-relaxed">{review.Comment}</p>}
-            </div>
-        );
-    };
-    ReviewCard.propTypes = { review: PropTypes.object.isRequired };
-
-    const ReviewForm = () => (
-        <form onSubmit={handleSubmit} className="bg-blue-50 rounded-xl p-5 border border-blue-100 mt-4">
-            <h4 className="font-semibold text-gray-800 mb-3">
-                {userReview ? "Edit your review" : "Write a review"}
-            </h4>
-            <div className="mb-3">
-                <label className="block text-sm text-gray-600 mb-1">Rating <span className="text-red-500">*</span></label>
-                <StarPicker value={rateValue} onChange={setRateValue} />
-            </div>
-            <div className="mb-4">
-                <label className="block text-sm text-gray-600 mb-1">Comment (optional)</label>
-                <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    rows={3}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-                    placeholder="Share your experience..."
-                />
-            </div>
-            <div className="flex gap-2">
-                <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors"
-                >
-                    {submitting ? "Saving..." : "Submit Review"}
-                </button>
-                {userReview && (
-                    <button
-                        type="button"
-                        onClick={() => setEditMode(false)}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                        Cancel
-                    </button>
-                )}
-            </div>
-        </form>
-    );
-
+  const ReviewCard = ({ review }) => {
+    const fullName = review.user
+      ? `${review.user.firstName || ""} ${review.user.lastName || ""}`.trim() ||
+        "Anonymous"
+      : "Anonymous Student";
+    const initial = fullName.charAt(0).toUpperCase();
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">
-                {t("course_data.studentReviews") || "Student Reviews"}
-            </h3>
-
-            {totalReviews > 0 ? (
-                <>
-                    {/* Summary */}
-                    <div className="flex items-center gap-8 mb-8">
-                        <div className="text-center">
-                            <div className="text-4xl font-bold text-gray-900">{averageRating.toFixed(1)}</div>
-                            {renderStars(averageRating, "text-lg mt-1")}
-                            <div className="text-xs text-gray-500 mt-1">{totalReviews} {totalReviews !== 1 ? "reviews" : "review"}</div>
-                        </div>
-                        <div className="flex-1">
-                            {ratingDistribution.map(({ rating, count, percentage }) => (
-                                <div key={rating} className="flex items-center gap-2 mb-1.5">
-                                    <span className="text-xs text-gray-500 w-3">{rating}</span>
-                                    <FaStar className="text-yellow-400 text-xs shrink-0" />
-                                    <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                                        <div className="bg-yellow-400 h-1.5 rounded-full" style={{ width: `${percentage}%` }} />
-                                    </div>
-                                    <span className="text-xs text-gray-400 w-4 text-right">{count}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Top 5 */}
-                    <div className="space-y-5">
-                        {reviews.slice(0, 5).map((review, i) => (
-                            <ReviewCard key={review.id || i} review={review} />
-                        ))}
-                    </div>
-
-                    {reviews.length > 5 && (
-                        <div className="text-center mt-5">
-                            <button
-                                onClick={() => setShowAllModal(true)}
-                                className="text-blue-600 hover:text-blue-700 font-medium text-sm underline underline-offset-2"
-                            >
-                                View all {totalReviews} reviews
-                            </button>
-                        </div>
-                    )}
-                </>
-            ) : (
-                <div className="text-center py-8 text-gray-400">
-                    <FaRegStar className="text-4xl mx-auto mb-3" />
-                    <p className="text-gray-500">{t("course_data.noReviewsYet") || "No reviews yet"}</p>
-                    <p className="text-sm">{t("course_data.beFirstToReview") || "Be the first to review!"}</p>
-                </div>
-            )}
-
-            {/* Enrolled user: their review or form */}
-            {isEnrolled && (
-                <div className="mt-8 border-t border-gray-100 pt-6">
-                    {userReview && !editMode ? (
-                        <div>
-                            <h4 className="font-semibold text-gray-800 mb-3">Your Review</h4>
-                            <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
-                                {renderStars(userReview.Rate, "text-base mb-2")}
-                                {userReview.Comment && (
-                                    <p className="text-sm text-gray-700">{userReview.Comment}</p>
-                                )}
-                                <div className="flex gap-2 mt-3">
-                                    <button
-                                        onClick={() => {
-                                            setRateValue(userReview.Rate);
-                                            setComment(userReview.Comment || "");
-                                            setEditMode(true);
-                                        }}
-                                        className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={handleDelete}
-                                        disabled={deleting}
-                                        className="px-3 py-1.5 text-xs font-medium bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 disabled:opacity-60 transition-colors"
-                                    >
-                                        {deleting ? "Deleting..." : "Delete"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ) : editMode ? (
-                        <ReviewForm />
-                    ) : (
-                        <ReviewForm />
-                    )}
-                </div>
-            )}
-
-            {/* View All Modal */}
-            {showAllModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[85vh] flex flex-col">
-                        <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
-                            <h3 className="text-lg font-bold text-gray-900">All Reviews ({totalReviews})</h3>
-                            <button onClick={() => setShowAllModal(false)} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
-                        </div>
-                        <div className="overflow-y-auto p-6 space-y-5">
-                            {reviews.map((review, i) => (
-                                <ReviewCard key={review.id || i} review={review} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
+      <div className="border-b border-gray-100 pb-5 last:border-b-0">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0 overflow-hidden">
+              {review.user?.profile_pic_link ? (
+                <img
+                  src={`${import.meta.env.VITE_API_URL || ""}${review.user.profile_pic_link}`}
+                  alt={fullName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                initial
+              )}
+            </div>
+            <div>
+              <div className="font-medium text-gray-900 text-sm">
+                {fullName}
+              </div>
+              <div className="text-xs text-gray-400">
+                {formatDate(review.createdAt)}
+              </div>
+            </div>
+          </div>
+          {renderStars(review.Rate)}
         </div>
+        {review.Comment && (
+          <p className="text-gray-700 text-sm leading-relaxed">
+            {review.Comment}
+          </p>
+        )}
+      </div>
     );
-};
+  };
+  ReviewCard.propTypes = { review: PropTypes.object.isRequired };
 
-CourseReviews.propTypes = {
-    courseStats: PropTypes.object,
-    course: PropTypes.object.isRequired,
-    userStatus: PropTypes.object,
-    userReview: PropTypes.object,
-};
+  const ReviewForm = () => (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-blue-50 rounded-xl p-5 border border-blue-100 mt-4"
+    >
+      <h4 className="font-semibold text-gray-800 mb-3">
+        {userReview ? "Edit your review" : "Write a review"}
+      </h4>
+      <div className="mb-3">
+        <label className="block text-sm text-gray-600 mb-1">
+          Rating <span className="text-red-500">*</span>
+        </label>
+        <StarPicker value={rateValue} onChange={setRateValue} />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm text-gray-600 mb-1">
+          Comment (optional)
+        </label>
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          rows={3}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          placeholder="Share your experience..."
+        />
+      </div>
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors"
+        >
+          {submitting ? "Saving..." : "Submit Review"}
+        </button>
+        {userReview && (
+          <button
+            type="button"
+            onClick={() => setEditMode(false)}
+            className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
+    </form>
+  );
 
-export default CourseReviews;
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">
+        {t("course_data.studentReviews") || "Student Reviews"}
+      </h3>
 
-const StarPicker = ({ value, onChange }) => (
-    <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-            <button
-                key={star}
-                type="button"
-                onClick={() => onChange(star)}
-                className="text-2xl focus:outline-none"
-                aria-label={`Rate ${star} star`}
-            >
-                {star <= value ? (
-                    <FaStar className="text-yellow-400" />
-                ) : (
-                    <FaRegStar className="text-gray-300 hover:text-yellow-300 transition-colors" />
-                )}
-            </button>
-        ))}
-    </div>
-);
-StarPicker.propTypes = { value: PropTypes.number, onChange: PropTypes.func };
-
-const CourseReviews = ({ courseStats, course, userStatus, userReview: initialUserReview }) => {
-    const { t } = useTranslation();
-    const reviews = course.course_reviews || [];
-    const averageRating = courseStats?.averageRating || 0;
-    const totalReviews = courseStats?.totalReviews || reviews.length || 0;
-
-    const [showAllModal, setShowAllModal] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [userReview, setUserReview] = useState(initialUserReview || null);
-    const [rateValue, setRateValue] = useState(userReview?.Rate || 0);
-    const [comment, setComment] = useState(userReview?.Comment || "");
-
-    // Generate rating distribution for visualization
-    const ratingDistribution = [5, 4, 3, 2, 1].map((rating) => {
-        const count = reviews.filter(
-            (review) => Math.round(review.Rate) === rating
-        ).length;
-        const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-        return { rating, count, percentage };
-    });
-
-    const renderStars = (rating, size = "text-sm") => {
-        return (
-            <div className={`flex items-center ${size}`}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <FaStar
-                        key={star}
-                        className={`${
-                            star <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"
-                        }`}
+      {totalReviews > 0 ? (
+        <>
+          {/* Summary */}
+          <div className="flex items-center gap-8 mb-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-gray-900">
+                {averageRating.toFixed(1)}
+              </div>
+              {renderStars(averageRating, "text-lg mt-1")}
+              <div className="text-xs text-gray-500 mt-1">
+                {totalReviews} {totalReviews !== 1 ? "reviews" : "review"}
+              </div>
+            </div>
+            <div className="flex-1">
+              {ratingDistribution.map(({ rating, count, percentage }) => (
+                <div key={rating} className="flex items-center gap-2 mb-1.5">
+                  <span className="text-xs text-gray-500 w-3">{rating}</span>
+                  <FaStar className="text-yellow-400 text-xs shrink-0" />
+                  <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                    <div
+                      className="bg-yellow-400 h-1.5 rounded-full"
+                      style={{ width: `${percentage}%` }}
                     />
-                ))}
-            </div>
-        );
-    };
-
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    };
-
-    const handleSubmitReview = async (e) => {
-        e.preventDefault();
-        if (!rateValue) {
-            toast.error(t("course_data.selectRating") || "Please select a rating.");
-            return;
-        }
-        try {
-            setSubmitting(true);
-            const res = await reviewsAPI.submitCourseReview(course.id, {
-                rate: rateValue,
-                comment,
-            });
-            setUserReview(res.data.review);
-            toast.success(res.data.message || "Review submitted!");
-        } catch (err) {
-            toast.error(
-                err?.response?.data?.message || "Failed to submit review."
-            );
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const ReviewCard = ({ review }) => {
-        const fullName = review.user
-            ? `${review.user.firstName || ""} ${review.user.lastName || ""}`.trim()
-            : t("course_data.anonymousStudent") || "Anonymous Student";
-        const initial = fullName.charAt(0).toUpperCase() || "A";
-        return (
-            <div className="border-b border-gray-100 pb-6 last:border-b-0">
-                <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
-                            {review.user?.profile_pic_link ? (
-                                <img
-                                    src={`${import.meta.env.VITE_API_URL || ""}${review.user.profile_pic_link}`}
-                                    alt={fullName}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                            ) : (
-                                initial
-                            )}
-                        </div>
-                        <div>
-                            <div className="font-medium text-gray-900">{fullName}</div>
-                            <div className="text-sm text-gray-500">
-                                {formatDate(review.createdAt)}
-                            </div>
-                        </div>
-                    </div>
-                    {renderStars(review.Rate)}
+                  </div>
+                  <span className="text-xs text-gray-400 w-4 text-right">
+                    {count}
+                  </span>
                 </div>
-                {review.Comment && (
-                    <p className="text-gray-700 leading-relaxed">{review.Comment}</p>
-                )}
+              ))}
             </div>
-        );
-    };
-    ReviewCard.propTypes = { review: PropTypes.object.isRequired };
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center mb-6">
-                <span className="text-yellow-500 text-xl mr-3"></span>
-                <h3 className="text-xl font-bold text-gray-900">
-                    {t("course_data.studentReviews") || "Student Reviews"}
-                </h3>
+          </div>
+
+          {/* Top 5 */}
+          <div className="space-y-5">
+            {reviews.slice(0, 5).map((review, i) => (
+              <ReviewCard key={review.id || i} review={review} />
+            ))}
+          </div>
+
+          {reviews.length > 5 && (
+            <div className="text-center mt-5">
+              <button
+                onClick={() => setShowAllModal(true)}
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm underline underline-offset-2"
+              >
+                View all {totalReviews} reviews
+              </button>
             </div>
-
-            {totalReviews > 0 ? (
-                <div>
-                    {/* Rating Summary */}
-                    <div className="flex items-center mb-8">
-                        <div className="text-center mr-8">
-                            <div className="text-4xl font-bold text-gray-900 mb-1">
-                                {averageRating.toFixed(1)}
-                            </div>
-                            {renderStars(averageRating, "text-lg")}
-                            <div className="text-sm text-gray-500 mt-1">
-                                {totalReviews}{" "}
-                                {totalReviews !== 1
-                                    ? t("course_data.reviews") || "reviews"
-                                    : t("course_data.review") || "review"}
-                            </div>
-                        </div>
-
-                        {/* Rating Distribution */}
-                        <div className="flex-1">
-                            {ratingDistribution.map(
-                                ({ rating, count, percentage }) => (
-                                    <div
-                                        key={rating}
-                                        className="flex items-center mb-2"
-                                    >
-                                        <span className="text-sm text-gray-600 w-6">
-                                            {rating}
-                                        </span>
-                                        <FaStar className="text-yellow-400 text-xs mx-2" />
-                                        <div className="flex-1 bg-gray-200 rounded-full h-2 mx-2">
-                                            <div
-                                                className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
-                                                style={{
-                                                    width: `${percentage}%`,
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <span className="text-sm text-gray-500 w-8 text-right">
-                                            {count}
-                                        </span>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Individual Reviews */}
-                    <div className="space-y-6">
-                        <h4 className="text-lg font-semibold text-gray-900">
-                            {t("course_data.recentReviews") || "Recent Reviews"}
-                        </h4>
-                        {reviews.slice(0, 5).map((review, index) => (
-                            <div
-                                key={review.id || index}
-                                className="border-b border-gray-100 pb-6 last:border-b-0"
-                            >
-                                <div className="flex items-start justify-between mb-3">
-                                    <div className="flex items-center">
-                                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
-                                            {(
-                                                review.user?.name ||
-                                                review.userName ||
-                                                "A"
-                                            )
-                                                .charAt(0)
-                                                .toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <div className="font-medium text-gray-900">
-                                                {review.user?.name ||
-                                                    review.userName ||
-                                                    "Anonymous Student"}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                {formatDate(
-                                                    review.createdAt ||
-                                                        review.date
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {renderStars(review.rating)}
-                                </div>
-
-                                {review.title && (
-                                    <h5 className="font-medium text-gray-900 mb-2">
-                                        {review.title}
-                                    </h5>
-                                )}
-
-                                <p className="text-gray-700 leading-relaxed">
-                                    {review.comment ||
-                                        review.content ||
-                                        review.text}
-                                </p>
-
-                                {review.helpful && (
-                                    <div className="flex items-center mt-3 text-sm text-gray-500">
-                                        <span className="mr-1"></span>
-                                        <span>
-                                            {review.helpful}{" "}
-                                            {t("course_data.foundHelpful") ||
-                                                "found this helpful"}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-
-                        {reviews.length > 5 && (
-                            <div className="text-center pt-4">
-                                <button className="text-blue-600 hover:text-blue-700 font-medium">
-                                    {t("course_data.viewAllReviews", {
-                                        count: totalReviews,
-                                    }) || `View All ${totalReviews} Reviews`}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            ) : (
-                <div className="text-center py-8">
-                    <div className="text-gray-400 text-4xl mb-4"></div>
-                    <p className="text-gray-500 mb-2">
-                        {t("course_data.noReviewsYet") || "No reviews yet"}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                        {t("course_data.beFirstToReview") ||
-                            "Be the first to review this course!"}
-                    </p>
-                </div>
-            )}
+          )}
+        </>
+      ) : (
+        <div className="text-center py-8 text-gray-400">
+          <FaRegStar className="text-4xl mx-auto mb-3" />
+          <p className="text-gray-500">
+            {t("course_data.noReviewsYet") || "No reviews yet"}
+          </p>
+          <p className="text-sm">
+            {t("course_data.beFirstToReview") || "Be the first to review!"}
+          </p>
         </div>
-    );
+      )}
+
+      {/* Enrolled user: their review or form */}
+      {isEnrolled && (
+        <div className="mt-8 border-t border-gray-100 pt-6">
+          {userReview && !editMode ? (
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-3">Your Review</h4>
+              <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4">
+                {renderStars(userReview.Rate, "text-base mb-2")}
+                {userReview.Comment && (
+                  <p className="text-sm text-gray-700">{userReview.Comment}</p>
+                )}
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => {
+                      setRateValue(userReview.Rate);
+                      setComment(userReview.Comment || "");
+                      setEditMode(true);
+                    }}
+                    className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="px-3 py-1.5 text-xs font-medium bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 disabled:opacity-60 transition-colors"
+                  >
+                    {deleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : editMode ? (
+            <ReviewForm />
+          ) : (
+            <ReviewForm />
+          )}
+        </div>
+      )}
+
+      {/* View All Modal */}
+      {showAllModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
+              <h3 className="text-lg font-bold text-gray-900">
+                All Reviews ({totalReviews})
+              </h3>
+              <button
+                onClick={() => setShowAllModal(false)}
+                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="overflow-y-auto p-6 space-y-5">
+              {reviews.map((review, i) => (
+                <ReviewCard key={review.id || i} review={review} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 CourseReviews.propTypes = {
-    courseStats: PropTypes.object,
-    course: PropTypes.object.isRequired,
+  courseStats: PropTypes.object,
+  course: PropTypes.object.isRequired,
+  userStatus: PropTypes.object,
+  userReview: PropTypes.object,
 };
 
 export default CourseReviews;
