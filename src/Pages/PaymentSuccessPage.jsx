@@ -334,8 +334,8 @@ const PaymentSuccessPage = () => {
               </p>
               <ContactForm
                 context="payment"
-                courseId={courseId ? parseInt(courseId) : null}
-                programId={programId ? parseInt(programId) : null}
+                courseId={courseId ? courseId : null}
+                programId={programId ? programId : null}
                 showTitle={false}
                 onSuccess={() => setShowContactModal(false)}
               />

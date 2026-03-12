@@ -160,7 +160,7 @@ const CourseReviews = ({
   };
   ReviewCard.propTypes = { review: PropTypes.object.isRequired };
 
-  const ReviewForm = () => (
+  const reviewForm = (
     <form
       onSubmit={handleSubmit}
       className="bg-blue-50 rounded-xl p-5 border border-blue-100 mt-4"
@@ -308,9 +308,9 @@ const CourseReviews = ({
               </div>
             </div>
           ) : editMode ? (
-            <ReviewForm />
+            reviewForm
           ) : (
-            <ReviewForm />
+            reviewForm
           )}
         </div>
       )}

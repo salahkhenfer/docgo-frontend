@@ -8,6 +8,7 @@ import {
   ExclamationCircleIcon,
   UserIcon,
   CogIcon,
+  TrophyIcon,
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
@@ -99,6 +100,13 @@ const UserSidebar = ({ isOpen, onClose }) => {
       name: t("dashboard.sidebar.applications", "Applications"),
       icon: DocumentTextIcon,
       path: "/dashboard/applications",
+      badge: null,
+    },
+    {
+      id: "certificates",
+      name: t("dashboard.sidebar.certificates", "My Certificates"),
+      icon: TrophyIcon,
+      path: "/dashboard/certificates",
       badge: null,
     },
     {

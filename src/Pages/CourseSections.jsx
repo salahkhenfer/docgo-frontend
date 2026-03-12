@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { EnrollmentAPI } from "../API/Enrollment";
 import reviewsAPI from "../API/Reviews";
+import apiClient from "../services/apiClient";
 import VideoPlayer from "../components/Common/VideoPlayer";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
@@ -780,6 +781,119 @@ function CourseReviewWidget({ courseId, courseData }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Course Support / Report-a-problem widget
+// ─────────────────────────────────────────────────────────────────────────────
+CourseSupportWidget.propTypes = {
+  courseId: PropTypes.string,
+  currentItem: PropTypes.object,
+  user: PropTypes.object,
+};
+function CourseSupportWidget({ courseId, currentItem, user }) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    setSending(true);
+    try {
+      const name =
+        user?.firstName && user?.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : user?.FirstName
+            ? `${user.FirstName} ${user.LastName}`
+            : user?.name || "User";
+      const email = user?.email || "";
+      const itemLabel = currentItem?.title ? ` — ${currentItem.title}` : "";
+
+      const res = await apiClient.post("/contact/auth-user", {
+        name,
+        email,
+        message: `[Course Issue${itemLabel}]\n${message}`,
+        messagePlain: `[Course Issue${itemLabel}]\n${message}`,
+        context: "course",
+        courseId,
+        priority: "high",
+      });
+      if (res.status === 201 || res.data?.success) {
+        setSent(true);
+        setMessage("");
+        setTimeout(() => setSent(false), 4000);
+      } else {
+        toast.error("Failed to send report. Please try again.");
+      }
+    } catch {
+      toast.error("Failed to send report. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="max-w-[860px] mx-auto mt-4 mb-8">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="w-full flex items-center justify-between text-left"
+        >
+          <span className="text-base font-bold text-gray-900">
+            {t("Report a problem") || "Report a problem"}
+          </span>
+          {open ? (
+            <ChevronUp className="w-4 h-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
+
+        {open && (
+          <div className="mt-4">
+            {sent ? (
+              <div className="flex items-center gap-2 text-green-600 bg-green-50 border border-green-100 rounded-xl px-4 py-3 text-sm font-medium">
+                <FaCheckCircle className="w-4 h-4 flex-shrink-0" />
+                {t("Report sent") ||
+                  "Your report has been sent. We'll look into it soon!"}
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <p className="text-sm text-gray-500">
+                  {t("report_desc") ||
+                    "Describe the issue with this lesson (e.g. video not loading, wrong content, etc.) and we'll fix it as soon as possible."}
+                </p>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={3}
+                  required
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
+                  placeholder={
+                    t("report_placeholder") ||
+                    "e.g. The video is not loading / The content is incorrect…"
+                  }
+                />
+                <button
+                  type="submit"
+                  disabled={sending || !message.trim()}
+                  className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 disabled:opacity-60 transition-colors"
+                >
+                  {sending
+                    ? t("Sending…") || "Sending…"
+                    : t("Send report") || "Send report"}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Main CourseSections component
 // ─────────────────────────────────────────────────────────────────────────────
 export function CourseSections() {
@@ -796,6 +910,8 @@ export function CourseSections() {
   // Progress
   const [completedItems, setCompletedItems] = useState(new Set());
   const [totalItems, setTotalItems] = useState(0);
+  const [progressLoaded, setProgressLoaded] = useState(false);
+  const initialItemSet = useRef(false);
 
   const { courseData, loading, error, hasError, isEnrolled, hasData } =
     useCourse(courseId);
@@ -818,7 +934,8 @@ export function CourseSections() {
           setTotalItems(res.data.totalItems || 0);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setProgressLoaded(true));
   }, [courseId, user]);
 
   // Auto-expand all sections and select first item
@@ -855,11 +972,6 @@ export function CourseSections() {
     });
     setExpandedSections(expanded);
 
-    // Select first item if none selected
-    if (!currentItem) {
-      const first = activeSections[0]?.items?.[0];
-      if (first) setCurrentItem(first);
-    }
     // Update total items count from sections
     const total = activeSections.reduce(
       (sum, s) => sum + (s.items?.length || 0),
@@ -869,6 +981,43 @@ export function CourseSections() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseData]);
 
+  // Resume to the first incomplete item once both course data and progress are ready
+  useEffect(() => {
+    if (initialItemSet.current) return;
+    const course = courseData?.course;
+    if (!course || !progressLoaded) return;
+
+    const rawSects = course.sections || [];
+    const legVids = course.videos || [];
+    const activeSections =
+      rawSects.length > 0
+        ? rawSects
+        : legVids.length > 0
+          ? [
+              {
+                id: "legacy",
+                title: "Course Content",
+                items: legVids.map((v) => ({
+                  id: v.id,
+                  title: v.title,
+                  type: "video",
+                  videoUrl: v.video || v.videoUrl || v.VideoUrl,
+                  isRequired: true,
+                })),
+              },
+            ]
+          : [];
+
+    const allItems = activeSections.flatMap((s) => s.items || []);
+    if (!allItems.length) return;
+
+    const firstIncomplete = allItems.find(
+      (item) => !completedItems.has(String(item.id)),
+    );
+    setCurrentItem(firstIncomplete || allItems[0]);
+    initialItemSet.current = true;
+  }, [courseData, progressLoaded, completedItems]);
+
   const handleItemComplete = useCallback(async (itemId) => {
     setCompletedItems((prev) => {
       const next = new Set(prev);
@@ -876,6 +1025,22 @@ export function CourseSections() {
       return next;
     });
   }, []);
+
+  // Mark current item complete then advance to next
+  const handleNextWithComplete = useCallback(
+    (nextItem) => {
+      if (currentItem && !completedItems.has(String(currentItem.id))) {
+        // Fire-and-forget: mark complete but don't block navigation
+        EnrollmentAPI.markItemComplete(courseId, currentItem.id, {
+          watchedDuration: 0,
+        }).then((res) => {
+          if (res.success) handleItemComplete(currentItem.id);
+        });
+      }
+      setCurrentItem(nextItem);
+    },
+    [currentItem, completedItems, courseId, handleItemComplete],
+  );
 
   const handleCertificateClick = async () => {
     const studentName =
@@ -968,20 +1133,88 @@ export function CourseSections() {
         ]
       : [];
 
-  // If genuinely no content at all, show message
+  // If genuinely no content at all, show the full shell (sidebar + empty
+  // main area) so the user can still leave a review and report a problem.
   if (!hasSections && !hasLegacyVideos) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">
-            {t("This course has no content yet")}
-          </p>
+      <div className="w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+        {/* Mobile header */}
+        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 flex items-center justify-between">
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
-            className="text-blue-600 hover:underline"
+            className="flex items-center gap-2 text-gray-600 font-medium"
           >
-            {t("Go back to course")}
+            <ChevronLeft className="w-5 h-5" />
+            {course?.Title || t("Back to course")}
           </button>
+        </div>
+
+        <div className="flex flex-row w-full min-h-screen">
+          {/* Sidebar */}
+          <aside className="hidden md:flex md:w-80 lg:w-96 flex-shrink-0">
+            <div className="flex flex-col px-6 border-r border-gray-200 min-h-screen bg-white shadow-sm w-full overflow-y-auto">
+              <button
+                onClick={() => navigate(`/Courses/${courseId}`)}
+                className="mt-6 mb-4 flex items-center text-gray-600 hover:text-blue-600 transition-all group"
+              >
+                <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
+                {t("Back to course")}
+              </button>
+              <h1 className="text-xl font-bold leading-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-5">
+                {course?.Title}
+              </h1>
+              <div className="mb-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-gray-700">
+                    {t("Progress")}
+                  </span>
+                  <span className="text-lg font-bold text-blue-600">0%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full"
+                    style={{ width: "0%" }}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  0 / 0 {t("items completed")}
+                </p>
+              </div>
+              <div className="flex-1 flex items-center justify-center text-gray-400 text-sm py-12">
+                {t("No lessons yet")}
+              </div>
+            </div>
+          </aside>
+
+          {/* Main */}
+          <main className="flex-1 min-w-0 p-6 md:p-8">
+            <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+              <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-2">
+                <BookOpen className="w-8 h-8 text-blue-400" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-700">
+                {t("This course has no content yet")}
+              </h2>
+              <p className="text-gray-500 text-sm max-w-xs">
+                {t(
+                  "Content will appear here once the instructor publishes lessons.",
+                )}
+              </p>
+              <button
+                onClick={() => navigate(`/Courses/${courseId}`)}
+                className="mt-2 px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-all"
+              >
+                {t("Go back to course")}
+              </button>
+            </div>
+
+            <CourseReviewWidget courseId={courseId} courseData={courseData} />
+            <CourseSupportWidget
+              courseId={courseId}
+              currentItem={null}
+              user={user}
+            />
+          </main>
         </div>
       </div>
     );
@@ -1029,7 +1262,32 @@ export function CourseSections() {
           {completedItems.size} / {totalItems} {t("items completed")}
         </p>
       </div>
-
+      {/* Certificate button */}
+      {hasCertificate && (
+        <div
+          className={`my-4 p-4 rounded-xl border-2 transition-all ${
+            isCertificateUnlocked
+              ? "border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 hover:shadow-md cursor-pointer"
+              : "border-gray-200 bg-gray-50"
+          }`}
+          onClick={isCertificateUnlocked ? handleCertificateClick : undefined}
+        >
+          {isCertificateUnlocked ? (
+            <div className="flex items-center gap-3 text-purple-700 font-semibold">
+              <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
+              <span className="flex-1">{t("Certificate")}</span>
+              <ChevronRight className="w-4 h-4" />
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 text-gray-400">
+              <FaLock className="w-5 h-5" />
+              <span className="flex-1 text-sm">
+                {t("Certificate (locked)")}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
       {/* Sections accordion */}
       <nav className="flex-1 overflow-y-auto space-y-3 pb-4">
         {sections.map((section) => {
@@ -1062,7 +1320,10 @@ export function CourseSections() {
                     {sectionDone}/{sectionItems.length} {t("completed")}
                   </p>
                 </div>
-                {isExpanded ? (
+                {sectionItems.length > 0 &&
+                sectionDone === sectionItems.length ? (
+                  <FaCheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 ml-2" />
+                ) : isExpanded ? (
                   <ChevronUp className="w-4 h-4 text-gray-500 flex-shrink-0 ml-2" />
                 ) : (
                   <ChevronDown className="w-4 h-4 text-gray-500 flex-shrink-0 ml-2" />
@@ -1127,33 +1388,6 @@ export function CourseSections() {
           );
         })}
       </nav>
-
-      {/* Certificate button */}
-      {hasCertificate && (
-        <div
-          className={`mt-4 p-4 rounded-xl border-2 transition-all ${
-            isCertificateUnlocked
-              ? "border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 hover:shadow-md cursor-pointer"
-              : "border-gray-200 bg-gray-50"
-          }`}
-          onClick={isCertificateUnlocked ? handleCertificateClick : undefined}
-        >
-          {isCertificateUnlocked ? (
-            <div className="flex items-center gap-3 text-purple-700 font-semibold">
-              <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-              <span className="flex-1">{t("Certificate")}</span>
-              <ChevronRight className="w-4 h-4" />
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 text-gray-400">
-              <FaLock className="w-5 h-5" />
-              <span className="flex-1 text-sm">
-                {t("Certificate (locked)")}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 
@@ -1256,6 +1490,11 @@ export function CourseSections() {
   const currentIdx = allItems.findIndex((i) => i.id === currentItem?.id);
   const hasPrev = currentIdx > 0;
   const hasNext = currentIdx < allItems.length - 1;
+  // Course can be finished only when ALL quiz items are passed
+  const allQuizItems = allItems.filter((i) => i.type === "quiz");
+  const canFinishCourse =
+    allQuizItems.length === 0 ||
+    allQuizItems.every((qi) => completedItems.has(String(qi.id)));
 
   return (
     <div className="w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
@@ -1338,24 +1577,45 @@ export function CourseSections() {
 
               {hasNext ? (
                 <button
-                  onClick={() => setCurrentItem(allItems[currentIdx + 1])}
+                  onClick={() =>
+                    handleNextWithComplete(allItems[currentIdx + 1])
+                  }
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm"
                 >
                   {t("Next")}
                   <ChevronRight className="w-4 h-4" />
                 </button>
-              ) : isCertificateUnlocked && hasCertificate ? (
+              ) : hasCertificate ? (
                 <button
-                  onClick={handleCertificateClick}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-all shadow-sm"
+                  onClick={canFinishCourse ? handleCertificateClick : undefined}
+                  disabled={!canFinishCourse}
+                  title={
+                    !canFinishCourse
+                      ? t("Pass the quiz to continue") ||
+                        "Pass the quiz to continue"
+                      : ""
+                  }
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm font-medium ${
+                    canFinishCourse
+                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  }`}
                 >
-                  <FaCheckCircle />
-                  {t("Get Certificate")}
+                  {canFinishCourse ? (
+                    <FaCheckCircle className="w-4 h-4" />
+                  ) : (
+                    <FaLock className="w-4 h-4" />
+                  )}
+                  {t("End of course")}
                 </button>
               ) : (
-                <span className="text-sm text-gray-400">
-                  {t("End of course")}
-                </span>
+                <button
+                  disabled
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white shadow-sm font-medium"
+                >
+                  <FaCheckCircle className="w-4 h-4" />
+                  {t("Course completed")}
+                </button>
               )}
             </div>
           )}
@@ -1363,6 +1623,15 @@ export function CourseSections() {
           {/* Review widget – always visible for enrolled users */}
           {!showCertificate && (
             <CourseReviewWidget courseId={courseId} courseData={courseData} />
+          )}
+
+          {/* Support / report-a-problem widget */}
+          {!showCertificate && currentItem && (
+            <CourseSupportWidget
+              courseId={courseId}
+              currentItem={currentItem}
+              user={user}
+            />
           )}
         </main>
       </div>

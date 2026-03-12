@@ -134,12 +134,12 @@ function CourseListItem({ course }) {
                 Featured
               </span>
             )}
-            {course.certificate && (
+            {/* {course.certificate && (
               <span className="bg-purple-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                 <Award className="w-2.5 h-2.5" />
                 {t("certificate") || "Cert"}
               </span>
-            )}
+            )} */}
           </div>
         </div>
 

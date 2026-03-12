@@ -1058,5 +1058,17 @@
   },
 
   "enrolled course": "enrolled course",
-  "Continue Learning": "Continue Learning"
+  "Continue Learning": "Continue Learning",
+
+  "certificate": {
+    "realNameTitle": "Your Certificate Name",
+    "realNameWarning": "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.",
+    "noName": "your name",
+    "goSetName": "Go set your name in profile",
+    "proceed": "Get Certificate",
+    "cancel": "Cancel"
+  },
+
+  "report_desc": "Describe the problem you encountered with this lesson or content.",
+  "report_placeholder": "e.g. Video won't play, audio is out of sync, subtitle error…"
 }

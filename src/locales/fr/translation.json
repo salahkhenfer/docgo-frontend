@@ -1023,5 +1023,17 @@
     "validationError": "Données invalides. Veuillez vérifier votre saisie.",
     "noFileUploaded": "Aucun fichier sélectionné. Veuillez choisir un fichier.",
     "unknown": "Une erreur inattendue s'est produite. Veuillez réessayer."
-  }
+  },
+
+  "certificate": {
+    "realNameTitle": "Votre nom sur le certificat",
+    "realNameWarning": "Votre nom complet apparaîtra sur le certificat exactement tel que vous l'avez saisi. Assurez-vous qu'il est correct.",
+    "noName": "votre nom",
+    "goSetName": "Définir votre nom dans le profil",
+    "proceed": "Obtenir le certificat",
+    "cancel": "Annuler"
+  },
+
+  "report_desc": "Décrivez le problème rencontré avec cette leçon ou ce contenu.",
+  "report_placeholder": "Ex. : La vidéo ne se lance pas, l'audio est désynchronisé, erreur de sous-titre…"
 }

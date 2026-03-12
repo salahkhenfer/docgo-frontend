@@ -405,14 +405,13 @@ const PaymentPage = () => {
       timer: paymentData.method === "ccp" ? 5000 : 3000,
       timerProgressBar: true,
       showConfirmButton: true,
-      confirmButtonText: t("alerts.payment.goToPrograms", "Go to Programs"),
+      // confirmButtonText: t("alerts.payment.goToPrograms", "Go to Programs"),
       allowOutsideClick: false,
       allowEscapeKey: false,
     }).then((result) => {
-      // Navigate to programs page
-      if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-        navigate("/programs");
-      }
+      // if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+        navigate("/dashboard");
+      // }
     });
   };
 

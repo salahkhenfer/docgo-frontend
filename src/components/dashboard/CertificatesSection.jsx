@@ -94,7 +94,9 @@ const CertificatesSection = ({ certificates }) => {
           <div
             key={certificate.id}
             className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-3 sm:p-4 hover:shadow-lg transition-all cursor-pointer border-2 border-purple-200 hover:border-purple-400"
-            onClick={() => navigate(`/certificate/${certificate.id}`)}
+            onClick={() =>
+              navigate(`/verify/certificate/${certificate.certificateId}`)
+            }
           >
             <div className="flex flex-col h-full">
               {/* Certificate Badge */}
@@ -203,7 +205,7 @@ const CertificatesSection = ({ certificates }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/certificate/${certificate.id}`);
+                  navigate(`/verify/certificate/${certificate.certificateId}`);
                 }}
                 className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 bg-purple-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
               >
@@ -266,6 +268,7 @@ CertificatesSection.propTypes = {
     courses: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
+        certificateId: PropTypes.string,
         issueDate: PropTypes.string.isRequired,
         Course: PropTypes.shape({
           Title: PropTypes.string,

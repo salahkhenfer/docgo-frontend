@@ -82,7 +82,9 @@ const UserNotifications = () => {
     }
     // eslint-disable-next-line
   }, [user?.id, filter]);
-
+useEffect(() => {
+  console.log(notifications);
+}, [notifications]);
   const fetchNotifications = async () => {
     try {
       setLoading(true);

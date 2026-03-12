@@ -11,72 +11,11 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import NotificationItem from "../components/notifications/NotificationsItem";
-
+import { useEffect } from "react";
 // Mock notifications data
-const notificationsData = [
-  {
-    id: 1,
-    type: "application",
-    title: "Application Approved",
-    message:
-      "Your application for France Study Program has been approved! Welcome to our program.",
-    timestamp: "2024-07-07T10:30:00Z",
-    read: false,
-    icon: CheckCircle,
-    color: "green",
-    actionRequired: false,
-  },
-  {
-    id: 2,
-    type: "application",
-    title: "Application Under Review",
-    message:
-      "Your application for Spain Cultural Exchange is currently under review. We'll notify you once a decision is made.",
-    timestamp: "2024-07-06T14:15:00Z",
-    read: false,
-    icon: AlertCircle,
-    color: "amber",
-    actionRequired: false,
-  },
+const notificationsData = [];
 
-  {
-    id: 6,
-    type: "application",
-    title: "Application Rejected",
-    message:
-      "Unfortunately, your application for UK Business Program was not successful. You can apply again next semester.",
-    timestamp: "2024-07-02T13:30:00Z",
-    read: true,
-    icon: XCircle,
-    color: "red",
-    actionRequired: false,
-  },
-  {
-    id: 7,
-    type: "system",
-    title: "System Maintenance",
-    message:
-      "Our system will be under maintenance tomorrow from 2 AM to 4 AM. Some features may be temporarily unavailable.",
-    timestamp: "2024-07-01T08:00:00Z",
-    read: true,
-    icon: Settings,
-    color: "gray",
-    actionRequired: false,
-  },
-  {
-    id: 8,
-    type: "info",
-    title: "New Programs Available",
-    message:
-      "Check out our new exchange programs for the upcoming semester. Applications are now open!",
-    timestamp: "2024-06-30T15:00:00Z",
-    read: false,
-    icon: Info,
-    color: "blue",
-    actionRequired: false,
-  },
-];
-
+  
 const NotificationsPage = () => {
   const { t } = useTranslation("", { keyPrefix: "notifications" });
   const [notifications, setNotifications] = useState(notificationsData);
@@ -104,14 +43,14 @@ const NotificationsPage = () => {
       notifications.map((notification) =>
         notification.id === id
           ? { ...notification, read: !notification.read }
-          : notification
-      )
+          : notification,
+      ),
     );
   };
 
   const handleDelete = (id) => {
     setNotifications(
-      notifications.filter((notification) => notification.id !== id)
+      notifications.filter((notification) => notification.id !== id),
     );
   };
 
@@ -122,7 +61,7 @@ const NotificationsPage = () => {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      notifications.map((notification) => ({ ...notification, read: true }))
+      notifications.map((notification) => ({ ...notification, read: true })),
     );
   };
 

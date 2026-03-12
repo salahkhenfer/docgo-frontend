@@ -116,12 +116,12 @@ export function CourseCard({
               Featured
             </span>
           )}
-          {course.certificate && (
+          {/* {course.certificate && (
             <span className="bg-purple-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
               <Award className="w-3 h-3" />
               {t("certificate") || "Certificate"}
             </span>
-          )}
+          )} */}
         </div>
       </div>
 

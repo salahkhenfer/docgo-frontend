@@ -204,18 +204,6 @@ const Routers = createBrowserRouter([
         element: <CourseSections />,
       },
       {
-        path: "Courses/:courseId/watch/quiz",
-        caseSensitive: false,
-        loader: protectedLoader,
-        element: <AllContentVideosCourse />,
-        children: [
-          {
-            index: true,
-            element: <QuizContent />,
-          },
-        ],
-      },
-      {
         path: "Courses/:courseId/watch/certificate",
         caseSensitive: false,
         loader: protectedLoader,
