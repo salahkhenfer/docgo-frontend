@@ -12,6 +12,7 @@ import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import Blocked from "./Pages/Auth/Blocked";
+import Deleted from "./Pages/Auth/Deleted";
 import ForgotPassword from "./Pages/Auth/ForgotPassword";
 import Courses from "./Pages/Courses";
 import FAQPage from "./Pages/FAQPage";
@@ -130,6 +131,11 @@ const Routers = createBrowserRouter([
         path: "blocked",
         caseSensitive: false,
         element: <Blocked />,
+      },
+      {
+        path: "deleted",
+        caseSensitive: false,
+        element: <Deleted />,
       },
       {
         path: "Programs",

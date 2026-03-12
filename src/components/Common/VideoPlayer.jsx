@@ -20,6 +20,7 @@ const VideoPlayer = ({
   controls = true,
   width = "100%",
   height = "auto",
+  crossOrigin = "use-credentials",
   onTimeUpdate,
   onDurationChange,
   onPlay,
@@ -169,7 +170,6 @@ const VideoPlayer = ({
         videoRef.current.pause();
       } else {
         videoRef.current.play().catch((err) => {
-          console.error("Error playing video:", err);
           setError({ code: 0, message: "Unable to play video." });
         });
       }
@@ -340,7 +340,7 @@ const VideoPlayer = ({
         src={src}
         poster={poster}
         autoPlay={autoPlay}
-        crossOrigin="use-credentials"
+        crossOrigin={crossOrigin || undefined}
         onLoadedMetadata={handleLoadedMetadata}
         onTimeUpdate={handleTimeUpdate}
         onPlay={handlePlay}

@@ -1,9 +1,22 @@
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, useParams } from "react-router-dom";
 import { CourseSidebar } from "./CourseSidebar";
+import { getCourseDetails } from "../../../API/Courses";
 
 function AllContentVideosCourse() {
+  const { courseId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hasCertificate, setHasCertificate] = useState(false);
+
+  useEffect(() => {
+    if (!courseId) return;
+    getCourseDetails(courseId)
+      .then((res) => {
+        const course = res?.data?.course || res?.data || res;
+        setHasCertificate(course?.certificate === true);
+      })
+      .catch(() => setHasCertificate(false));
+  }, [courseId]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -61,7 +74,7 @@ function AllContentVideosCourse() {
         <div className="flex gap-0  h-full">
           {/* Desktop Sidebar */}
           <div className="hidden md:block md:w-80 lg:w-96 flex-shrink-0">
-            <CourseSidebar quizPassed={false} />
+            <CourseSidebar quizPassed={false} hasCertificate={hasCertificate} />
           </div>
 
           {/* Mobile Sidebar */}
@@ -105,6 +118,7 @@ function AllContentVideosCourse() {
                 sidebarOpen={sidebarOpen}
                 toggleSidebar={toggleSidebar}
                 quizPassed={false}
+                hasCertificate={hasCertificate}
               />
             </div>
           </div>

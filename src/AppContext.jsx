@@ -294,6 +294,19 @@ export const AppProvider = ({ children }) => {
                                 response.data?.message ||
                                 "Your account has been blocked",
                         };
+                    }else if (
+                        response.status === 403 &&
+                        (response.data?.code === "USER_DELETED" ||
+                            String(response.data?.message || "")                                .toLowerCase()
+                                .includes("removed"))
+                    ) {
+                        return {
+                            success: false,
+                            deleted: true,
+                            message:
+                                response.data?.message ||
+                                "Your account has been removed",
+                        };
                     }
                     return {
                         success: false,

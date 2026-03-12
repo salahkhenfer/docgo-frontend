@@ -989,9 +989,35 @@
 
   "blocked": {
     "title": "Compte bloqué",
-    "message": "Votre compte a été bloqué par un administrateur. Si vous pensez que c'est une erreur, veuillez contacter le support.",
+    "message": "Votre compte a été temporairement suspendu par un administrateur. Si vous pensez que c'est une erreur, veuillez contacter le support.",
     "goHome": "Accueil",
-    "backToLogin": "Retour à la connexion"
+    "backToLogin": "Retour à la connexion",
+    "whatToDo": "Que pouvez-vous faire",
+    "step1": "Contactez notre équipe de support pour comprendre la raison de la suspension.",
+    "step2": "Si vous pensez que c'est une erreur, fournissez les informations nécessaires.",
+    "step3": "Cette page vérifiera automatiquement l'état de votre compte toutes les 10 secondes.",
+    "autoCheck": "Vérification automatique du statut",
+    "checking": "Vérification de votre compte...",
+    "nextCheck": "Prochaine vérification dans {{count}}s",
+    "checkNow": "Vérifier maintenant",
+    "contactSupport": "Contacter le support"
+  },
+
+  "deleted": {
+    "title": "Compte supprimé",
+    "message": "Votre compte a été définitivement supprimé de cette plateforme par un administrateur. Veuillez contacter le support pour plus d'informations.",
+    "goHome": "Accueil",
+    "backToLogin": "Retour à la connexion",
+    "createAccount": "Créer un nouveau compte",
+    "whatToDo": "Vos options",
+    "step1": "Contactez notre équipe de support pour comprendre pourquoi votre compte a été supprimé.",
+    "step2": "Vous pouvez créer un nouveau compte si vous souhaitez continuer à utiliser la plateforme.",
+    "step3": "Cette page vérifie automatiquement toutes les 10 secondes au cas où l'accès serait rétabli.",
+    "autoCheck": "Vérification automatique du statut",
+    "checking": "Vérification...",
+    "nextCheck": "Prochaine vérification dans {{count}}s",
+    "checkNow": "Vérifier maintenant",
+    "contactSupport": "Contacter le support"
   },
 
   "errorPage": {

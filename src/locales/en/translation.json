@@ -1021,9 +1021,35 @@
 
   "blocked": {
     "title": "Account Blocked",
-    "message": "Your account has been blocked by an administrator. If you think this is a mistake, please contact support.",
+    "message": "Your account has been temporarily suspended by an administrator. If you believe this is a mistake, please contact support.",
     "goHome": "Go Home",
-    "backToLogin": "Back to Login"
+    "backToLogin": "Back to Login",
+    "whatToDo": "What you can do",
+    "step1": "Contact our support team to understand the reason for the suspension.",
+    "step2": "If you believe this is a mistake, provide any relevant information to help resolve it.",
+    "step3": "This page will automatically check your account status every 10 seconds.",
+    "autoCheck": "Auto-checking your status",
+    "checking": "Verifying your account...",
+    "nextCheck": "Next check in {{count}}s",
+    "checkNow": "Check now",
+    "contactSupport": "Contact Support"
+  },
+
+  "deleted": {
+    "title": "Account Removed",
+    "message": "Your account has been permanently removed from this platform by an administrator. Please contact support for more information.",
+    "goHome": "Go Home",
+    "backToLogin": "Back to Login",
+    "createAccount": "Create New Account",
+    "whatToDo": "Your options",
+    "step1": "Contact our support team to understand why your account was removed.",
+    "step2": "You may register a new account if you wish to continue using the platform.",
+    "step3": "This page will automatically check every 10 seconds in case access is restored.",
+    "autoCheck": "Auto-checking your status",
+    "checking": "Verifying...",
+    "nextCheck": "Next check in {{count}}s",
+    "checkNow": "Check now",
+    "contactSupport": "Contact Support"
   },
 
   "errorPage": {

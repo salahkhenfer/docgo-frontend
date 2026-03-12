@@ -2,7 +2,12 @@ import { useState } from "react";
 import { FaCheck, FaCheckCircle, FaCircle, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export function CourseSidebar({ setSidebarOpen, sidebarOpen, quizPassed }) {
+export function CourseSidebar({
+  setSidebarOpen,
+  sidebarOpen,
+  quizPassed,
+  hasCertificate = true,
+}) {
   const [activeSectionId, setActiveSectionId] = useState(1);
 
   const handleSectionClick = (id) => {
@@ -69,8 +74,8 @@ export function CourseSidebar({ setSidebarOpen, sidebarOpen, quizPassed }) {
                     section.completed
                       ? "border-green-600 text-green-600"
                       : isActive
-                      ? "border-blue-500 bg-blue-50 text-blue-600"
-                      : "border-zinc-800 text-zinc-800 hover:border-blue-400 hover:bg-blue-50"
+                        ? "border-blue-500 bg-blue-50 text-blue-600"
+                        : "border-zinc-800 text-zinc-800 hover:border-blue-400 hover:bg-blue-50"
                   } ${section.id > 1 ? "mt-4" : ""}`}
                 >
                   {/* Icon */}
@@ -118,18 +123,22 @@ export function CourseSidebar({ setSidebarOpen, sidebarOpen, quizPassed }) {
             onClick={handleClickCertificate}
             className="mt-6 flex items-center gap-2"
           >
-            {quizPassed ? (
-              <Link
-                to="Certificate"
-                className="text-blue-600 hover:underline flex items-center gap-2"
-              >
-                <FaCheckCircle className="text-green-600" />
-                Certificat + PDF
-              </Link>
-            ) : (
-              <span className="text-gray-400 flex items-center gap-2">
-                <FaLock /> Certificat + PDF (verrouillé)
-              </span>
+            {hasCertificate && (
+              <>
+                {quizPassed ? (
+                  <Link
+                    to="Certificate"
+                    className="text-blue-600 hover:underline flex items-center gap-2"
+                  >
+                    <FaCheckCircle className="text-green-600" />
+                    Certificat + PDF
+                  </Link>
+                ) : (
+                  <span className="text-gray-400 flex items-center gap-2">
+                    <FaLock /> Certificat + PDF (verrouillé)
+                  </span>
+                )}
+              </>
             )}
           </div>
         </section>

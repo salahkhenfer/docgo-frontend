@@ -29,7 +29,6 @@ const UserCertificates = () => {
     }
   }, [user?.id]);
   useEffect(() => {
-    console.log(certificates);
   }, [certificates]);
 
   const fetchCertificates = async () => {

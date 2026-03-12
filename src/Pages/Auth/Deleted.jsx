@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  FaShieldAlt,
+  FaUserSlash,
   FaEnvelope,
   FaRedo,
   FaSignInAlt,
@@ -14,7 +14,7 @@ import { useAppContext } from "../../AppContext";
 
 const RECHECK_INTERVAL = 10;
 
-const Blocked = () => {
+const Deleted = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { contactInfo } = useAppContext();
@@ -58,38 +58,38 @@ const Blocked = () => {
   const progress = circumference * (countdown / RECHECK_INTERVAL);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-orange-50 to-white p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-slate-50 to-white p-6">
       <div className="max-w-md w-full space-y-5">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-100 mb-5">
-            <FaShieldAlt className="text-red-500 text-3xl" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-200 mb-5">
+            <FaUserSlash className="text-gray-500 text-3xl" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {t("blocked.title")}
+            {t("deleted.title")}
           </h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            {t("blocked.message")}
+            {t("deleted.message")}
           </p>
         </div>
 
         {/* What to do */}
-        <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-5">
-          <p className="text-xs font-semibold text-red-500 uppercase tracking-wider mb-3">
-            {t("blocked.whatToDo")}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            {t("deleted.whatToDo")}
           </p>
           <ul className="space-y-2.5 text-sm text-gray-600">
             <li className="flex items-start gap-2.5">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step1")}
+              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
+              {t("deleted.step1")}
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step2")}
+              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
+              {t("deleted.step2")}
             </li>
             <li className="flex items-start gap-2.5">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step3")}
+              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
+              {t("deleted.step3")}
             </li>
           </ul>
         </div>
@@ -111,7 +111,7 @@ const Blocked = () => {
                 cy="28"
                 r="24"
                 fill="none"
-                stroke={checking ? "#f97316" : "#ef4444"}
+                stroke={checking ? "#94a3b8" : "#6b7280"}
                 strokeWidth="4"
                 strokeDasharray={circumference}
                 strokeDashoffset={progress}
@@ -121,7 +121,7 @@ const Blocked = () => {
             </svg>
             <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700">
               {checking ? (
-                <FaRedo className="text-orange-500 animate-spin text-xs" />
+                <FaRedo className="text-slate-400 animate-spin text-xs" />
               ) : (
                 countdown
               )}
@@ -129,12 +129,12 @@ const Blocked = () => {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-800">
-              {t("blocked.autoCheck")}
+              {t("deleted.autoCheck")}
             </p>
             <p className="text-xs text-gray-400 mt-0.5 truncate">
               {checking
-                ? t("blocked.checking")
-                : t("blocked.nextCheck", { count: countdown })}
+                ? t("deleted.checking")
+                : t("deleted.nextCheck", { count: countdown })}
             </p>
           </div>
           <button
@@ -145,7 +145,7 @@ const Blocked = () => {
             disabled={checking}
             className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-50 transition-colors"
           >
-            {t("blocked.checkNow")}
+            {t("deleted.checkNow")}
           </button>
         </div>
 
@@ -154,23 +154,29 @@ const Blocked = () => {
           {contactInfo?.email ? (
             <a
               href={`mailto:${contactInfo.email}`}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gray-700 hover:bg-gray-800 text-white font-medium text-sm transition-colors"
             >
               <FaEnvelope />
-              {t("blocked.contactSupport")}
+              {t("deleted.contactSupport")}
             </a>
           ) : null}
           <Link
-            to="/login"
+            to="/register"
             className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium text-sm transition-colors"
           >
+            {t("deleted.createAccount")}
+          </Link>
+          <Link
+            to="/login"
+            className="flex items-center justify-center px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors"
+            title={t("deleted.backToLogin")}
+          >
             <FaSignInAlt />
-            {t("blocked.backToLogin")}
           </Link>
           <Link
             to="/"
             className="flex items-center justify-center px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors"
-            title={t("blocked.goHome")}
+            title={t("deleted.goHome")}
           >
             <FaHome />
           </Link>
@@ -180,4 +186,4 @@ const Blocked = () => {
   );
 };
 
-export default Blocked;
+export default Deleted;

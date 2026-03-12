@@ -419,10 +419,15 @@ function PdfViewer({ item, onComplete, isCompleted }) {
     }
   };
 
+  // Route through the media stream endpoint (direct /Courses_PDFs/ access
+  // is blocked by the media protection middleware).
   const url = item.pdfUrl;
+  const _pdfBasename = url?.split("/").pop();
   const embedUrl = url?.startsWith("http")
     ? url
-    : `${import.meta.env.VITE_API_URL}${url}`;
+    : _pdfBasename
+      ? `${import.meta.env.VITE_API_URL}/media/stream/pdf/${_pdfBasename}`
+      : `${import.meta.env.VITE_API_URL}${url}`;
 
   return (
     <div className="flex flex-col gap-4">
@@ -536,11 +541,35 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
   const lastAttemptRef = useRef(0);
   completedRef.current = isCompleted;
 
-  const url = item.videoUrl?.startsWith("http")
-    ? item.videoUrl
-    : item.videoUrl
-      ? `${import.meta.env.VITE_API_URL}${item.videoUrl}`
-      : null;
+  // Fetch a signed delivery URL from the server instead of redirecting
+  // <video> through the stream endpoint. This avoids the CORS failure that
+  // happens when crossOrigin="use-credentials" + CDN 302 redirect interact.
+  const _videoPath = item.videoUrl;
+  const _videoBasename = _videoPath?.split("/").pop();
+  const [resolvedUrl, setResolvedUrl] = useState(null);
+
+  useEffect(() => {
+    if (!_videoBasename) return;
+    if (_videoPath?.startsWith("http")) {
+      setResolvedUrl(_videoPath);
+      return;
+    }
+    apiClient
+      .get(`/media/signed-url/video/${_videoBasename}`)
+      .then((res) => setResolvedUrl(res.data?.url || null))
+      .catch(() => setResolvedUrl(null));
+  }, [_videoBasename, _videoPath]);
+
+  // Bunny CDN URLs are direct external URLs — the browser must NOT send
+  // credentials to them (Bunny responds with * which blocks credentialed
+  // requests). For local server stream URLs, keep crossOrigin so cookies
+  // flow and the server can do session binding.
+  const isBunnyUrl =
+    resolvedUrl &&
+    (resolvedUrl.includes(".b-cdn.net") ||
+      resolvedUrl.includes("bunnycdn.com") ||
+      resolvedUrl.includes("bunny.net"));
+  const videoCrossOrigin = isBunnyUrl ? null : "use-credentials";
 
   const markCompleteOnce = useCallback(
     (watchedSeconds) => {
@@ -596,9 +625,10 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
       )}
 
       <div className="relative mx-auto w-full max-w-[860px] overflow-hidden rounded-2xl bg-black shadow-2xl border border-gray-200">
-        {url ? (
+        {resolvedUrl ? (
           <VideoPlayer
-            src={url}
+            src={resolvedUrl}
+            crossOrigin={videoCrossOrigin}
             title={item.title}
             className="aspect-video"
             onDurationChange={(d) => setDuration(d)}
