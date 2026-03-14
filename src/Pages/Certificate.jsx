@@ -225,7 +225,7 @@ export default function Certificate() {
     verificationUrl:
       dbCertificate?.verificationUrl ||
       `${window.location.origin}/verify/certificate/${dbCertificate?.certificateId || ""}`,
-    institution: "DocGo",
+    institution: "healthpathglobal",
     quizScore: quizScore, // Add quiz score to certificate data
   };
 

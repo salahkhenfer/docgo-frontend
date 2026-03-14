@@ -5,8 +5,9 @@ import InlineLoading from "../../InlineLoading";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import axios from "axios";
+import loginImage from "../../assets/girl.png";
 const Login = () => {
-  const backgroundImage = "../../../src/assets/Login.png";
+  const backgroundImage = loginImage;
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: "",
@@ -122,7 +123,7 @@ const Login = () => {
         <div className="max-w-md w-full">
           <h2 className="text-2xl font-bold mb-2">Se connecter</h2>
           <p className="text-gray-600 mb-6">
-            Bienvenue à Docgo. Si possible signer sur votre compte
+            Bienvenue à healthpathglobal. Si possible signer sur votre compte
           </p>
 
           {error && (

@@ -171,8 +171,8 @@ export const Course = () => {
         <Seo
           title={t("Course") || "Course"}
           description={
-            t("Course details and learning content on DocGo.") ||
-            "Course details and learning content on DocGo."
+            t("Course details and learning content on healthpathglobal.") ||
+            "Course details and learning content on healthpathglobal."
           }
           canonicalPath={location.pathname}
         />
@@ -342,8 +342,8 @@ export const Course = () => {
     ? courseSeoDescription.length > 160
       ? `${courseSeoDescription.slice(0, 157)}...`
       : courseSeoDescription
-    : t("Course details and learning content on DocGo.") ||
-      "Course details and learning content on DocGo.";
+    : t("Course details and learning content on healthpathglobal.") ||
+      "Course details and learning content on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
     ? "ar"
@@ -353,7 +353,7 @@ export const Course = () => {
     import.meta.env.VITE_SITE_URL ||
     (typeof window !== "undefined" ? window.location.origin : "");
   const absoluteUrl = siteUrl ? `${siteUrl}${location.pathname}` : undefined;
-  const siteName = import.meta.env.VITE_SITE_NAME || "DocGo";
+  const siteName = import.meta.env.VITE_SITE_NAME || "healthpathglobal";
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -508,7 +508,7 @@
   "logout": "Log out",
   "notifications ": "Notifications",
   "notificationsWord": "Notifications",
-  "appTitle": "DOCGO",
+  "appTitle": "healthpathglobal",
   "AreYouSure": "Are you sure?",
   "YouWontBeAbleToRevertThis": "You won't be able to revert this!",
   "YesDeleteIt": "Yes!",
@@ -728,7 +728,7 @@
 
   "register": {
     "title": "Register",
-    "welcome": "Welcome to DocGo, your first step towards success",
+    "welcome": "Welcome to healthpathglobal, your first step towards success",
     "countryQuestion": "In which country do you want to pursue your studies?",
     "selectCountry": "Select Country",
     "fieldQuestion": "In which field do you want to pursue your studies?",

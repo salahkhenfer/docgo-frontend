@@ -12,3 +12,5 @@ Disallow: /courses/*/videos
 Disallow: /courses/*/resources
 Disallow: /courses/*/watch/quiz
 Disallow: /courses/*/watch/certificate
+
+Sitemap: https://healthpathglobal.com/sitemap.xml

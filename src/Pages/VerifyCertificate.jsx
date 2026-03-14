@@ -53,7 +53,7 @@ export default function VerifyCertificate() {
           <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 mb-4">
             <Award className="w-5 h-5 text-purple-600" />
             <span className="text-sm font-semibold text-gray-700">
-              DocGo Certificate Verification
+              healthpathglobal Certificate Verification
             </span>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function VerifyCertificate() {
             to="/"
             className="text-sm text-gray-400 hover:text-gray-600 underline"
           >
-            Return to DocGo
+            Return to healthpathglobal
           </Link>
         </div>
       </div>

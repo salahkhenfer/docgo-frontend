@@ -286,11 +286,11 @@ const PaymentSuccessPage = () => {
               )}
               {!adminContact.phone && !adminContact.email && (
                 <a
-                  href="mailto:support@docgo.com"
+                  href="mailto:support@healthpathglobal.com"
                   className="flex items-center justify-center gap-2 text-sm text-blue-600 hover:underline"
                 >
                   <FaEnvelope />
-                  support@docgo.com
+                  support@healthpathglobal.com
                 </a>
               )}
             </div>
