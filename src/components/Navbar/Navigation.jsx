@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -20,9 +20,12 @@ function Navigation({ branding = null }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [activeSection, setActiveSection] = useState("");
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isNavVisible, setIsNavVisible] = useState(true);
+    const [scrollProgress, setScrollProgress] = useState(0);
     const { i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
+    const lastScrollYRef = useRef(0);
 
     const isDashboardRoute = location.pathname
         .toLowerCase()
@@ -67,10 +70,33 @@ function Navigation({ branding = null }) {
     // Scroll detection for navbar background
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            const currentScrollY = window.scrollY;
+            const maxScrollableHeight =
+                document.documentElement.scrollHeight - window.innerHeight;
+
+            setIsScrolled(currentScrollY > 24);
+            setScrollProgress(
+                maxScrollableHeight > 0
+                    ? Math.min((currentScrollY / maxScrollableHeight) * 100, 100)
+                    : 0,
+            );
+
+            if (currentScrollY <= 16) {
+                setIsNavVisible(true);
+            } else if (
+                currentScrollY > lastScrollYRef.current &&
+                currentScrollY > 96
+            ) {
+                setIsNavVisible(false);
+            } else if (currentScrollY < lastScrollYRef.current) {
+                setIsNavVisible(true);
+            }
+
+            lastScrollYRef.current = currentScrollY;
         };
 
         window.addEventListener("scroll", handleScroll);
+        handleScroll();
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
@@ -262,36 +288,34 @@ function Navigation({ branding = null }) {
     };
 
     return (
-        <div
-            className={`sticky top-0 w-full z-50 transition-all duration-300 
-            ${
-                isScrolled
-                    ? "bg-white/95 backdrop-blur-md shadow-lg"
-                    : "bg-white"
-            }`}
-        >
+        <>
+            <div className="h-[126px] lg:h-[96px]" />
+            <div
+                className={`fixed inset-x-0 top-0 z-50 w-full transform transition-transform duration-300 ${
+                    isNavVisible ? "translate-y-0" : "-translate-y-full"
+                } ${
+                    isScrolled
+                        ? "bg-white/95 backdrop-blur-md shadow-lg"
+                        : "bg-white/95 backdrop-blur-sm"
+                }`}
+            >
             {/* Progress indicator */}
             <div
-                className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0086C9] to-transparent opacity-0 animate-pulse"
+                className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-[#0086C9] to-transparent opacity-70"
                 style={{
                     background: `linear-gradient(90deg, 
                         transparent 0%, 
-                        #0086C9 ${
-                            (window.scrollY /
-                                (document.documentElement.scrollHeight -
-                                    window.innerHeight)) *
-                            100
-                        }%, 
+                        #0086C9 ${scrollProgress}%, 
                         transparent 100%)`,
                 }}
             />
 
             <nav
-                className={`hidden lg:flex justify-between items-center px-4 sm:px-6 lg:px-10 transition-all duration-300
+                className={`mx-auto hidden max-w-screen-2xl items-center gap-6 px-4 sm:px-6 lg:flex lg:px-10 transition-all duration-300
                 ${isScrolled ? "py-2" : "py-3"}`}
             >
-                <Link to="/" className="flex items-center">
-                    <div className="flex items-center gap-3">
+                <Link to="/" className="min-w-0 shrink-0">
+                    <div className="flex min-w-0 items-center gap-3">
                         <img
                             className={`rounded-xl object-cover transition-all duration-300 hover:scale-105 shadow-sm ring-2 ring-white
                                 ${
@@ -303,8 +327,8 @@ function Navigation({ branding = null }) {
                             alt="Logo"
                         />
                         {brandName ? (
-                            <div className="hidden md:flex flex-col">
-                                <span className="font-extrabold text-xl tracking-tight text-gray-900 leading-tight">
+                            <div className="hidden min-w-0 md:flex md:max-w-[220px] xl:max-w-[320px]">
+                                <span className="truncate font-extrabold text-lg tracking-tight text-gray-900 leading-tight xl:text-xl">
                                     {brandName}
                                 </span>
                                 {/* <span className="text-xs text-blue-600 font-medium tracking-wide uppercase">
@@ -314,7 +338,9 @@ function Navigation({ branding = null }) {
                         ) : null}
                     </div>
                 </Link>
-                <MainContent />
+                <div className="flex min-w-0 flex-1 justify-center">
+                    <MainContent />
+                </div>
                 {/* <div
                     className="flex justify-center items-center gap-8 font-medium text-lg 
                       lg:max-3xl:text-sm lg-md:max-3xl:gap-6 md:max-lg:text-[12px] md:max-lg:gap-3"
@@ -338,7 +364,7 @@ function Navigation({ branding = null }) {
                 <div
                     className={`flex justify-${
                         i18n.language === "ar" ? "end" : "start"
-                    } items-center gap-3 font-medium text-sm lg:text-base`}
+                    } items-center gap-3 font-medium text-sm lg:text-base shrink-0`}
                 >
                     <LanguageDropdown />
 
@@ -426,9 +452,13 @@ function Navigation({ branding = null }) {
 
             {/* Pass the isDropdownOpen and setIsDropdownOpen states to NavigationMobile */}
             {!isDashboardRoute ? (
-                <NavigationMobile branding={branding} />
+                <NavigationMobile
+                    branding={branding}
+                    unreadNotifications={unreadNotifications}
+                />
             ) : null}
-        </div>
+            </div>
+        </>
     );
 }
 

@@ -5,7 +5,12 @@ import { Link } from "react-router-dom";
 import handleLogout from "../../API/Logout";
 import { useAppContext } from "../../AppContext";
 
-const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
+const NavBarDropDown = ({
+    isDropdownOpen,
+    setIsDropdownOpen,
+    buttonClassName = "",
+    menuClassName = "",
+}) => {
     const { t } = useTranslation();
     const { user, set_Auth, set_user, store_logout } = useAppContext();
     const avatarDropdownRef = useRef(null);
@@ -39,11 +44,11 @@ const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
         <div className="relative" ref={avatarDropdownRef}>
             <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB457] to-[#FF705B]
+                className={`w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB457] to-[#FF705B]
                 flex items-center justify-center border-2 border-white shadow-lg hover:shadow-xl
                 transition-all duration-300 transform hover:scale-110 relative overflow-hidden
                 before:absolute before:inset-0 before:bg-white/20 before:rounded-full
-                before:scale-0 hover:before:scale-100 before:transition-transform before:duration-300"
+                before:scale-0 hover:before:scale-100 before:transition-transform before:duration-300 ${buttonClassName}`}
             >
                 <FaUser className="text-white w-5 h-5 relative z-10" />
                 {/* Active indicator ring */}
@@ -63,8 +68,8 @@ const NavBarDropDown = ({ isDropdownOpen, setIsDropdownOpen }) => {
                         i18n.language === "ar"
                             ? "md:left-[20px] left-4"
                             : "md:right-[20px] right-4"
-                    } md:top-[70px] top-20 w-56 bg-white rounded-lg shadow-xl py-2 z-[9999]
-                    animate-in slide-in-from-top-2 fade-in duration-200`}
+                    } md:top-[70px] top-24 w-56 bg-white rounded-lg shadow-xl py-2 z-[9999]
+                    animate-in slide-in-from-top-2 fade-in duration-200 ${menuClassName}`}
                     style={{
                         boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                         border: "1px solid rgba(0,0,0,0.1)",

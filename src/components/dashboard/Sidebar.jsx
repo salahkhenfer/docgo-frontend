@@ -6,6 +6,7 @@ import {
   DocumentTextIcon,
   EnvelopeIcon,
   ExclamationCircleIcon,
+  HomeIcon,
   UserIcon,
   CogIcon,
   TrophyIcon,
@@ -29,6 +30,12 @@ const UserSidebar = ({ isOpen, onClose }) => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   const isRTL = i18n.language === "ar";
+
+  const handleMobileNavigate = () => {
+    if (window.innerWidth < 1024) {
+      onClose();
+    }
+  };
 
   const fetchContactStats = useCallback(async () => {
     try {
@@ -227,6 +234,17 @@ const UserSidebar = ({ isOpen, onClose }) => {
           </Link>
         </div>
 
+        <div className="p-4 border-b border-gray-200 lg:hidden">
+          <Link
+            to="/"
+            onClick={handleMobileNavigate}
+            className="flex items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 transition-colors duration-200 hover:bg-blue-100"
+          >
+            <HomeIcon className="h-5 w-5 flex-shrink-0" />
+            <span>{t("dashboard.sidebar.landingPage", "Landing Page")}</span>
+          </Link>
+        </div>
+
         {/* Navigation Items */}
         <nav className="flex-1 p-4 space-y-2">
           {sidebarItems.map((item) => {
@@ -237,12 +255,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
               <Link
                 key={item.id}
                 to={item.path}
-                onClick={() => {
-                  // Close sidebar on mobile after navigation
-                  if (window.innerWidth < 1024) {
-                    onClose();
-                  }
-                }}
+                onClick={handleMobileNavigate}
                 className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
                   isActive
                     ? "bg-blue-50 text-blue-700 border-r-2 border-blue-600"
@@ -287,12 +300,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
             </p>
             <Link
               to="/dashboard/messages/new"
-              onClick={() => {
-                // Close sidebar on mobile after navigation
-                if (window.innerWidth < 1024) {
-                  onClose();
-                }
-              }}
+              onClick={handleMobileNavigate}
               className="mt-2 inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-700"
             >
               {t("dashboard.sidebar.sendMessage", "Send Message")}

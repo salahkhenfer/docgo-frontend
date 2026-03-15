@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsBell, BsBellFill, BsHeart, BsHeartFill } from "react-icons/bs";
+import PropTypes from "prop-types";
 import logo from "../../assets/Logo.png";
 import LanguageDropdown from "../../components/LanguageDropdown";
 import { useAppContext } from "../../AppContext";
@@ -10,7 +11,7 @@ import { useFavorites } from "../../hooks/useFavorite";
 import { useUserNavigation } from "../../context/UserNavigationContext";
 import NavBarDropDown from "./NavBarDropDown";
 
-function NavigationMobile({ branding = null }) {
+function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
@@ -27,8 +28,8 @@ function NavigationMobile({ branding = null }) {
         const base = `${apiBase}${logoUrl}`;
         const updatedAt = branding?.logoUpdatedAt;
         if (!updatedAt) return base;
-        const v = new Date(updatedAt).getTime();
-        return `${base}?v=${v}`;
+        const version = new Date(updatedAt).getTime();
+        return `${base}?v=${version}`;
     })();
 
     const { totalCount } = useFavorites();
@@ -54,83 +55,114 @@ function NavigationMobile({ branding = null }) {
         }
     };
 
+    const closeMobileMenu = () => setIsOpen(false);
+
     return (
         <div className="block lg:hidden">
-            <div className="flex justify-between items-center px-4 py-3 shadow-md">
-                <Link to="/">
-                    <div className="flex items-center gap-3">
-                        <img
-                            className="w-14 h-14 rounded-xl object-cover shadow-sm ring-2 ring-gray-100 transition-transform duration-300 hover:scale-105"
-                            src={brandLogoSrc}
-                            alt="Logo"
-                        />
-                        {brandName ? (
-                            <div className="flex flex-col">
-                                <span className="font-extrabold text-lg tracking-tight text-gray-900 leading-tight">
-                                    {brandName}
-                                </span>
-                                {/* <span className="text-xs text-blue-600 font-medium tracking-wide">
-                                    e-learning
-                                </span> */}
-                            </div>
-                        ) : null}
-                    </div>
-                </Link>
-
-                <div className="flex items-center gap-4">
+            <div className="border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-md">
+                <div className="flex items-center justify-between gap-3 px-4 py-3">
                     <Link
-                        to="/favorites"
-                        className="relative p-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
-                        title={t("Favorites") || "Favorites"}
+                        to="/"
+                        className="min-w-0 flex-1"
+                        onClick={closeMobileMenu}
                     >
-                        {totalCount > 0 ? (
-                            <BsHeartFill className="w-6 h-6 text-red-500" />
-                        ) : (
-                            <BsHeart className="w-6 h-6" />
-                        )}
-                        {totalCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
-                                {totalCount > 99 ? "99+" : totalCount}
-                            </span>
-                        )}
+                        <div className="flex min-w-0 items-center gap-3">
+                            <img
+                                className="h-12 w-12 flex-shrink-0 rounded-xl object-cover shadow-sm ring-2 ring-gray-100 transition-transform duration-300 hover:scale-105"
+                                src={brandLogoSrc}
+                                alt="Logo"
+                            />
+                            {brandName ? (
+                                <div className="min-w-0">
+                                    <span className="block max-w-[42vw] truncate text-sm font-extrabold leading-tight tracking-tight text-gray-900 sm:max-w-[52vw] sm:text-base">
+                                        {brandName}
+                                    </span>
+                                </div>
+                            ) : null}
+                        </div>
                     </Link>
 
-                    <LanguageDropdown />
-
-                    {user && isAuth ? (
-                        <NavBarDropDown
-                            isDropdownOpen={isAvatarDropdownOpen}
-                            setIsDropdownOpen={setIsAvatarDropdownOpen}
-                        />
-                    ) : (
-                        <Link
-                            to="/login"
-                            className="text-sm px-3 py-1 bg-primary text-white rounded-md"
-                        >
-                            {t("BeingAstudent")}
-                        </Link>
-                    )}
-
                     <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className={`text-2xl transition-all duration-300 p-2 rounded-lg
-                            ${
-                                isOpen
-                                    ? "text-red-500 bg-red-50 rotate-180"
-                                    : "text-[#0086C9] hover:bg-blue-50 hover:text-blue-600"
-                            }`}
+                        onClick={() => setIsOpen((prev) => !prev)}
+                        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl transition-all duration-300 ${
+                            isOpen
+                                ? "rotate-180 bg-red-50 text-red-500"
+                                : "text-[#0086C9] hover:bg-blue-50 hover:text-blue-600"
+                        }`}
+                        aria-label={
+                            isOpen
+                                ? "Close navigation menu"
+                                : "Open navigation menu"
+                        }
                     >
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>
                 </div>
+
+                <div className="border-t border-gray-100 px-4 py-2.5">
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                        <LanguageDropdown compact menuClassName="left-0" />
+
+                        <Link
+                            to="/favorites"
+                            className="relative flex h-10 min-w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-600 transition-colors duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+                            title={t("Favorites") || "Favorites"}
+                        >
+                            {totalCount > 0 ? (
+                                <BsHeartFill className="h-5 w-5 text-red-500" />
+                            ) : (
+                                <BsHeart className="h-5 w-5" />
+                            )}
+                            {totalCount > 0 && (
+                                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+                                    {totalCount > 99 ? "99+" : totalCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        {isAuth && user && (
+                            <Link
+                                to="/notifications"
+                                className="relative flex h-10 min-w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-600 transition-colors duration-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-500"
+                                title={t("notifications.title", "Notifications")}
+                            >
+                                {unreadNotifications > 0 ? (
+                                    <BsBellFill className="h-5 w-5 text-blue-500" />
+                                ) : (
+                                    <BsBell className="h-5 w-5" />
+                                )}
+                                {unreadNotifications > 0 && (
+                                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-500 px-1 text-[10px] font-semibold text-white">
+                                        {unreadNotifications > 99
+                                            ? "99+"
+                                            : unreadNotifications}
+                                    </span>
+                                )}
+                            </Link>
+                        )}
+
+                        {user && isAuth ? (
+                            <NavBarDropDown
+                                isDropdownOpen={isAvatarDropdownOpen}
+                                setIsDropdownOpen={setIsAvatarDropdownOpen}
+                                buttonClassName="h-10 w-10 flex-shrink-0 shadow-md hover:scale-105"
+                                menuClassName="top-28"
+                            />
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="flex h-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#0086C9] px-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#0077b3]"
+                            >
+                                {t("Login", "Login")}
+                            </Link>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {isOpen && (
-                <div
-                    className="bg-white/95 backdrop-blur-md shadow-xl border-t border-gray-100 
-                    absolute w-full z-[9000] animate-in slide-in-from-top-3 fade-in duration-300"
-                >
-                    <div className="py-4 px-6">
+                <div className="absolute w-full border-t border-gray-100 bg-white/95 shadow-xl backdrop-blur-md z-[9000] animate-in slide-in-from-top-3 fade-in duration-300">
+                    <div className="px-6 py-4">
                         <div className="flex flex-col space-y-2">
                             {user && isAuth && (
                                 <Link
@@ -141,7 +173,7 @@ function NavigationMobile({ branding = null }) {
                                                 ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                                 : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                         }`}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={closeMobileMenu}
                                 >
                                     <span className="relative z-10">
                                         {t("Profile_nav")}
@@ -164,7 +196,7 @@ function NavigationMobile({ branding = null }) {
                                                     ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                                     : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                             }`}
-                                        onClick={() => setIsOpen(false)}
+                                        onClick={closeMobileMenu}
                                     >
                                         <span className="relative z-10">
                                             {t("MyLearning", "My Learning")}
@@ -183,7 +215,7 @@ function NavigationMobile({ branding = null }) {
                                                     ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                                     : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                             }`}
-                                        onClick={() => setIsOpen(false)}
+                                        onClick={closeMobileMenu}
                                     >
                                         <span className="relative z-10">
                                             {t("MyPrograms", "My Programs")}
@@ -201,7 +233,7 @@ function NavigationMobile({ branding = null }) {
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={closeMobileMenu}
                             >
                                 <span className="relative z-10">
                                     {t("Home_nav")}
@@ -220,7 +252,7 @@ function NavigationMobile({ branding = null }) {
                                                 ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                                 : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                         }`}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={closeMobileMenu}
                                 >
                                     <span className="relative z-10">
                                         {t("UserDashboard_nav", "My Dashboard")}
@@ -237,7 +269,7 @@ function NavigationMobile({ branding = null }) {
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={closeMobileMenu}
                             >
                                 <span className="relative z-10">
                                     {t("Programs_nav")}
@@ -253,7 +285,7 @@ function NavigationMobile({ branding = null }) {
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={closeMobileMenu}
                             >
                                 <span className="relative z-10">
                                     {t("Courses_nav")}
@@ -269,7 +301,7 @@ function NavigationMobile({ branding = null }) {
                                             ? "bg-red-50 text-red-600 border-l-4 border-red-500"
                                             : "text-gray-700 hover:bg-red-50 hover:text-red-600"
                                     }`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={closeMobileMenu}
                             >
                                 <span className="relative z-10 flex items-center gap-2">
                                     {totalCount > 0 ? (
@@ -297,7 +329,7 @@ function NavigationMobile({ branding = null }) {
                                             ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
                                             : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
                                     }`}
-                                onClick={() => setIsOpen(false)}
+                                onClick={closeMobileMenu}
                             >
                                 <span className="relative z-10">
                                     {t("FAQ")}
@@ -308,9 +340,7 @@ function NavigationMobile({ branding = null }) {
                             {!user && !isAuth && (
                                 <>
                                     <button
-                                        onClick={() =>
-                                            handleScrollToSection("ourServices")
-                                        }
+                                        onClick={() => handleScrollToSection("ourServices")}
                                         className="px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                             text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer bg-transparent border-none text-left w-full"
                                     >
@@ -320,9 +350,7 @@ function NavigationMobile({ branding = null }) {
                                         <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                                     </button>
                                     <button
-                                        onClick={() =>
-                                            handleScrollToSection("aboutUs")
-                                        }
+                                        onClick={() => handleScrollToSection("aboutUs")}
                                         className="px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                             text-gray-700 hover:bg-green-50 hover:text-green-600 cursor-pointer bg-transparent border-none text-left w-full"
                                     >
@@ -340,5 +368,18 @@ function NavigationMobile({ branding = null }) {
         </div>
     );
 }
+
+NavigationMobile.propTypes = {
+    branding: PropTypes.shape({
+        brandName: PropTypes.string,
+        logoUrl: PropTypes.string,
+        logoUpdatedAt: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.instanceOf(Date),
+        ]),
+    }),
+    unreadNotifications: PropTypes.number,
+};
 
 export default NavigationMobile;
