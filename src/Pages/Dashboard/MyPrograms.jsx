@@ -37,7 +37,6 @@ const MyPrograms = () => {
 
     load();
   }, [user?.id]);
-  
 
   if (loading) return <MainLoading />;
 
@@ -84,6 +83,7 @@ const MyPrograms = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {applications.map((application) => {
             const program = application.Program;
+            const isDeleted = Boolean(program?.isDeleted);
             const title =
               i18n.language === "ar" && (program?.title_ar || program?.Title_ar)
                 ? program.title_ar || program.Title_ar
@@ -91,13 +91,18 @@ const MyPrograms = () => {
             return (
               <div
                 key={application.id}
-                className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+                className={`bg-white rounded-lg shadow-sm border transition-shadow ${
+                  isDeleted ? "border-red-200" : "hover:shadow-md"
+                }`}
               >
                 <button
                   type="button"
-                  onClick={() =>
-                    navigate(`/Programs/${application.ProgramId}/status`)
-                  }
+                  onClick={() => {
+                    if (!isDeleted) {
+                      navigate(`/Programs/${application.ProgramId}/status`);
+                    }
+                  }}
+                  disabled={isDeleted}
                   className="w-full text-left"
                 >
                   <div className="p-4 flex gap-4">
@@ -115,6 +120,11 @@ const MyPrograms = () => {
                       <div className="font-semibold text-gray-900 truncate">
                         {title}
                       </div>
+                      {isDeleted && (
+                        <div className="mt-1 text-xs font-semibold text-red-600">
+                          {t("dashboard.deleted", "Deleted")}
+                        </div>
+                      )}
                       {(() => {
                         const org =
                           (i18n.language === "ar" && program?.organization_ar
@@ -152,15 +162,19 @@ const MyPrograms = () => {
                       <div className="mt-2 flex items-center gap-2 flex-wrap">
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                            application.status === "approved" ||
-                            application.status === "completed"
-                              ? "bg-green-100 text-green-700"
-                              : application.status === "rejected"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-yellow-100 text-yellow-700"
+                            isDeleted
+                              ? "bg-red-100 text-red-700"
+                              : application.status === "approved" ||
+                                  application.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : application.status === "rejected"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-yellow-100 text-yellow-700"
                           }`}
                         >
-                          {String(application.status || "")}
+                          {isDeleted
+                            ? t("dashboard.deleted", "Deleted")
+                            : String(application.status || "")}
                         </span>
                         {program?.programType && (
                           <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600 capitalize">
@@ -168,6 +182,14 @@ const MyPrograms = () => {
                           </span>
                         )}
                       </div>
+                      {isDeleted && (
+                        <p className="mt-2 text-xs text-red-600">
+                          {t(
+                            "dashboard.deletedProgramSupport",
+                            "This program has been deleted. Contact support for any considerations regarding your enrollment.",
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </button>

@@ -13,6 +13,7 @@ import { clientProgramsAPI } from "../../API/Programs";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import ImageWithFallback from "../Common/ImageWithFallback";
+import { buildApiUrl } from "../../utils/apiBaseUrl";
 
 const FeaturedPrograms = ({
   limit = 6,
@@ -151,11 +152,7 @@ const FeaturedPrograms = ({
               <div className="relative h-48 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
                 <ImageWithFallback
                   type="program"
-                  src={
-                    program.Image
-                      ? `${import.meta.env.VITE_API_URL}${program.Image}`
-                      : null
-                  }
+                  src={program.Image ? buildApiUrl(program.Image) : null}
                   alt={
                     i18n.language === "ar" && program.Title_ar
                       ? program.Title_ar

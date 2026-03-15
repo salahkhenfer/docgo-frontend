@@ -24,6 +24,7 @@ import MainLoading from "../MainLoading";
 import axios from "../utils/axios";
 import Seo from "../components/SEO/Seo";
 import { getApiErrorMessage } from "../utils/apiErrorTranslate";
+import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 
 // Import component parts
 import VideoPlayer from "../components/Common/VideoPlayer";
@@ -299,7 +300,29 @@ export const Course = () => {
 
     if (!videoPath) return null;
     if (videoPath.startsWith("http")) return videoPath;
-    return import.meta.env.VITE_API_URL + videoPath;
+
+    const normalizedPath = String(videoPath).trim();
+
+    // Intro/program/public videos should be served directly.
+    // Only protected course lesson videos should go through /media/stream.
+    if (
+      normalizedPath.startsWith("/Courses_Intro/") ||
+      normalizedPath.startsWith("/Programs/") ||
+      normalizedPath.startsWith("/public/")
+    ) {
+      return buildApiUrl(normalizedPath);
+    }
+
+    const filename = normalizedPath
+      .split("?")[0]
+      .split("#")[0]
+      .split("/")
+      .filter(Boolean)
+      .pop();
+
+    return filename
+      ? `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`
+      : buildApiUrl(videoPath);
   };
 
   // Helper function to format duration from seconds to MM:SS
@@ -335,9 +358,8 @@ export const Course = () => {
       : course.shortDescription) ||
     courseDescription ||
     "";
-  const courseSeoImage = course.Image
-    ? `${import.meta.env.VITE_API_URL || ""}${course.Image}`
-    : null;
+  const courseSeoImage = course.Image ? buildApiUrl(course.Image) : null;
+  const introVideoUrl = getVideoUrl({ videoUrl: course.videoUrl });
   const seoDescription = courseSeoDescription
     ? courseSeoDescription.length > 160
       ? `${courseSeoDescription.slice(0, 157)}...`
@@ -457,11 +479,7 @@ export const Course = () => {
                   >
                     <ImageWithFallback
                       type="course"
-                      src={
-                        course.Image
-                          ? `${import.meta.env.VITE_API_URL}${course.Image}`
-                          : null
-                      }
+                      src={buildApiUrl(course.Image)}
                       alt={courseTitle}
                       className="w-full h-full object-cover"
                     />
@@ -484,21 +502,16 @@ export const Course = () => {
                 ) : (
                   <div className="relative bg-black w-full h-full">
                     <video
-                      key={`${import.meta.env.VITE_API_URL}${course.videoUrl}`}
+                      key={introVideoUrl || course.videoUrl}
                       controls
                       autoPlay
                       controlsList="nodownload"
-                      poster={
-                        course.Image
-                          ? `${import.meta.env.VITE_API_URL}${course.Image}`
-                          : undefined
-                      }
+                      poster={buildApiUrl(course.Image) || undefined}
                       className="w-full h-full object-contain"
                     >
-                      <source
-                        src={`${import.meta.env.VITE_API_URL}${course.videoUrl}`}
-                        type="video/mp4"
-                      />
+                      {introVideoUrl && (
+                        <source src={introVideoUrl} type="video/mp4" />
+                      )}
                     </video>
                     <button
                       onClick={() => setShowIntroVideo(false)}
@@ -512,11 +525,7 @@ export const Course = () => {
                 <>
                   <ImageWithFallback
                     type="course"
-                    src={
-                      course.Image
-                        ? `${import.meta.env.VITE_API_URL}${course.Image}`
-                        : null
-                    }
+                    src={buildApiUrl(course.Image)}
                     alt={courseTitle}
                     className="w-full h-full object-cover"
                   />

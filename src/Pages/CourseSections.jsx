@@ -24,6 +24,7 @@ import VideoPlayer from "../components/Common/VideoPlayer";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
+import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 import Certificate from "./Certificate";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -426,8 +427,8 @@ function PdfViewer({ item, onComplete, isCompleted }) {
   const embedUrl = url?.startsWith("http")
     ? url
     : _pdfBasename
-      ? `${import.meta.env.VITE_API_URL}/media/stream/pdf/${_pdfBasename}`
-      : `${import.meta.env.VITE_API_URL}${url}`;
+      ? `${getApiBaseUrl()}/media/stream/pdf/${encodeURIComponent(_pdfBasename)}`
+      : buildApiUrl(url);
 
   return (
     <div className="flex flex-col gap-4">

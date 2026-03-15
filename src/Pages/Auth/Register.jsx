@@ -7,7 +7,7 @@ import Register_Step_2 from "./Register_Step_2";
 import InlineLoading from "../../InlineLoading";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
-import loginImage from "../../assets/girl.png";
+import loginImage from "../../assets/login.png";
 const Register = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);

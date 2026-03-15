@@ -19,6 +19,8 @@ import Certificate from "./Certificate";
 import CourseResources from "./CourseResources";
 import QuizContent from "./QuizContent";
 import Swal from "sweetalert2";
+import axios from "../utils/axios";
+import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 
 export function CourseVideos() {
   const { t } = useTranslation();
@@ -37,6 +39,7 @@ export function CourseVideos() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [showResources, setShowResources] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [resolvedVideoUrl, setResolvedVideoUrl] = useState(null);
 
   // Progress tracking
   const [completedVideos, setCompletedVideos] = useState(new Set());
@@ -122,7 +125,7 @@ export function CourseVideos() {
   }, [hasData, isEnrolled, courseId, navigate]);
 
   // Get video URL with API base
-  const getVideoUrl = useCallback((video) => {
+  const getVideoPath = useCallback((video) => {
     if (!video) {
       return null;
     }
@@ -143,12 +146,59 @@ export function CourseVideos() {
       return null;
     }
 
-    if (typeof videoPath === "string" && videoPath.startsWith("http")) {
-      return videoPath;
-    }
-
-    return import.meta.env.VITE_API_URL + videoPath;
+    return videoPath;
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const resolveVideoUrl = async () => {
+      const currentPath = getVideoPath(
+        courseData?.course?.videos?.[currentVideoIndex],
+      );
+
+      if (!currentPath) {
+        setResolvedVideoUrl(null);
+        return;
+      }
+
+      if (typeof currentPath === "string" && currentPath.startsWith("http")) {
+        setResolvedVideoUrl(currentPath);
+        return;
+      }
+
+      const filename = String(currentPath)
+        .split("?")[0]
+        .split("#")[0]
+        .split("/")
+        .filter(Boolean)
+        .pop();
+
+      if (!filename) {
+        setResolvedVideoUrl(buildApiUrl(currentPath));
+        return;
+      }
+
+      try {
+        const response = await axios.get(`/media/signed-url/video/${filename}`);
+        if (isActive) {
+          setResolvedVideoUrl(response.data?.url || null);
+        }
+      } catch {
+        if (isActive) {
+          setResolvedVideoUrl(
+            `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
+          );
+        }
+      }
+    };
+
+    resolveVideoUrl();
+
+    return () => {
+      isActive = false;
+    };
+  }, [courseData, currentVideoIndex, getVideoPath]);
 
   // Attach HLS when the backend returns an .m3u8 URL
   // Must be declared before any conditional returns to keep hook order stable.
@@ -157,7 +207,7 @@ export function CourseVideos() {
     const videos = course?.videos || [];
     const currentVideo = videos[currentVideoIndex];
 
-    const url = getVideoUrl(currentVideo);
+    const url = resolvedVideoUrl;
     const videoEl = videoRef.current;
 
     if (!videoEl || !url) return;
@@ -202,7 +252,7 @@ export function CourseVideos() {
         hlsRef.current = null;
       }
     };
-  }, [courseData, currentVideoIndex, getVideoUrl]);
+  }, [resolvedVideoUrl]);
 
   if (loading) return <MainLoading />;
 
@@ -1267,12 +1317,12 @@ export function CourseVideos() {
                   {/* Video Player */}
                   <div className="py-6">
                     <div className="relative mx-auto mt-6 w-full max-w-[860px] overflow-hidden rounded-2xl bg-black shadow-2xl transition duration-300 hover:shadow-3xl border border-gray-200">
-                      {getVideoUrl(currentVideo) ? (
+                      {resolvedVideoUrl ? (
                         <>
                           <video
                             className="w-full aspect-video object-contain"
                             ref={videoRef}
-                            src={getVideoUrl(currentVideo)}
+                            src={resolvedVideoUrl}
                             onTimeUpdate={handleTimeUpdate}
                             onLoadedMetadata={handleLoadedMetadata}
                             onPlay={() => setPlaying(true)}

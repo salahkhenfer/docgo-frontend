@@ -12,6 +12,7 @@ import LightColoredButton from "../../components/Buttons/LightColoredButton";
 import NavigationMobile from "./NavigationMobile";
 import NavBarDropDown from "./NavBarDropDown";
 import apiClient from "../../services/apiClient";
+import { getApiBaseUrl } from "../../utils/apiBaseUrl";
 
 function Navigation({ branding = null }) {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ function Navigation({ branding = null }) {
     .toLowerCase()
     .startsWith("/dashboard");
 
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const apiBase = getApiBaseUrl();
   const brandName = branding?.brandName || "";
   const displayBrandName =
     brandName.length > 26 ? `${brandName.slice(0, 26).trim()}...` : brandName;

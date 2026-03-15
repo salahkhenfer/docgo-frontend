@@ -10,9 +10,9 @@ import { UserNavigationProvider } from "./context/UserNavigationContext";
 import MainLoading from "./MainLoading";
 import Seo from "./components/SEO/Seo";
 import { useTranslation } from "react-i18next";
+import { getApiBaseUrl } from "./utils/apiBaseUrl";
 
-const API_URL_FALLBACK =
-  import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL_FALLBACK = getApiBaseUrl();
 
 function App() {
   const [loading, setLoading] = useState(true);

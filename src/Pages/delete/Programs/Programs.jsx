@@ -19,6 +19,22 @@ import {
 import { clientProgramsAPI } from "../../../API/Programs";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../../InlineLoading";
+import { buildApiUrl } from "../../../utils/apiBaseUrl";
+
+const resolveProgramMediaUrl = (mediaPath) => {
+    if (!mediaPath) return null;
+
+    const value = String(mediaPath).trim();
+    if (!value) return null;
+    if (/^https?:\/\//i.test(value)) return value;
+
+    const normalized = value.replace(/^\/?public\/+?/i, "/");
+    const withLeadingSlash = normalized.startsWith("/")
+        ? normalized
+        : `/${normalized}`;
+
+    return buildApiUrl(withLeadingSlash);
+};
 
 const Programs = () => {
     const { t, i18n } = useTranslation();
@@ -379,9 +395,9 @@ const Programs = () => {
                                 <div className="relative h-48 bg-gradient-to-br from-blue-50 to-indigo-50">
                                     {program.Image ? (
                                         <img
-                                            src={`${
-                                                import.meta.env.VITE_SERVER_URL
-                                            }/public${program.Image}`}
+                                            src={resolveProgramMediaUrl(
+                                                program.Image
+                                            )}
                                             alt={
                                                 i18n.language === "ar" &&
                                                 program.Title_ar

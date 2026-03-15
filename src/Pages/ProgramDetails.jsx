@@ -22,6 +22,7 @@ import axios from "../utils/axios";
 import Seo from "../components/SEO/Seo";
 import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 import { useEffect } from "react";
+import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 // Import component parts
 import ProgramContent from "../components/Program/ProgramContent";
 import ProgramFAQSection from "../components/Program/ProgramFAQSection";
@@ -68,6 +69,7 @@ export const ProgramDetails = () => {
   const [applied, setApplied] = useState(hasApplied);
   const [programReviews, setProgramReviews] = useState([]);
   const [userProgramReview, setUserProgramReview] = useState(null);
+  const [resolvedVideoUrl, setResolvedVideoUrl] = useState(null);
 
   useEffect(() => {
     if (!programId) return;
@@ -284,13 +286,68 @@ export const ProgramDetails = () => {
   const isEnrolled =
     hasApplied && ["approved", "completed", "enrolled"].includes(status);
 
-  // Check what video URL we'll use
+  // Resolve playable URL for program intro video.
+  // If a protected course-video path is reused, request signed URL fallback.
   const videoUrl = program.videoUrl || program.videos?.[0]?.videoUrl;
-  const fullVideoUrl =
-    videoUrl &&
-    (videoUrl.startsWith("http")
-      ? videoUrl
-      : `${import.meta.env.VITE_API_URL}${videoUrl}`);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const resolveProgramVideoUrl = async () => {
+      if (!videoUrl) {
+        if (isActive) setResolvedVideoUrl(null);
+        return;
+      }
+
+      if (String(videoUrl).startsWith("http")) {
+        if (isActive) setResolvedVideoUrl(videoUrl);
+        return;
+      }
+
+      const normalizedPath = String(videoUrl).trim();
+      const filename = normalizedPath
+        .split("?")[0]
+        .split("#")[0]
+        .split("/")
+        .filter(Boolean)
+        .pop();
+
+      if (!filename) {
+        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
+        return;
+      }
+
+      const requiresProtectedStream =
+        normalizedPath.startsWith("/Courses_Videos/");
+
+      if (!requiresProtectedStream) {
+        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
+        return;
+      }
+
+      try {
+        const response = await axios.get(`/media/signed-url/video/${filename}`);
+        if (isActive) {
+          setResolvedVideoUrl(
+            response.data?.url ||
+              `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
+          );
+        }
+      } catch {
+        if (isActive) {
+          setResolvedVideoUrl(
+            `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
+          );
+        }
+      }
+    };
+
+    resolveProgramVideoUrl();
+
+    return () => {
+      isActive = false;
+    };
+  }, [videoUrl]);
 
   const programTitle =
     i18n.language === "ar" && program.Title_ar
@@ -307,9 +364,7 @@ export const ProgramDetails = () => {
       : program.shortDescription) ||
     programDescription ||
     "";
-  const programSeoImage = program.Image
-    ? `${import.meta.env.VITE_API_URL || ""}${program.Image}`
-    : null;
+  const programSeoImage = program.Image ? buildApiUrl(program.Image) : null;
   const seoDescription = programSeoDescription
     ? programSeoDescription.length > 160
       ? `${programSeoDescription.slice(0, 157)}...`
@@ -427,9 +482,7 @@ export const ProgramDetails = () => {
 
                 if (videoUrl) {
                   // Add base URL if the video path is relative
-                  const fullVideoUrl = videoUrl.startsWith("http")
-                    ? videoUrl
-                    : `${import.meta.env.VITE_API_URL}${videoUrl}`;
+                  const fullVideoUrl = resolvedVideoUrl;
 
                   return (
                     <div className="relative w-full h-full">
@@ -443,9 +496,7 @@ export const ProgramDetails = () => {
                           <ImageWithFallback
                             type="program"
                             src={
-                              program.Image
-                                ? `${import.meta.env.VITE_API_URL}${program.Image}`
-                                : null
+                              program.Image ? buildApiUrl(program.Image) : null
                             }
                             alt={programTitle}
                             className="w-full h-full object-cover"
@@ -488,15 +539,15 @@ export const ProgramDetails = () => {
                             controlsList="nodownload"
                             poster={
                               program.Image
-                                ? `${import.meta.env.VITE_API_URL}${
-                                    program.Image
-                                  }`
+                                ? buildApiUrl(program.Image)
                                 : undefined
                             }
                             className="w-full h-full object-contain"
                             onError={(e) => {}}
                           >
-                            <source src={fullVideoUrl} type="video/mp4" />
+                            {fullVideoUrl && (
+                              <source src={fullVideoUrl} type="video/mp4" />
+                            )}
                             <p className="text-white p-4">
                               {t(
                                 "Your browser does not support the video tag.",
@@ -532,11 +583,7 @@ export const ProgramDetails = () => {
                   return (
                     <ImageWithFallback
                       type="program"
-                      src={
-                        program.Image
-                          ? `${import.meta.env.VITE_API_URL}${program.Image}`
-                          : null
-                      }
+                      src={program.Image ? buildApiUrl(program.Image) : null}
                       alt={programTitle}
                       className="w-full h-full object-cover"
                     />

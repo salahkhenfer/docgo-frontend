@@ -5,7 +5,7 @@ import InlineLoading from "../../InlineLoading";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import axios from "axios";
-import loginImage from "../../assets/girl.png";
+import loginImage from "../../assets/login.png";
 const Login = () => {
   const backgroundImage = loginImage;
   const { t } = useTranslation();

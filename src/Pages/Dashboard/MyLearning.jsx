@@ -86,6 +86,7 @@ const MyLearning = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {enrollments.map((enrollment) => {
             const course = enrollment.Course;
+            const isDeleted = Boolean(course?.isDeleted);
             const title =
               i18n.language === "ar" && course?.Title_ar
                 ? course.Title_ar
@@ -93,13 +94,18 @@ const MyLearning = () => {
             return (
               <div
                 key={enrollment.id}
-                className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+                className={`bg-white rounded-lg shadow-sm border transition-shadow ${
+                  isDeleted ? "border-red-200" : "hover:shadow-md"
+                }`}
               >
                 <button
                   type="button"
-                  onClick={() =>
-                    navigate(`/Courses/${enrollment.CourseId}/watch`)
-                  }
+                  onClick={() => {
+                    if (!isDeleted) {
+                      navigate(`/Courses/${enrollment.CourseId}/watch`);
+                    }
+                  }}
+                  disabled={isDeleted}
                   className="w-full text-left"
                 >
                   <div className="p-4 flex gap-4">
@@ -117,6 +123,11 @@ const MyLearning = () => {
                       <div className="font-semibold text-gray-900 truncate">
                         {title}
                       </div>
+                      {isDeleted && (
+                        <div className="mt-1 text-xs font-semibold text-red-600">
+                          {t("dashboard.deleted", "Deleted")}
+                        </div>
+                      )}
                       <div className="text-sm text-gray-600 mt-1 truncate">
                         {(i18n.language === "ar" && course?.Category_ar
                           ? course.Category_ar
@@ -129,20 +140,32 @@ const MyLearning = () => {
                       <div className="mt-2 flex items-center justify-between">
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            enrollment.status === "completed"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-blue-100 text-blue-800"
+                            isDeleted
+                              ? "bg-red-100 text-red-700"
+                              : enrollment.status === "completed"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-blue-100 text-blue-800"
                           }`}
                         >
-                          {enrollment.status === "completed"
-                            ? t("dashboard.completed", "Completed")
-                            : t("dashboard.active", "Active")}
+                          {isDeleted
+                            ? t("dashboard.deleted", "Deleted")
+                            : enrollment.status === "completed"
+                              ? t("dashboard.completed", "Completed")
+                              : t("dashboard.active", "Active")}
                         </span>
                         <span className="text-xs text-gray-500">
                           {t("dashboard.progress", "Progress")}:{" "}
                           {Math.round(enrollment.progressPercentage || 0)}%
                         </span>
                       </div>
+                      {isDeleted && (
+                        <p className="mt-2 text-xs text-red-600">
+                          {t(
+                            "dashboard.deletedCourseSupport",
+                            "This course has been deleted. Contact support for any considerations regarding your enrollment.",
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </button>

@@ -88,31 +88,49 @@ const EnrolledProgramsSection = ({ enrollments }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {enrollments.map((enrollment) => (
-          <div
-            key={enrollment.id}
-            className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer border border-green-100"
-            onClick={() => navigate(`/Programs/${enrollment.ProgramId}/status`)}
-          >
-            <div className="flex items-start gap-4">
-              <ImageWithFallback
-                type="program"
-                src={
-                  enrollment.Program?.Image
-                    ? `${import.meta.env.VITE_API_URL}${enrollment.Program.Image}`
-                    : null
+        {enrollments.map((enrollment) => {
+          const isDeleted = Boolean(enrollment.Program?.isDeleted);
+
+          return (
+            <div
+              key={enrollment.id}
+              className={`rounded-lg p-6 transition-shadow border ${
+                isDeleted
+                  ? "bg-red-50 border-red-200 cursor-not-allowed"
+                  : "bg-gradient-to-r from-green-50 to-blue-50 hover:shadow-md cursor-pointer border-green-100"
+              }`}
+              onClick={() => {
+                if (!isDeleted) {
+                  navigate(`/Programs/${enrollment.ProgramId}/status`);
                 }
-                alt={enrollment.Program?.title || enrollment.Program?.Title}
-                className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-gray-900 mb-1 text-lg">
-                  {i18n.language === "ar" &&
-                  (enrollment.Program?.title_ar || enrollment.Program?.Title_ar)
-                    ? enrollment.Program.title_ar || enrollment.Program.Title_ar
-                    : enrollment.Program?.title || enrollment.Program?.Title}
-                </h3>
-                {/* <div className="flex items-center gap-2 mb-2">
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <ImageWithFallback
+                  type="program"
+                  src={
+                    enrollment.Program?.Image
+                      ? `${import.meta.env.VITE_API_URL}${enrollment.Program.Image}`
+                      : null
+                  }
+                  alt={enrollment.Program?.title || enrollment.Program?.Title}
+                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-gray-900 mb-1 text-lg">
+                    {i18n.language === "ar" &&
+                    (enrollment.Program?.title_ar ||
+                      enrollment.Program?.Title_ar)
+                      ? enrollment.Program.title_ar ||
+                        enrollment.Program.Title_ar
+                      : enrollment.Program?.title || enrollment.Program?.Title}
+                  </h3>
+                  {isDeleted && (
+                    <div className="mb-1 text-xs font-semibold text-red-600">
+                      {t("dashboard.deleted", "Deleted")}
+                    </div>
+                  )}
+                  {/* <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm text-gray-600">
                     {i18n.language === "ar" &&
                     enrollment.Program?.organization_ar
@@ -127,90 +145,106 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                   </span>
                 </div> */}
 
-                {/* Status and Scholarship Info */}
-                <div className="flex items-center justify-between mb-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      enrollment.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : enrollment.status === "pending_start"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-blue-100 text-blue-800"
-                    }`}
-                  >
-                    {enrollment.status === "completed"
-                      ? t("dashboard.completed", "Completed")
-                      : enrollment.status === "pending_start"
-                        ? t("dashboard.pendingStart", "Pending Start")
-                        : t("dashboard.active", "Active")}
-                  </span>
-
-                  {enrollment.isScholarship && (
-                    <div className="flex items-center gap-1 text-green-600">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-xs font-medium">
-                        {t("dashboard.scholarship", "Scholarship")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Program Dates */}
-                <div className="space-y-1">
-                  <div className="text-xs text-gray-600 flex items-center justify-between">
-                    <span>{t("dashboard.enrolledOn", "Enrolled on")}:</span>
-                    <span className="font-medium">
-                      {new Date(enrollment.enrollmentDate).toLocaleDateString()}
+                  {/* Status and Scholarship Info */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        isDeleted
+                          ? "bg-red-100 text-red-700"
+                          : enrollment.status === "completed"
+                            ? "bg-green-100 text-green-800"
+                            : enrollment.status === "pending_start"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
+                      {isDeleted
+                        ? t("dashboard.deleted", "Deleted")
+                        : enrollment.status === "completed"
+                          ? t("dashboard.completed", "Completed")
+                          : enrollment.status === "pending_start"
+                            ? t("dashboard.pendingStart", "Pending Start")
+                            : t("dashboard.active", "Active")}
                     </span>
+
+                    {enrollment.isScholarship && (
+                      <div className="flex items-center gap-1 text-green-600">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-xs font-medium">
+                          {t("dashboard.scholarship", "Scholarship")}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  {enrollment.programStartDate && (
+
+                  {/* Program Dates */}
+                  <div className="space-y-1">
                     <div className="text-xs text-gray-600 flex items-center justify-between">
-                      <span>{t("dashboard.startDate", "Start Date")}:</span>
+                      <span>{t("dashboard.enrolledOn", "Enrolled on")}:</span>
                       <span className="font-medium">
                         {new Date(
-                          enrollment.programStartDate,
+                          enrollment.enrollmentDate,
                         ).toLocaleDateString()}
                       </span>
+                    </div>
+                    {enrollment.programStartDate && (
+                      <div className="text-xs text-gray-600 flex items-center justify-between">
+                        <span>{t("dashboard.startDate", "Start Date")}:</span>
+                        <span className="font-medium">
+                          {new Date(
+                            enrollment.programStartDate,
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                    {enrollment.programEndDate && (
+                      <div className="text-xs text-gray-600 flex items-center justify-between">
+                        <span>{t("dashboard.endDate", "End Date")}:</span>
+                        <span className="font-medium">
+                          {new Date(
+                            enrollment.programEndDate,
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Scholarship Amount */}
+                  {enrollment.isScholarship && enrollment.scholarshipAmount && (
+                    <div className="mt-3 p-2 bg-green-50 rounded-lg">
+                      <div className="text-sm text-green-700 font-medium">
+                        {t("dashboard.scholarshipAmount", "Scholarship Amount")}
+                        :
+                        <span className="ml-1 font-bold">
+                          {enrollment.scholarshipAmount}{" "}
+                          {enrollment.Program?.currency || "DZD"}
+                        </span>
+                      </div>
                     </div>
                   )}
-                  {enrollment.programEndDate && (
-                    <div className="text-xs text-gray-600 flex items-center justify-between">
-                      <span>{t("dashboard.endDate", "End Date")}:</span>
-                      <span className="font-medium">
-                        {new Date(
-                          enrollment.programEndDate,
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
+                  {isDeleted && (
+                    <p className="mt-2 text-xs text-red-600">
+                      {t(
+                        "dashboard.deletedProgramSupport",
+                        "This program has been deleted. Contact support for any considerations regarding your enrollment.",
+                      )}
+                    </p>
                   )}
                 </div>
-
-                {/* Scholarship Amount */}
-                {enrollment.isScholarship && enrollment.scholarshipAmount && (
-                  <div className="mt-3 p-2 bg-green-50 rounded-lg">
-                    <div className="text-sm text-green-700 font-medium">
-                      {t("dashboard.scholarshipAmount", "Scholarship Amount")}:
-                      <span className="ml-1 font-bold">
-                        {enrollment.scholarshipAmount}{" "}
-                        {enrollment.Program?.currency || "DZD"}
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* View All Button */}
