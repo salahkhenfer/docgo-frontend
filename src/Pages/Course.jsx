@@ -501,18 +501,14 @@ export const Course = () => {
                   </div>
                 ) : (
                   <div className="relative bg-black w-full h-full">
-                    <video
+                    <VideoPlayer
                       key={introVideoUrl || course.videoUrl}
-                      controls
-                      autoPlay
-                      controlsList="nodownload"
+                      src={introVideoUrl || course.videoUrl}
                       poster={buildApiUrl(course.Image) || undefined}
-                      className="w-full h-full object-contain"
-                    >
-                      {introVideoUrl && (
-                        <source src={introVideoUrl} type="video/mp4" />
-                      )}
-                    </video>
+                      title={courseTitle}
+                      className="w-full h-full"
+                      autoPlay
+                    />
                     <button
                       onClick={() => setShowIntroVideo(false)}
                       className="absolute top-2 right-2 bg-black bg-opacity-70 hover:bg-opacity-90 text-white rounded-full p-1.5 transition-all z-10"

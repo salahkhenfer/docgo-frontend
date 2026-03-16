@@ -944,15 +944,22 @@ export function CourseSections() {
   const [progressLoaded, setProgressLoaded] = useState(false);
   const initialItemSet = useRef(false);
 
-  const { courseData, loading, error, hasError, isEnrolled, hasData } =
-    useCourse(courseId);
+  const {
+    courseData,
+    loading,
+    error,
+    hasError,
+    isEnrolled,
+    canAccessContent,
+    hasData,
+  } = useCourse(courseId);
 
-  // Redirect if not enrolled
+  // Redirect only when the user cannot access the content.
   useEffect(() => {
-    if (hasData && !isEnrolled) {
+    if (hasData && !canAccessContent) {
       navigate(`/Courses/${courseId}`);
     }
-  }, [hasData, isEnrolled, courseId, navigate]);
+  }, [hasData, canAccessContent, courseId, navigate]);
 
   // Load progress from backend
   useEffect(() => {

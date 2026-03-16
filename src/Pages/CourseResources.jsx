@@ -1,15 +1,65 @@
 import { Download, ExternalLink, FileText, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
+import { buildApiUrl } from "../utils/apiBaseUrl";
+import axios from "../utils/axios";
 
 export default function CourseResources() {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { courseData, loading } = useCourse(courseId);
+  const { courseData, loading, hasData, canAccessContent } =
+    useCourse(courseId);
   const [viewingPdf, setViewingPdf] = useState(null);
+  const [viewingPdfBlobUrl, setViewingPdfBlobUrl] = useState(null);
+  const [loadingPdfPreview, setLoadingPdfPreview] = useState(false);
+
+  useEffect(() => {
+    if (hasData && !canAccessContent) {
+      navigate(`/Courses/${courseId}`);
+    }
+  }, [hasData, canAccessContent, courseId, navigate]);
+
+  useEffect(() => {
+    if (!viewingPdf?.url) {
+      setViewingPdfBlobUrl(null);
+      setLoadingPdfPreview(false);
+      return;
+    }
+
+    let active = true;
+    let objectUrl = null;
+    setLoadingPdfPreview(true);
+    setViewingPdfBlobUrl(null);
+
+    axios
+      .get(viewingPdf.url, { responseType: "blob" })
+      .then((response) => {
+        if (!active) return;
+        objectUrl = URL.createObjectURL(response.data);
+        setViewingPdfBlobUrl(objectUrl);
+      })
+      .catch(() => {
+        if (active) {
+          setViewingPdfBlobUrl(null);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingPdfPreview(false);
+        }
+      });
+
+    return () => {
+      active = false;
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [viewingPdf]);
 
   if (loading) {
     return <MainLoading />;
@@ -58,11 +108,30 @@ export default function CourseResources() {
           {/* PDF Viewer */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
             <div className="w-full" style={{ height: "calc(100vh - 220px)" }}>
-              <iframe
-                src={viewingPdf.url}
-                className="w-full h-full"
-                title={viewingPdf.title || "PDF Viewer"}
-              />
+              {loadingPdfPreview ? (
+                <div className="w-full h-full flex items-center justify-center text-slate-600">
+                  Chargement du PDF...
+                </div>
+              ) : viewingPdfBlobUrl ? (
+                <iframe
+                  src={viewingPdfBlobUrl}
+                  className="w-full h-full"
+                  title={viewingPdf.title || "PDF Viewer"}
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-slate-600 px-6 text-center">
+                  <p>{t("Preview unavailable, open document in a new tab")}</p>
+                  <a
+                    href={viewingPdf.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    <span>{t("Open")}</span>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -135,9 +204,7 @@ export default function CourseResources() {
 
                 // If URL doesn't start with http, prepend the API URL
                 if (resourceUrl && !resourceUrl.startsWith("http")) {
-                  resourceUrl = `${import.meta.env.VITE_API_URL}${
-                    resourceUrl.startsWith("/") ? "" : "/"
-                  }${resourceUrl}`;
+                  resourceUrl = buildApiUrl(resourceUrl);
                 }
 
                 const handleOpenPDF = () => {

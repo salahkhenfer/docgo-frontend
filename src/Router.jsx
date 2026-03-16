@@ -1,9 +1,4 @@
-import {
-  createBrowserRouter,
-  Navigate,
-  redirect,
-  ScrollRestoration,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
 import { getApiBaseUrl } from "./utils/apiBaseUrl";
@@ -115,12 +110,7 @@ const protectedLoader = async ({ request }) => {
 const Routers = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>
-        <App />
-        <ScrollRestoration />
-      </>
-    ),
+    element: <App />,
     errorElement: <ErrorElement />,
     children: [
       {
@@ -206,7 +196,6 @@ const Routers = createBrowserRouter([
       {
         path: "Courses/:courseId/watch",
         caseSensitive: false,
-        loader: protectedLoader,
         element: <CourseSections />,
       },
       {
@@ -223,13 +212,11 @@ const Routers = createBrowserRouter([
       {
         path: "Courses/:courseId/watch/resources",
         caseSensitive: false,
-        loader: protectedLoader,
         element: <CourseResources />,
       },
       {
         path: "Courses/:courseId/videos",
         caseSensitive: false,
-        loader: protectedLoader,
         element: <AllContentVideosCourse />,
         children: [
           {

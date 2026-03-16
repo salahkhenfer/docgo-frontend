@@ -11,6 +11,7 @@ import MainLoading from "./MainLoading";
 import Seo from "./components/SEO/Seo";
 import { useTranslation } from "react-i18next";
 import { getApiBaseUrl } from "./utils/apiBaseUrl";
+import ScrollToTopOnRouteChange from "./components/Common/ScrollToTopOnRouteChange";
 
 const API_URL_FALLBACK = getApiBaseUrl();
 
@@ -219,6 +220,7 @@ function App() {
   return (
     <UserNavigationProvider>
       <div className="relative">
+        <ScrollToTopOnRouteChange />
         <Seo
           title={seo.title}
           description={seo.description}

@@ -20,7 +20,7 @@ const VideoPlayer = ({
   controls = true,
   width = "100%",
   height = "auto",
-  crossOrigin = "use-credentials",
+  crossOrigin,
   onTimeUpdate,
   onDurationChange,
   onPlay,

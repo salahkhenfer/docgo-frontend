@@ -293,7 +293,9 @@ export default function Courses() {
           const mapped = enrollments
             .filter(
               (e) =>
-                e.Course && (e.status === "active" || e.status === "completed"),
+                e.Course &&
+                !e.Course.isDeleted &&
+                (e.status === "active" || e.status === "completed"),
             )
             .map((e) => ({
               ...(e.Course || {}),

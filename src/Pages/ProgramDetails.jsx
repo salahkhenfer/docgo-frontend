@@ -28,6 +28,7 @@ import ProgramContent from "../components/Program/ProgramContent";
 import ProgramFAQSection from "../components/Program/ProgramFAQSection";
 import ProgramReviews from "../components/Program/ProgramReviews";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
+import VideoPlayer from "../components/Common/VideoPlayer";
 import reviewsAPI from "../API/Reviews";
 
 export const ProgramDetails = () => {
@@ -532,29 +533,18 @@ export const ProgramDetails = () => {
                       ) : (
                         // Video Player
                         <div className="relative w-full h-full bg-black">
-                          <video
+                          <VideoPlayer
                             key={fullVideoUrl}
-                            controls
-                            autoPlay
-                            controlsList="nodownload"
+                            src={fullVideoUrl}
                             poster={
                               program.Image
                                 ? buildApiUrl(program.Image)
                                 : undefined
                             }
-                            className="w-full h-full object-contain"
-                            onError={(e) => {}}
-                          >
-                            {fullVideoUrl && (
-                              <source src={fullVideoUrl} type="video/mp4" />
-                            )}
-                            <p className="text-white p-4">
-                              {t(
-                                "Your browser does not support the video tag.",
-                              ) ||
-                                "Your browser does not support the video tag."}
-                            </p>
-                          </video>
+                            title={programTitle}
+                            className="w-full h-full"
+                            autoPlay
+                          />
 
                           {/* Close Button */}
                           <button

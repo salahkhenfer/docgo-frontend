@@ -419,7 +419,10 @@ export function Programs() {
         const apps = Array.isArray(response.data?.data)
           ? response.data.data
           : response.data?.data?.applications || [];
-        const validApps = apps.filter((app) => app.status !== "rejected");
+        const validApps = apps.filter(
+          (app) =>
+            app.status !== "rejected" && app.Program && !app.Program.isDeleted,
+        );
         const enrolledIds = new Set(
           validApps
             .map((app) => app.ProgramId || app.Program?.id)

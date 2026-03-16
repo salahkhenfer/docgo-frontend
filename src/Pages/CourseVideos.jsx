@@ -53,8 +53,15 @@ export function CourseVideos() {
   const [completedItems, setCompletedItems] = useState(new Set());
   const [totalSectionItems, setTotalSectionItems] = useState(0);
 
-  const { courseData, loading, error, hasError, isEnrolled, hasData } =
-    useCourse(courseId);
+  const {
+    courseData,
+    loading,
+    error,
+    hasError,
+    isEnrolled,
+    canAccessContent,
+    hasData,
+  } = useCourse(courseId);
 
   // Load certificate unlock status - check both quiz completion and score
   useEffect(() => {
@@ -117,12 +124,12 @@ export function CourseVideos() {
     if (courseId && user) loadItemProgress();
   }, [courseId, user]);
 
-  // Redirect if not enrolled
+  // Redirect only when the user cannot access the content.
   useEffect(() => {
-    if (hasData && !isEnrolled) {
+    if (hasData && !canAccessContent) {
       navigate(`/Courses/${courseId}`);
     }
-  }, [hasData, isEnrolled, courseId, navigate]);
+  }, [hasData, canAccessContent, courseId, navigate]);
 
   // Get video URL with API base
   const getVideoPath = useCallback((video) => {
