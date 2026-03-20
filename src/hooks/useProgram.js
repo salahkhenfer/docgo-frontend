@@ -435,7 +435,7 @@ export const useProgram = (programId) => {
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: t("alerts.payment.submitNew"),
+          confirmButtonText: t("alerts.payment.submitNew", "Submit new payment"),
           cancelButtonText: t("common.cancel", "Cancel"),
         });
 

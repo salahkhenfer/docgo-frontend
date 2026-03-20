@@ -137,7 +137,7 @@ function ProgramListItem({
   };
 
   const formatPrice = (p) => {
-    if (!p || p === 0) return t("free") || "Free";
+    if (!p || p === 0) return t("free", "Free") || "Free";
     return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${program.currency || "DZD"}`;
   };
 
@@ -185,10 +185,10 @@ function ProgramListItem({
       ? `/Courses/${courseId}`
       : `/Programs/${program.id}`;
   const actionLabel = isEnrolled
-    ? t("ViewProgram") || "View Program"
+    ? t("ViewProgram", "View Program") || "View Program"
     : effectivePrice === 0 && courseId
-      ? t("Go to Course") || "Go to Course"
-      : t("View Details") || "View Details";
+      ? t("Go to Course", "Go to Course") || "Go to Course"
+      : t("View Details", "View Details") || "View Details";
   const actionClass = isEnrolled
     ? "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
     : effectivePrice === 0 && courseId
@@ -203,7 +203,7 @@ function ProgramListItem({
       {/* Enrollment ribbon */}
       {isEnrolled && (
         <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-          {t("Enrolled") || "Enrolled"}
+          {t("Enrolled", "Enrolled") || "Enrolled"}
         </div>
       )}
 
@@ -243,7 +243,7 @@ function ProgramListItem({
             {program.isFeatured && (
               <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                 <Star className="w-2.5 h-2.5 fill-amber-900" />
-                {t("Featured") || "Featured"}
+                {t("Featured", "Featured") || "Featured"}
               </span>
             )}
             {program.status && (
@@ -300,7 +300,7 @@ function ProgramListItem({
               )}
               {program.isRemote && (
                 <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
-                  {t("Remote") || "Remote"}
+                  {t("Remote", "Remote") || "Remote"}
                 </span>
               )}
             </div>
@@ -311,7 +311,7 @@ function ProgramListItem({
                 <div className="flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-gray-400" />
                   <span>
-                    {t("Deadline") || "Deadline"}:{" "}
+                    {t("Deadline", "Deadline") || "Deadline"}:{" "}
                     <span className="font-medium text-gray-700">
                       {formatDate(program.applicationDeadline)}
                     </span>
@@ -361,7 +361,7 @@ function ProgramListItem({
               {program.scholarshipAmount && program.scholarshipAmount > 0 ? (
                 <div className="flex flex-col items-end">
                   <span className="text-xs text-emerald-600 font-medium">
-                    {t("Scholarship") || "Scholarship"}
+                    {t("Scholarship", "Scholarship") || "Scholarship"}
                   </span>
                   <span className="text-xl font-bold text-emerald-600 whitespace-nowrap">
                     {Number(program.scholarshipAmount).toLocaleString()}{" "}
@@ -370,7 +370,7 @@ function ProgramListItem({
                 </div>
               ) : isFree ? (
                 <span className="text-xl font-bold text-emerald-600">
-                  {t("free") || "Free"}
+                  {t("free", "Free") || "Free"}
                 </span>
               ) : program.discountPrice !== undefined &&
                 program.discountPrice !== null ? (
@@ -432,10 +432,10 @@ const ProgramsList = ({
       <div className="flex flex-col items-center justify-center mt-12 p-12 bg-white rounded-2xl shadow-sm">
         <div className="text-6xl mb-4"></div>
         <p className="text-gray-600 text-xl font-medium mb-2">
-          {t("NoProgramsFound") || "No programs found"}
+          {t("NoProgramsFound", "No Programs Found") || "No programs found"}
         </p>
         <p className="text-gray-500 text-center max-w-md">
-          {t("TryAdjustingFilters") ||
+          {t("TryAdjustingFilters", "Try Adjusting Filters") ||
             "Try adjusting your search filters or browse different categories"}
         </p>
       </div>

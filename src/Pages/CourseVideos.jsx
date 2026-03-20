@@ -268,13 +268,13 @@ export function CourseVideos() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">
-            {error || t("Error loading course")}
+            {error || t("Error loading course", "Error loading course")}
           </p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
             className="text-blue-600 hover:underline"
           >
-            {t("Go back to course")}
+            {t("Go back to course", "Go back to course")}
           </button>
         </div>
       </div>
@@ -286,13 +286,13 @@ export function CourseVideos() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">
-            {t("Course data is incomplete. Please try again.")}
+            {t("Course data is incomplete. Please try again.", "Course data is incomplete. Please try again.")}
           </p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
             className="text-blue-600 hover:underline"
           >
-            {t("Go back to course")}
+            {t("Go back to course", "Go back to course")}
           </button>
         </div>
       </div>
@@ -465,17 +465,17 @@ export function CourseVideos() {
           : "";
 
     const result = await Swal.fire({
-      title: t("certificate.realNameTitle") || "Certificate Name",
+      title: t("certificate.realNameTitle", "Your Certificate Name") || "Certificate Name",
       html: `
                 <p style="margin-bottom:10px;color:#374151">
-                    ${t("certificate.realNameWarning") || "Your certificate will be issued under your real name. This cannot be changed later."}
+                    ${t("certificate.realNameWarning", "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.") || "Your certificate will be issued under your real name. This cannot be changed later."}
                 </p>
                 <p style="font-weight:700;font-size:1.1em;color:#7c3aed;padding:8px 16px;background:#f3e8ff;border-radius:8px;display:inline-block">
-                    ${studentName || t("certificate.noName") || "Name not set"}
+                    ${studentName || t("certificate.noName", "your name") || "Name not set"}
                 </p>
                 ${
                   !studentName
-                    ? `<p style="margin-top:10px;color:#dc2626;font-size:0.9em">${t("certificate.goSetName") || "Please update your profile with your real name first."}</p>`
+                    ? `<p style="margin-top:10px;color:#dc2626;font-size:0.9em">${t("certificate.goSetName", "Go set your name in profile") || "Please update your profile with your real name first."}</p>`
                     : ""
                 }
             `,
@@ -483,8 +483,8 @@ export function CourseVideos() {
       showCancelButton: true,
       confirmButtonColor: "#7c3aed",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: t("certificate.proceed") || "Get Certificate",
-      cancelButtonText: t("certificate.cancel") || "Cancel",
+      confirmButtonText: t("certificate.proceed", "Get Certificate") || "Get Certificate",
+      cancelButtonText: t("certificate.cancel", "Cancel") || "Cancel",
       focusCancel: !studentName,
     });
 
@@ -506,12 +506,12 @@ export function CourseVideos() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">{t("No videos available")}</p>
+          <p className="text-gray-600">{t("No videos available", "No videos available")}</p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
             className="mt-4 text-blue-600 hover:underline"
           >
-            {t("Go back to course")}
+            {t("Go back to course", "Go back to course")}
           </button>
         </div>
       </div>
@@ -573,7 +573,7 @@ export function CourseVideos() {
                 className="mt-6 mb-4 flex items-center text-gray-600 hover:text-blue-600 transition-all group"
               >
                 <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
-                {t("Back to course")}
+                {t("Back to course", "Back to course")}
               </button>
 
               <h1 className="text-2xl font-bold leading-9 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
@@ -584,7 +584,7 @@ export function CourseVideos() {
               <div className="mb-8 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm w-full">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-semibold text-gray-700">
-                    {t("Progress")}
+                    {t("Progress", "Progress")}
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-bold text-blue-600">
@@ -608,7 +608,7 @@ export function CourseVideos() {
                   <p className="text-xs text-gray-600 flex items-center gap-2">
                     <FaCheckCircle className="text-green-500" />
                     {completedVideos.size} / {videos.length}{" "}
-                    {t("videos completed")}
+                    {t("videos completed", "Videos completed")}
                   </p>
                   {lastSyncTime && !isSyncing && (
                     <p className="text-xs text-gray-500 flex items-center gap-1">
@@ -623,7 +623,7 @@ export function CourseVideos() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      {t("Synced") || "Synced"}
+                      {t("Synced", "Synced") || "Synced"}
                     </p>
                   )}
                 </div>
@@ -633,7 +633,7 @@ export function CourseVideos() {
               <section className="w-full  ">
                 <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                   <Play className="w-5 h-5 text-blue-600" />
-                  {t("Course Content")}
+                  {t("Course Content", "Course Content")}
                 </h2>
                 <nav className="space-y-2 ">
                   {videos.map((video, index) => {
@@ -739,7 +739,7 @@ export function CourseVideos() {
                     <FileText className="w-5 h-5 text-orange-600" />
                     <div className="flex-1 text-left">
                       <span className="font-semibold text-orange-700 block">
-                        {t("Resources")}
+                        {t("Resources", "Resources")}
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-orange-600" />
@@ -766,14 +766,14 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-green-700 hover:text-green-800 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
-                        <span className="flex-1">{t("Quiz unlocked")}</span>
+                        <span className="flex-1">{t("Quiz unlocked", "Quiz unlocked")}</span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
                       <div className="flex items-center gap-3 text-gray-400">
                         <FaLock className="w-5 h-5" />
                         <span className="flex-1 text-sm">
-                          {t("Quiz (locked)")}
+                          {t("Quiz (locked)", "Quiz (locked)")}
                         </span>
                       </div>
                     )}
@@ -794,14 +794,14 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-purple-700 hover:text-purple-800 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                        <span className="flex-1">{t("Certificate")}</span>
+                        <span className="flex-1">{t("Certificate", "certificate")}</span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
                       <div className="flex items-center gap-3 text-gray-400">
                         <FaLock className="w-5 h-5" />
                         <span className="flex-1 text-sm">
-                          {t("Certificate (locked)")}
+                          {t("Certificate (locked)", "Certificate (locked)")}
                         </span>
                       </div>
                     )}
@@ -839,7 +839,7 @@ export function CourseVideos() {
 
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 <Play className="w-5 h-5 text-blue-600" />
-                {t("Course Content")}
+                {t("Course Content", "Course Content")}
               </h2>
 
               <nav className="space-y-4">
@@ -946,7 +946,7 @@ export function CourseVideos() {
                     <FileText className="w-5 h-5 text-orange-600" />
                     <div className="flex-1 text-left">
                       <span className="font-semibold text-orange-700 block">
-                        {t("Resources")}
+                        {t("Resources", "Resources")}
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-orange-600" />
@@ -973,14 +973,14 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-green-700 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
-                        <span className="flex-1">{t("Quiz unlocked")}</span>
+                        <span className="flex-1">{t("Quiz unlocked", "Quiz unlocked")}</span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
                       <div className="flex items-center gap-3 text-gray-400">
                         <FaLock className="w-5 h-5" />
                         <span className="flex-1 text-sm">
-                          {t("Quiz (locked)")}
+                          {t("Quiz (locked)", "Quiz (locked)")}
                         </span>
                       </div>
                     )}
@@ -1000,14 +1000,14 @@ export function CourseVideos() {
                       className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                     >
                       <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                      <span className="flex-1">{t("Certificate")}</span>
+                      <span className="flex-1">{t("Certificate", "certificate")}</span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   ) : (
                     <div className="flex items-center gap-3 text-gray-400">
                       <FaLock className="w-5 h-5" />
                       <span className="flex-1 text-sm">
-                        {t("Certificate (locked)")}
+                        {t("Certificate (locked)", "Certificate (locked)")}
                       </span>
                     </div>
                   )}
@@ -1048,7 +1048,7 @@ export function CourseVideos() {
 
                     <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                       <Play className="w-5 h-5 text-blue-600" />
-                      {t("Course Content")}
+                      {t("Course Content", "Course Content")}
                     </h2>
 
                     <nav className="space-y-4">
@@ -1157,7 +1157,7 @@ export function CourseVideos() {
                           <FileText className="w-5 h-5 text-orange-600" />
                           <div className="flex-1 text-left">
                             <span className="font-semibold text-orange-700 block">
-                              {t("Resources")}
+                              {t("Resources", "Resources")}
                             </span>
                           </div>
                           <ChevronRight className="w-4 h-4 text-orange-600" />
@@ -1185,7 +1185,7 @@ export function CourseVideos() {
                             >
                               <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
                               <span className="flex-1">
-                                {t("Quiz unlocked")}
+                                {t("Quiz unlocked", "Quiz unlocked")}
                               </span>
                               <ChevronRight className="w-4 h-4" />
                             </button>
@@ -1193,7 +1193,7 @@ export function CourseVideos() {
                             <div className="flex items-center gap-3 text-gray-400">
                               <FaLock className="w-5 h-5" />
                               <span className="flex-1 text-sm">
-                                {t("Quiz (locked)")}
+                                {t("Quiz (locked)", "Quiz (locked)")}
                               </span>
                             </div>
                           )}
@@ -1213,14 +1213,14 @@ export function CourseVideos() {
                             className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                           >
                             <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                            <span className="flex-1">{t("Certificate")}</span>
+                            <span className="flex-1">{t("Certificate", "certificate")}</span>
                             <ChevronRight className="w-4 h-4" />
                           </button>
                         ) : (
                           <div className="flex items-center gap-3 text-gray-400">
                             <FaLock className="w-5 h-5" />
                             <span className="flex-1 text-sm">
-                              {t("Certificate (locked)")}
+                              {t("Certificate (locked)", "Certificate (locked)")}
                             </span>
                           </div>
                         )}
@@ -1231,14 +1231,14 @@ export function CourseVideos() {
                 {/* Certificate Header with Back Button */}
                 <div className="flex items-center justify-between mb-6">
                   <h1 className="text-2xl font-semibold text-zinc-800">
-                    {t("Course Certificate")}
+                    {t("Course Certificate", "Course Certificate")}
                   </h1>
                   <button
                     onClick={() => setShowCertificate(false)}
                     className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                   >
                     <X className="w-4 h-4" />
-                    <span>{t("Back to Videos")}</span>
+                    <span>{t("Back to Videos", "Back to Videos")}</span>
                   </button>
                 </div>
 
@@ -1252,14 +1252,14 @@ export function CourseVideos() {
                 {/* Resources Header with Back Button */}
                 <div className="flex items-center justify-between mb-6">
                   <h1 className="text-2xl font-semibold text-zinc-800">
-                    {t("Course Resources")}
+                    {t("Course Resources", "Course Resources")}
                   </h1>
                   <button
                     onClick={() => setShowResources(false)}
                     className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                   >
                     <X className="w-4 h-4" />
-                    <span>{t("Back to Videos")}</span>
+                    <span>{t("Back to Videos", "Back to Videos")}</span>
                   </button>
                 </div>
 
@@ -1273,14 +1273,14 @@ export function CourseVideos() {
                 {/* Quiz Header with Back Button */}
                 <div className="flex items-center justify-between mb-6">
                   <h1 className="text-2xl font-semibold text-zinc-800">
-                    {t("Course Quiz")}
+                    {t("Course Quiz", "Course Quiz")}
                   </h1>
                   <button
                     onClick={() => setShowQuiz(false)}
                     className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                   >
                     <X className="w-4 h-4" />
-                    <span>{t("Back to Videos")}</span>
+                    <span>{t("Back to Videos", "Back to Videos")}</span>
                   </button>
                 </div>
 
@@ -1364,7 +1364,7 @@ export function CourseVideos() {
                           <div className="text-center p-8">
                             <div className="text-6xl mb-4"></div>
                             <h3 className="text-xl font-semibold mb-2">
-                              {t("Video not available")}
+                              {t("Video not available", "Video not available")}
                             </h3>
                             <p className="text-gray-400 text-sm">
                               {t(

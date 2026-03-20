@@ -228,7 +228,7 @@ function UserMessages_new() {
                                 </div>
                             ) : null}
                         </div>
-                        <p className="text-gray-600">{t("OurPlatform")}</p>
+                        <p className="text-gray-600">{t("OurPlatform", "Our platform offers opportunities to study abroad and innovative online courses.")}</p>
 
                         <div className="flex flex-wrap gap-3">
                             {contactInfo?.facebook && (

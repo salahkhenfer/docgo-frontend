@@ -38,12 +38,12 @@ const FavoritesPage = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            {t("favorites.title")}
+            {t("favorites.title", "My Favorites")}
           </h1>
           <p className="text-gray-600 text-lg">
             {user
-              ? t("favorites.savedCourses")
-              : t("favorites.savedCoursesLocal")}
+              ? t("favorites.savedCourses", "Your saved courses and programs")
+              : t("favorites.savedCoursesLocal", "Your locally saved courses and programs")}
           </p>
         </div>
 
@@ -57,7 +57,7 @@ const FavoritesPage = () => {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t("favorites.all")} ({totalCount})
+            {t("favorites.all", "All")} ({totalCount})
           </button>
           <button
             onClick={() => setActiveTab("courses")}
@@ -67,7 +67,7 @@ const FavoritesPage = () => {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t("favorites.courses")} ({favorites.courses.length})
+            {t("favorites.courses", "Courses")} ({favorites.courses.length})
           </button>
           <button
             onClick={() => setActiveTab("programs")}
@@ -77,7 +77,7 @@ const FavoritesPage = () => {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t("favorites.programs")} ({favorites.programs.length})
+            {t("favorites.programs", "Programs")} ({favorites.programs.length})
           </button>
         </div>
 
@@ -94,16 +94,16 @@ const FavoritesPage = () => {
               </svg>
             </div>
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              {t("favorites.noFavorites")}
+              {t("favorites.noFavorites", "No favorites yet")}
             </h3>
             <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
-              {t("favorites.startExploring")}
+              {t("favorites.startExploring", "Start exploring courses and programs to add them to your favorites!")}
             </p>
             <Link
               to="/Courses"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
-              {t("favorites.browseCourses")}
+              {t("favorites.browseCourses", "Browse Courses")}
             </Link>
           </div>
         ) : (
@@ -266,7 +266,7 @@ const FavoriteCard = ({ item, type }) => {
                 : "bg-blue-500/90 text-white"
             }`}
           >
-            {isProgram ? t("favorites.programs") : t("favorites.courses")}
+            {isProgram ? t("favorites.programs", "Programs") : t("favorites.courses", "Courses")}
           </span>
         </div>
 
@@ -347,7 +347,7 @@ const FavoriteCard = ({ item, type }) => {
                 </>
               ) : price === 0 ? (
                 <span className="text-xl font-bold text-green-600">
-                  {t("favorites.free")}
+                  {t("favorites.free", "Free")}
                 </span>
               ) : (
                 <span className="text-xl font-bold text-gray-900">
@@ -363,7 +363,7 @@ const FavoriteCard = ({ item, type }) => {
           to={isProgram ? `/programs/${itemId}` : `/Courses/${itemId}`}
           className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
         >
-          {isProgram ? t("favorites.viewProgram") : t("favorites.viewCourse")}
+          {isProgram ? t("favorites.viewProgram", "View Program") : t("favorites.viewCourse", "View Course")}
         </Link>
       </div>
     </div>

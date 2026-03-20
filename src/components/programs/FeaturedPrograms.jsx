@@ -131,12 +131,12 @@ const FeaturedPrograms = ({
           <div className="flex items-center justify-center gap-2 mb-4">
             <Star className="w-6 h-6 text-yellow-500 fill-current" />
             <h2 className="text-3xl font-bold text-gray-900">
-              {t("programs.featured.title")}
+              {t("programs.featured.title", "Featured Programs")}
             </h2>
             <Star className="w-6 h-6 text-yellow-500 fill-current" />
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("programs.featured.subtitle")}
+            {t("programs.featured.subtitle", "Discover our most popular and highly rated programs")}
           </p>
         </div>
 
@@ -166,7 +166,7 @@ const FeaturedPrograms = ({
                   <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
                     <Star className="w-3 h-3 fill-current" />
                     <span className="text-xs font-medium">
-                      {t("programs.featuredBadge")}
+                      {t("programs.featuredBadge", "Featured")}
                     </span>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ const FeaturedPrograms = ({
                     <div className="bg-purple-600 text-white px-2 py-1 rounded-full flex items-center gap-1">
                       <PlayCircle className="w-3 h-3" />
                       <span className="text-xs font-medium">
-                        {t("programs.video")}
+                        {t("programs.video", "Video")}
                       </span>
                     </div>
                   </div>
@@ -195,10 +195,10 @@ const FeaturedPrograms = ({
                     }`}
                   >
                     {program.status?.toLowerCase() === "open"
-                      ? t("programs.status.open")
+                      ? t("programs.status.open", "Open")
                       : program.status?.toLowerCase() === "closed"
-                        ? t("programs.status.closed")
-                        : t("programs.status.comingSoon")}
+                        ? t("programs.status.closed", "Closed")
+                        : t("programs.status.comingSoon", "Coming Soon")}
                   </span>
                 </div>
               </div>
@@ -243,7 +243,7 @@ const FeaturedPrograms = ({
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       <span>
-                        {t("programs.deadline")}:{" "}
+                        {t("programs.deadline", "Deadline")}:{" "}
                         {formatDate(program.applicationDeadline)}
                       </span>
                     </div>
@@ -253,7 +253,7 @@ const FeaturedPrograms = ({
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4" />
                       <span>
-                        {program.Users_count} {t("programs.applicants")}
+                        {program.Users_count} {t("programs.applicants", "applicants")}
                       </span>
                     </div>
                   )}
@@ -262,7 +262,7 @@ const FeaturedPrograms = ({
                 {/* Action */}
                 <div className="pt-4 border-t border-gray-100">
                   <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 group-hover:shadow-md">
-                    <span>{t("programs.viewDetails")}</span>
+                    <span>{t("programs.viewDetails", "View Details")}</span>
                     <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
@@ -278,7 +278,7 @@ const FeaturedPrograms = ({
               onClick={handleViewAllClick}
               className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg border border-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
             >
-              <span>{t("programs.viewAllFeatured")}</span>
+              <span>{t("programs.viewAllFeatured", "View all featured programs")}</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>

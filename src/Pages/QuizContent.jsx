@@ -58,7 +58,7 @@ const TrueFalseQuestion = ({ question, selectedAnswer, onAnswerChange }) => {
                         className="form-radio h-5 w-5 text-blue-600"
                     />
                     <span className="ml-3 text-gray-700">
-                        {t("quiz_page.true")}
+                        {t("quiz_page.true", "True")}
                     </span>
                 </label>
                 <label className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer flex-1 justify-center">
@@ -73,7 +73,7 @@ const TrueFalseQuestion = ({ question, selectedAnswer, onAnswerChange }) => {
                         className="form-radio h-5 w-5 text-blue-600"
                     />
                     <span className="ml-3 text-gray-700">
-                        {t("quiz_page.false")}
+                        {t("quiz_page.false", "False")}
                     </span>
                 </label>
             </div>
@@ -134,7 +134,7 @@ const TextAreaQuestion = ({ question, answer, onAnswerChange }) => {
                 onChange={(e) => onAnswerChange(question.id, e.target.value)}
                 className="mt-4 w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 rows="4"
-                placeholder={t("quiz_page.textPlaceholder")}
+                placeholder={t("quiz_page.textPlaceholder", "Write your answer here...")}
             />
         </div>
     );
@@ -149,7 +149,7 @@ const QuizResults = ({ results, onRetry, score }) => {
         <div className="mt-8 p-6 bg-white rounded-lg shadow-lg">
             <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                    {t("quiz_page.results")}
+                    {t("quiz_page.results", "Your Results")}
                 </h2>
                 <div
                     className="text-4xl font-bold mb-2"
@@ -165,8 +165,8 @@ const QuizResults = ({ results, onRetry, score }) => {
                     {score}%
                 </div>
                 <p className="text-gray-600">
-                    {correctAnswers} {t("quiz_page.of")} {totalQuestions}{" "}
-                    {t("quiz_page.question")}
+                    {correctAnswers} {t("quiz_page.of", "of")} {totalQuestions}{" "}
+                    {t("quiz_page.question", "Question")}
                 </p>
             </div>
 
@@ -214,7 +214,7 @@ const QuizResults = ({ results, onRetry, score }) => {
                     onClick={onRetry}
                     className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                    {t("quiz_page.backToCourse")}
+                    {t("quiz_page.backToCourse", "Back to Course")}
                 </button>
             </div>
         </div>
@@ -559,10 +559,10 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
             <main className="ml-5 w-[72%] max-md:ml-0 max-md:w-full">
                 <>
                     <h2 className="text-xl font-bold text-green-700 mb-2">
-                        {t("quiz_page.results")}
+                        {t("quiz_page.results", "Your Results")}
                     </h2>
                     <div className="mb-4 text-green-800">
-                        {t("quiz_page.score")}: {lastResult.score}%
+                        {t("quiz_page.score", "Score")}: {lastResult.score}%
                     </div>
                     <QuizResults
                         results={lastResult.validationResults}
@@ -685,10 +685,10 @@ function QuizContent({ quizData: propQuizData, onQuizResult }) {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                 ></path>
                             </svg>
-                            <span>{t("quiz_page.submitting")}</span>
+                            <span>{t("quiz_page.submitting", "Submitting...")}</span>
                         </>
                     ) : (
-                        <span>{t("quiz_page.submit")}</span>
+                        <span>{t("quiz_page.submit", "Submit Quiz")}</span>
                     )}
                 </button>
             </div>

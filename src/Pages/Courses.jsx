@@ -31,7 +31,7 @@ function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-blue-100 text-sm font-medium">
-              {t("Total Courses") || "Total Courses"}
+              {t("Total Courses", "Total Courses") || "Total Courses"}
             </p>
             <p className="text-3xl font-bold">{totalCourses || 0}</p>
           </div>
@@ -43,7 +43,7 @@ function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-yellow-100 text-sm font-medium">
-              {t("Featured") || "Featured"}
+              {t("Featured", "Featured") || "Featured"}
             </p>
             <p className="text-3xl font-bold">{featuredCourses || 0}</p>
           </div>
@@ -55,7 +55,7 @@ function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-purple-100 text-sm font-medium">
-              {t("Categories") || "Categories"}
+              {t("Categories", "Categories") || "Categories"}
             </p>
             <p className="text-3xl font-bold">{totalCategories || 0}</p>
           </div>
@@ -199,10 +199,10 @@ export default function Courses() {
 
           setError(null);
         } else {
-          throw new Error(response.message || t("Failed to fetch courses"));
+          throw new Error(response.message || t("Failed to fetch courses", "Failed to fetch courses"));
         }
       } catch (err) {
-        setError(err.message || t("An error occurred while fetching courses"));
+        setError(err.message || t("An error occurred while fetching courses", "An error occurred while fetching courses"));
         setCourses([]);
         setPagination((prev) => ({
           ...prev,
@@ -451,37 +451,37 @@ export default function Courses() {
   const sortOptions = [
     {
       value: "createdAt_desc",
-      label: t("Newest First") || "Newest First",
+      label: t("Newest First", "Newest First") || "Newest First",
       sortBy: "createdAt",
       sortOrder: "desc",
     },
     {
       value: "createdAt_asc",
-      label: t("Oldest First") || "Oldest First",
+      label: t("Oldest First", "Oldest First") || "Oldest First",
       sortBy: "createdAt",
       sortOrder: "asc",
     },
     {
       value: "Title_asc",
-      label: t("Title A-Z") || "Title A-Z",
+      label: t("Title A-Z", "Title A-Z") || "Title A-Z",
       sortBy: "Title",
       sortOrder: "asc",
     },
     {
       value: "Title_desc",
-      label: t("Title Z-A") || "Title Z-A",
+      label: t("Title Z-A", "Title Z-A") || "Title Z-A",
       sortBy: "Title",
       sortOrder: "desc",
     },
     {
       value: "Price_desc",
-      label: t("Highest Price") || "Highest Price",
+      label: t("Highest Price", "Highest Price") || "Highest Price",
       sortBy: "Price",
       sortOrder: "desc",
     },
     {
       value: "Price_asc",
-      label: t("Lowest Price") || "Lowest Price",
+      label: t("Lowest Price", "Lowest Price") || "Lowest Price",
       sortBy: "Price",
       sortOrder: "asc",
     },
@@ -502,14 +502,14 @@ export default function Courses() {
           <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
             <div className="text-red-500 text-6xl mb-4"></div>
             <h3 className="text-xl font-semibold text-red-800 mb-2">
-              {t("Error Loading Courses") || "Error Loading Courses"}
+              {t("Error Loading Courses", "Error Loading Courses") || "Error Loading Courses"}
             </h3>
             <p className="text-red-600 mb-4">{error}</p>
             <button
               onClick={handleRetry}
               className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
-              {t("Try Again") || "Try Again"}
+              {t("Try Again", "Try Again") || "Try Again"}
             </button>
           </div>
         </div>
@@ -524,10 +524,10 @@ export default function Courses() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {t("TousLesCours") || "All Courses"}
+              {t("TousLesCours", "All Courses") || "All Courses"}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("ExploreCoursesDescription") ||
+              {t("ExploreCoursesDescription", "Explore our online courses designed to enhance your skills and knowledge.") ||
                 "Explore our comprehensive collection of courses to enhance your skills and knowledge"}
             </p>
           </div>
@@ -544,7 +544,7 @@ export default function Courses() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
             <input
               type="text"
-              placeholder={t("Search courses...") || "Search courses..."}
+              placeholder={t("Search courses...", "Search courses...") || "Search courses..."}
               value={searchQuery}
               onChange={(e) => handleFilterChange("search", e.target.value)}
               onKeyPress={handleSearchKeyPress}
@@ -554,14 +554,14 @@ export default function Courses() {
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
                 <span className="text-sm text-gray-500">
-                  {t("Searching...") || "Searching..."}
+                  {t("Searching...", "Searching...") || "Searching..."}
                 </span>
               </div>
             )}
             {filters.search && !searchLoading && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
-                  {t("Press Enter or wait...") || "Press Enter or wait..."}
+                  {t("Press Enter or wait...", "Press Enter or wait...") || "Press Enter or wait..."}
                 </span>
               </div>
             )}
@@ -579,11 +579,11 @@ export default function Courses() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white">
-                  {t("Continue Learning") || "Continue Learning"}
+                  {t("Continue Learning", "Continue Learning") || "Continue Learning"}
                 </h2>
                 <p className="text-teal-100 text-sm">
                   {enrolledCourses.length}{" "}
-                  {t("enrolled course") || "enrolled course"}
+                  {t("enrolled course", "enrolled course") || "enrolled course"}
                   {enrolledCourses.length !== 1 ? "s" : ""}
                 </p>
               </div>
@@ -631,7 +631,7 @@ export default function Courses() {
                       {/* Progress bar */}
                       <div>
                         <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>{t("Progress") || "Progress"}</span>
+                          <span>{t("Progress", "Progress") || "Progress"}</span>
                           <span className="font-semibold text-emerald-600">
                             {Math.round(course.progress || 0)}%
                           </span>
@@ -685,12 +685,12 @@ export default function Courses() {
                     filters.featured ||
                     filters.certificate ? (
                       <>
-                        {courses.length} {t("course") || "course"}
+                        {courses.length} {t("course", "course") || "course"}
                         {courses.length !== 1 ? "s" : ""}{" "}
-                        {t("found") || "found"}
+                        {t("found", "found") || "found"}
                         {filters.search && (
                           <span className="ml-1">
-                            {t("for") || "for"}{" "}
+                            {t("for", "for") || "for"}{" "}
                             <span className="font-medium text-gray-800">
                               &ldquo;
                               {filters.search}
@@ -701,9 +701,9 @@ export default function Courses() {
                       </>
                     ) : (
                       <>
-                        {t("Showing") || "Showing"} {courses.length}{" "}
-                        {t("of") || "of"} {pagination?.totalCourses || 0}{" "}
-                        {t("courses") || "courses"}
+                        {t("Showing", "Showing") || "Showing"} {courses.length}{" "}
+                        {t("of", "of") || "of"} {pagination?.totalCourses || 0}{" "}
+                        {t("courses", "Courses") || "courses"}
                       </>
                     )}
                   </p>
@@ -717,7 +717,7 @@ export default function Courses() {
                     className="lg:hidden px-4 py-2 border border-gray-200 rounded-xl flex items-center gap-2 hover:bg-gray-50"
                   >
                     <Filter className="w-5 h-5" />
-                    {t("Filters") || "Filters"}
+                    {t("Filters", "Filters") || "Filters"}
                   </button>
 
                   {/* View Mode Toggle */}

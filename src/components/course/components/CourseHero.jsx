@@ -175,7 +175,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                   : "0h 0m"}
               </div>
               <div className="text-blue-200 text-xs sm:text-sm">
-                {t("course_data.duration") || "Duration"}
+                {t("course_data.duration", "Duration") || "Duration"}
               </div>
             </div>
 
@@ -187,7 +187,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                 {courseStats?.enrolledCount || 0}
               </div>
               <div className="text-blue-200 text-xs sm:text-sm">
-                {t("course_data.students") || "Students"}
+                {t("course_data.students", "Students") || "Students"}
               </div>
             </div>
 
@@ -199,7 +199,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                 {courseStats?.averageRating?.toFixed(1) || "0.0"}
               </div>
               <div className="text-blue-200 text-xs sm:text-sm">
-                {t("course_data.rating") || "Rating"}
+                {t("course_data.rating", "Rating") || "Rating"}
               </div>
             </div>
           </div>

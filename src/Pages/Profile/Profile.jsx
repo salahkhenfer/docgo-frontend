@@ -68,13 +68,13 @@ const Profile = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600">
-            {t("error")}: {error}
+            {t("error", "Error")}: {error}
           </p>
           <button
             onClick={fetchProfileData}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            {t("retry")}
+            {t("retry", "Retry")}
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@ const Profile = () => {
   if (!profileData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">{t("no_data")}</p>
+        <p className="text-gray-600">{t("no_data", "No data available")}</p>
       </div>
     );
   }
@@ -216,7 +216,7 @@ const Profile = () => {
             />
           </svg>
           <span className="text-sm font-semibold tracking-wide">
-            {t("edit_profile") || "Edit Profile"}
+            {t("edit_profile", "Edit profile") || "Edit Profile"}
           </span>
         </button>
         <ProfileInfoSection profile={transformedProfile} />

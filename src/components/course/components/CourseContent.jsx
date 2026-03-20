@@ -284,7 +284,7 @@ const LegacyVideoList = ({
                   </h4>
                   {video.isFree && (
                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full ml-2">
-                      {t("course.freePreview") || "Free Preview"}
+                      {t("course.freePreview", "Free Preview") || "Free Preview"}
                     </span>
                   )}
                 </div>
@@ -338,7 +338,7 @@ const CourseContent = ({
       {/* Prerequisites */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-4">
-          {t("course_data.prerequisites") || "Prerequisites"}
+          {t("course_data.prerequisites", "Prerequisites") || "Prerequisites"}
         </h3>
         {course.Prerequisites ? (
           <RichTextDisplay
@@ -347,7 +347,7 @@ const CourseContent = ({
           />
         ) : (
           <p className="text-gray-500">
-            {t("course_data.no_prerequisites") || "No prerequisites"}
+            {t("course_data.no_prerequisites", "No prerequisites") || "No prerequisites"}
           </p>
         )}
       </div>
@@ -358,7 +358,7 @@ const CourseContent = ({
           <div className="flex items-center mb-4">
             <TbTargetArrow className="text-green-500 text-xl mr-3" />
             <h3 className="text-xl font-bold text-gray-900">
-              {t("course_data.whatYouLearn") || "What You'll Learn"}
+              {t("course_data.whatYouLearn", "What you'll learn") || "What You'll Learn"}
             </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-3">
@@ -386,7 +386,7 @@ const CourseContent = ({
           <div className="flex items-center">
             <FaListUl className="text-blue-500 text-xl mr-3" />
             <h3 className="text-xl font-bold text-gray-900">
-              {t("course_data.content") || "Contenu du cours"}
+              {t("course_data.content", "Course Content") || "Contenu du cours"}
             </h3>
           </div>
           {hasSections && (
@@ -397,7 +397,7 @@ const CourseContent = ({
           )}
           {!hasSections && hasVideos && (
             <span className="text-sm text-gray-500">
-              {course.videos.length} {t("course_data.videos") || "vidéos"}
+              {course.videos.length} {t("course_data.videos", "videos") || "vidéos"}
             </span>
           )}
         </div>
@@ -421,7 +421,7 @@ const CourseContent = ({
           <div className="text-center py-8">
             <div className="text-gray-400 text-4xl mb-4">📚</div>
             <p className="text-gray-500">
-              {t("course_data.noVideos") || "Aucun contenu disponible"}
+              {t("course_data.noVideos", "No videos available yet") || "Aucun contenu disponible"}
             </p>
           </div>
         )}
@@ -433,7 +433,7 @@ const CourseContent = ({
           <div className="flex items-center mb-4">
             <span className="text-purple-500 text-xl mr-3">📎</span>
             <h3 className="text-xl font-bold text-gray-900">
-              {t("course_data.materials") || "Course Materials"}
+              {t("course_data.materials", "Course materials") || "Course Materials"}
             </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-4">

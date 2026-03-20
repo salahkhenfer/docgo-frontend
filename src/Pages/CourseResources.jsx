@@ -100,7 +100,7 @@ export default function CourseResources() {
                 className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-700 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 <X className="w-5 h-5" />
-                <span>{t("Close")}</span>
+                <span>{t("Close", "Close")}</span>
               </button>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function CourseResources() {
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-slate-600 px-6 text-center">
-                  <p>{t("Preview unavailable, open document in a new tab")}</p>
+                  <p>{t("Preview unavailable, open document in a new tab", "Preview unavailable, open document in a new tab")}</p>
                   <a
                     href={viewingPdf.url}
                     target="_blank"
@@ -128,7 +128,7 @@ export default function CourseResources() {
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span>{t("Open")}</span>
+                    <span>{t("Open", "Open")}</span>
                   </a>
                 </div>
               )}
@@ -150,10 +150,10 @@ export default function CourseResources() {
             </div>
             <div>
               <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                {t("Course Resources")}
+                {t("Course Resources", "Course Resources")}
               </h2>
               <p className="text-slate-600 mt-2 text-lg">
-                {t("Download PDFs and course materials")}
+                {t("Download PDFs and course materials", "Download PDFs and course materials")}
               </p>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function CourseResources() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-3">
-                  {t("No Resources Available")}
+                  {t("No Resources Available", "No Resources Available")}
                 </h3>
                 <p className="text-slate-600 text-lg">
                   {t(
@@ -279,7 +279,7 @@ export default function CourseResources() {
                           className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-xl transform hover:scale-105"
                         >
                           <ExternalLink className="w-5 h-5" />
-                          <span>{t("Open")}</span>
+                          <span>{t("Open", "Open")}</span>
                         </button>
                         <button
                           onClick={handleDownloadPDF}
@@ -296,7 +296,7 @@ export default function CourseResources() {
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                             <p className="text-xs text-slate-500 font-medium">
-                              {t("Size")}: {resource.size}
+                              {t("Size", "Size")}: {resource.size}
                             </p>
                           </div>
                         </div>

@@ -520,7 +520,7 @@ const CCPPayment = ({
           <span className="text-white font-bold text-sm">C</span>
         </div>
         <h3 className="text-lg font-medium text-gray-900">
-          {t("paymentPage.ccpPaymentForm.title")}
+          {t("paymentPage.ccpPaymentForm.title", "CCP Algeria Payment")}
         </h3>
       </div>
 
@@ -530,7 +530,7 @@ const CCPPayment = ({
           <FaInfoCircle className="text-green-600 mt-1" />
           <div className="flex-1">
             <h4 className="font-medium text-green-900 mb-2">
-              {t("paymentPage.ccpPaymentForm.paymentInstructions")}
+              {t("paymentPage.ccpPaymentForm.paymentInstructions", "Payment Instructions")}
             </h4>
             {paymentConfig?.instructions ? (
               <RichTextDisplay
@@ -540,11 +540,11 @@ const CCPPayment = ({
               />
             ) : (
               <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
-                <li>{t("paymentPage.ccpPaymentForm.instruction1")}</li>
-                <li>{t("paymentPage.ccpPaymentForm.instruction2")}</li>
-                <li>{t("paymentPage.ccpPaymentForm.instruction3")}</li>
-                <li>{t("paymentPage.ccpPaymentForm.instruction4")}</li>
-                <li>{t("paymentPage.ccpPaymentForm.instruction5")}</li>
+                <li>{t("paymentPage.ccpPaymentForm.instruction1", "Transfer the amount to our CCP account")}</li>
+                <li>{t("paymentPage.ccpPaymentForm.instruction2", "Take a photo or scan your payment receipt")}</li>
+                <li>{t("paymentPage.ccpPaymentForm.instruction3", "Fill in the form below and upload your receipt")}</li>
+                <li>{t("paymentPage.ccpPaymentForm.instruction4", "We will verify your payment within 24 hours")}</li>
+                <li>{t("paymentPage.ccpPaymentForm.instruction5", "You will receive course access after verification")}</li>
               </ol>
             )}
           </div>
@@ -555,12 +555,12 @@ const CCPPayment = ({
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-300 rounded-lg p-5 shadow-sm">
         <h4 className="font-semibold text-gray-900 mb-4 text-lg flex items-center gap-2">
           <FaInfoCircle className="text-green-600" />
-          {t("paymentPage.ccpPaymentForm.transferToAccount")}
+          {t("paymentPage.ccpPaymentForm.transferToAccount", "Transfer to this account")}
         </h4>
         <div className="bg-white rounded-lg p-4 space-y-3 shadow-sm">
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-gray-600 font-medium">
-              {t("paymentPage.ccpPaymentForm.accountNumber")}:
+              {t("paymentPage.ccpPaymentForm.accountNumber", "Account Number")}:
             </span>
             <span className="font-mono font-bold text-gray-900 text-lg">
               {ccpAccountDetails.accountNumber}
@@ -568,7 +568,7 @@ const CCPPayment = ({
           </div>
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-gray-600 font-medium">
-              {t("paymentPage.ccpPaymentForm.accountName")}:
+              {t("paymentPage.ccpPaymentForm.accountName", "Account Name")}:
             </span>
             <span className="font-semibold text-gray-900">
               {ccpAccountDetails.accountName}
@@ -576,7 +576,7 @@ const CCPPayment = ({
           </div>
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-gray-600 font-medium">
-              {t("paymentPage.ccpPaymentForm.rib")}:
+              {t("paymentPage.ccpPaymentForm.rib", "RIB")}:
             </span>
             <span className="font-mono font-medium text-gray-900">
               {ccpAccountDetails.rib}
@@ -584,7 +584,7 @@ const CCPPayment = ({
           </div>
           <div className="flex justify-between items-center py-2 border-b">
             <span className="text-gray-600 font-medium">
-              {t("paymentPage.ccpPaymentForm.bank")}:
+              {t("paymentPage.ccpPaymentForm.bank", "Bank")}:
             </span>
             <span className="font-medium text-gray-900">
               {ccpAccountDetails.bankName}
@@ -592,7 +592,7 @@ const CCPPayment = ({
           </div>
           <div className="flex justify-between items-center py-3 bg-green-50 -mx-4 px-4 rounded-b-lg">
             <span className="text-gray-700 font-semibold text-lg">
-              {t("paymentPage.ccpPaymentForm.amountToPay")}:
+              {t("paymentPage.ccpPaymentForm.amountToPay", "Amount to Pay")}:
             </span>
             <div className="text-right">
               {couponResult && (
@@ -685,7 +685,7 @@ const CCPPayment = ({
       <form onSubmit={handleCCPPayment} className="space-y-5">
         <div className="bg-white border-2 border-gray-200 rounded-lg p-6 shadow-sm">
           <h4 className="font-semibold text-gray-900 mb-4 text-lg">
-            {t("paymentPage.ccpPaymentForm.yourInformation")}
+            {t("paymentPage.ccpPaymentForm.yourInformation", "Your Information")}
           </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -695,7 +695,7 @@ const CCPPayment = ({
                 htmlFor="fullName"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.fullName")}{" "}
+                {t("paymentPage.ccpPaymentForm.fullName", "Full Name")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -723,7 +723,7 @@ const CCPPayment = ({
                 htmlFor="ccpNumber"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.ccpNumber")}{" "}
+                {t("paymentPage.ccpPaymentForm.ccpNumber", "CCP Number")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -751,7 +751,7 @@ const CCPPayment = ({
                 htmlFor="transferReference"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.transferReference")}{" "}
+                {t("paymentPage.ccpPaymentForm.transferReference", "Transfer Reference")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -776,7 +776,7 @@ const CCPPayment = ({
                 </p>
               )}
               <p className="mt-1 text-xs text-gray-500">
-                {t("paymentPage.ccpPaymentForm.transferReferenceHelp")}
+                {t("paymentPage.ccpPaymentForm.transferReferenceHelp", "Enter the reference number from your CCP transfer receipt")}
               </p>
             </div>
 
@@ -786,7 +786,7 @@ const CCPPayment = ({
                 htmlFor="phoneNumber"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.phoneNumber")}{" "}
+                {t("paymentPage.ccpPaymentForm.phoneNumber", "Phone Number")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -816,7 +816,7 @@ const CCPPayment = ({
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                {t("paymentPage.ccpPaymentForm.email")}{" "}
+                {t("paymentPage.ccpPaymentForm.email", "Email Address")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -829,7 +829,7 @@ const CCPPayment = ({
                 className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
-                placeholder={t("paymentPage.ccpPaymentForm.emailPlaceholder")}
+                placeholder={t("paymentPage.ccpPaymentForm.emailPlaceholder", "your.email@example.com")}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -841,7 +841,7 @@ const CCPPayment = ({
         {/* File Upload Section */}
         <div className="bg-white border-2 border-gray-200 rounded-lg p-6 shadow-sm">
           <h4 className="font-semibold text-gray-900 mb-4 text-lg">
-            {t("paymentPage.ccpPaymentForm.uploadReceiptRequired")}
+            {t("paymentPage.ccpPaymentForm.uploadReceiptRequired", "Upload Payment Receipt *")}
           </h4>
 
           <div className="space-y-4">
@@ -859,13 +859,13 @@ const CCPPayment = ({
                     <>
                       <FaCheckCircle className="w-12 h-12 mb-3 text-green-600" />
                       <p className="mb-2 text-sm font-semibold text-green-700">
-                        {t("paymentPage.ccpPaymentForm.fileSelected")}
+                        {t("paymentPage.ccpPaymentForm.fileSelected", "File selected:")}
                       </p>
                       <p className="text-sm text-green-600 break-all">
                         {fileName}
                       </p>
                       <p className="text-xs text-green-500 mt-2">
-                        {t("paymentPage.ccpPaymentForm.clickToChange")}
+                        {t("paymentPage.ccpPaymentForm.clickToChange", "Click to change file")}
                       </p>
                     </>
                   ) : (
@@ -873,12 +873,12 @@ const CCPPayment = ({
                       <FaUpload className="w-12 h-12 mb-3 text-green-600" />
                       <p className="mb-2 text-sm text-gray-700">
                         <span className="font-semibold">
-                          {t("paymentPage.ccpPaymentForm.clickToUpload")}
+                          {t("paymentPage.ccpPaymentForm.clickToUpload", "Click to upload")}
                         </span>{" "}
-                        {t("paymentPage.ccpPaymentForm.yourReceipt")}
+                        {t("paymentPage.ccpPaymentForm.yourReceipt", "your receipt")}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {t("paymentPage.ccpPaymentForm.acceptedFormats")}
+                        {t("paymentPage.ccpPaymentForm.acceptedFormats", "JPG, PNG or PDF (MAX. 5MB)")}
                       </p>
                     </>
                   )}
@@ -910,20 +910,20 @@ const CCPPayment = ({
           {loading ? (
             <>
               <FaSpinner className="animate-spin text-xl" />
-              <span>{t("paymentPage.ccpPaymentForm.submittingPayment")}</span>
+              <span>{t("paymentPage.ccpPaymentForm.submittingPayment", "Submitting payment...")}</span>
             </>
           ) : (
             <>
               <FaCheckCircle className="text-xl" />
               <span>
-                {t("paymentPage.ccpPaymentForm.submitForVerification")}
+                {t("paymentPage.ccpPaymentForm.submitForVerification", "Submit Payment for Verification")}
               </span>
             </>
           )}
         </button>
 
         <p className="text-sm text-gray-600 text-center">
-          {t("paymentPage.ccpPaymentForm.confirmationMessage")}
+          {t("paymentPage.ccpPaymentForm.confirmationMessage", "By submitting this form, you confirm that you have completed the CCP transfer and uploaded a valid payment receipt for verification.")}
         </p>
       </form>
     </div>

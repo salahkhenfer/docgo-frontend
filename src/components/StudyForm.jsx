@@ -239,7 +239,7 @@ const StudyForm = ({ customFields, customLocations }) => {
                     dir={i18n.dir()}
                 >
                     <option value="" disabled>
-                        {t("WhatDoYouWantToStudy")}
+                        {t("WhatDoYouWantToStudy", "What do you want to study?")}
                     </option>
                     {filteredFieldItems.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -265,7 +265,7 @@ const StudyForm = ({ customFields, customLocations }) => {
                     dir={i18n.dir()}
                 >
                     <option value="" disabled>
-                        {t("WhereDoYouwantToStudy?")}
+                        {t("WhereDoYouwantToStudy?", "Where do you want to study?")}
                     </option>
                     {filteredLocationItems.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -286,7 +286,7 @@ const StudyForm = ({ customFields, customLocations }) => {
                 disabled={!selectedCategory && !selectedCountry}
                 className="w-full p-3 sm:p-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base disabled:cursor-not-allowed disabled:opacity-60"
             >
-                {t("ToRegister")}
+                {t("ToRegister", "Register")}
             </button>
         </div>
     );

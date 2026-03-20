@@ -151,13 +151,13 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
 
     const markAsHelpful = async (faqId) => {
         if (!isAuth) {
-            alert(t("faq.pleaseLoginToVote"));
+            alert(t("faq.pleaseLoginToVote", "Please log in to vote on FAQs."));
             return;
         }
 
         // Check if already voted
         if (voteStates[faqId]?.hasVoted) {
-            alert(t("faq.alreadyVoted"));
+            alert(t("faq.alreadyVoted", "You have already voted on this FAQ."));
             return;
         }
 
@@ -197,12 +197,12 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
         } catch (error) {
 
             if (error.response?.status === 401) {
-                alert(t("faq.pleaseLoginToVote"));
+                alert(t("faq.pleaseLoginToVote", "Please log in to vote on FAQs."));
             } else if (
                 error.response?.status === 400 &&
                 error.response?.data?.alreadyVoted
             ) {
-                alert(t("faq.alreadyVoted"));
+                alert(t("faq.alreadyVoted", "You have already voted on this FAQ."));
                 // Update local state to reflect that user has voted
                 setVoteStates((prev) => ({
                     ...prev,
@@ -212,7 +212,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                     },
                 }));
             } else {
-                alert(t("faq.failedToVote"));
+                alert(t("faq.failedToVote", "Failed to submit vote. Please try again."));
             }
         } finally {
             // Clear voting in progress
@@ -293,7 +293,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
         return (
             <div className="bg-white rounded-lg shadow-lg p-6">
                 {/* <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    {t("faq_title")}
+                    {t("faq_title", "Frequently Asked Questions")}
                 </h2> */}
                 <div className="text-center text-gray-500">
                     <svg
@@ -309,7 +309,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                             d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                     </svg>
-                    <p>{t("no_faq_now")}</p>
+                    <p>{t("no_faq_now", "No FAQs available at the moment.")}</p>
                 </div>
             </div>
         );
@@ -318,7 +318,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {t("faq_title")}
+                {t("faq_title", "Frequently Asked Questions")}
             </h2>
 
             {/* Category Filter */}
@@ -333,7 +333,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                             }`}
                         >
-                            {t("faq.all")}
+                            {t("faq.all", "All")}
                         </button>
                         {categories.map((category) => (
                             <button
@@ -415,7 +415,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                                         {faq.helpfulCount > 0 && (
                                             <span>
                                                 {faq.helpfulCount}{" "}
-                                                {t("faq.peopleFoundHelpful")}
+                                                {t("faq.peopleFoundHelpful", "people found this helpful")}
                                             </span>
                                         )}
                                     </div>
@@ -459,10 +459,10 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                                                 />
                                             </svg>
                                             {voteStates[faq.id]?.hasVoted
-                                                ? t("faq.voted")
+                                                ? t("faq.voted", "Voted")
                                                 : votingInProgress[faq.id]
-                                                ? t("faq.voting")
-                                                : t("faq.helpful")}
+                                                ? t("faq.voting", "Voting...")
+                                                : t("faq.helpful", "Helpful")}
                                         </button>
                                     ) : (
                                         <span className="text-sm text-gray-400 flex items-center gap-1">
@@ -479,7 +479,7 @@ const FAQSection = ({ type = "home", courseId = null, programId = null }) => {
                                                     d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V9a2 2 0 00-2-2H4.5a1.5 1.5 0 000 3h2a2 2 0 012 2v.5m7-10V7a2 2 0 00-2-2H9M7 20v-2c0-.554.446-1 1-1h3.5a1.5 1.5 0 001.5-1.5v-.5m-7 3.5V20"
                                                 />
                                             </svg>
-                                            {t("faq.loginToVote")}
+                                            {t("faq.loginToVote", "Log in to vote")}
                                         </span>
                                     )}
                                 </div>

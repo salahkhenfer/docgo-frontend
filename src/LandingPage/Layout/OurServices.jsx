@@ -32,11 +32,11 @@ function OurServices({ cms }) {
                 {/* Enhanced Title */}
                 <div className="text-center space-y-4">
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 leading-tight">
-                        {c("servicesTitle") || t("OurServices")}
+                        {c("servicesTitle") || t("OurServices", "Our Services")}
                     </h1>
                     <div className="h-1.5 w-40 mx-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full"></div>
                     <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-                        {t("ServicesSubtitle")}
+                        {t("ServicesSubtitle", "Discover our comprehensive services designed to help you achieve your educational goals")}
                     </p>
                 </div>
 
@@ -44,23 +44,23 @@ function OurServices({ cms }) {
                     <Service
                         url={Knwoledge1}
                         h1={
-                            c("service1Title") || t("GuidanceForStudyingAbroad")
+                            c("service1Title") || t("GuidanceForStudyingAbroad", "Guidance for Studying Abroad")
                         }
                         h3={
                             c("service1Desc") ||
-                            t("StudyingAbroadChangesPerspective")
+                            t("StudyingAbroadChangesPerspective", "Studying abroad can change the way you see the world")
                         }
-                        p={c("service1Desc") || t("GuidanceDescription")}
-                        btn={c("service1Cta") || t("SignUpAndDiscover")}
+                        p={c("service1Desc") || t("GuidanceDescription", "Navigate your journey to study at the best international institutions with personalized support. Our team helps you choose the right programs, prepare your application, and understand the requirements.")}
+                        btn={c("service1Cta") || t("SignUpAndDiscover", "Sign up and discover")}
                         to="/Programs"
                     />
 
                     <Service
                         url={Knwoledge2}
-                        h1={c("service2Title") || t("OnlineCourses")}
-                        h3={c("service2Desc") || t("LearnAnything")}
-                        p={c("service2Desc") || t("OnlineCoursesDescription")}
-                        btn={c("service2Cta") || t("DiscoverAllCourses")}
+                        h1={c("service2Title") || t("OnlineCourses", "Online Courses")}
+                        h3={c("service2Desc") || t("LearnAnything", "You can learn anything")}
+                        p={c("service2Desc") || t("OnlineCoursesDescription", "Enhance your skills with our carefully curated online courses. Learn at your own pace through videos, quizzes, and downloadable resources to strengthen your knowledge and career.")}
+                        btn={c("service2Cta") || t("DiscoverAllCourses", "Discover all our courses")}
                         to="/AllCourses"
                     />
                 </div>

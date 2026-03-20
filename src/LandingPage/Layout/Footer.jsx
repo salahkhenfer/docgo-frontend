@@ -77,7 +77,7 @@ function Footer({ contactInfo, branding = null }) {
                                 </div>
                             ) : null}
                         </div>
-                        <p className="text-gray-600">{t("OurPlatform")}</p>
+                        <p className="text-gray-600">{t("OurPlatform", "Our platform offers opportunities to study abroad and innovative online courses.")}</p>
 
                         <div className="flex flex-wrap gap-3 max-lg:justify-center">
                             {contactInfo?.facebook && (
@@ -193,7 +193,7 @@ function Footer({ contactInfo, branding = null }) {
                     {/* Dynamic program categories */}
                     <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-gray-900">
-                            {t("Specialites")}
+                            {t("Specialites", "Specialties")}
                         </h3>
                         {categories.length > 0 ? (
                             <ul className="space-y-2">
@@ -222,7 +222,7 @@ function Footer({ contactInfo, branding = null }) {
                         {categories.length > 4 && (
                             <>
                                 <h3 className="text-lg font-semibold text-gray-900 pt-6">
-                                    {t("OtherSpecialties")}
+                                    {t("OtherSpecialties", "Other Specialties")}
                                 </h3>
                                 <ul className="space-y-2">
                                     {categories.slice(4).map((cat) => (
@@ -244,12 +244,12 @@ function Footer({ contactInfo, branding = null }) {
                             href="/programs?status=open"
                             className="inline-block pt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
                         >
-                            {t("StudyAbroad")} </a>
+                            {t("StudyAbroad", "Study Abroad")} </a>
                     </div>
 
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-gray-900">
-                            {t("OurServicesLink")}
+                            {t("OurServicesLink", "Our Services")}
                         </h3>
                         <ul className="space-y-2">
                             <li>
@@ -262,7 +262,7 @@ function Footer({ contactInfo, branding = null }) {
                                     duration={500}
                                     className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
                                 >
-                                    {t("AboutUsLink")}
+                                    {t("AboutUsLink", "About Us")}
                                 </ScrollSmooth>
                             </li>
                             <li>
@@ -270,7 +270,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/faq"
                                     className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
                                 >
-                                    {t("FAQ")}
+                                    {t("FAQ", "FAQ")}
                                 </a>
                             </li>
                             <li>
@@ -283,7 +283,7 @@ function Footer({ contactInfo, branding = null }) {
                                     duration={500}
                                     className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
                                 >
-                                    {t("TheStages")}
+                                    {t("TheStages", "The Steps")}
                                 </ScrollSmooth>
                             </li>
                             <li>
@@ -296,7 +296,7 @@ function Footer({ contactInfo, branding = null }) {
                                     duration={500}
                                     className="text-gray-600 hover:text-gray-900 hover:cursor-pointer"
                                 >
-                                    {t("ContactUs")}
+                                    {t("ContactUs", "Contact Us")}
                                 </ScrollSmooth>
                             </li>
                         </ul>
@@ -309,7 +309,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/programs?status=open"
                                     className="text-gray-600 hover:text-gray-900"
                                 >
-                                    {t("StudyAbroad")}
+                                    {t("StudyAbroad", "Study Abroad")}
                                 </a>
                             </li>
                             <li>
@@ -317,7 +317,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/courses"
                                     className="text-gray-600 hover:text-gray-900"
                                 >
-                                    {t("OurCourses")}
+                                    {t("OurCourses", "Our Courses")}
                                 </a>
                             </li>
                             <li>
@@ -325,7 +325,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/Register"
                                     className="text-gray-600 hover:text-gray-900"
                                 >
-                                    {t("ToRegister")}
+                                    {t("ToRegister", "Register")}
                                 </a>
                             </li>
                             <li>
@@ -333,7 +333,7 @@ function Footer({ contactInfo, branding = null }) {
                                     href="/Login"
                                     className="text-gray-600 hover:text-gray-900"
                                 >
-                                    {t("SignIn")}
+                                    {t("SignIn", "Sign In")}
                                 </a>
                             </li>
                         </ul>

@@ -81,7 +81,7 @@ const Register_Sterp_2 = ({
 
       if (!phoneRegex.test(phone)) {
         const errorMessage =
-          t("register.phoneValidationError") || "Invalid phone format.";
+          t("register.phoneValidationError", "Invalid phone number format.") || "Invalid phone format.";
         setPhoneError(errorMessage);
         return;
       }
@@ -94,10 +94,10 @@ const Register_Sterp_2 = ({
   return (
     <div className="w-full transition-all duration-300 ease-in-out">
       <h2 className="text-2xl font-bold mb-2">
-        {t("register.title") || "Register"}
+        {t("register.title", "Register") || "Register"}
       </h2>
       <p className="text-gray-600 mb-6">
-        {t("register.welcome") ||
+        {t("register.welcome", "Welcome to healthpathglobal, your first step towards success") ||
           "Welcome to healthpathglobal, your first step towards success"}
       </p>
 
@@ -111,7 +111,7 @@ const Register_Sterp_2 = ({
         {/* Country Selection */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.countryQuestion") ||
+            {t("register.countryQuestion", "In which country do you want to pursue your studies?") ||
               "In which country do you want to pursue your studies?"}
           </label>
           <select
@@ -125,7 +125,7 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectCountry") || "Select Country"}
+              {t("register.selectCountry", "Select Country") || "Select Country"}
             </option>
             {countries.map((country) => (
               <option key={country} value={country}>
@@ -138,7 +138,7 @@ const Register_Sterp_2 = ({
         {/* Study Field Selection */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.fieldQuestion") ||
+            {t("register.fieldQuestion", "In which field do you want to pursue your studies?") ||
               "In which field do you want to pursue your studies?"}
           </label>
           <select
@@ -152,7 +152,7 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectField") || "Select Study Field"}
+              {t("register.selectField", "Select Study Field") || "Select Study Field"}
             </option>
             {studyFields.map((field) => (
               <option key={field} value={field}>
@@ -165,7 +165,7 @@ const Register_Sterp_2 = ({
         {/* Study Domain Selection */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.domainQuestion") || "What is your specialization?"}
+            {t("register.domainQuestion", "What is your specialization?") || "What is your specialization?"}
           </label>
           <select
             name="studyDomain"
@@ -178,7 +178,7 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectDomain") || "Select Specialization"}
+              {t("register.selectDomain", "Select Specialization") || "Select Specialization"}
             </option>
             {studyDomains.map((domain) => (
               <option key={domain} value={domain}>
@@ -191,12 +191,12 @@ const Register_Sterp_2 = ({
         {/* Phone Number Input */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.phoneOptional") || "Phone Number (optional)"}
+            {t("register.phoneOptional", "Phone Number (optional)") || "Phone Number (optional)"}
           </label>
           <input
             type="tel"
             name="phoneNumber"
-            placeholder={t("register.phoneNumber") || "Phone Number"}
+            placeholder={t("register.phoneNumber", "Phone Number") || "Phone Number"}
             value={formData.phoneNumber || ""}
             onChange={handlePhoneChange}
             className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -228,7 +228,7 @@ const Register_Sterp_2 = ({
               marginLeft: i18n.language === "ar" ? "0" : "1rem",
             }}
           >
-            {t("register.back") || "Back"}
+            {t("register.back", "Back") || "Back"}
           </button>
           <button
             type="submit"
@@ -238,7 +238,7 @@ const Register_Sterp_2 = ({
             {loading ? (
               <InlineLoading borderColor="white" />
             ) : (
-              t("register.finish") || "Finish"
+              t("register.finish", "Finish") || "Finish"
             )}
           </button>
         </div>

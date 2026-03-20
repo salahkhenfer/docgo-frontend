@@ -28,7 +28,7 @@ function WhatToDoSection({ cms }) {
                 {/* Enhanced Title Section */}
                 <div className="text-center space-y-4">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 leading-tight">
-                        {c("stepsTitle") || t("WhatToDoToStudyAbroad")}
+                        {c("stepsTitle") || t("WhatToDoToStudyAbroad", "What to do to study abroad?")}
                     </h1>
                     <div className="h-1 w-32 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full"></div>
                 </div>
@@ -36,30 +36,30 @@ function WhatToDoSection({ cms }) {
                 <div className="grid place-items-stretch sm-sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6 lg:gap-8">
                     <Step
                         Number={1}
-                        label={c("step1Title") || t("Register")}
+                        label={c("step1Title") || t("Register", "Register")}
                         description={
-                            c("step1Desc") || t("CreateAccountAndSubmitInfo")
+                            c("step1Desc") || t("CreateAccountAndSubmitInfo", "Create your account and submit your details to start your visa application.")
                         }
                     />
                     <Step
                         Number={2}
-                        label={c("step2Title") || t("Connexion")}
+                        label={c("step2Title") || t("Connexion", "Connect")}
                         description={
-                            c("step2Desc") || t("OurTeamGuidesVisaProcess")
+                            c("step2Desc") || t("OurTeamGuidesVisaProcess", "Our team will guide you through the visa process and required documents.")
                         }
                     />
                     <Step
                         Number={3}
-                        label={c("step3Title") || t("Submit")}
+                        label={c("step3Title") || t("Submit", "Submit")}
                         description={
-                            c("step3Desc") || t("CompleteVisaApplication")
+                            c("step3Desc") || t("CompleteVisaApplication", "Complete your visa application and make the necessary payments.")
                         }
                     />
                     <Step
                         Number={4}
-                        label={c("step4Title") || t("wewillcontactyou")}
+                        label={c("step4Title") || t("wewillcontactyou", "We will contact you")}
                         description={
-                            c("step4Desc") || t("wewillcontactyoudesc")
+                            c("step4Desc") || t("wewillcontactyoudesc", "We will follow up with you regarding the next steps, visa application and preparing the necessary documents.")
                         }
                     />
                 </div>

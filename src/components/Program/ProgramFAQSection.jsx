@@ -15,7 +15,7 @@ const ProgramFAQSection = ({ faqs = [] }) => {
     const { user } = useAppContext();
     const [openItems, setOpenItems] = useState(new Set());
     const [voteStates, setVoteStates] = useState({}); // Track voting states for each FAQ
-    const [selectedCategory, setSelectedCategory] = useState(t("faq.all"));
+    const [selectedCategory, setSelectedCategory] = useState(t("faq.all", "All"));
 
     // Get current language
     const currentLang = i18n.language || "en";
@@ -45,13 +45,13 @@ const ProgramFAQSection = ({ faqs = [] }) => {
     // Handle voting on FAQ
     const handleVote = async (faqId) => {
         if (!user) {
-            alert(t("faq.pleaseLoginToVote"));
+            alert(t("faq.pleaseLoginToVote", "Please log in to vote on FAQs."));
             return;
         }
 
         // Check if already voted
         if (voteStates[faqId]?.hasVoted) {
-            alert(t("faq.alreadyVoted"));
+            alert(t("faq.alreadyVoted", "You have already voted on this FAQ."));
             return;
         }
 
@@ -87,10 +87,10 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                     },
                 }));
             } else {
-                alert(result.message || t("faq.failedToVote"));
+                alert(result.message || t("faq.failedToVote", "Failed to submit vote. Please try again."));
             }
         } catch (error) {
-            alert(t("faq.failedToVote"));
+            alert(t("faq.failedToVote", "Failed to submit vote. Please try again."));
         } finally {
             setVoteStates((prev) => ({
                 ...prev,
@@ -111,11 +111,11 @@ const ProgramFAQSection = ({ faqs = [] }) => {
     }, {});
 
     // Extract categories for filter
-    const availableCategories = [t("faq.all"), ...Object.keys(groupedFAQs)];
+    const availableCategories = [t("faq.all", "All"), ...Object.keys(groupedFAQs)];
 
     // Filter FAQs based on selected category
     const filteredFAQs =
-        selectedCategory === t("faq.all")
+        selectedCategory === t("faq.all", "All")
             ? faqs
             : groupedFAQs[selectedCategory] || [];
 
@@ -211,7 +211,7 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                                             <HandThumbUpIcon className="h-4 w-4" />
                                             <span>
                                                 {helpfulCount}{" "}
-                                                {t("faq.peopleFoundHelpful")}
+                                                {t("faq.peopleFoundHelpful", "people found this helpful")}
                                             </span>
                                         </div>
 
@@ -231,7 +231,7 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                                             }`}
                                             title={
                                                 !user
-                                                    ? t("faq.loginToVote")
+                                                    ? t("faq.loginToVote", "Log in to vote")
                                                     : ""
                                             }
                                         >
@@ -242,10 +242,10 @@ const ProgramFAQSection = ({ faqs = [] }) => {
                                             )}
                                             <span>
                                                 {voteState.isVoting
-                                                    ? t("faq.voting")
+                                                    ? t("faq.voting", "Voting...")
                                                     : voteState.hasVoted
-                                                    ? t("faq.voted")
-                                                    : t("faq.helpful")}
+                                                    ? t("faq.voted", "Voted")
+                                                    : t("faq.helpful", "Helpful")}
                                             </span>
                                         </button>
                                     </div>
@@ -257,7 +257,7 @@ const ProgramFAQSection = ({ faqs = [] }) => {
             </div>
 
             {/* No FAQs for selected category */}
-            {filteredFAQs.length === 0 && selectedCategory !== t("faq.all") && (
+            {filteredFAQs.length === 0 && selectedCategory !== t("faq.all", "All") && (
                 <div className="text-center py-8 text-gray-500">
                     <p>
                         {t(

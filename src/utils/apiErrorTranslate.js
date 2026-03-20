@@ -76,7 +76,7 @@ const ERROR_KEY_MAP = {
  * @returns {string}
  */
 export function translateApiError(rawMessage, t) {
-    if (!rawMessage) return t("apiErrors.unknown");
+    if (!rawMessage) return t("apiErrors.unknown", "An unexpected error occurred. Please try again.");
 
     const lower = rawMessage.toLowerCase().trim();
 

@@ -119,7 +119,7 @@ const PendingApplicationsSection = ({ applications }) => {
             </svg>
           </div>
           <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900">
-            {t("dashboard.pendingApplications")}
+            {t("dashboard.pendingApplications", "Pending applications")}
           </h2>
         </div>
         <div className="text-xs sm:text-sm text-gray-500">

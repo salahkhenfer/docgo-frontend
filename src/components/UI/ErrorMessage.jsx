@@ -28,9 +28,9 @@ export const ErrorMessage = ({
             <div className="flex items-start justify-between">
                 <div className="flex-1">
                     <p className="font-medium text-sm">
-                        {type === "error" && (t("Error") || "Error")}
-                        {type === "warning" && (t("Warning") || "Warning")}
-                        {type === "info" && (t("Information") || "Information")}
+                        {type === "error" && (t("Error", "Error") || "Error")}
+                        {type === "warning" && (t("Warning", "Warning") || "Warning")}
+                        {type === "info" && (t("Information", "Information") || "Information")}
                     </p>
                     <p className="mt-1 text-sm">{message}</p>
                 </div>
@@ -39,7 +39,7 @@ export const ErrorMessage = ({
                         onClick={onRetry}
                         className="ml-4 px-3 py-1 text-xs bg-white border border-current rounded hover:bg-opacity-10 transition"
                     >
-                        {t("Retry") || "Retry"}
+                        {t("Retry", "Retry") || "Retry"}
                     </button>
                 )}
             </div>

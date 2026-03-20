@@ -23,7 +23,7 @@ const ProfileInfoSection = ({ profile }) => {
                         <div className="flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full">
                             <div className="w-5 h-5 bg-amber-400 rounded-full"></div>
                             <span className="text-sm font-medium text-gray-800">
-                                {t("profile_data.professional_member")}
+                                {t("profile_data.professional_member", "Professional Member")}
                             </span>
                         </div>
                     </div>
@@ -32,14 +32,14 @@ const ProfileInfoSection = ({ profile }) => {
                             <CheckCircle className="w-5 h-5" />
                             <span>
                                 {profile.stats.completed}{" "}
-                                {t("profile_data.completed_courses")}
+                                {t("profile_data.completed_courses", "Completed courses")}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 text-orange-500">
                             <Clock className="w-5 h-5" />
                             <span>
                                 {profile.stats.inProgress}{" "}
-                                {t("profile_data.in_progress_courses")}
+                                {t("profile_data.in_progress_courses", "Courses in progress")}
                             </span>
                         </div>
                     </div>

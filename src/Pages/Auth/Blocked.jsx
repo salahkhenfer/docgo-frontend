@@ -66,30 +66,30 @@ const Blocked = () => {
             <FaShieldAlt className="text-red-500 text-3xl" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {t("blocked.title")}
+            {t("blocked.title", "Account Blocked")}
           </h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            {t("blocked.message")}
+            {t("blocked.message", "Your account has been temporarily suspended by an administrator. If you believe this is a mistake, please contact support.")}
           </p>
         </div>
 
         {/* What to do */}
         <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-5">
           <p className="text-xs font-semibold text-red-500 uppercase tracking-wider mb-3">
-            {t("blocked.whatToDo")}
+            {t("blocked.whatToDo", "What you can do")}
           </p>
           <ul className="space-y-2.5 text-sm text-gray-600">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step1")}
+              {t("blocked.step1", "Contact our support team to understand the reason for the suspension.")}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step2")}
+              {t("blocked.step2", "If you believe this is a mistake, provide any relevant information to help resolve it.")}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step3")}
+              {t("blocked.step3", "This page will automatically check your account status every 10 seconds.")}
             </li>
           </ul>
         </div>
@@ -129,11 +129,11 @@ const Blocked = () => {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-800">
-              {t("blocked.autoCheck")}
+              {t("blocked.autoCheck", "Auto-checking your status")}
             </p>
             <p className="text-xs text-gray-400 mt-0.5 truncate">
               {checking
-                ? t("blocked.checking")
+                ? t("blocked.checking", "Verifying your account...")
                 : t("blocked.nextCheck", { count: countdown })}
             </p>
           </div>
@@ -145,7 +145,7 @@ const Blocked = () => {
             disabled={checking}
             className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-50 transition-colors"
           >
-            {t("blocked.checkNow")}
+            {t("blocked.checkNow", "Check now")}
           </button>
         </div>
 
@@ -157,7 +157,7 @@ const Blocked = () => {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition-colors"
             >
               <FaEnvelope />
-              {t("blocked.contactSupport")}
+              {t("blocked.contactSupport", "Contact Support")}
             </a>
           ) : null}
           <Link
@@ -165,12 +165,12 @@ const Blocked = () => {
             className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium text-sm transition-colors"
           >
             <FaSignInAlt />
-            {t("blocked.backToLogin")}
+            {t("blocked.backToLogin", "Back to Login")}
           </Link>
           <Link
             to="/"
             className="flex items-center justify-center px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors"
-            title={t("blocked.goHome")}
+            title={t("blocked.goHome", "Go Home")}
           >
             <FaHome />
           </Link>

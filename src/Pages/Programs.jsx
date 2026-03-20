@@ -294,7 +294,7 @@ export function Programs() {
         setError(null);
       } catch (error) {
         setError("Failed to load programs. Please try again.");
-        toast.error(t("Failed to load programs"));
+        toast.error(t("Failed to load programs", "Failed to load programs"));
         setPrograms([]);
       } finally {
         setLoading(false);
@@ -614,37 +614,37 @@ export function Programs() {
   const sortOptions = [
     {
       value: "createdAt_desc",
-      label: t("Newest First") || "Newest First",
+      label: t("Newest First", "Newest First") || "Newest First",
       sortBy: "createdAt",
       sortOrder: "desc",
     },
     {
       value: "createdAt_asc",
-      label: t("Oldest First") || "Oldest First",
+      label: t("Oldest First", "Oldest First") || "Oldest First",
       sortBy: "createdAt",
       sortOrder: "asc",
     },
     {
       value: "title_asc",
-      label: t("Title A-Z") || "Title A-Z",
+      label: t("Title A-Z", "Title A-Z") || "Title A-Z",
       sortBy: "title",
       sortOrder: "asc",
     },
     {
       value: "title_desc",
-      label: t("Title Z-A") || "Title Z-A",
+      label: t("Title Z-A", "Title Z-A") || "Title Z-A",
       sortBy: "title",
       sortOrder: "desc",
     },
     {
       value: "scholarship_desc",
-      label: t("Highest Scholarship") || "Highest Scholarship",
+      label: t("Highest Scholarship", "Highest Scholarship") || "Highest Scholarship",
       sortBy: "scholarship",
       sortOrder: "desc",
     },
     {
       value: "scholarship_asc",
-      label: t("Lowest Scholarship") || "Lowest Scholarship",
+      label: t("Lowest Scholarship", "Lowest Scholarship") || "Lowest Scholarship",
       sortBy: "scholarship",
       sortOrder: "asc",
     },
@@ -665,10 +665,10 @@ export function Programs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {t("TrouverUnProgramme") || "Find a Program"}
+              {t("TrouverUnProgramme", "Find a Program") || "Find a Program"}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("TrouverUnProgrammeDes") ||
+              {t("TrouverUnProgrammeDes", "Choose country, specialty and search") ||
                 "Discover amazing scholarship opportunities from universities worldwide"}
             </p>
           </div>
@@ -685,7 +685,7 @@ export function Programs() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
             <input
               type="text"
-              placeholder={t("Search programs...") || "Search programs..."}
+              placeholder={t("Search programs...", "Search programs...") || "Search programs..."}
               value={searchQuery}
               onChange={(e) => handleFilterChange("search", e.target.value)}
               onKeyPress={handleSearchKeyPress}
@@ -695,14 +695,14 @@ export function Programs() {
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
                 <span className="text-sm text-gray-500">
-                  {t("Searching...") || "Searching..."}
+                  {t("Searching...", "Searching...") || "Searching..."}
                 </span>
               </div>
             )}
             {filters.search && !searchLoading && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
-                  {t("Press Enter or wait...") || "Press Enter or wait..."}
+                  {t("Press Enter or wait...", "Press Enter or wait...") || "Press Enter or wait..."}
                 </span>
               </div>
             )}
@@ -720,11 +720,11 @@ export function Programs() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white">
-                  {t("My Programs") || "My Programs"}
+                  {t("My Programs", "My Programs") || "My Programs"}
                 </h2>
                 <p className="text-purple-200 text-sm">
                   {enrolledPrograms.length}{" "}
-                  {t("enrolled program") || "enrolled program"}
+                  {t("enrolled program", "Enrolled program") || "enrolled program"}
                   {enrolledPrograms.length !== 1 ? "s" : ""}
                 </p>
               </div>
@@ -782,7 +782,7 @@ export function Programs() {
                         <div className="mt-2 flex items-center gap-1.5">
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
                             {" "}
-                            {t("Enrolled") || "Enrolled"}
+                            {t("Enrolled", "Enrolled") || "Enrolled"}
                           </span>
                           {program.status && (
                             <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
@@ -837,7 +837,7 @@ export function Programs() {
                     <Star className="w-6 h-6 text-blue-600 fill-blue-600" />
                     <div>
                       <h3 className="text-lg font-semibold text-blue-800">
-                        {t("All Programs") || "All Programs"}
+                        {t("All Programs", "All Programs") || "All Programs"}
                       </h3>
                       <p className="text-sm text-blue-700">
                         {t(
@@ -857,7 +857,7 @@ export function Programs() {
                     <div className="flex items-center gap-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                       <span className="text-sm text-blue-600">
-                        {t("Updating...") || "Updating..."}
+                        {t("Updating...", "Updating...") || "Updating..."}
                       </span>
                     </div>
                   )}
@@ -870,12 +870,12 @@ export function Programs() {
                     filters.location ||
                     filters.isRemote ? (
                       <>
-                        {programs.length} {t("program") || "program"}
+                        {programs.length} {t("program", "Program") || "program"}
                         {programs.length !== 1 ? "s" : ""}{" "}
-                        {t("found") || "found"}
+                        {t("found", "found") || "found"}
                         {debouncedSearch && (
                           <span className="ml-1">
-                            {t("for") || "for"}{" "}
+                            {t("for", "for") || "for"}{" "}
                             <span className="font-medium text-gray-800">
                               &ldquo;
                               {debouncedSearch}
@@ -886,8 +886,8 @@ export function Programs() {
                       </>
                     ) : (
                       <>
-                        {t("Showing") || "Showing"} {programs.length}{" "}
-                        {t("of") || "of"} {pagination.totalPrograms} programs
+                        {t("Showing", "Showing") || "Showing"} {programs.length}{" "}
+                        {t("of", "of") || "of"} {pagination.totalPrograms} programs
                       </>
                     )}
                   </p>
@@ -901,7 +901,7 @@ export function Programs() {
                     className="lg:hidden px-4 py-2 border border-gray-200 rounded-xl flex items-center gap-2 hover:bg-gray-50"
                   >
                     <Filter className="w-5 h-5" />
-                    {t("Filters") || "Filters"}
+                    {t("Filters", "Filters") || "Filters"}
                   </button>
 
                   {/* View Mode Toggle */}
@@ -934,7 +934,7 @@ export function Programs() {
                       onClick={() => setShowSortMenu(!showSortMenu)}
                       className="px-4 py-2 border border-gray-200 rounded-xl flex items-center gap-2 hover:bg-gray-50"
                     >
-                      {t("Sort by") || "Sort by"}
+                      {t("Sort by", "Sort by") || "Sort by"}
                       <ChevronDown className="w-4 h-4" />
                     </button>
 
@@ -971,7 +971,7 @@ export function Programs() {
                   onClick={handleRetry}
                   className="mt-4 px-6 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700"
                 >
-                  {t("Try Again") || "Try Again"}
+                  {t("Try Again", "Try Again") || "Try Again"}
                 </button>
               </div>
             ) : programs.length === 0 ? (
@@ -990,13 +990,13 @@ export function Programs() {
                 filters.isRemote ? (
                   <div>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                      {t("No programs match your criteria") ||
+                      {t("No programs match your criteria", "No programs match your criteria") ||
                         "No programs match your criteria"}
                     </h3>
                     <div className="text-gray-600 mb-6">
                       {debouncedSearch && (
                         <p className="mb-2">
-                          {t("No results found for") || "No results found for"}:{" "}
+                          {t("No results found for", "No results found for") || "No results found for"}:{" "}
                           <span className="font-semibold text-gray-800">
                             &ldquo;{debouncedSearch}
                             &rdquo;
@@ -1005,7 +1005,7 @@ export function Programs() {
                       )}
 
                       <p className="text-gray-600">
-                        {t("Try adjusting your search criteria or filters") ||
+                        {t("Try adjusting your search criteria or filters", "Try adjusting your search criteria or filters") ||
                           "Try adjusting your search criteria or filters"}
                       </p>
                     </div>
@@ -1013,7 +1013,7 @@ export function Programs() {
                 ) : (
                   <div>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                      {t("No programs available") || "No programs available"}
+                      {t("No programs available", "No programs available") || "No programs available"}
                     </h3>
                     <p className="text-gray-600 mb-6">
                       {t(
@@ -1028,7 +1028,7 @@ export function Programs() {
                   onClick={resetFilters}
                   className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                 >
-                  {t("Reset Filters") || "Reset Filters"}
+                  {t("Reset Filters", "Reset Filters") || "Reset Filters"}
                 </button>
               </div>
             ) : (
@@ -1040,7 +1040,7 @@ export function Programs() {
                       <div className="bg-white rounded-lg shadow-lg px-4 py-2 flex items-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                         <span className="text-sm text-gray-600">
-                          {t("Updating results...") || "Updating results..."}
+                          {t("Updating results...", "Updating results...") || "Updating results..."}
                         </span>
                       </div>
                     </div>

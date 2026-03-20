@@ -331,9 +331,7 @@ export function CourseVideosContent() {
 
         try {
             alert(
-                `${t("course_data.thankYou")}\n${t(
-                    "course.rating"
-                )}: ${rating} â...\n${t("course_data.comment")}: ${comment}`
+                `${t("course_data.thankYou", "Thank you!")}\n${t("course.rating", "Rating")}: ${rating} â...\n${t("course_data.comment", "Comment")}: ${comment}`
             );
             setComment("");
             setRating(0);
@@ -391,16 +389,16 @@ export function CourseVideosContent() {
                         <div className="flex gap-6 mt-4 text-sm text-neutral-600 flex-wrap">
                             <span>
                                 {courseData.statistics.totalViews.toLocaleString()}{" "}
-                                {t("course_data.views")}
+                                {t("course_data.views", "Views")}
                             </span>
                             <span>
                                 {courseData.statistics.totalStudents.toLocaleString()}{" "}
-                                {t("course_data.students")}
+                                {t("course_data.students", "Students")}
                             </span>
                             <span>
                                 â... {courseData.statistics.averageRating} (
                                 {courseData.statistics.totalReviews}{" "}
-                                {t("course_data.course_reviews")})
+                                {t("course_data.course_reviews", "Course reviews")})
                             </span>
                         </div>
                     </header>
@@ -486,7 +484,7 @@ export function CourseVideosContent() {
                                     : "bg-white text-zinc-800 border-gray-300 hover:bg-gray-50"
                             }`}
                         >
-                            {t("course_data.readComments")} (
+                            {t("course_data.readComments", "Read comments")} (
                             {courseData.testimonials.length})
                         </button>
                         <button
@@ -497,7 +495,7 @@ export function CourseVideosContent() {
                             }`}
                             onClick={() => setShowFeedbackForm(true)}
                         >
-                            {t("course_data.writeFeedback")}
+                            {t("course_data.writeFeedback", "Write your own comment")}
                         </button>
                     </div>
 
@@ -505,11 +503,11 @@ export function CourseVideosContent() {
                     {showFeedbackForm && (
                         <div className="mt-6 border p-6 rounded-xl bg-gray-50">
                             <h3 className="text-lg font-semibold text-zinc-800 mb-4">
-                                {t("course_data.leaveFeedback")}
+                                {t("course_data.leaveFeedback", "Leave your feedback")}
                             </h3>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="text-gray-600">
-                                    {t("course_data.rating")}:
+                                    {t("course_data.rating", "Rating")}:
                                 </span>
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
@@ -534,9 +532,7 @@ export function CourseVideosContent() {
                                 rows={4}
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                placeholder={t(
-                                    "course_data.commentPlaceholder"
-                                )}
+                                placeholder={t("course_data.commentPlaceholder", "Your comment...")}
                                 className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none"
                             />
                             <div className="mt-4 flex gap-2 justify-end">
@@ -555,7 +551,7 @@ export function CourseVideosContent() {
                                     disabled={!rating || !comment.trim()}
                                     className="px-6 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                                 >
-                                    {t("course_data.submit")}
+                                    {t("course_data.submit", "Submit")}
                                 </button>
                             </div>
                         </div>
@@ -565,7 +561,7 @@ export function CourseVideosContent() {
                     {!showFeedbackForm && (
                         <div className="mt-8">
                             <h3 className="text-xl font-semibold text-zinc-800 mb-6">
-                                {t("course_data.testimonials")}(
+                                {t("course_data.testimonials", "Student Reviews")}(
                                 {courseData.testimonials.length})
                             </h3>
 

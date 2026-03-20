@@ -55,18 +55,18 @@ export function CourseCard({
       : price === 0 || !price;
 
   const formatPrice = (p) => {
-    if (!p || p === 0) return t("free") || "Free";
+    if (!p || p === 0) return t("free", "Free") || "Free";
     return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${currency}`;
   };
 
   const enrollmentLabel = !isEnrolled
     ? null
     : enrollmentStatus === "pending"
-      ? t("ApplicationPending") || "Pending"
+      ? t("ApplicationPending", "Application Pending") || "Pending"
       : enrollmentStatus === "approved"
-        ? t("Enrolled") || "Enrolled"
+        ? t("Enrolled", "Enrolled") || "Enrolled"
         : enrollmentStatus === "rejected"
-          ? t("ApplicationRejected") || "Rejected"
+          ? t("ApplicationRejected", "Application Rejected") || "Rejected"
           : null;
 
   const enrollmentColor =
@@ -84,7 +84,7 @@ export function CourseCard({
       {/* Enrollment ribbon */}
       {isEnrolled && enrollmentStatus === "approved" && (
         <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-          {t("Enrolled") || "Enrolled"}
+          {t("Enrolled", "Enrolled") || "Enrolled"}
         </div>
       )}
 
@@ -119,7 +119,7 @@ export function CourseCard({
           {/* {course.certificate && (
             <span className="bg-purple-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
               <Award className="w-3 h-3" />
-              {t("certificate") || "Certificate"}
+              {t("certificate", "Certificate") || "Certificate"}
             </span>
           )} */}
         </div>
@@ -194,7 +194,7 @@ export function CourseCard({
           )}
           {course.certificate && (
             <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
-              {t("Certificate") || "Cert"}
+              {t("Certificate", "certificate") || "Cert"}
             </span>
           )}
           {course.Language && (
@@ -211,7 +211,7 @@ export function CourseCard({
         <div className="flex items-center gap-2 mb-3">
           {isFree ? (
             <span className="text-xl font-bold text-emerald-600">
-              {t("free") || "Free"}
+              {t("free", "Free") || "Free"}
             </span>
           ) : discountPrice !== undefined && discountPrice !== null ? (
             <>
@@ -242,7 +242,7 @@ export function CourseCard({
         {shouldShowProgress && (
           <div className="mb-3">
             <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>{t("Progress") || "Progress"}</span>
+              <span>{t("Progress", "Progress") || "Progress"}</span>
               <span className="font-semibold text-blue-600">
                 {Math.round(progress)}%
               </span>
@@ -267,8 +267,8 @@ export function CourseCard({
           }`}
         >
           {isEnrolled && enrollmentStatus === "approved"
-            ? t("ContinueCourse") || "Continue Course"
-            : t("View Details") || "View Details"}
+            ? t("ContinueCourse", "Continue Course") || "Continue Course"
+            : t("View Details", "View Details") || "View Details"}
         </Link>
       </div>
     </article>

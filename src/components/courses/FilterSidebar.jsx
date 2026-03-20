@@ -31,7 +31,7 @@ export function FilterSidebar({
 
     // Create specialties options from dynamic data
     const specialtyOptions = [
-        { value: "", label: t("All Specialties") || "All Specialties" },
+        { value: "", label: t("All Specialties", "All Specialties") || "All Specialties" },
         ...specialties.map((specialty) => ({
             value: specialty,
             label: specialty,
@@ -39,25 +39,25 @@ export function FilterSidebar({
     ];
 
     const difficulties = [
-        { value: "", label: t("All Levels") || "All Levels" },
-        { value: "beginner", label: t("Beginner") || "Beginner" },
-        { value: "intermediate", label: t("Intermediate") || "Intermediate" },
-        { value: "advanced", label: t("Advanced") || "Advanced" },
-        { value: "expert", label: t("Expert") || "Expert" },
+        { value: "", label: t("All Levels", "All Levels") || "All Levels" },
+        { value: "beginner", label: t("Beginner", "Beginner") || "Beginner" },
+        { value: "intermediate", label: t("Intermediate", "Intermediate") || "Intermediate" },
+        { value: "advanced", label: t("Advanced", "Advanced") || "Advanced" },
+        { value: "expert", label: t("Expert", "Expert") || "Expert" },
     ];
 
     // Status options for courses
     const statusOptions = [
-        { value: "", label: t("All Status") || "All Status" },
-        { value: "published", label: t("Published") || "Published" },
-        { value: "draft", label: t("Draft") || "Draft" },
-        { value: "archived", label: t("Archived") || "Archived" },
+        { value: "", label: t("All Status", "All Status") || "All Status" },
+        { value: "published", label: t("Published", "Published") || "Published" },
+        { value: "draft", label: t("Draft", "Draft") || "Draft" },
+        { value: "archived", label: t("Archived", "Archived") || "Archived" },
     ];
 
     const certificateOptions = [
-        { value: "", label: t("All Courses") || "All Courses" },
-        { value: "true", label: t("With Certificate") || "With Certificate" },
-        { value: "false", label: t("No Certificate") || "No Certificate" },
+        { value: "", label: t("All Courses", "All Courses") || "All Courses" },
+        { value: "true", label: t("With Certificate", "With Certificate") || "With Certificate" },
+        { value: "false", label: t("No Certificate", "No Certificate") || "No Certificate" },
     ];
 
     const isFreeFilter = filters.maxPrice === "0" && filters.minPrice === "0";
@@ -90,7 +90,7 @@ export function FilterSidebar({
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-blue-600" />
-                    {t("Filters") || "Filters"}
+                    {t("Filters", "Filters") || "Filters"}
                 </h3>
                 {hasActiveFilters && (
                     <button
@@ -98,7 +98,7 @@ export function FilterSidebar({
                         className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
                     >
                         <RotateCcw className="w-4 h-4" />
-                        {t("Reset") || "Reset"}
+                        {t("Reset", "Reset") || "Reset"}
                     </button>
                 )}
             </div>
@@ -108,18 +108,18 @@ export function FilterSidebar({
                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-xl border border-yellow-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Star className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                        {t("Featured Courses") || "Featured Courses"}
+                        {t("Featured Courses", "Featured Courses") || "Featured Courses"}
                     </label>
                     <div className="space-y-2">
                         {[
                             {
                                 value: "",
-                                label: t("All Courses") || "All Courses",
+                                label: t("All Courses", "All Courses") || "All Courses",
                                 icon: "",
                             },
                             {
                                 value: "true",
-                                label: t("Featured Only") || "Featured Only",
+                                label: t("Featured Only", "Featured Only") || "Featured Only",
                                 icon: "",
                             },
                         ].map((option) => (
@@ -153,7 +153,7 @@ export function FilterSidebar({
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <BookOpen className="w-4 h-4 text-blue-600" />
-                        {t("Category") || "Category"}
+                        {t("Category", "Category") || "Category"}
                     </label>
                     <select
                         value={filters.category || ""}
@@ -163,7 +163,7 @@ export function FilterSidebar({
                         className="w-full p-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
                     >
                         <option value="">
-                            {t("All Categories") || "All Categories"}
+                            {t("All Categories", "All Categories") || "All Categories"}
                         </option>
                         {categories.map((category) => (
                             <option key={category} value={category}>
@@ -177,7 +177,7 @@ export function FilterSidebar({
                 <div className="bg-green-50 p-4 rounded-xl border border-green-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Star className="w-4 h-4 text-green-600" />
-                        {t("Specialty") || "Specialty"}
+                        {t("Specialty", "Specialty") || "Specialty"}
                     </label>
                     <select
                         value={filters.specialty || ""}
@@ -201,7 +201,7 @@ export function FilterSidebar({
                 <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Clock className="w-4 h-4 text-purple-600" />
-                        {t("Difficulty") || "Difficulty"}
+                        {t("Difficulty", "Difficulty") || "Difficulty"}
                     </label>
                     <select
                         value={filters.difficulty || ""}
@@ -225,7 +225,7 @@ export function FilterSidebar({
                 <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Clock className="w-4 h-4 text-indigo-600" />
-                        {t("Status") || "Status"}
+                        {t("Status", "Status") || "Status"}
                     </label>
                     <select
                         value={filters.status || ""}
@@ -246,7 +246,7 @@ export function FilterSidebar({
                 <div className="bg-teal-50 p-4 rounded-xl border border-teal-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Star className="w-4 h-4 text-teal-600" />
-                        {t("Certificate") || "Certificate"}
+                        {t("Certificate", "certificate") || "Certificate"}
                     </label>
                     <div className="space-y-2">
                         {certificateOptions.map((option) => (
@@ -281,18 +281,18 @@ export function FilterSidebar({
                 <div className="bg-green-50 p-4 rounded-xl border border-green-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         <Sparkles className="w-5 h-5 text-green-600" />
-                        {t("Price Type") || "Price Type"}
+                        {t("Price Type", "Price Type") || "Price Type"}
                     </label>
                     <div className="space-y-2">
                         {[
                             {
                                 value: "all",
-                                label: t("All Courses") || "All Courses",
+                                label: t("All Courses", "All Courses") || "All Courses",
                                 icon: "",
                             },
                             {
                                 value: "free",
-                                label: t("Free Only") || "Free Only",
+                                label: t("Free Only", "Free Only") || "Free Only",
                                 icon: "",
                             },
                         ].map((option) => (
@@ -335,13 +335,13 @@ export function FilterSidebar({
                 <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
                         {/* <DollarSign className="w-4 h-4 text-emerald-600" /> */}
-                        {t("Price Range") || "Price Range"}
+                        {t("Price Range", "Price Range") || "Price Range"}
                     </label>
                     <div className="space-y-3">
                         <div className="grid grid-cols-2 gap-2">
                             <div>
                                 <label className="text-xs text-emerald-600 mb-1 block">
-                                    {t("Min Price") || "Min Price"}
+                                    {t("Min Price", "Min Price") || "Min Price"}
                                 </label>
                                 <input
                                     type="number"
@@ -360,7 +360,7 @@ export function FilterSidebar({
                             </div>
                             <div>
                                 <label className="text-xs text-emerald-600 mb-1 block">
-                                    {t("Max Price") || "Max Price"}
+                                    {t("Max Price", "Max Price") || "Max Price"}
                                 </label>
                                 <input
                                     type="number"
@@ -383,7 +383,7 @@ export function FilterSidebar({
                             className="w-full px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
                         >
                             {/* <DollarSign className="w-4 h-4" /> */}
-                            {t("Apply Price Filter") || "Apply Price Filter"}
+                            {t("Apply Price Filter", "Apply Price Filter") || "Apply Price Filter"}
                         </button>
                     </div>
                 </div>

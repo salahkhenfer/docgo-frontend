@@ -18,10 +18,10 @@ function Programme({ program }) {
           {program.price}
         </p>
         <p className="text-sm text-gray-600 mb-4">
-          {t("Description")}: {program.description}
+          {t("Description", "Description")}: {program.description}
         </p>
         <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
-          {t("Detail")}
+          {t("Detail", "View Details")}
         </button>
       </div>
     </div>

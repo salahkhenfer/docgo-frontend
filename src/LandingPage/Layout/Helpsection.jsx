@@ -34,7 +34,7 @@ function HelpSection({ contactInfo }) {
                     </div>
                     <div className="h-1.5 w-48 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full mb-6"></div>
                     <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed">
-                        {t("contact.helpText")}
+                        {t("contact.helpText", "Have questions? Our team is here to help. Send us a message and we'll get back to you as soon as possible.")}
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@ function HelpSection({ contactInfo }) {
                             {/* Contact Information */}
                             <div className="relative z-10 space-y-6 mb-8">
                                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 leading-tight">
-                                    {t("contact.getInTouch")}
+                                    {t("contact.getInTouch", "Let us know if you have any questions")}
                                 </h3>
 
                                 {contactInfo?.email && (
@@ -59,7 +59,7 @@ function HelpSection({ contactInfo }) {
                                         </div>
                                         <div>
                                             <p className="font-semibold mb-1 text-blue-100">
-                                                {t("Email")}
+                                                {t("Email", "Email")}
                                             </p>
                                             <a
                                                 href={`mailto:${contactInfo.email}`}
@@ -78,7 +78,7 @@ function HelpSection({ contactInfo }) {
                                         </div>
                                         <div>
                                             <p className="font-semibold mb-1 text-blue-100">
-                                                {t("contact.phone")}
+                                                {t("contact.phone", "Phone")}
                                             </p>
                                             <a
                                                 href={`tel:${contactInfo.phone}`}
@@ -96,7 +96,7 @@ function HelpSection({ contactInfo }) {
                                         </div>
                                         <div>
                                             <p className="font-semibold mb-1 text-blue-100">
-                                                {t("contact.address")}
+                                                {t("contact.address", "Address")}
                                             </p>
                                             <a
                                                 href={`tel:${contactInfo.address}`}
@@ -114,10 +114,10 @@ function HelpSection({ contactInfo }) {
                                     </div>
                                     <div>
                                         <p className="font-semibold mb-1 text-blue-100">
-                                            {t("contact.supportTitle")}
+                                            {t("contact.supportTitle", "Support")}
                                         </p>
                                         <p className="text-white/90">
-                                            {t("contact.supportDesc")}
+                                            {t("contact.supportDesc", "Available 7 days a week to answer your questions")}
                                         </p>
                                     </div>
                                 </div>

@@ -59,7 +59,7 @@ const CardCourse = ({ id, url, title, description, price }) => {
             <div className="flex flex-col items-center gap-2 text-gray-400">
               <ImageIcon className="w-12 h-12" />
               <span className="text-xs font-medium">
-                {t("ImageNotFound") || "Image not found"}
+                {t("ImageNotFound", "Image not found") || "Image not found"}
               </span>
             </div>
           </div>
@@ -80,7 +80,7 @@ const CardCourse = ({ id, url, title, description, price }) => {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg backdrop-blur-sm flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
             <span className="text-sm sm:text-base font-bold">{price}</span>
             <span className="text-xs sm:text-sm font-medium">
-              {t("Currency")}
+              {t("Currency", "DA")}
             </span>
           </div>
         </div>
@@ -95,7 +95,7 @@ const CardCourse = ({ id, url, title, description, price }) => {
 
         {/* Description with better styling */}
         {/* <p className="text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed flex-1">
-          {description || t("CourseDescription")}
+          {description || t("CourseDescription", "The UI/UX design specialization takes a design-centered approach...")}
         </p> */}
 
         {/* Enhanced button with arrow */}
@@ -105,7 +105,7 @@ const CardCourse = ({ id, url, title, description, price }) => {
           whileTap={{ scale: 0.95 }}
         >
           <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-            <span className="text-sm sm:text-base">{t("ViewMoreDetails")}</span>
+            <span className="text-sm sm:text-base">{t("ViewMoreDetails", "View more details")}</span>
             <ArrowRight
               className={`w-4 h-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`}
             />

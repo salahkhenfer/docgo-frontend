@@ -101,7 +101,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
             <Link
               to="/favorites"
               className="relative flex h-10 min-w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-600 transition-colors duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
-              title={t("Favorites") || "Favorites"}
+              title={t("Favorites", "Favorites") || "Favorites"}
             >
               {totalCount > 0 ? (
                 <BsHeartFill className="h-5 w-5 text-red-500" />
@@ -168,7 +168,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                         }`}
                   onClick={closeMobileMenu}
                 >
-                  <span className="relative z-10">{t("Profile_nav")}</span>
+                  <span className="relative z-10">{t("Profile_nav", "Profile")}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                 </Link>
               )}
@@ -226,7 +226,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("Home_nav")}</span>
+                <span className="relative z-10">{t("Home_nav", "Home")}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -260,7 +260,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("Programs_nav")}</span>
+                <span className="relative z-10">{t("Programs_nav", "Programs")}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -274,7 +274,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("Courses_nav")}</span>
+                <span className="relative z-10">{t("Courses_nav", "Courses")}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -294,7 +294,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                   ) : (
                     <BsHeart className="w-4 h-4" />
                   )}
-                  {t("Favorites")}
+                  {t("Favorites", "Favorites")}
                   {totalCount > 0 && (
                     <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] ml-auto">
                       {totalCount > 99 ? "99+" : totalCount}
@@ -314,7 +314,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("FAQ")}</span>
+                <span className="relative z-10">{t("FAQ", "FAQ")}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -326,7 +326,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                             text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer bg-transparent border-none text-left w-full"
                   >
                     <span className="relative z-10">
-                      {t("OurServicesLink")}
+                      {t("OurServicesLink", "Our Services")}
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                   </button>
@@ -335,7 +335,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                     className="px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
                                             text-gray-700 hover:bg-green-50 hover:text-green-600 cursor-pointer bg-transparent border-none text-left w-full"
                   >
-                    <span className="relative z-10">{t("AboutUsLink")}</span>
+                    <span className="relative z-10">{t("AboutUsLink", "About Us")}</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                   </button>
                 </>

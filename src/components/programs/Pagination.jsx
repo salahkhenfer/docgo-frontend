@@ -44,7 +44,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                         ? "text-gray-400 cursor-not-allowed"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
-                title={t("First Page") || "First Page"}
+                title={t("First Page", "First Page") || "First Page"}
             >
                 <ChevronsLeft className="w-5 h-5" />
             </button>
@@ -58,7 +58,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                         ? "text-gray-400 cursor-not-allowed"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
-                title={t("Previous Page") || "Previous Page"}
+                title={t("Previous Page", "Previous Page") || "Previous Page"}
             >
                 <ChevronLeft className="w-5 h-5" />
             </button>
@@ -120,7 +120,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                         ? "text-gray-400 cursor-not-allowed"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
-                title={t("Next Page") || "Next Page"}
+                title={t("Next Page", "Next Page") || "Next Page"}
             >
                 <ChevronRight className="w-5 h-5" />
             </button>
@@ -134,14 +134,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                         ? "text-gray-400 cursor-not-allowed"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
-                title={t("Last Page") || "Last Page"}
+                title={t("Last Page", "Last Page") || "Last Page"}
             >
                 <ChevronsRight className="w-5 h-5" />
             </button>
 
             {/* Page Info */}
             <div className="ml-4 text-sm text-gray-600">
-                {t("Page") || "Page"} {currentPage} {t("of") || "of"}{" "}
+                {t("Page", "Page") || "Page"} {currentPage} {t("of", "of") || "of"}{" "}
                 {totalPages}
             </div>
         </div>

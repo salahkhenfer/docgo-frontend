@@ -66,30 +66,30 @@ const Deleted = () => {
             <FaUserSlash className="text-gray-500 text-3xl" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {t("deleted.title")}
+            {t("deleted.title", "Account Removed")}
           </h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            {t("deleted.message")}
+            {t("deleted.message", "Your account has been permanently removed from this platform by an administrator. Please contact support for more information.")}
           </p>
         </div>
 
         {/* What to do */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            {t("deleted.whatToDo")}
+            {t("deleted.whatToDo", "Your options")}
           </p>
           <ul className="space-y-2.5 text-sm text-gray-600">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step1")}
+              {t("deleted.step1", "Contact our support team to understand why your account was removed.")}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step2")}
+              {t("deleted.step2", "You may register a new account if you wish to continue using the platform.")}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step3")}
+              {t("deleted.step3", "This page will automatically check every 10 seconds in case access is restored.")}
             </li>
           </ul>
         </div>
@@ -129,11 +129,11 @@ const Deleted = () => {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-800">
-              {t("deleted.autoCheck")}
+              {t("deleted.autoCheck", "Auto-checking your status")}
             </p>
             <p className="text-xs text-gray-400 mt-0.5 truncate">
               {checking
-                ? t("deleted.checking")
+                ? t("deleted.checking", "Verifying...")
                 : t("deleted.nextCheck", { count: countdown })}
             </p>
           </div>
@@ -145,7 +145,7 @@ const Deleted = () => {
             disabled={checking}
             className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-50 transition-colors"
           >
-            {t("deleted.checkNow")}
+            {t("deleted.checkNow", "Check now")}
           </button>
         </div>
 
@@ -157,26 +157,26 @@ const Deleted = () => {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gray-700 hover:bg-gray-800 text-white font-medium text-sm transition-colors"
             >
               <FaEnvelope />
-              {t("deleted.contactSupport")}
+              {t("deleted.contactSupport", "Contact Support")}
             </a>
           ) : null}
           <Link
             to="/register"
             className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium text-sm transition-colors"
           >
-            {t("deleted.createAccount")}
+            {t("deleted.createAccount", "Create New Account")}
           </Link>
           <Link
             to="/login"
             className="flex items-center justify-center px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors"
-            title={t("deleted.backToLogin")}
+            title={t("deleted.backToLogin", "Back to Login")}
           >
             <FaSignInAlt />
           </Link>
           <Link
             to="/"
             className="flex items-center justify-center px-4 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-500 transition-colors"
-            title={t("deleted.goHome")}
+            title={t("deleted.goHome", "Go Home")}
           >
             <FaHome />
           </Link>

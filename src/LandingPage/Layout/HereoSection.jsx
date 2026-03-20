@@ -44,7 +44,7 @@ function HeroSection({ statistics, cms }) {
                     >
                         <Sparkles className="w-3 h-3 text-blue-600" />
                         <span className="text-xs md:text-sm text-gray-700 font-medium">
-                            {c("heroBadge") || t("ExploreOpportunities")}
+                            {c("heroBadge") || t("ExploreOpportunities", "Explore the world of opportunities")}
                         </span>
                         <Sparkles className="w-3 h-3 text-purple-600" />
                     </motion.div>
@@ -57,7 +57,7 @@ function HeroSection({ statistics, cms }) {
                         transition={{ delay: 0.3, duration: 0.8 }}
                     >
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm">
-                            {c("heroTitle") || t("DiveIntoPossibilities")}
+                            {c("heroTitle") || t("DiveIntoPossibilities", "Dive into a world of possibilities: Study abroad with us")}
                         </span>
                     </motion.h1>
 
@@ -76,7 +76,7 @@ function HeroSection({ statistics, cms }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6, duration: 0.8 }}
                     >
-                        {t("JoinUsToDiscover")}
+                        {t("JoinUsToDiscover", "Join us to discover incredible study abroad options and elevate your learning through specialized courses")}
                     </motion.p>
 
                     {/* Stats Cards */}
@@ -102,7 +102,7 @@ function HeroSection({ statistics, cms }) {
                             >
                                 <span className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                                 <span className="relative flex items-center gap-2">
-                                    {c("heroCta") || t("StudyAbroad")}
+                                    {c("heroCta") || t("StudyAbroad", "Study Abroad")}
                                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                                 </span>
                             </motion.button>

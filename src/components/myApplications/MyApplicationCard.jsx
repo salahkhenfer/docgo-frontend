@@ -8,17 +8,17 @@ const MyApplicationCard = ({ program, status }) => {
         const statusConfig = {
             rejected: {
                 icon: XCircle,
-                text: t("myApplicationsPage.status.rejected"),
+                text: t("myApplicationsPage.status.rejected", "Rejected"),
                 className: "bg-red-50 text-red-700 border-red-200",
             },
             accepted: {
                 icon: CheckCircle,
-                text: t("myApplicationsPage.status.accepted"),
+                text: t("myApplicationsPage.status.accepted", "Accepted"),
                 className: "bg-green-50 text-green-700 border-green-200",
             },
             pending: {
                 icon: Clock,
-                text: t("myApplicationsPage.status.pending"),
+                text: t("myApplicationsPage.status.pending", "Pending"),
                 className: "bg-amber-50 text-amber-700 border-amber-200",
             },
         };
@@ -87,7 +87,7 @@ const MyApplicationCard = ({ program, status }) => {
                                             className="text-gray-400"
                                         />
                                         <span>
-                                            {t("myApplicationsPage.appliedOn")}{" "}
+                                            {t("myApplicationsPage.appliedOn", "Applied on")}{" "}
                                             {program.appliedDate || ""}
                                         </span>
                                     </div>
@@ -131,10 +131,10 @@ const MyApplicationCard = ({ program, status }) => {
                     <div className="mt-6 pt-4 border-t border-amber-200/50">
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-xs font-medium text-amber-700">
-                                {t("myApplicationsPage.applicationProgress")}
+                                {t("myApplicationsPage.applicationProgress", "Application Progress")}
                             </span>
                             <span className="text-xs text-amber-600">
-                                {t("myApplicationsPage.underReview")}
+                                {t("myApplicationsPage.underReview", "Under Review")}
                             </span>
                         </div>
                         <div className="w-full bg-amber-200/50 rounded-full h-2">

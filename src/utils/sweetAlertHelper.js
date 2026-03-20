@@ -133,7 +133,7 @@ export const showEnrollmentSuccess = async () => {
     "alerts.enrollment.successTitle",
     "alerts.enrollment.successText",
     {
-      confirmButtonText: t("alerts.enrollment.startLearning"),
+      confirmButtonText: t("alerts.enrollment.startLearning", "Start Learning"),
     },
   );
 };
@@ -145,7 +145,7 @@ export const showEnrollmentError = async (errorMessage = null) => {
   const { t } = i18n;
 
   return showError("alerts.enrollment.failedTitle", null, {
-    text: errorMessage || t("alerts.enrollment.failedText"),
+    text: errorMessage || t("alerts.enrollment.failedText", "Could not enroll in the course. Please try again."),
   });
 };
 
@@ -159,7 +159,7 @@ export const showApplicationSuccess = async () => {
     "alerts.application.successTitle",
     "alerts.application.successText",
     {
-      confirmButtonText: t("alerts.application.viewApplications"),
+      confirmButtonText: t("alerts.application.viewApplications", "View applications"),
     },
   );
 };
@@ -171,7 +171,7 @@ export const showApplicationError = async (errorMessage = null) => {
   const { t } = i18n;
 
   return showError("alerts.application.failedTitle", null, {
-    text: errorMessage || t("alerts.application.failedText"),
+    text: errorMessage || t("alerts.application.failedText", "Could not submit your application for the program. Please try again."),
   });
 };
 
@@ -182,8 +182,8 @@ export const showPaymentPending = async (transactionId) => {
   const { t } = i18n;
 
   return showInfo("alerts.payment.pendingTitle", null, {
-    html: `${t("alerts.payment.pendingText")}<br/><br/>
-           <strong>${t("alerts.payment.transactionId")}</strong> ${transactionId}<br/><br/>
+    html: `${t("alerts.payment.pendingText", "Your payment is currently being reviewed by our administration team.")}<br/><br/>
+           <strong>${t("alerts.payment.transactionId", "Transaction ID:")}</strong> ${transactionId}<br/><br/>
            ${t("common.waitingForApproval", "Vous serez notifié une fois approuvé")}`,
     confirmButtonText: t("common.ok", "OK"),
   });
@@ -196,8 +196,8 @@ export const showCertificateGenerating = async () => {
   const { t } = i18n;
 
   return showAlert({
-    title: t("alerts.certificate.generatingTitle"),
-    html: t("alerts.certificate.generatingText"),
+    title: t("alerts.certificate.generatingTitle", "Generating Certificate"),
+    html: t("alerts.certificate.generatingText", "Please wait while your certificate is being created..."),
     allowOutsideClick: false,
     allowEscapeKey: false,
     didOpen: (modal) => {
@@ -224,11 +224,11 @@ export const showQuizIncomplete = async () => {
 export const showQuizSuccess = async (score) => {
   const { t } = i18n;
 
-  const passText = t("alerts.quiz.passText").replace("{{score}}", score);
+  const passText = t("alerts.quiz.passText", "You scored {{score}}%. You can now obtain your certificate.").replace("{{score}}", score);
 
   return showSuccess("alerts.quiz.successTitle", null, {
     html: `<strong>${passText}</strong>`,
-    confirmButtonText: t("alerts.quiz.viewResults"),
+    confirmButtonText: t("alerts.quiz.viewResults", "View my results"),
   });
 };
 
@@ -238,11 +238,11 @@ export const showQuizSuccess = async (score) => {
 export const showQuizFail = async (score) => {
   const { t } = i18n;
 
-  const failText = t("alerts.quiz.failText").replace("{{score}}", score);
+  const failText = t("alerts.quiz.failText", "You scored {{score}}%. At least 50% is needed to unlock the certificate.").replace("{{score}}", score);
 
   return showInfo("alerts.quiz.failTitle", null, {
     html: failText,
-    confirmButtonText: t("alerts.quiz.viewResults"),
+    confirmButtonText: t("alerts.quiz.viewResults", "View my results"),
   });
 };
 

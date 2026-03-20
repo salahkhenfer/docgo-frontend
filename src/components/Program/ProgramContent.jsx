@@ -103,7 +103,7 @@ const ProgramContent = ({ program }) => {
                             </svg>
                         </div>
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("About this program")}
+                            {t("About this program", "About this program")}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -119,7 +119,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center gap-3 mb-4">
                         <Award className="text-purple-600 w-6 h-6" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Program Information")}
+                            {t("Program Information", "Program Information")}
                         </h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,7 +142,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Type")}
+                                        {t("Type", "Type")}
                                     </p>
                                     <p className="text-gray-700 capitalize">
                                         {program.programType}
@@ -170,7 +170,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Organization")}
+                                        {t("Organization", "Organization")}
                                     </p>
                                     <p className="text-gray-700">
                                         {organization}
@@ -198,7 +198,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Category")}
+                                        {t("Category", "Category")}
                                     </p>
                                     <p className="text-gray-700">{category}</p>
                                 </div>
@@ -224,7 +224,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Language")}
+                                        {t("Language", "Language")}
                                     </p>
                                     <p className="text-gray-700">
                                         {program.language}
@@ -242,7 +242,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center gap-3 mb-4">
                         {/* <DollarSign className="text-emerald-600 w-6 h-6" /> */}
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Financial Information") ||
+                            {t("Financial Information", "Financial Information") ||
                                 "Financial Information"}
                         </h3>
                     </div>
@@ -254,7 +254,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Program Fee") || "Program Fee"}
+                                        {t("Program Fee", "Program Fee") || "Program Fee"}
                                     </p>
                                     <p className="text-gray-700 text-lg font-semibold">
                                         {program.Price} DZD
@@ -266,7 +266,7 @@ const ProgramContent = ({ program }) => {
                                     </p>
                                     {program.discountPrice && (
                                         <p className="text-sm text-emerald-600 mt-1">
-                                            {t("Discount Price") ||
+                                            {t("Discount Price", "Discount Price") ||
                                                 "Discount Price"}
                                             : {program.discountPrice} DZD
                                         </p>
@@ -282,7 +282,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Scholarship Available") ||
+                                        {t("Scholarship Available", "Scholarship Available") ||
                                             "Scholarship Available"}
                                     </p>
                                     <p className="text-gray-700 text-lg font-semibold">
@@ -306,7 +306,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center gap-3 mb-4">
                         <Calendar className="text-blue-600 w-6 h-6" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Program Highlights") || "Program Highlights"}
+                            {t("Program Highlights", "Program Highlights") || "Program Highlights"}
                         </h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -315,7 +315,7 @@ const ProgramContent = ({ program }) => {
                                 <Calendar className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Application Opens") ||
+                                        {t("Application Opens", "Application Opens") ||
                                             "Application Opens"}
                                     </p>
                                     <p className="text-gray-700">
@@ -332,7 +332,7 @@ const ProgramContent = ({ program }) => {
                                 <Clock className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Application Deadline") ||
+                                        {t("Application Deadline", "Application Deadline") ||
                                             "Application Deadline"}
                                     </p>
                                     <p className="text-gray-700">
@@ -349,7 +349,7 @@ const ProgramContent = ({ program }) => {
                                 <Calendar className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Program Starts") ||
+                                        {t("Program Starts", "Program Starts") ||
                                             "Program Starts"}
                                     </p>
                                     <p className="text-gray-700">
@@ -366,7 +366,7 @@ const ProgramContent = ({ program }) => {
                                 <Calendar className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Program Ends") || "Program Ends"}
+                                        {t("Program Ends", "Program Ends") || "Program Ends"}
                                     </p>
                                     <p className="text-gray-700">
                                         {new Date(
@@ -382,7 +382,7 @@ const ProgramContent = ({ program }) => {
                                 <MapPin className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Location") || "Location"}
+                                        {t("Location", "Location") || "Location"}
                                     </p>
                                     <p className="text-gray-700">{location}</p>
                                     {program.country && (
@@ -399,12 +399,12 @@ const ProgramContent = ({ program }) => {
                                 <Globe className="w-5 h-5 text-cyan-600 mt-0.5 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium text-gray-900 text-sm">
-                                        {t("Format") || "Format"}
+                                        {t("Format", "Format") || "Format"}
                                     </p>
                                     <p className="text-gray-700">
                                         {program.isRemote
-                                            ? t("Remote") || "Remote"
-                                            : t("On-site") || "On-site"}
+                                            ? t("Remote", "Remote") || "Remote"
+                                            : t("On-site", "On site") || "On-site"}
                                     </p>
                                 </div>
                             </div>
@@ -418,7 +418,7 @@ const ProgramContent = ({ program }) => {
                 <div className="flex items-center mb-4">
                     <Award className="text-blue-600 w-6 h-6 mr-3" />
                     <h3 className="text-xl font-bold text-gray-900">
-                        {t("Program Highlights") || "Program Highlights"}
+                        {t("Program Highlights", "Program Highlights") || "Program Highlights"}
                     </h3>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -427,7 +427,7 @@ const ProgramContent = ({ program }) => {
                             <Calendar className="text-blue-600 w-5 h-5 mr-3 mt-1 flex-shrink-0" />
                             <div>
                                 <p className="font-medium text-gray-900">
-                                    {t("Start Date") || "Start Date"}
+                                    {t("Start Date", "Start Date") || "Start Date"}
                                 </p>
                                 <p className="text-gray-600 text-sm">
                                     {new Date(
@@ -451,7 +451,7 @@ const ProgramContent = ({ program }) => {
                             <Clock className="text-blue-600 w-5 h-5 mr-3 mt-1 flex-shrink-0" />
                             <div>
                                 <p className="font-medium text-gray-900">
-                                    {t("Duration") || "Duration"}
+                                    {t("Duration", "Duration") || "Duration"}
                                 </p>
                                 <p className="text-gray-600 text-sm">
                                     {program.duration}
@@ -464,12 +464,12 @@ const ProgramContent = ({ program }) => {
                             <MapPin className="text-blue-600 w-5 h-5 mr-3 mt-1 flex-shrink-0" />
                             <div>
                                 <p className="font-medium text-gray-900">
-                                    {t("Location") || "Location"}
+                                    {t("Location", "Location") || "Location"}
                                 </p>
                                 <p className="text-gray-600 text-sm">
                                     {program.isRemote
-                                        ? t("Remote") || "Remote"
-                                        : t("On-site") || "On-site"}
+                                        ? t("Remote", "Remote") || "Remote"
+                                        : t("On-site", "On site") || "On-site"}
                                 </p>
                             </div>
                         </div>
@@ -479,11 +479,11 @@ const ProgramContent = ({ program }) => {
                             <Users className="text-blue-600 w-5 h-5 mr-3 mt-1 flex-shrink-0" />
                             <div>
                                 <p className="font-medium text-gray-900">
-                                    {t("Participants") || "Participants"}
+                                    {t("Participants", "Participants") || "Participants"}
                                 </p>
                                 <p className="text-gray-600 text-sm">
                                     {program.Users_count}{" "}
-                                    {t("enrolled") || "enrolled"}
+                                    {t("enrolled", "Enrolled") || "enrolled"}
                                 </p>
                             </div>
                         </div>
@@ -497,7 +497,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <Target className="text-blue-600 w-6 h-6 mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Eligibility Criteria") ||
+                            {t("Eligibility Criteria", "Eligibility Criteria") ||
                                 "Eligibility Criteria"}
                         </h3>
                     </div>
@@ -514,7 +514,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <Gift className="text-green-600 w-6 h-6 mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Program Benefits") || "Program Benefits"}
+                            {t("Program Benefits", "Program Benefits") || "Program Benefits"}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -530,7 +530,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <ClipboardList className="text-purple-600 w-6 h-6 mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Application Process") || "Application Process"}
+                            {t("Application Process", "Application Process") || "Application Process"}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -546,7 +546,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <FileText className="text-orange-600 w-6 h-6 mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Required Documents") || "Required Documents"}
+                            {t("Required Documents", "Required Documents") || "Required Documents"}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -562,7 +562,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <TbTargetArrow className="text-green-500 text-2xl mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("What you'll learn") || "What you'll learn"}
+                            {t("What you'll learn", "What you'll learn") || "What you'll learn"}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -578,7 +578,7 @@ const ProgramContent = ({ program }) => {
                     <div className="flex items-center mb-4">
                         <CheckCircle className="text-orange-500 w-6 h-6 mr-3" />
                         <h3 className="text-xl font-bold text-gray-900">
-                            {t("Requirements") || "Requirements"}
+                            {t("Requirements", "Requirements") || "Requirements"}
                         </h3>
                     </div>
                     <RichTextDisplay
@@ -592,7 +592,7 @@ const ProgramContent = ({ program }) => {
             {hasContent(program.structure) && (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-4">
-                        {t("Program Structure") || "Program Structure"}
+                        {t("Program Structure", "Program Structure") || "Program Structure"}
                     </h3>
                     <RichTextDisplay
                         textClassName="text-gray-700"
@@ -607,7 +607,7 @@ const ProgramContent = ({ program }) => {
                 program.website) && (
                 <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-sm border border-indigo-100 p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-4">
-                        {t("Contact Information") || "Contact Information"}
+                        {t("Contact Information", "Contact Information") || "Contact Information"}
                     </h3>
                     <div className="space-y-3">
                         {program.contactEmail && (
@@ -629,7 +629,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 font-medium">
-                                        {t("Email") || "Email"}
+                                        {t("Email", "Email") || "Email"}
                                     </p>
                                     <a
                                         href={`mailto:${program.contactEmail}`}
@@ -659,7 +659,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 font-medium">
-                                        {t("Phone") || "Phone"}
+                                        {t("Phone", "Phone") || "Phone"}
                                     </p>
                                     <a
                                         href={`tel:${program.contactPhone}`}
@@ -689,7 +689,7 @@ const ProgramContent = ({ program }) => {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 font-medium">
-                                        {t("Website") || "Website"}
+                                        {t("Website", "Website") || "Website"}
                                     </p>
                                     <a
                                         href={program.website}

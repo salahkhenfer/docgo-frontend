@@ -71,7 +71,7 @@ const CertificatesProfileSection = ({
       </div>
       {/* <div className="mt-8 text-right">
         <button className="text-blue-500 hover:text-blue-600 font-semibold underline">
-          {t("certificates.view_all")}
+          {t("certificates.view_all", "View all certificates")}
         </button>
       </div> */}
     </div>

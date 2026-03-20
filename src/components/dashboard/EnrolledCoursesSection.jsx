@@ -79,7 +79,7 @@ const EnrolledCoursesSection = ({ enrollments }) => {
             </svg>
           </div>
           <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900">
-            {t("dashboard.enrolledCourses")}
+            {t("dashboard.enrolledCourses", "My enrolled courses")}
           </h2>
         </div>
         <div className="text-xs sm:text-sm text-gray-500">

@@ -36,14 +36,14 @@ const CourseSidebar = ({
                 <div className="flex items-center mb-4">
                     <FaChartLine className="text-blue-500 text-xl mr-3" />
                     <h3 className="text-lg font-bold text-gray-900">
-                        {t("courseInfo.courseStatistics")}
+                        {t("courseInfo.courseStatistics", "Course Statistics")}
                     </h3>
                 </div>
 
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
                         <span className="text-gray-600">
-                            {t("courseInfo.totalStudents")}
+                            {t("courseInfo.totalStudents", "Total Students")}
                         </span>
                         <span className="font-semibold text-gray-900">
                             {courseStats?.enrolledCount || 0}
@@ -52,7 +52,7 @@ const CourseSidebar = ({
 
                     <div className="flex justify-between items-center">
                         <span className="text-gray-600">
-                            {t("courseInfo.completionRate")}
+                            {t("courseInfo.completionRate", "Completion Rate")}
                         </span>
                         <span className="font-semibold text-green-600">
                             {courseStats?.completionRate || 0}%
@@ -61,7 +61,7 @@ const CourseSidebar = ({
 
                     <div className="flex justify-between items-center">
                         <span className="text-gray-600">
-                            {t("courseInfo.averageRating")}
+                            {t("courseInfo.averageRating", "Average Rating")}
                         </span>
                         <span className="font-semibold text-yellow-600">
                             {courseStats?.averageRating?.toFixed(1) || "0.0"} 
@@ -70,7 +70,7 @@ const CourseSidebar = ({
 
                     <div className="flex justify-between items-center">
                         <span className="text-gray-600">
-                            {t("courseInfo.totalReviews")}
+                            {t("courseInfo.totalReviews", "Total Reviews")}
                         </span>
                         <span className="font-semibold text-gray-900">
                             {courseStats?.reviewCount || 0}
@@ -85,7 +85,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <FaCalendarAlt className="text-green-500 text-xl mr-3" />
                         <h3 className="text-lg font-bold text-gray-900">
-                            {t("courseInfo.upcomingSessions")}
+                            {t("courseInfo.upcomingSessions", "Upcoming Sessions")}
                         </h3>
                     </div>
 
@@ -121,7 +121,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <FaCertificate className="text-yellow-500 text-xl mr-3" />
                         <h3 className="text-lg font-bold text-gray-900">
-                            {t("courseInfo.certificate")}
+                            {t("courseInfo.certificate", "Certificate")}
                         </h3>
                     </div>
 
@@ -129,15 +129,15 @@ const CourseSidebar = ({
                         <div className="flex items-center text-yellow-800 mb-2">
                             <FaTrophy className="mr-2" />
                             <span className="font-semibold">
-                                {t("courseInfo.certificateEarned")}
+                                {t("courseInfo.certificateEarned", "Certificate Earned!")}
                             </span>
                         </div>
                         <div className="text-sm text-yellow-700 mb-3">
-                            {t("courseInfo.congratulations")}
+                            {t("courseInfo.congratulations", "Congratulations on completing the course")}
                         </div>
                         <button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                             <FaDownload className="mr-2" />
-                            {t("courseInfo.downloadCertificate")}
+                            {t("courseInfo.downloadCertificate", "Download Certificate")}
                         </button>
                     </div>
                 </div>
@@ -148,7 +148,7 @@ const CourseSidebar = ({
                 <div className="flex items-center mb-4">
                     <FaGraduationCap className="text-purple-500 text-xl mr-3" />
                     <h3 className="text-lg font-bold text-gray-900">
-                        {t("courseInfo.courseDetails")}
+                        {t("courseInfo.courseDetails", "Course Details")}
                     </h3>
                 </div>
 
@@ -156,7 +156,7 @@ const CourseSidebar = ({
                     <div className="flex items-center">
                         <FaGlobeAmericas className="text-gray-400 mr-3" />
                         <span className="text-gray-600">
-                            {t("courseInfo.language")}:
+                            {t("courseInfo.language", "Language")}:
                         </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.language || "English"}
@@ -166,7 +166,7 @@ const CourseSidebar = ({
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
-                            {t("courseInfo.level")}:
+                            {t("courseInfo.level", "Level")}:
                         </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.level || "Beginner"}
@@ -176,7 +176,7 @@ const CourseSidebar = ({
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
-                            {t("courseInfo.category")}:
+                            {t("courseInfo.category", "Category")}:
                         </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.category || "General"}
@@ -186,7 +186,7 @@ const CourseSidebar = ({
                     <div className="flex items-center">
                         <span className="text-gray-400 mr-3"></span>
                         <span className="text-gray-600">
-                            {t("courseInfo.field")}:
+                            {t("courseInfo.field", "Field")}:
                         </span>
                         <span className="ml-auto font-medium text-gray-900">
                             {course.field || "Education"}
@@ -197,7 +197,7 @@ const CourseSidebar = ({
                         <div className="flex items-center">
                             <span className="text-gray-400 mr-3"></span>
                             <span className="text-gray-600">
-                                {t("courseInfo.lastUpdated")}:
+                                {t("courseInfo.lastUpdated", "Last Updated")}:
                             </span>
                             <span className="ml-auto font-medium text-gray-900">
                                 {new Date(
@@ -215,7 +215,7 @@ const CourseSidebar = ({
                     <div className="flex items-center mb-4">
                         <span className="text-indigo-500 text-xl mr-3"></span>
                         <h3 className="text-lg font-bold text-gray-900">
-                            {t("courseInfo.instructor")}
+                            {t("courseInfo.instructor", "Instructor")}
                         </h3>
                     </div>
 
@@ -231,7 +231,7 @@ const CourseSidebar = ({
                             </div>
                             <div className="text-sm text-gray-500">
                                 {course.instructor.title ||
-                                    t("courseInfo.courseInstructor")}
+                                    t("courseInfo.courseInstructor", "Course Instructor")}
                             </div>
                         </div>
                     </div>

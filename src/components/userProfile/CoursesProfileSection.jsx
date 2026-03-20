@@ -11,7 +11,7 @@ const CoursesProfileSection = ({ courses, currentSlide, setSlide }) => {
     <div className="bg-white rounded-3xl p-8 shadow-sm">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-3xl font-bold text-gray-800">
-          {t("courses_data.title")}
+          {t("courses_data.title", "Your Courses")}
         </h2>
         <div className="flex items-center gap-4">
           <SliderButtonProfile
@@ -61,7 +61,7 @@ const CoursesProfileSection = ({ courses, currentSlide, setSlide }) => {
       </div>
       {/* <div className="mt-8 text-right">
         <button className="text-blue-500 hover:text-blue-600 font-semibold underline">
-          {t("courses_data.view_all")}
+          {t("courses_data.view_all", "View all courses")}
         </button>
       </div> */}
     </div>
@@ -107,7 +107,7 @@ const CourseCard = ({ course }) => {
 
       <div className="space-y-3">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">{t("courses_data.progress")}</span>
+          <span className="text-gray-500">{t("courses_data.progress", "Progress")}</span>
           <span className="font-medium">{enrollmentProgress}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -121,10 +121,10 @@ const CourseCard = ({ course }) => {
 
         <div className="flex justify-between text-xs text-gray-500 mb-3">
           <span>
-            {t("courses_data.enrolled")}:{" "}
+            {t("courses_data.enrolled", "Enrolled")}:{" "}
             {enrollmentDate
               ? new Date(enrollmentDate).toLocaleDateString()
-              : t("profile_data.active")}
+              : t("profile_data.active", "Active")}
           </span>
           {courseData.duration && <span>{courseData.duration}</span>}
         </div>
@@ -133,12 +133,12 @@ const CourseCard = ({ course }) => {
           <div className="flex items-center space-x-2">
             {courseData.videos_count && (
               <span className="text-xs text-gray-500">
-                {courseData.videos_count} {t("courses_data.videos")}
+                {courseData.videos_count} {t("courses_data.videos", "videos")}
               </span>
             )}
             {enrollmentProgress >= 100 && (
               <span className="text-xs text-green-600 font-medium">
-                 {t("profile_data.completed")}
+                 {t("profile_data.completed", "Completed")}
               </span>
             )}
           </div>
@@ -149,7 +149,7 @@ const CourseCard = ({ course }) => {
                 to={`/courses/${courseData.id}/certificate`}
                 className="px-3 py-1 bg-green-500 text-white rounded-lg text-xs hover:bg-green-600 transition-colors"
               >
-                {t("courses_data.certificate")}
+                {t("courses_data.certificate", "Certificate")}
               </Link>
             )}
             <Link
@@ -157,8 +157,8 @@ const CourseCard = ({ course }) => {
               className="px-4 py-2 bg-blue-500 text-white rounded-xl text-sm hover:bg-blue-600 transition-colors"
             >
               {enrollmentProgress >= 100
-                ? t("courses_data.review")
-                : t("courses_data.continue")}
+                ? t("courses_data.review", "Review")
+                : t("courses_data.continue", "Continue")}
             </Link>
           </div>
         </div>

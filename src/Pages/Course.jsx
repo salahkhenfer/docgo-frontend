@@ -72,7 +72,7 @@ export const Course = () => {
   } = useCourse(courseId);
 
   const formatCurrency = (amount) => {
-    if (!amount || parseFloat(amount) === 0) return t("Free") || "Free";
+    if (!amount || parseFloat(amount) === 0) return t("Free", "Free") || "Free";
     // eslint-disable-next-line no-undef
     return new Intl.NumberFormat(i18n.language === "ar" ? "ar-DZ" : "en-US", {
       style: "currency",
@@ -85,13 +85,13 @@ export const Course = () => {
 
     // Validate required fields
     if (!contactForm.subject || !contactForm.message) {
-      toast.error(t("common.fillAllFields"));
+      toast.error(t("common.fillAllFields", "Please fill all required fields."));
       return;
     }
 
     // For non-authenticated users, validate name and email
     if (!user && (!contactForm.name || !contactForm.email)) {
-      toast.error(t("common.fillAllFields"));
+      toast.error(t("common.fillAllFields", "Please fill all required fields."));
       return;
     }
 
@@ -114,7 +114,7 @@ export const Course = () => {
       const endpoint = user ? "/contact" : "/contact";
       await axios.post(endpoint, requestData);
 
-      toast.success(t("common.messageSentSuccess"));
+      toast.success(t("common.messageSentSuccess", "Message sent successfully!"));
 
       setContactForm({
         subject: "",
@@ -152,7 +152,7 @@ export const Course = () => {
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success(
-        t("Link copied to clipboard") || "Link copied to clipboard",
+        t("Link copied to clipboard", "Link copied to clipboard") || "Link copied to clipboard",
       );
     }
   };
@@ -161,8 +161,8 @@ export const Course = () => {
     setIsFavorite(!isFavorite);
     toast.success(
       isFavorite
-        ? t("Removed from favorites") || "Removed from favorites"
-        : t("Added to favorites") || "Added to favorites",
+        ? t("Removed from favorites", "Removed from favorites") || "Removed from favorites"
+        : t("Added to favorites", "Added to favorites") || "Added to favorites",
     );
   };
 
@@ -170,9 +170,9 @@ export const Course = () => {
     return (
       <>
         <Seo
-          title={t("Course") || "Course"}
+          title={t("Course", "Course") || "Course"}
           description={
-            t("Course details and learning content on healthpathglobal.") ||
+            t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
             "Course details and learning content on healthpathglobal."
           }
           canonicalPath={location.pathname}
@@ -186,10 +186,10 @@ export const Course = () => {
     return (
       <>
         <Seo
-          title={t("Unable to Load Course") || "Unable to Load Course"}
+          title={t("Unable to Load Course", "Unable to Load Course") || "Unable to Load Course"}
           description={
             error ||
-            t("Something went wrong while loading the course details.") ||
+            t("Something went wrong while loading the course details.", "Something went wrong while loading the course details.") ||
             "Something went wrong while loading the course details."
           }
           canonicalPath={location.pathname}
@@ -199,11 +199,11 @@ export const Course = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
             <div className="text-red-500 text-4xl sm:text-5xl mb-4"></div>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-              {t("Unable to Load Course") || "Unable to Load Course"}
+              {t("Unable to Load Course", "Unable to Load Course") || "Unable to Load Course"}
             </h2>
             <p className="text-sm sm:text-base text-gray-600 mb-6">
               {error ||
-                t("Something went wrong while loading the course details.") ||
+                t("Something went wrong while loading the course details.", "Something went wrong while loading the course details.") ||
                 "Something went wrong while loading the course details."}
             </p>
             <button
@@ -211,13 +211,13 @@ export const Course = () => {
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 flex items-center justify-center mx-auto text-sm sm:text-base"
             >
               <IoMdRefresh className="mr-2 w-4 h-4" />
-              {t("Try Again") || "Try Again"}
+              {t("Try Again", "Try Again") || "Try Again"}
             </button>
             <Link
               to="/Courses"
               className="inline-block mt-4 text-blue-600 hover:text-blue-700 text-xs sm:text-sm"
             >
-              â{t("Back to Courses") || "Back to Courses"}
+              â{t("Back to Courses", "Back to Courses") || "Back to Courses"}
             </Link>
           </div>
         </div>
@@ -229,7 +229,7 @@ export const Course = () => {
     return (
       <>
         <Seo
-          title={t("Course Not Found") || "Course Not Found"}
+          title={t("Course Not Found", "Course Not Found") || "Course Not Found"}
           description={
             t(
               "The course you're looking for doesn't exist or has been removed.",
@@ -243,7 +243,7 @@ export const Course = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
             <div className="text-gray-400 text-4xl sm:text-5xl mb-4"></div>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-              {t("Course Not Found") || "Course Not Found"}
+              {t("Course Not Found", "Course Not Found") || "Course Not Found"}
             </h2>
             <p className="text-sm sm:text-base text-gray-600 mb-6">
               {t(
@@ -255,7 +255,7 @@ export const Course = () => {
               to="/Courses"
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 inline-block text-sm sm:text-base"
             >
-              {t("Browse Courses") || "Browse Courses"}
+              {t("Browse Courses", "Browse Courses") || "Browse Courses"}
             </Link>
           </div>
         </div>
@@ -364,7 +364,7 @@ export const Course = () => {
     ? courseSeoDescription.length > 160
       ? `${courseSeoDescription.slice(0, 157)}...`
       : courseSeoDescription
-    : t("Course details and learning content on healthpathglobal.") ||
+    : t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
       "Course details and learning content on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
@@ -394,7 +394,7 @@ export const Course = () => {
   return (
     <>
       <Seo
-        title={courseTitle || t("Course") || "Course"}
+        title={courseTitle || t("Course", "Course") || "Course"}
         description={seoDescription}
         canonicalPath={location.pathname}
         image={courseSeoImage}
@@ -417,7 +417,7 @@ export const Course = () => {
                 </button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {t("Course Details") || "Course Details"}
+                    {t("Course Details", "Course Details") || "Course Details"}
                   </h1>
                   <p className="text-gray-600">{courseTitle}</p>
                 </div>
@@ -428,7 +428,7 @@ export const Course = () => {
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
                   <MessageSquare className="w-4 h-4" />
-                  {t("Contact") || "Contact"}
+                  {t("Contact", "Contact") || "Contact"}
                 </button>
                 <button
                   onClick={handleShare}
@@ -459,7 +459,7 @@ export const Course = () => {
             <div className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg flex items-center text-sm sm:text-base">
               <IoMdRefresh className="animate-spin mr-2 w-4 h-4" />
               <span className="hidden sm:inline">
-                {t("Refreshing...") || "Refreshing..."}
+                {t("Refreshing...", "Refreshing...") || "Refreshing..."}
               </span>
               <span className="sm:hidden">...</span>
             </div>
@@ -495,7 +495,7 @@ export const Course = () => {
                     <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-2">
                       <PlayCircle className="w-4 h-4 text-white" />
                       <span className="text-white text-sm font-medium">
-                        {t("Watch Intro Video") || "Watch Intro Video"}
+                        {t("Watch Intro Video", "Watch Intro Video") || "Watch Intro Video"}
                       </span>
                     </div>
                   </div>
@@ -583,7 +583,7 @@ export const Course = () => {
                     className="mb-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg flex items-center gap-3"
                   >
                     <PlayCircle className="w-6 h-6" />
-                    {t("Watch Course") || "Watch Course"}
+                    {t("Watch Course", "Watch Course") || "Watch Course"}
                   </button>
                 )}
 
@@ -595,7 +595,7 @@ export const Course = () => {
                       {/* <DollarSign className="w-5 h-5 text-green-600" /> */}
                       <div>
                         <p className="text-sm text-green-700 font-medium">
-                          {t("Price") || "Price"}
+                          {t("Price", "Price") || "Price"}
                         </p>
                         <p className="text-lg font-bold text-green-800">
                           {formatCurrency(coursePrice, currency)}
@@ -610,7 +610,7 @@ export const Course = () => {
                       <Clock className="w-5 h-5 text-blue-600" />
                       <div>
                         <p className="text-sm text-blue-700 font-medium">
-                          {t("Duration") || "Duration"}
+                          {t("Duration", "Duration") || "Duration"}
                         </p>
                         <p className="text-lg font-bold text-blue-800">
                           {(() => {
@@ -644,7 +644,7 @@ export const Course = () => {
                       <Users className="w-5 h-5 text-purple-600" />
                       <div>
                         <p className="text-sm text-purple-700 font-medium">
-                          {t("Students") || "Students"}
+                          {t("Students", "Students") || "Students"}
                         </p>
                         <p className="text-lg font-bold text-purple-800">
                           {course.Users_count ??
@@ -661,7 +661,7 @@ export const Course = () => {
                       <Star className="w-5 h-5 text-yellow-600" />
                       <div>
                         <p className="text-sm text-yellow-700 font-medium">
-                          {t("Rating") || "Rating"}
+                          {t("Rating", "Rating") || "Rating"}
                         </p>
                         <p className="text-lg font-bold text-yellow-800">
                           {courseStats?.averageRating || course.Rate
@@ -713,7 +713,7 @@ export const Course = () => {
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <Mail className="w-5 h-5" />
-                    {t("Contact for this course") || "Contact for this course"}
+                    {t("Contact for this course", "Contact for this course") || "Contact for this course"}
                   </h3>
                   <form onSubmit={handleContactSubmit} className="space-y-4">
                     {/* Name and Email fields for non-authenticated users */}
@@ -721,7 +721,7 @@ export const Course = () => {
                       <div className="grid grid-cols-1 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t("Name") || "Name"}{" "}
+                            {t("Name", "Name") || "Name"}{" "}
                             <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -735,14 +735,14 @@ export const Course = () => {
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder={
-                              t("Your full name") || "Your full name"
+                              t("Your full name", "Your full name") || "Your full name"
                             }
                             required
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t("Email") || "Email"}{" "}
+                            {t("Email", "Email") || "Email"}{" "}
                             <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -756,7 +756,7 @@ export const Course = () => {
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder={
-                              t("Your email address") || "Your email address"
+                              t("Your email address", "Your email address") || "Your email address"
                             }
                             required
                           />
@@ -766,7 +766,7 @@ export const Course = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t("Subject") || "Subject"}{" "}
+                        {t("Subject", "Subject") || "Subject"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -779,13 +779,13 @@ export const Course = () => {
                           })
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder={t("Message subject") || "Message subject"}
+                        placeholder={t("Message subject", "Message subject") || "Message subject"}
                         required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t("Message") || "Message"}{" "}
+                        {t("Message", "Message") || "Message"}{" "}
                         <span className="text-red-500">*</span>
                       </label>
                       <textarea
@@ -799,7 +799,7 @@ export const Course = () => {
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                         placeholder={
-                          t("Your message about this course...") ||
+                          t("Your message about this course...", "Your message about this course...") ||
                           "Your message about this course..."
                         }
                         required
@@ -813,15 +813,15 @@ export const Course = () => {
                       >
                         <Send className="w-4 h-4" />
                         {isSubmittingContact
-                          ? t("Sending...") || "Sending..."
-                          : t("Send") || "Send"}
+                          ? t("Sending...", "Sending...") || "Sending..."
+                          : t("Send", "Send") || "Send"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowContactForm(false)}
                         className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
                       >
-                        {t("Cancel") || "Cancel"}
+                        {t("Cancel", "Cancel") || "Cancel"}
                       </button>
                     </div>
                   </form>
@@ -852,18 +852,18 @@ export const Course = () => {
                   <div className="text-center">
                     <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
                     <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                      {t("Questions about this course?") ||
+                      {t("Questions about this course?", "Questions about this course?") ||
                         "Questions about this course?"}
                     </h3>
                     <p className="text-blue-700 text-sm mb-4">
-                      {t("Click the Contact button to get in touch with us") ||
+                      {t("Click the Contact button to get in touch with us", "Click the Contact button to get in touch with us") ||
                         "Click the Contact button to get in touch with us"}
                     </p>
                     <button
                       onClick={() => setShowContactForm(true)}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
                     >
-                      {t("Contact Us") || "Contact Us"}
+                      {t("Contact Us", "Contact Us") || "Contact Us"}
                     </button>
                   </div>
                 </div>
@@ -878,7 +878,7 @@ export const Course = () => {
             <div className="bg-black rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden">
               <div className="flex items-center justify-between p-4 bg-gray-900">
                 <h3 className="text-lg font-semibold text-white">
-                  {currentVideo.title || t("Course Video")}
+                  {currentVideo.title || t("Course Video", "Course Video")}
                 </h3>
                 <button
                   onClick={handleCloseVideo}
@@ -899,7 +899,7 @@ export const Course = () => {
                   <div className="bg-gray-900 p-8 text-center min-h-[400px] flex flex-col items-center justify-center">
                     <PlayCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-400">
-                      {t("Video not available") || "Video not available"}
+                      {t("Video not available", "Video not available") || "Video not available"}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
                       Check console for video data structure

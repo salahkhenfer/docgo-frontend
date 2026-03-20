@@ -65,18 +65,18 @@ const ApplicationsProfileSection = ({
         return (
             <div className="bg-white rounded-3xl p-8 shadow-sm">
                 <h2 className="text-3xl font-bold text-gray-800 mb-8">
-                    {t("profile_data.applications")}
+                    {t("profile_data.applications", "Applications")}
                 </h2>
                 <div className="text-center py-12">
                     <GraduationCap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500 mb-4">
-                        {t("dashboard.noApplications")}
+                        {t("dashboard.noApplications", "No Applications")}
                     </p>
                     <Link
                         to="/programs"
                         className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
-                        {t("dashboard.browsePrograms")}
+                        {t("dashboard.browsePrograms", "Browse Programs")}
                     </Link>
                 </div>
             </div>
@@ -87,7 +87,7 @@ const ApplicationsProfileSection = ({
         <div className="bg-white rounded-3xl p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">
-                    {t("profile_data.applications")}
+                    {t("profile_data.applications", "Applications")}
                 </h2>
                 <div className="flex items-center gap-4">
                     <SliderButtonProfile
@@ -194,7 +194,7 @@ const ApplicationCard = ({ application, getStatusIcon, getStatusColor }) => {
             </div>
 
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                {targetData?.title || t("dashboard.applicationTitle")}
+                {targetData?.title || t("dashboard.applicationTitle", "Application Title")}
             </h3>
 
             {targetData?.description && (
@@ -206,7 +206,7 @@ const ApplicationCard = ({ application, getStatusIcon, getStatusColor }) => {
             <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                     <span className="text-gray-500">
-                        {t("applications.submitted")}
+                        {t("applications.submitted", "Submitted on:")}
                     </span>
                     <span className="text-gray-700">
                         {new Date(application.createdAt).toLocaleDateString()}
@@ -216,7 +216,7 @@ const ApplicationCard = ({ application, getStatusIcon, getStatusColor }) => {
                 {application.updatedAt !== application.createdAt && (
                     <div className="flex justify-between">
                         <span className="text-gray-500">
-                            {t("applications.lastUpdate")}
+                            {t("applications.lastUpdate", "Last update")}
                         </span>
                         <span className="text-gray-700">
                             {new Date(
@@ -236,7 +236,7 @@ const ApplicationCard = ({ application, getStatusIcon, getStatusColor }) => {
                             }
                             className="block w-full text-center px-4 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600 transition-colors"
                         >
-                            {t("applications.access")}
+                            {t("applications.access", "Access")}
                         </Link>
                     </div>
                 )}
@@ -244,7 +244,7 @@ const ApplicationCard = ({ application, getStatusIcon, getStatusColor }) => {
                 {application.status === "pending" && (
                     <div className="mt-4 pt-3 border-t border-gray-200">
                         <p className="text-xs text-gray-500 text-center">
-                            {t("applications.pendingMessage")}
+                            {t("applications.pendingMessage", "Your application is under review")}
                         </p>
                     </div>
                 )}

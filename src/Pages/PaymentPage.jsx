@@ -384,14 +384,14 @@ const PaymentPage = () => {
   };
 
   const handlePaymentSuccess = (paymentData) => {
-    let successMessage = t("alerts.payment.successTitle");
+    let successMessage = t("alerts.payment.successTitle", "Payment Successful!");
     let redirectMessage = t(
       "common.redirecting",
       "Redirecting to your dashboard...",
     );
 
     if (paymentData.method === "ccp") {
-      successMessage = t("alerts.payment.successTitle");
+      successMessage = t("alerts.payment.successTitle", "Payment Successful!");
       redirectMessage = t(
         "common.ccpSubmitted",
         "Your CCP payment has been submitted for verification. You will be notified once it's approved.",
@@ -538,18 +538,18 @@ const PaymentPage = () => {
             >
               <FaArrowLeft />
               <span>
-                {t("paymentPage.backToItem")} {t(`paymentPage.${itemType}`)}
+                {t("paymentPage.backToItem", "Back")} {t(`paymentPage.${itemType}`)}
               </span>
             </button>
 
             <div className="flex items-center gap-3">
               <FaLock className="text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-900">
-                {t("paymentPage.title")}
+                {t("paymentPage.title", "Secure Payment")}
               </h1>
             </div>
             <p className="text-gray-600 mt-2">
-              {t("paymentPage.enrollmentMessage")}
+              {t("paymentPage.enrollmentMessage", "Complete your enrollment in this course")}
             </p>
           </div>
         </div>
@@ -569,15 +569,15 @@ const PaymentPage = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-red-900 mb-2">
-                        {t("paymentPage.rejectionNotice.title")}
+                        {t("paymentPage.rejectionNotice.title", "Title")}
                       </h3>
                       <div className="space-y-2 text-sm">
                         <p className="text-red-700">
                           <strong>
-                            {t("paymentPage.rejectionNotice.reason")}:
+                            {t("paymentPage.rejectionNotice.reason", "Reason")}:
                           </strong>{" "}
                           {existingPayment.rejectionReason ||
-                            t("paymentPage.rejectionNotice.noReason")}
+                            t("paymentPage.rejectionNotice.noReason", "No Reason")}
                         </p>
                         <p className="text-red-600">
                           <strong>Transaction ID:</strong>{" "}
@@ -700,7 +700,7 @@ const PaymentPage = () => {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">
-                  {t("paymentPage.orderSummary")}
+                  {t("paymentPage.orderSummary", "Order Summary")}
                 </h3>
 
                 {/* Item Info */}
@@ -746,7 +746,7 @@ const PaymentPage = () => {
                     <div className="border-t border-gray-300 pt-3">
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-gray-900 text-lg">
-                          {t("paymentPage.total")}
+                          {t("paymentPage.total", "Total")}
                         </span>
                         <span className="font-bold text-2xl text-blue-600">
                           {price} {currency}
@@ -761,19 +761,19 @@ const PaymentPage = () => {
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.securePayment")}
+                      {t("paymentPage.securePayment", "SSL Secure & Encrypted Payment")}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.instantAccess")}
+                      {t("paymentPage.instantAccess", "Instant access after payment")}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.moneyBackGuarantee")}
+                      {t("paymentPage.moneyBackGuarantee", "30-day money-back guarantee")}
                     </span>
                   </div>
                 </div>

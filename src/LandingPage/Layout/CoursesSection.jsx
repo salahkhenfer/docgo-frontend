@@ -106,7 +106,7 @@ function CoursesSection({ featuredCourses, latestCourses }) {
     <Container>
       <div id="Coureses" className="relative px-2 sm:px-4 md:px-6">
         <h2 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium  text-gray-700 text-center mb-8">
-          {t("DeepenYourKnowledgeWithOurCourses")}
+          {t("DeepenYourKnowledgeWithOurCourses", "Deepen your knowledge with our courses")}
         </h2>
 
         <div
@@ -142,7 +142,7 @@ function CoursesSection({ featuredCourses, latestCourses }) {
             scrollPosition <= 0 ? "hidden" : ""
           }`}
           onClick={() => handleScrollButton("left")}
-          aria-label={t("Previous")}
+          aria-label={t("Previous", "Previous")}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -152,7 +152,7 @@ function CoursesSection({ featuredCourses, latestCourses }) {
             scrollPosition >= maxScroll ? "hidden" : ""
           }`}
           onClick={() => handleScrollButton("right")}
-          aria-label={t("Next")}
+          aria-label={t("Next", "Next")}
         >
           <ChevronRight className="w-6 h-6" />
         </button>

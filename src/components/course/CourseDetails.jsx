@@ -38,9 +38,9 @@ export const CourseDetails = () => {
     return (
       <>
         <Seo
-          title={t("Course") || "Course"}
+          title={t("Course", "Course") || "Course"}
           description={
-            t("Course details and learning content on healthpathglobal.") ||
+            t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
             "Course details and learning content on healthpathglobal."
           }
           canonicalPath={location.pathname}
@@ -54,7 +54,7 @@ export const CourseDetails = () => {
     return (
       <>
         <Seo
-          title={t("Unable to Load Course") || "Unable to Load Course"}
+          title={t("Unable to Load Course", "Unable to Load Course") || "Unable to Load Course"}
           description={
             error || "Something went wrong while loading the course details."
           }
@@ -94,7 +94,7 @@ export const CourseDetails = () => {
     return (
       <>
         <Seo
-          title={t("Course Not Found") || "Course Not Found"}
+          title={t("Course Not Found", "Course Not Found") || "Course Not Found"}
           description={
             "The course you're looking for doesn't exist or has been removed."
           }
@@ -155,7 +155,7 @@ export const CourseDetails = () => {
     ? courseSeoDescription.length > 160
       ? `${courseSeoDescription.slice(0, 157)}...`
       : courseSeoDescription
-    : t("Course details and learning content on healthpathglobal.") ||
+    : t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
       "Course details and learning content on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
@@ -171,7 +171,7 @@ export const CourseDetails = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",
-    name: courseTitle || t("Course") || "Course",
+    name: courseTitle || t("Course", "Course") || "Course",
     description: seoDescription,
     url: absoluteUrl,
     image: courseSeoImage || undefined,
@@ -208,7 +208,7 @@ export const CourseDetails = () => {
   return (
     <>
       <Seo
-        title={courseTitle || t("Course") || "Course"}
+        title={courseTitle || t("Course", "Course") || "Course"}
         description={seoDescription}
         canonicalPath={location.pathname}
         image={courseSeoImage}
@@ -224,7 +224,7 @@ export const CourseDetails = () => {
             <div className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg flex items-center text-sm sm:text-base">
               <IoMdRefresh className="animate-spin mr-2 w-4 h-4" />
               <span className="hidden sm:inline">
-                {t("course_data.refreshing") || "Refreshing..."}
+                {t("course_data.refreshing", "Refreshing...") || "Refreshing..."}
               </span>
               <span className="sm:hidden">...</span>
             </div>

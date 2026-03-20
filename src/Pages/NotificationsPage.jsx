@@ -68,22 +68,22 @@ const NotificationsPage = () => {
   const filterOptions = [
     {
       value: "all",
-      label: t("filter.all"),
+      label: t("filter.all", "All"),
       count: notifications.length,
     },
     {
       value: "unread",
-      label: t("filter.unread"),
+      label: t("filter.unread", "Unread"),
       count: unreadCount,
     },
     {
       value: "read",
-      label: t("filter.read"),
+      label: t("filter.read", "Read"),
       count: notifications.length - unreadCount,
     },
     {
       value: "application",
-      label: t("filter.applications"),
+      label: t("filter.applications", "Applications"),
       count: notifications.filter((n) => n.type === "application").length,
     },
   ];
@@ -103,8 +103,8 @@ const NotificationsPage = () => {
               )}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{t("title")}</h1>
-              <p className="text-gray-600">{t("description")}</p>
+              <h1 className="text-3xl font-bold text-gray-900">{t("title", "Title")}</h1>
+              <p className="text-gray-600">{t("description", "Description")}</p>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ const NotificationsPage = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Check size={16} />
-                  {t("markAllAsRead")}
+                  {t("markAllAsRead", "Mark All As Read")}
                 </button>
               )}
               <span className="text-sm text-gray-600">
@@ -135,7 +135,7 @@ const NotificationsPage = () => {
           <div className="flex items-center gap-2 mb-4">
             <Filter size={16} className="text-gray-500" />
             <span className="text-sm font-medium text-gray-700">
-              {t("filterBy")}
+              {t("filterBy", "Filter By")}
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -164,10 +164,10 @@ const NotificationsPage = () => {
             <div className="text-center py-12">
               <Bell size={48} className="text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {t("noNotificationsFound")}
+                {t("noNotificationsFound", "No Notifications Found")}
               </h3>
               <p className="text-gray-600">
-                {searchTerm ? t("tryAdjustingSearch") : t("allCaughtUp")}
+                {searchTerm ? t("tryAdjustingSearch", "Try Adjusting Search") : t("allCaughtUp", "All Caught Up")}
               </p>
             </div>
           ) : (

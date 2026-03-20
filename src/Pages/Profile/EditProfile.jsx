@@ -42,7 +42,7 @@ const EditProfile = () => {
     };
     // Function to get placeholder text based on language
     const getSelectCountryText = () => {
-        return t("editProfile.selectCountry") || "Select Country";
+        return t("editProfile.selectCountry", "Select country") || "Select Country";
     };
     const getFields = (optionString) => {
         const [english_french, arabic] = optionString.split(" / ");
@@ -234,7 +234,7 @@ const EditProfile = () => {
                     ...data,
                 }));
             } else {
-                toast.error(t("apiErrors.failedToLoad"));
+                toast.error(t("apiErrors.failedToLoad", "Failed to load data. Please try again."));
             }
         } catch (error) {
             toast.error(getApiErrorMessage(error, t));
@@ -274,7 +274,7 @@ const EditProfile = () => {
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            {t("editProfile.title") || "Edit Profile"}
+                            {t("editProfile.title", "Edit Profile") || "Edit Profile"}
                         </h1>
                         <button
                             onClick={() => navigate("/profile")}
@@ -331,9 +331,9 @@ const EditProfile = () => {
                                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 {uploadingImage
-                                    ? t("editProfile.uploadingImage") ||
+                                    ? t("editProfile.uploadingImage", "Uploading...") ||
                                       "Uploading Image..."
-                                    : t("editProfile.uploadProfileImage") ||
+                                    : t("editProfile.uploadProfileImage", "Upload profile photo") ||
                                       "Upload profile Image"}
                             </button>
                         </div>
@@ -344,7 +344,7 @@ const EditProfile = () => {
                                     htmlFor="firstName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    {t("editProfile.firstName") || "First Name"}{" "}
+                                    {t("editProfile.firstName", "First Name") || "First Name"}{" "}
                                     *
                                 </label>
                                 <input
@@ -365,7 +365,7 @@ const EditProfile = () => {
                                     htmlFor="lastName"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    {t("editProfile.lastName") || "Last Name"} *
+                                    {t("editProfile.lastName", "Last Name") || "Last Name"} *
                                 </label>
                                 <input
                                     type="text"
@@ -385,7 +385,7 @@ const EditProfile = () => {
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {t("editProfile.email") || "Email Address"} *
+                                {t("editProfile.email", "Email address") || "Email Address"} *
                             </label>
                             <input
                                 type="email"
@@ -402,7 +402,7 @@ const EditProfile = () => {
                                 htmlFor="phoneNumber"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {t("editProfile.phoneNumber") || "Phone Number"}
+                                {t("editProfile.phoneNumber", "Phone number") || "Phone Number"}
                             </label>
                             <input
                                 type="tel"
@@ -419,7 +419,7 @@ const EditProfile = () => {
                                 htmlFor="country"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                {t("editProfile.country") || "Country"}
+                                {t("editProfile.country", "Country") || "Country"}
                             </label>
                             <select
                                 id="country"
@@ -449,7 +449,7 @@ const EditProfile = () => {
                         {/* Academic Information */}
                         <div className="border-t pt-6">
                             <h3 className="text-lg font-medium text-gray-900 mb-4">
-                                {t("editProfile.academicInformation") ||
+                                {t("editProfile.academicInformation", "Academic Information") ||
                                     "Academic Information"}
                             </h3>
 
@@ -459,7 +459,7 @@ const EditProfile = () => {
                                         htmlFor="studyField"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        {t("editProfile.studyField") ||
+                                        {t("editProfile.studyField", "Study Field") ||
                                             "Study Field"}
                                     </label>
                                     <select
@@ -497,7 +497,7 @@ const EditProfile = () => {
                                         htmlFor="studyDomain"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        {t("editProfile.studyDomain") ||
+                                        {t("editProfile.studyDomain", "Specialization") ||
                                             "Study Domain"}
                                     </label>
                                     <select
@@ -560,10 +560,10 @@ const EditProfile = () => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             ></path>
                                         </svg>
-                                        {t("editProfile.saving") || "Saving..."}
+                                        {t("editProfile.saving", "Saving...") || "Saving..."}
                                     </div>
                                 ) : (
-                                    t("editProfile.saveChanges") ||
+                                    t("editProfile.saveChanges", "Save Changes") ||
                                     "Save Changes"
                                 )}
                             </button>
@@ -573,7 +573,7 @@ const EditProfile = () => {
                                 onClick={() => navigate("/profile")}
                                 className="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                             >
-                                {t("editProfile.cancel") || "Cancel"}
+                                {t("editProfile.cancel", "Cancel") || "Cancel"}
                             </button>
                         </div>
                     </form>

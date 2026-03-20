@@ -210,7 +210,7 @@ const CourseReviews = ({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {t("course_data.studentReviews") || "Student Reviews"}
+        {t("course_data.studentReviews", "Student reviews") || "Student Reviews"}
       </h3>
 
       {totalReviews > 0 ? (
@@ -267,10 +267,10 @@ const CourseReviews = ({
         <div className="text-center py-8 text-gray-400">
           <FaRegStar className="text-4xl mx-auto mb-3" />
           <p className="text-gray-500">
-            {t("course_data.noReviewsYet") || "No reviews yet"}
+            {t("course_data.noReviewsYet", "No reviews yet") || "No reviews yet"}
           </p>
           <p className="text-sm">
-            {t("course_data.beFirstToReview") || "Be the first to review!"}
+            {t("course_data.beFirstToReview", "Be the first to review this course!") || "Be the first to review!"}
           </p>
         </div>
       )}

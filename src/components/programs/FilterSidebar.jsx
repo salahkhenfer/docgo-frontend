@@ -23,10 +23,10 @@ const FilterSidebar = ({
     const { t } = useTranslation();
 
     const statusOptions = [
-        { value: "", label: t("All Status") || "All Status" },
-        { value: "open", label: t("Open") || "Open" },
-        { value: "closed", label: t("Closed") || "Closed" },
-        { value: "upcoming", label: t("Upcoming") || "Upcoming" },
+        { value: "", label: t("All Status", "All Status") || "All Status" },
+        { value: "open", label: t("Open", "Open") || "Open" },
+        { value: "closed", label: t("Closed", "Closed") || "Closed" },
+        { value: "upcoming", label: t("Upcoming", "Upcoming") || "Upcoming" },
     ];
 
     const hasActiveFilters = Object.entries(filters).some(
@@ -51,7 +51,7 @@ const FilterSidebar = ({
                 <div className="flex items-center gap-2">
                     <Filter className="w-4 h-4 text-blue-600" />
                     <h3 className="text-base font-semibold text-gray-900">
-                        {t("Filtres") || "Filtres"}
+                        {t("Filtres", "Filtres") || "Filtres"}
                     </h3>
                 </div>
                 {hasActiveFilters && (
@@ -60,7 +60,7 @@ const FilterSidebar = ({
                         className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
                     >
                         <RotateCcw className="w-3 h-3" />
-                        {t("Reset") || "Reset"}
+                        {t("Reset", "Reset") || "Reset"}
                     </button>
                 )}
             </div>
@@ -70,17 +70,17 @@ const FilterSidebar = ({
                 <div className="bg-green-50 p-3 rounded-lg border border-green-200">
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-2">
                         <Sparkles className="w-4 h-4 text-green-600" />
-                        {t("Price Type") || "Price Type"}
+                        {t("Price Type", "Price Type") || "Price Type"}
                     </label>
                     <div className="space-y-1">
                         {[
                             {
                                 value: "all",
-                                label: t("All Programs") || "All Programs",
+                                label: t("All Programs", "All Programs") || "All Programs",
                             },
                             {
                                 value: "free",
-                                label: t("Free Only") || " Free Only",
+                                label: t("Free Only", "Free Only") || " Free Only",
                             },
                         ].map((option) => (
                             <label
@@ -122,17 +122,17 @@ const FilterSidebar = ({
                 <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-2">
                         <Star className="w-4 h-4 text-yellow-600 fill-yellow-600" />
-                        {t("Featured Programs") || "Featured Programs"}
+                        {t("Featured Programs", "Featured Programs") || "Featured Programs"}
                     </label>
                     <div className="space-y-1">
                         {[
                             {
                                 value: "",
-                                label: t("All Programs") || "All Programs",
+                                label: t("All Programs", "All Programs") || "All Programs",
                             },
                             {
                                 value: "true",
-                                label: t("Featured Only") || "Featured Only",
+                                label: t("Featured Only", "Featured Only") || "Featured Only",
                             },
                         ].map((option) => (
                             <label
@@ -162,7 +162,7 @@ const FilterSidebar = ({
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <Tag className="w-3.5 h-3.5 text-blue-600" />
-                        {t("Category") || "Category"}
+                        {t("Category", "Category") || "Category"}
                     </label>
                     <select
                         value={filters.category}
@@ -172,7 +172,7 @@ const FilterSidebar = ({
                         className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
                     >
                         <option value="">
-                            {t("All Categories") || "All Categories"}
+                            {t("All Categories", "All Categories") || "All Categories"}
                         </option>
                         {categories.map((category, index) => {
                             const categoryValue =
@@ -199,7 +199,7 @@ const FilterSidebar = ({
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <Building className="w-3.5 h-3.5 text-green-600" />
-                        {t("Organization") || "Organization"}
+                        {t("Organization", "Organization") || "Organization"}
                     </label>
                     <select
                         value={filters.organization}
@@ -209,7 +209,7 @@ const FilterSidebar = ({
                         className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
                     >
                         <option value="">
-                            {t("All Organizations") || "All Organizations"}
+                            {t("All Organizations", "All Organizations") || "All Organizations"}
                         </option>
                         {organizations.map((org, index) => {
                             const orgValue =
@@ -236,7 +236,7 @@ const FilterSidebar = ({
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <Calendar className="w-3.5 h-3.5 text-purple-600" />
-                        {t("Status") || "Status"}
+                        {t("Status", "Status") || "Status"}
                     </label>
                     <select
                         value={filters.status}
@@ -257,7 +257,7 @@ const FilterSidebar = ({
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <MapPin className="w-3.5 h-3.5 text-red-600" />
-                        {t("Location") || "Location"}
+                        {t("Location", "Location") || "Location"}
                     </label>
                     <select
                         value={filters.location}
@@ -267,7 +267,7 @@ const FilterSidebar = ({
                         className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
                     >
                         <option value="">
-                            {t("All Locations") || "All Locations"}
+                            {t("All Locations", "All Locations") || "All Locations"}
                         </option>
                         {Array.isArray(locations) &&
                             [
@@ -296,23 +296,23 @@ const FilterSidebar = ({
                 <div className="bg-cyan-50 p-3 rounded-lg border border-cyan-200">
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-2">
                         <Monitor className="w-4 h-4 text-cyan-600" />
-                        {t("Program Format") || "Program Format"}
+                        {t("Program Format", "Program Format") || "Program Format"}
                     </label>
                     <div className="space-y-1">
                         {[
                             {
                                 value: "",
-                                label: t("All Formats") || "All Formats",
+                                label: t("All Formats", "All Formats") || "All Formats",
                             },
                             {
                                 value: "true",
                                 label:
-                                    t("Online Programs") || "Online Programs",
+                                    t("Online Programs", "Online Programs") || "Online Programs",
                             },
                             {
                                 value: "false",
                                 label:
-                                    t("On-site Programs") || "On-site Programs",
+                                    t("On-site Programs", "On site Programs") || "On-site Programs",
                             },
                         ].map((option) => (
                             <label
@@ -342,12 +342,12 @@ const FilterSidebar = ({
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <Tag className="w-3.5 h-3.5 text-pink-600" />
-                        {t("Tags") || "Tags"}
+                        {t("Tags", "Tags") || "Tags"}
                     </label>
                     <input
                         type="text"
                         placeholder={
-                            t("Enter tags (comma separated)") ||
+                            t("Enter tags (comma separated)", "Enter tags (comma separated)") ||
                             "Enter tags (comma separated)"
                         }
                         value={filters.tags}

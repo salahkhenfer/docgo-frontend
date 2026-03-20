@@ -23,7 +23,7 @@ const Switch = () => {
             : "border-gray-400 text-customGray"
         }`}
       >
-        {t("studyAbroad")}
+        {t("studyAbroad", "Study abroad")}
       </button>
       <button
         onClick={() => setIsSwitched(true)}
@@ -33,7 +33,7 @@ const Switch = () => {
             : "border-gray-400 text-customGray"
         }`}
       >
-        {t("learningCourses")}
+        {t("learningCourses", "Learning Courses")}
       </button>
     </div>
   );

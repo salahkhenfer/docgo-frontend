@@ -230,7 +230,7 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
     return (
       <div className="p-8 text-center text-gray-500">
         <HelpCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-        <p>{t("No quiz questions available")}</p>
+        <p>{t("No quiz questions available", "No quiz questions available")}</p>
       </div>
     );
   }
@@ -241,8 +241,8 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
       <div className="mb-6 p-4 bg-purple-50 rounded-xl border border-purple-100">
         <h2 className="text-xl font-bold text-purple-800 mb-1">{item.title}</h2>
         <p className="text-sm text-purple-600">
-          {t("Passing score")}: {passingScore}% &nbsp;|&nbsp;
-          {t("Attempts")}: {attempts}/{maxAttempts}
+          {t("Passing score", "Passing score")}: {passingScore}% &nbsp;|&nbsp;
+          {t("Attempts", "Attempts")}: {attempts}/{maxAttempts}
         </p>
       </div>
 
@@ -258,15 +258,15 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
           <p className="text-2xl font-bold mb-1">{score}%</p>
           <p className="font-medium">
             {score >= passingScore
-              ? t("Quiz passed! Great job.")
-              : t("Quiz failed. Try again.")}
+              ? t("Quiz passed! Great job.", "Quiz passed! Great job.")
+              : t("Quiz failed. Try again.", "Quiz failed. Try again.")}
           </p>
           {score < passingScore && attempts < maxAttempts && (
             <button
               onClick={handleRetry}
               className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
             >
-              {t("Retry")}
+              {t("Retry", "Retry")}
             </button>
           )}
         </div>
@@ -376,7 +376,7 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
             })}
             className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
-            {t("Submit Quiz")}
+            {t("Submit Quiz", "Submit Quiz")}
           </button>
         </div>
       )}
@@ -385,7 +385,7 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
       {isCompleted && !submitted && (
         <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-green-700 text-sm text-center">
           <FaCheckCircle className="inline mr-2" />
-          {t("You have already completed this quiz")}
+          {t("You have already completed this quiz", "You have already completed this quiz")}
         </div>
       )}
     </div>
@@ -439,11 +439,11 @@ function PdfViewer({ item, onComplete, isCompleted }) {
             onClick={handleMark}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
           >
-            <FaCheckCircle /> {t("Mark as Read")}
+            <FaCheckCircle /> {t("Mark as Read", "Mark as Read")}
           </button>
         ) : (
           <span className="flex items-center gap-2 text-green-700 font-medium text-sm">
-            <FaCheckCircle /> {t("Completed")}
+            <FaCheckCircle /> {t("Completed", "Completed")}
           </span>
         )}
       </div>
@@ -459,7 +459,7 @@ function PdfViewer({ item, onComplete, isCompleted }) {
         />
       ) : (
         <div className="flex items-center justify-center h-64 bg-gray-50 rounded-xl border border-gray-200 text-gray-500">
-          <p>{t("PDF not available")}</p>
+          <p>{t("PDF not available", "PDF not available")}</p>
         </div>
       )}
     </div>
@@ -507,18 +507,18 @@ function TextReader({ item, onComplete, isCompleted }) {
             onClick={handleMark}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
           >
-            <FaCheckCircle /> {t("Mark as Read")}
+            <FaCheckCircle /> {t("Mark as Read", "Mark as Read")}
           </button>
         ) : (
           <span className="flex items-center gap-2 text-green-700 font-medium text-sm">
-            <FaCheckCircle /> {t("Completed")}
+            <FaCheckCircle /> {t("Completed", "Completed")}
           </span>
         )}
       </div>
       <div
         className="prose prose-gray max-w-none p-6 bg-white rounded-xl border border-gray-200 shadow-sm leading-relaxed"
         dangerouslySetInnerHTML={{
-          __html: content || `<p>${t("No content available")}</p>`,
+          __html: content || `<p>${t("No content available", "No content available")}</p>`,
         }}
       />
     </div>
@@ -617,7 +617,7 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
         <h2 className="text-xl font-semibold text-gray-800">{item.title}</h2>
         {isCompleted && (
           <span className="flex items-center gap-2 text-green-700 font-medium text-sm">
-            <FaCheckCircle /> {t("Completed")}
+            <FaCheckCircle /> {t("Completed", "Completed")}
           </span>
         )}
       </div>
@@ -640,7 +640,7 @@ function VideoItemPlayer({ item, courseId, onComplete, isCompleted }) {
           <div className="w-full aspect-video flex items-center justify-center bg-gray-900 text-white">
             <div className="text-center p-8">
               <p className="text-gray-400 text-sm">
-                {t("Video not available")}
+                {t("Video not available", "Video not available")}
               </p>
             </div>
           </div>
@@ -722,7 +722,7 @@ function CourseReviewWidget({ courseId, courseData }) {
     <div className="max-w-[860px] mx-auto mt-10 mb-4">
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
         <h3 className="text-base font-bold text-gray-900 mb-4">
-          {t("Rate this course") || "Rate this course"}
+          {t("Rate this course", "Rate this course") || "Rate this course"}
         </h3>
 
         {userReview && !editMode ? (
@@ -872,7 +872,7 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
           className="w-full flex items-center justify-between text-left"
         >
           <span className="text-base font-bold text-gray-900">
-            {t("Report a problem") || "Report a problem"}
+            {t("Report a problem", "Report a problem") || "Report a problem"}
           </span>
           {open ? (
             <ChevronUp className="w-4 h-4 text-gray-400" />
@@ -886,13 +886,13 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
             {sent ? (
               <div className="flex items-center gap-2 text-green-600 bg-green-50 border border-green-100 rounded-xl px-4 py-3 text-sm font-medium">
                 <FaCheckCircle className="w-4 h-4 flex-shrink-0" />
-                {t("Report sent") ||
+                {t("Report sent", "Report sent") ||
                   "Your report has been sent. We'll look into it soon!"}
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
                 <p className="text-sm text-gray-500">
-                  {t("report_desc") ||
+                  {t("report_desc", "Describe the problem you encountered with this lesson or content.") ||
                     "Describe the issue with this lesson (e.g. video not loading, wrong content, etc.) and we'll fix it as soon as possible."}
                 </p>
                 <textarea
@@ -902,7 +902,7 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
                   required
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
                   placeholder={
-                    t("report_placeholder") ||
+                    t("report_placeholder", "e.g. Video won't play, audio is out of sync, subtitle error…") ||
                     "e.g. The video is not loading / The content is incorrect…"
                   }
                 />
@@ -912,8 +912,8 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
                   className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 disabled:opacity-60 transition-colors"
                 >
                   {sending
-                    ? t("Sending…") || "Sending…"
-                    : t("Send report") || "Send report"}
+                    ? t("Sending…", "Sending…") || "Sending…"
+                    : t("Send report", "Send report") || "Send report"}
                 </button>
               </form>
             )}
@@ -1089,20 +1089,20 @@ export function CourseSections() {
           : user?.name || "";
 
     const result = await Swal.fire({
-      title: t("certificate.realNameTitle") || "Certificate Name",
+      title: t("certificate.realNameTitle", "Your Certificate Name") || "Certificate Name",
       html: `
                 <p style="margin-bottom:10px;color:#374151">
                     ${
-                      t("certificate.realNameWarning") ||
+                      t("certificate.realNameWarning", "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.") ||
                       "Your certificate will be issued under your real name. This cannot be changed later."
                     }
                 </p>
                 <p style="font-weight:700;font-size:1.1em;color:#7c3aed;padding:8px 16px;background:#f3e8ff;border-radius:8px;display:inline-block">
-                    ${studentName || t("certificate.noName") || "Name not set"}
+                    ${studentName || t("certificate.noName", "your name") || "Name not set"}
                 </p>
                 ${
                   !studentName
-                    ? `<p style="margin-top:10px;color:#dc2626;font-size:0.9em">${t("certificate.goSetName") || "Please update your profile with your real name first."}</p>`
+                    ? `<p style="margin-top:10px;color:#dc2626;font-size:0.9em">${t("certificate.goSetName", "Go set your name in profile") || "Please update your profile with your real name first."}</p>`
                     : ""
                 }
             `,
@@ -1110,8 +1110,8 @@ export function CourseSections() {
       showCancelButton: true,
       confirmButtonColor: "#7c3aed",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: t("certificate.proceed") || "Get Certificate",
-      cancelButtonText: t("certificate.cancel") || "Cancel",
+      confirmButtonText: t("certificate.proceed", "Get Certificate") || "Get Certificate",
+      cancelButtonText: t("certificate.cancel", "Cancel") || "Cancel",
       focusCancel: !studentName,
     });
 
@@ -1130,13 +1130,13 @@ export function CourseSections() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">
-            {error || t("Error loading course")}
+            {error || t("Error loading course", "Error loading course")}
           </p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
             className="text-blue-600 hover:underline"
           >
-            {t("Go back to course")}
+            {t("Go back to course", "Go back to course")}
           </button>
         </div>
       </div>
@@ -1157,7 +1157,7 @@ export function CourseSections() {
       ? [
           {
             id: "legacy",
-            title: t("Course Content"),
+            title: t("Course Content", "Course Content"),
             items: legacyVideos.map((v) => ({
               id: v.id,
               title: v.title,
@@ -1183,7 +1183,7 @@ export function CourseSections() {
             className="flex items-center gap-2 text-gray-600 font-medium"
           >
             <ChevronLeft className="w-5 h-5" />
-            {course?.Title || t("Back to course")}
+            {course?.Title || t("Back to course", "Back to course")}
           </button>
         </div>
 
@@ -1196,7 +1196,7 @@ export function CourseSections() {
                 className="mt-6 mb-4 flex items-center text-gray-600 hover:text-blue-600 transition-all group"
               >
                 <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
-                {t("Back to course")}
+                {t("Back to course", "Back to course")}
               </button>
               <h1 className="text-xl font-bold leading-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-5">
                 {course?.Title}
@@ -1204,7 +1204,7 @@ export function CourseSections() {
               <div className="mb-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-semibold text-gray-700">
-                    {t("Progress")}
+                    {t("Progress", "Progress")}
                   </span>
                   <span className="text-lg font-bold text-blue-600">0%</span>
                 </div>
@@ -1215,11 +1215,11 @@ export function CourseSections() {
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  0 / 0 {t("items completed")}
+                  0 / 0 {t("items completed", "Items completed")}
                 </p>
               </div>
               <div className="flex-1 flex items-center justify-center text-gray-400 text-sm py-12">
-                {t("No lessons yet")}
+                {t("No lessons yet", "No lessons yet")}
               </div>
             </div>
           </aside>
@@ -1231,7 +1231,7 @@ export function CourseSections() {
                 <BookOpen className="w-8 h-8 text-blue-400" />
               </div>
               <h2 className="text-xl font-semibold text-gray-700">
-                {t("This course has no content yet")}
+                {t("This course has no content yet", "This course has no content yet")}
               </h2>
               <p className="text-gray-500 text-sm max-w-xs">
                 {t(
@@ -1242,7 +1242,7 @@ export function CourseSections() {
                 onClick={() => navigate(`/Courses/${courseId}`)}
                 className="mt-2 px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-all"
               >
-                {t("Go back to course")}
+                {t("Go back to course", "Go back to course")}
               </button>
             </div>
 
@@ -1273,7 +1273,7 @@ export function CourseSections() {
         className="mt-6 mb-4 flex items-center text-gray-600 hover:text-blue-600 transition-all group"
       >
         <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
-        {t("Back to course")}
+        {t("Back to course", "Back to course")}
       </button>
 
       <h1 className="text-xl font-bold leading-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-5">
@@ -1284,7 +1284,7 @@ export function CourseSections() {
       <div className="mb-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-semibold text-gray-700">
-            {t("Progress")}
+            {t("Progress", "Progress")}
           </span>
           <span className="text-lg font-bold text-blue-600">
             {progressPct}%
@@ -1297,7 +1297,7 @@ export function CourseSections() {
           />
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {completedItems.size} / {totalItems} {t("items completed")}
+          {completedItems.size} / {totalItems} {t("items completed", "Items completed")}
         </p>
       </div>
       {/* Certificate button */}
@@ -1313,14 +1313,14 @@ export function CourseSections() {
           {isCertificateUnlocked ? (
             <div className="flex items-center gap-3 text-purple-700 font-semibold">
               <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-              <span className="flex-1">{t("Certificate")}</span>
+              <span className="flex-1">{t("Certificate", "certificate")}</span>
               <ChevronRight className="w-4 h-4" />
             </div>
           ) : (
             <div className="flex items-center gap-3 text-gray-400">
               <FaLock className="w-5 h-5" />
               <span className="flex-1 text-sm">
-                {t("Certificate (locked)")}
+                {t("Certificate (locked)", "Certificate (locked)")}
               </span>
             </div>
           )}
@@ -1355,7 +1355,7 @@ export function CourseSections() {
                     {section.title}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {sectionDone}/{sectionItems.length} {t("completed")}
+                    {sectionDone}/{sectionItems.length} {t("completed", "Completed")}
                   </p>
                 </div>
                 {sectionItems.length > 0 &&
@@ -1436,14 +1436,14 @@ export function CourseSections() {
         <div className="flex flex-col w-full">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-semibold text-zinc-800">
-              {t("Course Certificate")}
+              {t("Course Certificate", "Course Certificate")}
             </h1>
             <button
               onClick={() => setShowCertificate(false)}
               className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             >
               <X className="w-4 h-4" />
-              <span>{t("Back")}</span>
+              <span>{t("Back", "Back")}</span>
             </button>
           </div>
           <Certificate />
@@ -1454,7 +1454,7 @@ export function CourseSections() {
     if (!currentItem) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
-          <p>{t("Select an item from the sidebar to begin")}</p>
+          <p>{t("Select an item from the sidebar to begin", "Select an item from the sidebar to begin")}</p>
         </div>
       );
     }
@@ -1516,7 +1516,7 @@ export function CourseSections() {
         return (
           <div className="p-8 text-center text-gray-500">
             <p>
-              {t("Unknown item type")}: {currentItem.type}
+              {t("Unknown item type", "Unknown item type")}: {currentItem.type}
             </p>
           </div>
         );
@@ -1610,7 +1610,7 @@ export function CourseSections() {
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
               >
                 <ChevronLeft className="w-4 h-4" />
-                {t("Previous")}
+                {t("Previous", "Previous")}
               </button>
 
               {hasNext ? (
@@ -1620,7 +1620,7 @@ export function CourseSections() {
                   }
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm"
                 >
-                  {t("Next")}
+                  {t("Next", "Next")}
                   <ChevronRight className="w-4 h-4" />
                 </button>
               ) : hasCertificate ? (
@@ -1629,7 +1629,7 @@ export function CourseSections() {
                   disabled={!canFinishCourse}
                   title={
                     !canFinishCourse
-                      ? t("Pass the quiz to continue") ||
+                      ? t("Pass the quiz to continue", "Pass the quiz to continue") ||
                         "Pass the quiz to continue"
                       : ""
                   }
@@ -1644,7 +1644,7 @@ export function CourseSections() {
                   ) : (
                     <FaLock className="w-4 h-4" />
                   )}
-                  {t("End of course")}
+                  {t("End of course", "End of course")}
                 </button>
               ) : (
                 <button
@@ -1652,7 +1652,7 @@ export function CourseSections() {
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white shadow-sm font-medium"
                 >
                   <FaCheckCircle className="w-4 h-4" />
-                  {t("Course completed")}
+                  {t("Course completed", "Course completed")}
                 </button>
               )}
             </div>

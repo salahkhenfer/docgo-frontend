@@ -24,7 +24,7 @@ const LanguageDropdown = ({ compact = false, menuClassName = "" }) => {
     useEffect(() => {
         document.documentElement.dir = i18n.dir();
         document.documentElement.lang = i18n.language;
-        document.title = i18n.t("appTitle");
+        document.title = i18n.t("appTitle", "healthpathglobal");
 
         // Close dropdown when clicking outside
         const handleClickOutside = (event) => {

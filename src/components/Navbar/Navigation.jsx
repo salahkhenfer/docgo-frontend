@@ -201,7 +201,7 @@ function Navigation({ branding = null }) {
     return (
       <div className="flex w-full items-center justify-center gap-1.5 overflow-x-auto whitespace-nowrap px-1 xl:gap-3 [&::-webkit-scrollbar]:hidden">
         <Link to="/" className={getNavLinkClass("home")}>
-          {t("Home_nav")}
+          {t("Home_nav", "Home")}
           <ActiveIndicator isActive={isHomeActive} />
         </Link>
         {isAuth && (
@@ -211,11 +211,11 @@ function Navigation({ branding = null }) {
           </Link>
         )}
         <Link to="/programs" className={getNavLinkClass("programs")}>
-          {t("Programs_nav")}
+          {t("Programs_nav", "Programs")}
           <ActiveIndicator isActive={isProgramsActive} />
         </Link>
         <Link to="/courses" className={getNavLinkClass("courses")}>
-          {t("Courses_nav")}
+          {t("Courses_nav", "Courses")}
           <ActiveIndicator isActive={isCoursesActive} />
         </Link>
         {/* {isAuth && (
@@ -240,7 +240,7 @@ function Navigation({ branding = null }) {
           to="/faq"
           className={`${getNavLinkClass("faq")} flex items-center gap-1`}
         >
-          {t("FAQ")}
+          {t("FAQ", "FAQ")}
           <ActiveIndicator isActive={isFaqActive} />
         </Link>
         {/* <Link
@@ -254,7 +254,7 @@ function Navigation({ branding = null }) {
                     >
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
-                    {t("Favorites")}
+                    {t("Favorites", "Favorites")}
                 </Link> */}
         {!isAuth && (
           <>
@@ -265,7 +265,7 @@ function Navigation({ branding = null }) {
                 "ourServices",
               )} bg-transparent border-none cursor-pointer`}
             >
-              {t("OurServicesLink")}
+              {t("OurServicesLink", "Our Services")}
               <ActiveIndicator isActive={activeSection === "ourServices"} />
             </button>
             <button
@@ -275,7 +275,7 @@ function Navigation({ branding = null }) {
                 "aboutUs",
               )} bg-transparent border-none cursor-pointer`}
             >
-              {t("AboutUsLink")}
+              {t("AboutUsLink", "About Us")}
               <ActiveIndicator isActive={activeSection === "aboutUs"} />
             </button>
           </>
@@ -345,7 +345,7 @@ function Navigation({ branding = null }) {
                     ? "bg-red-100 text-red-600"
                     : "text-gray-600 hover:text-red-500 hover:bg-red-50"
                 }`}
-                title={t("Favorites") || "Favorites"}
+                title={t("Favorites", "Favorites") || "Favorites"}
               >
                 <div className="relative">
                   {totalCount > 0 ? (

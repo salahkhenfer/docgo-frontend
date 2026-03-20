@@ -41,12 +41,12 @@ const FormField = ({
 // Compact validation schema
 const validationSchema = Yup.object({
   cardName: Yup.string()
-    .required(t("required"))
+    .required(t("required", "Required"))
     .min(3, t("minLength", { length: 3 })),
   cardNumber: Yup.string()
-    .required(t("required"))
-    .matches(/^[0-9\s]{13,19}$/, t("invalidCardNumber"))
-    .test("test-number", t("invalidCardNumber"), (value) => {
+    .required(t("required", "Required"))
+    .matches(/^[0-9\s]{13,19}$/, t("invalidCardNumber", "Invalid card number"))
+    .test("test-number", t("invalidCardNumber", "Invalid card number"), (value) => {
       const cardNumber = (value || "").replace(/\s/g, "");
       if (cardNumber.length < 13) return false;
 
@@ -65,17 +65,17 @@ const validationSchema = Yup.object({
       return sum % 10 === 0;
     }),
   expiryDate: Yup.string()
-    .required(t("required"))
-    .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, t("invalidExpiryFormat"))
-    .test("test-expiry", t("expiredCard"), (value) => {
+    .required(t("required", "Required"))
+    .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, t("invalidExpiryFormat", "MM/YY format"))
+    .test("test-expiry", t("expiredCard", "Card expired"), (value) => {
       if (!value) return false;
       const [month, year] = value.split("/");
       const expiryDate = new Date(20 + year, month - 1, 1);
       return expiryDate > new Date();
     }),
   cvv: Yup.string()
-    .required(t("required"))
-    .matches(/^[0-9]{3,4}$/, t("invalidCVV")),
+    .required(t("required", "Required"))
+    .matches(/^[0-9]{3,4}$/, t("invalidCVV", "Invalid CVV")),
 });
 
 // Formatters
@@ -108,7 +108,7 @@ const CardDetailsForm = () => {
   const { t } = useTranslation();
   return (
     <div className="w-full max-w-md mx-auto p-3 bg-white shadow-sm rounded-lg">
-      <h2 className="text-lg font-bold mb-3 text-zinc-800">{t("payment")}</h2>
+      <h2 className="text-lg font-bold mb-3 text-zinc-800">{t("payment", "Payment")}</h2>
 
       <Formik
         initialValues={{
@@ -120,7 +120,7 @@ const CardDetailsForm = () => {
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setTimeout(() => {
-            alert(t("paymentSuccess"));
+            alert(t("paymentSuccess", "Payment Success"));
             setSubmitting(false);
           }, 500);
         }}
@@ -130,9 +130,9 @@ const CardDetailsForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
                 <FormField
-                  label={t("cardName")}
+                  label={t("cardName", "Name on card")}
                   name="cardName"
-                  placeholder={t("enterCardName")}
+                  placeholder={t("enterCardName", "Enter name")}
                   errors={errors}
                   touched={touched}
                 />
@@ -140,9 +140,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-2">
                 <FormField
-                  label={t("cardNumber")}
+                  label={t("cardNumber", "Card Number")}
                   name="cardNumber"
-                  placeholder={t("enterCardNumber")}
+                  placeholder={t("enterCardNumber", "XXXX XXXX XXXX XXXX")}
                   errors={errors}
                   touched={touched}
                   onChange={(e) => {
@@ -154,9 +154,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-1">
                 <FormField
-                  label={t("expiryDate")}
+                  label={t("expiryDate", "Expiry Date")}
                   name="expiryDate"
-                  placeholder={t("enterExpiryDate")}
+                  placeholder={t("enterExpiryDate", "MM/YY")}
                   errors={errors}
                   touched={touched}
                   onChange={(e) => {
@@ -168,9 +168,9 @@ const CardDetailsForm = () => {
 
               <div className="col-span-1">
                 <FormField
-                  label={t("cvv")}
+                  label={t("cvv", "CVV")}
                   name="cvv"
-                  placeholder={t("enterCVV")}
+                  placeholder={t("enterCVV", "123")}
                   errors={errors}
                   touched={touched}
                 />
@@ -205,10 +205,10 @@ const CardDetailsForm = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    {t("processing")}
+                    {t("processing", "Processing...")}
                   </span>
                 ) : (
-                  t("completePayment")
+                  t("completePayment", "Complete Payment")
                 )}
               </Button>
             </div>

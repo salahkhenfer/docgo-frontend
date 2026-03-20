@@ -159,7 +159,7 @@ const Programs = () => {
     };
 
     const formatDate = (dateString) => {
-        if (!dateString) return t("programs.notDefined");
+        if (!dateString) return t("programs.notDefined", "Not defined");
         return new Date(dateString).toLocaleDateString(
             i18n.language === "ar" ? "ar-EG" : "fr-FR",
             {
@@ -186,13 +186,13 @@ const Programs = () => {
     const getStatusText = (status) => {
         switch (status?.toLowerCase()) {
             case "open":
-                return t("programs.status.open");
+                return t("programs.status.open", "Open");
             case "closed":
-                return t("programs.status.closed");
+                return t("programs.status.closed", "Closed");
             case "coming_soon":
-                return t("programs.status.comingSoon");
+                return t("programs.status.comingSoon", "Coming Soon");
             default:
-                return status || t("programs.status.unknown");
+                return status || t("programs.status.unknown", "Unknown Status");
         }
     };
 
@@ -211,10 +211,10 @@ const Programs = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center">
                         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                            {t("programs.title")}
+                            {t("programs.title", "Educational Programs")}
                         </h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            {t("programs.subtitle")}
+                            {t("programs.subtitle", "Discover our excellence programs for your academic future")}
                         </p>
                     </div>
                 </div>
@@ -229,7 +229,7 @@ const Programs = () => {
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                             <input
                                 type="text"
-                                placeholder={t("programs.search.placeholder")}
+                                placeholder={t("programs.search.placeholder", "Search programs...")}
                                 value={filters.search}
                                 onChange={(e) =>
                                     handleFilterChange("search", e.target.value)
@@ -247,7 +247,7 @@ const Programs = () => {
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">
-                                {t("programs.filters.allCategories")}
+                                {t("programs.filters.allCategories", "All Categories")}
                             </option>
                             {categories.map((cat, index) => (
                                 <option key={index} value={cat.category}>
@@ -270,7 +270,7 @@ const Programs = () => {
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">
-                                {t("programs.filters.allOrganizations")}
+                                {t("programs.filters.allOrganizations", "All Organizations")}
                             </option>
                             {organizations.map((org, index) => (
                                 <option key={index} value={org.organization}>
@@ -291,10 +291,10 @@ const Programs = () => {
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">
-                                {t("programs.filters.allPrograms")}
+                                {t("programs.filters.allPrograms", "All Programs")}
                             </option>
                             <option value="true">
-                                {t("programs.filters.featuredOnly")}
+                                {t("programs.filters.featuredOnly", "Featured Programs Only")}
                             </option>
                         </select>
                     </div>
@@ -303,7 +303,7 @@ const Programs = () => {
                     <div className="flex flex-wrap items-center justify-between mt-4 pt-4 border-t">
                         <div className="flex items-center space-x-4">
                             <label className="text-sm font-medium text-gray-700">
-                                {t("programs.sort.label")}:
+                                {t("programs.sort.label", "Sort by")}:
                             </label>
                             <select
                                 value={sortBy}
@@ -311,16 +311,16 @@ const Programs = () => {
                                 className="px-3 py-1 border border-gray-300 rounded-md text-sm"
                             >
                                 <option value="createdAt">
-                                    {t("programs.sort.newest")}
+                                    {t("programs.sort.newest", "Newest")}
                                 </option>
                                 <option value="Title">
-                                    {t("programs.sort.title")}
+                                    {t("programs.sort.title", "Title")}
                                 </option>
                                 <option value="applicationDeadline">
-                                    {t("programs.sort.deadline")}
+                                    {t("programs.sort.deadline", "Deadline")}
                                 </option>
                                 <option value="Rate">
-                                    {t("programs.sort.rating")}
+                                    {t("programs.sort.rating", "Rating")}
                                 </option>
                             </select>
                             <button
@@ -337,7 +337,7 @@ const Programs = () => {
 
                         <div className="text-sm text-gray-600">
                             {pagination.totalPrograms}{" "}
-                            {t("programs.results.count")}
+                            {t("programs.results.count", "results found")}
                         </div>
                     </div>
                 </div>
@@ -350,7 +350,7 @@ const Programs = () => {
                             onClick={fetchPrograms}
                             className="mt-2 text-red-600 hover:text-red-800 underline"
                         >
-                            {t("common.retry")}
+                            {t("common.retry", "Retry")}
                         </button>
                     </div>
                 )}
@@ -377,10 +377,10 @@ const Programs = () => {
                     <div className="text-center py-12">
                         <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            {t("programs.empty.title")}
+                            {t("programs.empty.title", "No programs found")}
                         </h3>
                         <p className="text-gray-600">
-                            {t("programs.empty.description")}
+                            {t("programs.empty.description", "Try adjusting your search criteria or removing some filters.")}
                         </p>
                     </div>
                 ) : (
@@ -429,9 +429,7 @@ const Programs = () => {
                                             <div className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full flex items-center gap-1">
                                                 <Star className="w-3 h-3" />
                                                 <span className="text-xs font-medium">
-                                                    {t(
-                                                        "programs.featuredBadge"
-                                                    )}
+                                                    {t("programs.featuredBadge", "Featured")}
                                                 </span>
                                             </div>
                                         </div>
@@ -443,7 +441,7 @@ const Programs = () => {
                                             <div className="bg-purple-600 text-white px-2 py-1 rounded-full flex items-center gap-1">
                                                 <PlayCircle className="w-3 h-3" />
                                                 <span className="text-xs font-medium">
-                                                    {t("programs.video")}
+                                                    {t("programs.video", "Video")}
                                                 </span>
                                             </div>
                                         </div>
@@ -495,7 +493,7 @@ const Programs = () => {
                                             <div className="flex items-center gap-2">
                                                 <Clock className="w-4 h-4" />
                                                 <span>
-                                                    {t("programs.deadline")}:{" "}
+                                                    {t("programs.deadline", "Deadline")}:{" "}
                                                     {formatDate(
                                                         program.applicationDeadline
                                                     )}
@@ -508,7 +506,7 @@ const Programs = () => {
                                                 <Users className="w-4 h-4" />
                                                 <span>
                                                     {program.Users_count}{" "}
-                                                    {t("programs.applicants")}
+                                                    {t("programs.applicants", "applicants")}
                                                 </span>
                                             </div>
                                         )}
@@ -518,7 +516,7 @@ const Programs = () => {
                                     <div className="mt-4 pt-4 border-t">
                                         <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
                                             <span>
-                                                {t("programs.viewDetails")}
+                                                {t("programs.viewDetails", "View Details")}
                                             </span>
                                             <ExternalLink className="w-4 h-4" />
                                         </button>

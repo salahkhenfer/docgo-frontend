@@ -90,7 +90,7 @@ export const ProgramDetails = () => {
   }, [programId, user?.id]);
 
   const formatCurrency = (amount, currencyCode) => {
-    if (!amount || parseFloat(amount) === 0) return t("Free") || "Free";
+    if (!amount || parseFloat(amount) === 0) return t("Free", "Free") || "Free";
     return new Intl.NumberFormat(i18n.language === "ar" ? "ar-DZ" : "en-US", {
       style: "currency",
       currency: currencyCode || "DZD",
@@ -196,9 +196,9 @@ export const ProgramDetails = () => {
     return (
       <>
         <Seo
-          title={t("Program") || "Program"}
+          title={t("Program", "Program") || "Program"}
           description={
-            t("Program details and enrollment on healthpathglobal.") ||
+            t("Program details and enrollment on healthpathglobal.", "Program details and enrollment on healthpathglobal.") ||
             "Program details and enrollment on healthpathglobal."
           }
           canonicalPath={location.pathname}
@@ -212,8 +212,8 @@ export const ProgramDetails = () => {
     return (
       <>
         <Seo
-          title={t("Something went wrong") || "Something went wrong"}
-          description={t("Failed to load program") || "Failed to load program"}
+          title={t("Something went wrong", "Something went wrong") || "Something went wrong"}
+          description={t("Failed to load program", "Failed to load program") || "Failed to load program"}
           canonicalPath={location.pathname}
           noIndex={true}
         />
@@ -221,10 +221,10 @@ export const ProgramDetails = () => {
           <div className="text-center max-w-md mx-auto p-8">
             <div className="text-red-500 text-6xl mb-4"></div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {t("Something went wrong") || "Something went wrong"}
+              {t("Something went wrong", "Something went wrong") || "Something went wrong"}
             </h2>
             <p className="text-gray-600 mb-6">
-              {error || t("Failed to load program") || "Failed to load program"}
+              {error || t("Failed to load program", "Failed to load program") || "Failed to load program"}
             </p>
             <div className="flex gap-4 justify-center">
               <button
@@ -232,13 +232,13 @@ export const ProgramDetails = () => {
                 className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <IoMdRefresh className="text-lg" />
-                {t("Try Again") || "Try Again"}
+                {t("Try Again", "Try Again") || "Try Again"}
               </button>
               <button
                 onClick={() => navigate("/Programs")}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                {t("Browse Programs") || "Browse Programs"}
+                {t("Browse Programs", "Browse Programs") || "Browse Programs"}
               </button>
             </div>
           </div>
@@ -251,9 +251,9 @@ export const ProgramDetails = () => {
     return (
       <>
         <Seo
-          title={t("Program not found") || "Program not found"}
+          title={t("Program not found", "Program not found") || "Program not found"}
           description={
-            t("This program doesn't exist or has been removed.") ||
+            t("This program doesn't exist or has been removed.", "This program doesn't exist or has been removed.") ||
             "This program doesn't exist or has been removed."
           }
           canonicalPath={location.pathname}
@@ -263,17 +263,17 @@ export const ProgramDetails = () => {
           <div className="text-center max-w-md mx-auto p-8">
             <div className="text-gray-400 text-6xl mb-4"></div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {t("Program not found") || "Program not found"}
+              {t("Program not found", "Program not found") || "Program not found"}
             </h2>
             <p className="text-gray-600 mb-6">
-              {t("This program doesn't exist or has been removed.") ||
+              {t("This program doesn't exist or has been removed.", "This program doesn't exist or has been removed.") ||
                 "This program doesn't exist or has been removed."}
             </p>
             <button
               onClick={() => navigate("/Programs")}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              {t("Browse Programs") || "Browse Programs"}
+              {t("Browse Programs", "Browse Programs") || "Browse Programs"}
             </button>
           </div>
         </div>
@@ -370,7 +370,7 @@ export const ProgramDetails = () => {
     ? programSeoDescription.length > 160
       ? `${programSeoDescription.slice(0, 157)}...`
       : programSeoDescription
-    : t("Program details and enrollment on healthpathglobal.") ||
+    : t("Program details and enrollment on healthpathglobal.", "Program details and enrollment on healthpathglobal.") ||
       "Program details and enrollment on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
@@ -400,7 +400,7 @@ export const ProgramDetails = () => {
   return (
     <>
       <Seo
-        title={programTitle || t("Program") || "Program"}
+        title={programTitle || t("Program", "Program") || "Program"}
         description={seoDescription}
         canonicalPath={location.pathname}
         image={programSeoImage}
@@ -423,7 +423,7 @@ export const ProgramDetails = () => {
                 </button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {t("Program Details") || "Program Details"}
+                    {t("Program Details", "Program Details") || "Program Details"}
                   </h1>
                   <p className="text-gray-600">{programTitle}</p>
                 </div>
@@ -434,7 +434,7 @@ export const ProgramDetails = () => {
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
                   <MessageSquare className="w-4 h-4" />
-                  {t("Contact") || "Contact"}
+                  {t("Contact", "Contact") || "Contact"}
                 </button>
                 <button
                   onClick={handleShare}
@@ -465,7 +465,7 @@ export const ProgramDetails = () => {
             <div className="bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg flex items-center text-sm sm:text-base">
               <IoMdRefresh className="animate-spin mr-2 w-4 h-4" />
               <span className="hidden sm:inline">
-                {t("Refreshing...") || "Refreshing..."}
+                {t("Refreshing...", "Refreshing...") || "Refreshing..."}
               </span>
               <span className="sm:hidden">...</span>
             </div>
@@ -526,7 +526,7 @@ export const ProgramDetails = () => {
                           <div className="absolute bottom-6 left-6 bg-black bg-opacity-70 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
                             <PlayCircle className="w-5 h-5 text-white" />
                             <span className="text-white font-medium">
-                              {t("Watch Video") || "Watch Video"}
+                              {t("Watch Video", "Watch Video") || "Watch Video"}
                             </span>
                           </div>
                         </div>
@@ -611,7 +611,7 @@ export const ProgramDetails = () => {
                     <div className="flex items-center gap-2 text-gray-600">
                       <Clock className="w-5 h-5" />
                       <span>
-                        {t("Starts") || "Starts"}:{" "}
+                        {t("Starts", "Starts") || "Starts"}:{" "}
                         {new Date(program.startDate).toLocaleDateString()}
                       </span>
                     </div>
@@ -621,7 +621,7 @@ export const ProgramDetails = () => {
                       <Users className="w-5 h-5" />
                       <span>
                         {program.participantCount}{" "}
-                        {t("participants") || "participants"}
+                        {t("participants", "Participants") || "participants"}
                       </span>
                     </div>
                   )}
@@ -631,7 +631,7 @@ export const ProgramDetails = () => {
                       <span>{program.rating}</span>
                       {program.reviewsCount && (
                         <span className="text-gray-500">
-                          ({program.reviewsCount} {t("reviews") || "reviews"})
+                          ({program.reviewsCount} {t("reviews", "Reviews") || "reviews"})
                         </span>
                       )}
                     </div>
@@ -671,7 +671,7 @@ export const ProgramDetails = () => {
               {/* Program Information Card */}
               <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {t("Program Information") || "Program Information"}
+                  {t("Program Information", "Program Information") || "Program Information"}
                 </h3>
 
                 {/* Price */}
@@ -679,7 +679,7 @@ export const ProgramDetails = () => {
                   <div className="text-center">
                     {isFree ? (
                       <div className="text-3xl font-bold text-green-600">
-                        {t("Free") || "Free"}
+                        {t("Free", "Free") || "Free"}
                       </div>
                     ) : (
                       <div className="text-3xl font-bold text-gray-900">
@@ -891,12 +891,12 @@ export const ProgramDetails = () => {
                     {applying ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-                        {t("Applying...") || "Applying..."}
+                        {t("Applying...", "Applying...") || "Applying..."}
                       </div>
                     ) : isFree ? (
-                      t("Apply for Free") || "Apply for Free"
+                      t("Apply for Free", "Apply for Free") || "Apply for Free"
                     ) : (
-                      t("Apply Now") || "Apply Now"
+                      t("Apply Now", "Apply Now") || "Apply Now"
                     )}
                   </button>
                 )}
@@ -908,7 +908,7 @@ export const ProgramDetails = () => {
                       <Clock className="w-4 h-4 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          {t("Start Date") || "Start Date"}
+                          {t("Start Date", "Start Date") || "Start Date"}
                         </p>
                         <p className="text-sm text-gray-600">
                           {new Date(program.startDate).toLocaleDateString()}
@@ -922,7 +922,7 @@ export const ProgramDetails = () => {
                       <Clock className="w-4 h-4 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          {t("Duration") || "Duration"}
+                          {t("Duration", "Duration") || "Duration"}
                         </p>
                         <p className="text-sm text-gray-600">
                           {program.duration}
@@ -936,7 +936,7 @@ export const ProgramDetails = () => {
                       <GraduationCap className="w-4 h-4 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          {t("Level") || "Level"}
+                          {t("Level", "Level") || "Level"}
                         </p>
                         <p className="text-sm text-gray-600">{program.level}</p>
                       </div>
@@ -955,7 +955,7 @@ export const ProgramDetails = () => {
               <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    {t("Contact Us") || "Contact Us"}
+                    {t("Contact Us", "Contact Us") || "Contact Us"}
                   </h3>
                   <button
                     onClick={() => setShowContactForm(false)}
@@ -969,7 +969,7 @@ export const ProgramDetails = () => {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t("Name") || "Name"} *
+                          {t("Name", "Name") || "Name"} *
                         </label>
                         <input
                           type="text"
@@ -986,7 +986,7 @@ export const ProgramDetails = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t("Email") || "Email"} *
+                          {t("Email", "Email") || "Email"} *
                         </label>
                         <input
                           type="email"
@@ -1005,7 +1005,7 @@ export const ProgramDetails = () => {
                   )}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("Subject") || "Subject"} *
+                      {t("Subject", "Subject") || "Subject"} *
                     </label>
                     <input
                       type="text"
@@ -1022,7 +1022,7 @@ export const ProgramDetails = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t("Message") || "Message"} *
+                      {t("Message", "Message") || "Message"} *
                     </label>
                     <textarea
                       required
@@ -1043,7 +1043,7 @@ export const ProgramDetails = () => {
                       onClick={() => setShowContactForm(false)}
                       className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                      {t("Cancel") || "Cancel"}
+                      {t("Cancel", "Cancel") || "Cancel"}
                     </button>
                     <button
                       type="submit"
@@ -1053,12 +1053,12 @@ export const ProgramDetails = () => {
                       {isSubmittingContact ? (
                         <>
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          {t("Sending...") || "Sending..."}
+                          {t("Sending...", "Sending...") || "Sending..."}
                         </>
                       ) : (
                         <>
                           <Send className="w-4 h-4" />
-                          {t("Send Message") || "Send Message"}
+                          {t("Send Message", "Send Message") || "Send Message"}
                         </>
                       )}
                     </button>

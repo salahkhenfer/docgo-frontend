@@ -91,10 +91,10 @@ const NavBarDropDown = ({
                                             ? user.firstName.slice(0, 12) +
                                               "..."
                                             : user.firstName
-                                        : t("guest")}
+                                        : t("guest", "Guest")}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                    {t("welcomeBack")}
+                                    {t("welcomeBack", "Welcome Back")}
                                 </p>
                             </div>
                         </div>
@@ -108,7 +108,7 @@ const NavBarDropDown = ({
                             onClick={() => setIsDropdownOpen(false)}
                         >
                             <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
-                            <span className="ml-2">{t("Profile")}</span>
+                            <span className="ml-2">{t("Profile", "Profile")}</span>
                         </Link>
                         <Link
                             to="/"
@@ -117,7 +117,7 @@ const NavBarDropDown = ({
                             onClick={() => setIsDropdownOpen(false)}
                         >
                             <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
-                            <span className="ml-2">{t("home")}</span>
+                            <span className="ml-2">{t("home", "Home")}</span>
                         </Link>
 
                         <Link
@@ -150,7 +150,7 @@ const NavBarDropDown = ({
                             onClick={() => setIsDropdownOpen(false)}
                         >
                             <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
-                            <span className="ml-2">{t("MyApplications")}</span>
+                            <span className="ml-2">{t("MyApplications", "My Applications")}</span>
                         </Link>
 
                         {/* Notifications link removed from profile dropdown */}
@@ -163,7 +163,7 @@ const NavBarDropDown = ({
                             onClick={logout}
                         >
                             <div className="absolute left-0 top-0 h-full w-1 bg-red-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
-                            <span className="ml-2">{t("Logout")}</span>
+                            <span className="ml-2">{t("Logout", "Logout")}</span>
                         </button>
                     </div>
                 </div>

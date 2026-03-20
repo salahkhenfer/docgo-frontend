@@ -13,28 +13,28 @@ const StatsOverview = ({
     const stats = [
         {
             icon: GraduationCap,
-            label: t("Total Programs") || "Total Programs",
+            label: t("Total Programs", "Total Programs") || "Total Programs",
             value: totalPrograms || 0,
             color: "text-blue-600",
             bgColor: "bg-blue-100",
         },
         // {
         //     icon: Users,
-        //     label: t("Open Programs") || "Open Programs",
+        //     label: t("Open Programs", "Open Programs") || "Open Programs",
         //     value: openPrograms || 0,
         //     color: "text-green-600",
         //     bgColor: "bg-green-100",
         // },
         {
             icon: Star,
-            label: t("Featured") || "Featured",
+            label: t("Featured", "Featured") || "Featured",
             value: featuredPrograms || 0,
             color: "text-yellow-600",
             bgColor: "bg-yellow-100",
         },
         // {
         //     icon: Globe,
-        //     label: t("Organizations") || "Organizations",
+        //     label: t("Organizations", "Organizations") || "Organizations",
         //     value: totalOrganizations || 0,
         //     color: "text-purple-600",
         //     bgColor: "bg-purple-100",

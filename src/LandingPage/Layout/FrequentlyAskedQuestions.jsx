@@ -36,9 +36,9 @@ function FrequentlyAskedQuestions({ faqs: propFaqs }) {
         dynamicFaqs.length > 0
             ? dynamicFaqs
             : [
-                  { question: t("faqQuestion1"), answer: t("faqAnswer1") },
-                  { question: t("faqQuestion2"), answer: t("faqAnswer2") },
-                  { question: t("faqQuestion3"), answer: t("faqAnswer3") },
+                  { question: t("faqQuestion1", "How do I start the process of studying abroad?"), answer: t("faqAnswer1", "Simply register on our platform, fill in your details, and our team will guide you through the application and visa process.") },
+                  { question: t("faqQuestion2", "What documents are needed to apply?"), answer: t("faqAnswer2", "Required documents include a valid passport, transcripts, and motivation or recommendation letters.") },
+                  { question: t("faqQuestion3", "Do you offer financial assistance or scholarships?"), answer: t("faqAnswer3", "Yes, we provide guidance on available scholarships and help you apply.") },
               ];
 
     /**
@@ -108,15 +108,15 @@ function FrequentlyAskedQuestions({ faqs: propFaqs }) {
                 <img
                     className="w-full h-full object-contain"
                     src={GeometricShapes}
-                    alt={t("geometricShapes")}
+                    alt={t("geometricShapes", "geometric shapes")}
                 />
 
                 <h1 className="text-xl md:text-2xl text-center font-medium text-customGray">
-                    {t("faqTitle")}
+                    {t("faqTitle", "Frequently asked questions")}
                 </h1>
 
                 <p className="text-customGray text-center leading-normal font-normal text-sm md:text-base px-4">
-                    {t("faqDescription")}
+                    {t("faqDescription", "Faq Description")}
                 </p>
 
                 <div className="flex flex-col gap-3 md:gap-6">

@@ -11,10 +11,10 @@ const FAQPage = () => {
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-12">
                         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                            {t("faq_data.title")}
+                            {t("faq_data.title", "Frequently Asked Questions")}
                         </h1>
                         <p className="text-xl text-gray-600">
-                            {t("faq_data.intro")}
+                            {t("faq_data.intro", "Find answers to common questions about our courses and programs.")}
                         </p>
                     </div>
 

@@ -89,106 +89,106 @@ export function SearchFilters({ onFiltersChange }) {
     };
 
     const categoryOptions = [
-        { value: "", label: t("Toutes les catégories") || "All Categories" },
-        { value: "Programming", label: t("Programming") || "Programming" },
-        { value: "Design", label: t("Design") || "Design" },
-        { value: "Business", label: t("Business") || "Business" },
-        { value: "Marketing", label: t("Marketing") || "Marketing" },
-        { value: "Data Science", label: t("Data Science") || "Data Science" },
-        { value: "Languages", label: t("Languages") || "Languages" },
+        { value: "", label: t("Toutes les catégories", "Toutes les catégories") || "All Categories" },
+        { value: "Programming", label: t("Programming", "Programming") || "Programming" },
+        { value: "Design", label: t("Design", "Design") || "Design" },
+        { value: "Business", label: t("Business", "Business") || "Business" },
+        { value: "Marketing", label: t("Marketing", "Marketing") || "Marketing" },
+        { value: "Data Science", label: t("Data Science", "Data Science") || "Data Science" },
+        { value: "Languages", label: t("Languages", "Languages") || "Languages" },
     ];
 
     const specialtyOptions = [
-        { value: "", label: t("Toutes les spécialités") || "All Specialties" },
+        { value: "", label: t("Toutes les spécialités", "Toutes les spécialités") || "All Specialties" },
         {
             value: "Web Development",
-            label: t("Web Development") || "Web Development",
+            label: t("Web Development", "Web Development") || "Web Development",
         },
         {
             value: "Mobile Development",
-            label: t("Mobile Development") || "Mobile Development",
+            label: t("Mobile Development", "Mobile Development") || "Mobile Development",
         },
-        { value: "Data Science", label: t("Data Science") || "Data Science" },
+        { value: "Data Science", label: t("Data Science", "Data Science") || "Data Science" },
         {
             value: "AI & Machine Learning",
-            label: t("AI & Machine Learning") || "AI & Machine Learning",
+            label: t("AI & Machine Learning", "AI & Machine Learning") || "AI & Machine Learning",
         },
-        { value: "UI/UX Design", label: t("UI/UX Design") || "UI/UX Design" },
+        { value: "UI/UX Design", label: t("UI/UX Design", "UI/UX Design") || "UI/UX Design" },
         {
             value: "Digital Marketing",
-            label: t("Digital Marketing") || "Digital Marketing",
+            label: t("Digital Marketing", "Digital Marketing") || "Digital Marketing",
         },
         {
             value: "Cybersecurity",
-            label: t("Cybersecurity") || "Cybersecurity",
+            label: t("Cybersecurity", "Cybersecurity") || "Cybersecurity",
         },
         {
             value: "Cloud Computing",
-            label: t("Cloud Computing") || "Cloud Computing",
+            label: t("Cloud Computing", "Cloud Computing") || "Cloud Computing",
         },
     ];
 
     const difficultyOptions = [
-        { value: "", label: t("Tous les niveaux") || "All Levels" },
-        { value: "beginner", label: t("Débutant") || "Beginner" },
-        { value: "intermediate", label: t("Intermédiaire") || "Intermediate" },
-        { value: "advanced", label: t("Avancé") || "Advanced" },
-        { value: "expert", label: t("Expert") || "Expert" },
+        { value: "", label: t("Tous les niveaux", "Tous les niveaux") || "All Levels" },
+        { value: "beginner", label: t("Débutant", "Débutant") || "Beginner" },
+        { value: "intermediate", label: t("Intermédiaire", "Intermédiaire") || "Intermediate" },
+        { value: "advanced", label: t("Avancé", "Avancé") || "Advanced" },
+        { value: "expert", label: t("Expert", "Expert") || "Expert" },
     ];
 
     const priceOptions = [
-        { value: "", label: t("Tous les prix") || "All Prices" },
-        { value: "free", label: t("Gratuit") || "Free" },
-        { value: "paid", label: t("Payant") || "Paid" },
+        { value: "", label: t("Tous les prix", "Tous les prix") || "All Prices" },
+        { value: "free", label: t("Gratuit", "Free") || "Free" },
+        { value: "paid", label: t("Payant", "Paid") || "Paid" },
     ];
 
     const certificateOptions = [
         {
             value: "",
             label:
-                t("Avec ou sans certificat") || "With or without certificate",
+                t("Avec ou sans certificat", "Avec ou sans certificat") || "With or without certificate",
         },
-        { value: "with", label: t("Avec certificat") || "With certificate" },
+        { value: "with", label: t("Avec certificat", "Avec certificat") || "With certificate" },
         {
             value: "without",
-            label: t("Sans certificat") || "Without certificate",
+            label: t("Sans certificat", "Sans certificat") || "Without certificate",
         },
     ];
 
     const sortOptions = [
         {
             value: "latest",
-            label: t("Plus récent") || "Latest",
+            label: t("Plus récent", "Plus récent") || "Latest",
             sortBy: "createdAt",
             order: "DESC",
         },
         {
             value: "oldest",
-            label: t("Plus ancien") || "Oldest",
+            label: t("Plus ancien", "Plus ancien") || "Oldest",
             sortBy: "createdAt",
             order: "ASC",
         },
         {
             value: "popular",
-            label: t("Plus populaire") || "Most Popular",
+            label: t("Plus populaire", "Plus populaire") || "Most Popular",
             sortBy: "enrollments",
             order: "DESC",
         },
         {
             value: "rating",
-            label: t("Mieux noté") || "Highest Rated",
+            label: t("Mieux noté", "Mieux noté") || "Highest Rated",
             sortBy: "rating",
             order: "DESC",
         },
         {
             value: "title_az",
-            label: t("Titre A-Z") || "Title A-Z",
+            label: t("Titre A-Z", "Titre A Z") || "Title A-Z",
             sortBy: "title",
             order: "ASC",
         },
         {
             value: "title_za",
-            label: t("Titre Z-A") || "Title Z-A",
+            label: t("Titre Z-A", "Titre Z A") || "Title Z-A",
             sortBy: "title",
             order: "DESC",
         },
@@ -238,7 +238,7 @@ export function SearchFilters({ onFiltersChange }) {
                         <input
                             type="text"
                             placeholder={
-                                t("RechercherUnCours") ||
+                                t("RechercherUnCours", "Search for a course...") ||
                                 "Search for courses..."
                             }
                             value={localFilters.search}
@@ -255,7 +255,7 @@ export function SearchFilters({ onFiltersChange }) {
                     className="flex items-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                     <FiFilter className="w-4 h-4" />
-                    {t("Filtres") || "Filters"}
+                    {t("Filtres", "Filtres") || "Filters"}
                 </button>
 
                 {/* Apply/Clear Buttons */}
@@ -265,7 +265,7 @@ export function SearchFilters({ onFiltersChange }) {
                         disabled={isSearching}
                         className="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                        {t("Appliquer") || "Apply"}
+                        {t("Appliquer", "Appliquer") || "Apply"}
                     </button>
                     <button
                         onClick={clearFilters}
@@ -284,7 +284,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Category Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Catégorie") || "Category"}
+                                {t("Catégorie", "Catégorie") || "Category"}
                             </label>
                             <select
                                 value={localFilters.category}
@@ -310,7 +310,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Specialty Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Spécialité") || "Specialty"}
+                                {t("Spécialité", "Spécialité") || "Specialty"}
                             </label>
                             <select
                                 value={localFilters.specialty}
@@ -336,7 +336,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Difficulty Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Niveau") || "Difficulty"}
+                                {t("Niveau", "Niveau") || "Difficulty"}
                             </label>
                             <select
                                 value={localFilters.difficulty}
@@ -362,7 +362,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Price Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Prix") || "Price"}
+                                {t("Prix", "Prix") || "Price"}
                             </label>
                             <select
                                 value={localFilters.price}
@@ -388,7 +388,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Certificate Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Certificat") || "Certificate"}
+                                {t("Certificat", "Certificat") || "Certificate"}
                             </label>
                             <select
                                 value={localFilters.certificate}
@@ -414,7 +414,7 @@ export function SearchFilters({ onFiltersChange }) {
                         {/* Sort Filter */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t("Trier par") || "Sort by"}
+                                {t("Trier par", "Trier par") || "Sort by"}
                             </label>
                             <select
                                 value={localFilters.date}

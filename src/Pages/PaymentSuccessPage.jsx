@@ -108,8 +108,8 @@ const PaymentSuccessPage = () => {
           {/* Title */}
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {paymentData.status === "completed"
-              ? t("paymentSuccess.titleCompleted")
-              : t("paymentSuccess.titlePending")}
+              ? t("paymentSuccess.titleCompleted", "Payment Successful!")
+              : t("paymentSuccess.titlePending", "Payment Submitted!")}
           </h1>
 
           {/* Message */}
@@ -117,12 +117,12 @@ const PaymentSuccessPage = () => {
             {isCCP && (
               <div className="space-y-2">
                 <p className="text-gray-600">
-                  {t("paymentSuccess.ccpSubmitted")}
+                  {t("paymentSuccess.ccpSubmitted", "Your CCP payment has been submitted for verification.")}
                 </p>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                   <p className="text-sm text-yellow-800">
-                    <strong>{t("paymentSuccess.ccpImportant")}:</strong>{" "}
-                    {t("paymentSuccess.ccpVerifyTime")}
+                    <strong>{t("paymentSuccess.ccpImportant", "Important")}:</strong>{" "}
+                    {t("paymentSuccess.ccpVerifyTime", "We will verify your payment within 24 hours. You will receive an email confirmation once verified.")}
                   </p>
                 </div>
               </div>
@@ -133,8 +133,8 @@ const PaymentSuccessPage = () => {
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <h3 className="font-medium text-gray-900 mb-2">
               {itemType === "course"
-                ? t("paymentSuccess.courseEnrolled")
-                : t("paymentSuccess.programApplied")}
+                ? t("paymentSuccess.courseEnrolled", "Course Enrolled")
+                : t("paymentSuccess.programApplied", "Program Applied")}
             </h3>
             <div className="flex items-center gap-3">
               <ImageWithFallback
@@ -157,23 +157,23 @@ const PaymentSuccessPage = () => {
           {/* Payment Details */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
             <h3 className="font-medium text-gray-900 mb-2">
-              {t("paymentSuccess.paymentDetails")}
+              {t("paymentSuccess.paymentDetails", "Payment Details")}
             </h3>
             <div className="space-y-1 text-sm text-gray-600">
               <div className="flex justify-between">
-                <span>{t("paymentSuccess.paymentId")}:</span>
+                <span>{t("paymentSuccess.paymentId", "Payment ID")}:</span>
                 <span className="font-mono">{paymentData.paymentId}</span>
               </div>
               <div className="flex justify-between">
-                <span>{t("paymentSuccess.method")}:</span>
+                <span>{t("paymentSuccess.method", "Method")}:</span>
                 <span>CCP</span>
               </div>
               <div className="flex justify-between">
-                <span>{t("paymentSuccess.amount")}:</span>
+                <span>{t("paymentSuccess.amount", "Amount")}:</span>
                 <span>{paymentData.amount} DZD</span>
               </div>
               <div className="flex justify-between">
-                <span>{t("paymentSuccess.status")}:</span>
+                <span>{t("paymentSuccess.status", "Status")}:</span>
                 <span
                   className={`capitalize ${
                     paymentData.status === "completed"
@@ -197,7 +197,7 @@ const PaymentSuccessPage = () => {
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                   >
                     <span className="flex items-center justify-center gap-2">
-                      <span>{t("paymentSuccess.startLearning")}</span>
+                      <span>{t("paymentSuccess.startLearning", "Start Learning")}</span>
                       <FaArrowRight />
                     </span>
                   </Link>
@@ -215,7 +215,7 @@ const PaymentSuccessPage = () => {
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                   >
                     <span className="flex items-center justify-center gap-2">
-                      <span>{t("paymentSuccess.viewCourseDetails")}</span>
+                      <span>{t("paymentSuccess.viewCourseDetails", "View Course Details")}</span>
                       <FaArrowRight />
                     </span>
                   </Link>
@@ -226,7 +226,7 @@ const PaymentSuccessPage = () => {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <FaDownload />
-                      <span>{t("paymentSuccess.saveReceipt")}</span>
+                      <span>{t("paymentSuccess.saveReceipt", "Save Receipt")}</span>
                     </span>
                   </button>
                 </>
@@ -238,7 +238,7 @@ const PaymentSuccessPage = () => {
                   className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                 >
                   <span className="flex items-center justify-center gap-2">
-                    <span>{t("paymentSuccess.viewApplications")}</span>
+                    <span>{t("paymentSuccess.viewApplications", "View My Applications")}</span>
                     <FaArrowRight />
                   </span>
                 </Link>
@@ -255,15 +255,15 @@ const PaymentSuccessPage = () => {
               className="block w-full text-gray-600 hover:text-gray-800 py-2 transition-colors duration-200"
             >
               {itemType === "course"
-                ? t("paymentSuccess.browseMoreCourses")
-                : t("paymentSuccess.browseMorePrograms")}
+                ? t("paymentSuccess.browseMoreCourses", "Browse More Courses")
+                : t("paymentSuccess.browseMorePrograms", "Browse More Programs")}
             </Link>
           </div>
 
           {/* Support Info */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500 mb-3">
-              {t("paymentSuccess.needHelp")}
+              {t("paymentSuccess.needHelp", "Need help? Contact our support team:")}
             </p>
             <div className="space-y-2">
               {adminContact.phone && (
@@ -299,7 +299,7 @@ const PaymentSuccessPage = () => {
               className="mt-3 flex items-center justify-center gap-2 w-full text-sm text-white bg-gray-700 hover:bg-gray-800 py-2.5 px-4 rounded-lg transition-colors"
             >
               <FaComment />
-              {t("paymentSuccess.sendSupportMessage")}
+              {t("paymentSuccess.sendSupportMessage", "Send Support Message")}
             </button>
           </div>
         </div>
@@ -317,7 +317,7 @@ const PaymentSuccessPage = () => {
           >
             <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b">
               <h3 className="text-lg font-semibold text-gray-900">
-                {t("paymentSuccess.contactSupport")}
+                {t("paymentSuccess.contactSupport", "Contact Support")}
               </h3>
               <button
                 onClick={() => setShowContactModal(false)}
@@ -329,8 +329,8 @@ const PaymentSuccessPage = () => {
             <div className="px-6 pb-6 pt-4">
               <p className="text-sm text-gray-500 mb-4">
                 {itemType === "course"
-                  ? t("paymentSuccess.paymentContextCourse")
-                  : t("paymentSuccess.paymentContextProgram")}
+                  ? t("paymentSuccess.paymentContextCourse", "Your message will be tagged as payment support for the course.")
+                  : t("paymentSuccess.paymentContextProgram", "Your message will be tagged as payment support for the program.")}
               </p>
               <ContactForm
                 context="payment"

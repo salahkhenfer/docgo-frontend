@@ -47,18 +47,18 @@ function CourseListItem({ course }) {
       : price === 0 || !price;
 
   const formatPrice = (p) => {
-    if (!p || p === 0) return t("free") || "Free";
+    if (!p || p === 0) return t("free", "Free") || "Free";
     return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${currency}`;
   };
 
   const enrollmentLabel = !isEnrolled
     ? null
     : enrollmentStatus === "pending"
-      ? t("ApplicationPending") || "Pending"
+      ? t("ApplicationPending", "Application Pending") || "Pending"
       : enrollmentStatus === "approved"
-        ? t("Enrolled") || "Enrolled"
+        ? t("Enrolled", "Enrolled") || "Enrolled"
         : enrollmentStatus === "rejected"
-          ? t("ApplicationRejected") || "Rejected"
+          ? t("ApplicationRejected", "Application Rejected") || "Rejected"
           : null;
 
   const enrollmentColor =
@@ -91,7 +91,7 @@ function CourseListItem({ course }) {
       {/* Enrolled top ribbon */}
       {isEnrolled && enrollmentStatus === "approved" && (
         <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-          {t("Enrolled") || "Enrolled"}
+          {t("Enrolled", "Enrolled") || "Enrolled"}
         </div>
       )}
 
@@ -137,7 +137,7 @@ function CourseListItem({ course }) {
             {/* {course.certificate && (
               <span className="bg-purple-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                 <Award className="w-2.5 h-2.5" />
-                {t("certificate") || "Cert"}
+                {t("certificate", "Certificate") || "Cert"}
               </span>
             )} */}
           </div>
@@ -198,7 +198,7 @@ function CourseListItem({ course }) {
               {course.certificate && (
                 <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium flex items-center gap-1">
                   <Award className="w-3 h-3" />
-                  {t("Certificate") || "Certificate"}
+                  {t("Certificate", "certificate") || "Certificate"}
                 </span>
               )}
               {course.Language && (
@@ -215,7 +215,7 @@ function CourseListItem({ course }) {
             <div className="flex flex-col items-start sm:items-end gap-0.5">
               {isFree ? (
                 <span className="text-xl font-bold text-emerald-600">
-                  {t("free") || "Free"}
+                  {t("free", "Free") || "Free"}
                 </span>
               ) : discountPrice !== undefined && discountPrice !== null ? (
                 <>
@@ -246,7 +246,7 @@ function CourseListItem({ course }) {
             {shouldShowProgress && (
               <div className="w-full sm:w-40">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>{t("Progress") || "Progress"}</span>
+                  <span>{t("Progress", "Progress") || "Progress"}</span>
                   <span className="font-semibold text-blue-600">
                     {Math.round(progress)}%
                   </span>
@@ -271,8 +271,8 @@ function CourseListItem({ course }) {
               }`}
             >
               {isEnrolled && enrollmentStatus === "approved"
-                ? t("ContinueCourse") || "Continue"
-                : t("View Details") || "View Details"}
+                ? t("ContinueCourse", "Continue Course") || "Continue"
+                : t("View Details", "View Details") || "View Details"}
             </Link>
           </div>
         </div>
@@ -329,10 +329,10 @@ export function CourseList({
       <div className="flex flex-col items-center justify-center mt-12 p-12 bg-white rounded-2xl shadow-sm">
         <div className="text-6xl mb-4"></div>
         <p className="text-gray-600 text-xl font-medium mb-2">
-          {t("NoCoursesFound") || "No courses found"}
+          {t("NoCoursesFound", "No Courses Found") || "No courses found"}
         </p>
         <p className="text-gray-500 text-center max-w-md">
-          {t("TryAdjustingFilters") ||
+          {t("TryAdjustingFilters", "Try Adjusting Filters") ||
             "Try adjusting your search filters or browse different categories"}
         </p>
       </div>

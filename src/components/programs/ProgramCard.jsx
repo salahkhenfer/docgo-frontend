@@ -93,7 +93,7 @@ export function ProgramCard({
   };
 
   const formatPrice = (p) => {
-    if (!p || p === 0) return t("free") || "Free";
+    if (!p || p === 0) return t("free", "Free") || "Free";
     return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${program.currency || "DZD"}`;
   };
 
@@ -165,7 +165,7 @@ export function ProgramCard({
       {/* Enrollment ribbon */}
       {isEnrolled && (
         <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold py-1 text-center tracking-wide">
-          {t("Enrolled") || "Enrolled"}
+          {t("Enrolled", "Enrolled") || "Enrolled"}
         </div>
       )}
 
@@ -193,7 +193,7 @@ export function ProgramCard({
           {program.isFeatured && (
             <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
               <Star className="w-3 h-3 fill-amber-900" />
-              {t("Featured") || "Featured"}
+              {t("Featured", "Featured") || "Featured"}
             </span>
           )}
           {program.status && (
@@ -263,7 +263,7 @@ export function ProgramCard({
           )}
           {program.isRemote && (
             <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
-              {t("Remote") || "Remote"}
+              {t("Remote", "Remote") || "Remote"}
             </span>
           )}
         </div>
@@ -273,7 +273,7 @@ export function ProgramCard({
           {program.applicationDeadline && (
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
               <Clock className="w-3.5 h-3.5 text-gray-400" />
-              <span>{t("Deadline") || "Deadline"}:</span>
+              <span>{t("Deadline", "Deadline") || "Deadline"}:</span>
               <span className="font-medium text-gray-700">
                 {formatDate(program.applicationDeadline)}
               </span>
@@ -315,7 +315,7 @@ export function ProgramCard({
         <div className="flex items-center gap-2 mb-3">
           {isFree ? (
             <span className="text-xl font-bold text-emerald-600">
-              {t("free") || "Free"}
+              {t("free", "Free") || "Free"}
             </span>
           ) : program.discountPrice !== undefined &&
             program.discountPrice !== null ? (
@@ -348,7 +348,7 @@ export function ProgramCard({
                 }}
                 className="w-full text-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold text-sm transition-all duration-200 shadow-sm"
               >
-                {t("ViewProgram") || "View Program"}
+                {t("ViewProgram", "View Program") || "View Program"}
               </Link>
             );
           }
@@ -377,7 +377,7 @@ export function ProgramCard({
                 }}
                 className="w-full text-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold text-sm transition-all duration-200 shadow-sm"
               >
-                {t("Go to Course") || "Go to Course"}
+                {t("Go to Course", "Go to Course") || "Go to Course"}
               </Link>
             );
           }
@@ -390,7 +390,7 @@ export function ProgramCard({
               }}
               className="w-full text-center px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold text-sm transition-all duration-200"
             >
-              {t("View Details") || "View Details"}
+              {t("View Details", "View Details") || "View Details"}
             </Link>
           );
         })()}
