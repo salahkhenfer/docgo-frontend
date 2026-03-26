@@ -5,7 +5,7 @@
 Copy `.env.example` to `.env`.
 
 - `VITE_API_URL`: backend base URL (scheme + domain + optional path, no trailing slash)
-  - `http://localhost:3000`
+  - `https://backend.healthpathglobal.com`
   - `https://api.healthpathglobal.com`
   - `https://healthpathglobal.com/api`
 

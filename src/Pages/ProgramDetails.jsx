@@ -72,6 +72,9 @@ export const ProgramDetails = () => {
   const [userProgramReview, setUserProgramReview] = useState(null);
   const [resolvedVideoUrl, setResolvedVideoUrl] = useState(null);
 
+  // ===== ALL HOOKS MUST BE CALLED UNCONDITIONALLY BEFORE ANY EARLY RETURNS =====
+
+  // Fetch reviews
   useEffect(() => {
     if (!programId) return;
     reviewsAPI
@@ -88,6 +91,76 @@ export const ProgramDetails = () => {
       })
       .catch(() => {});
   }, [programId, user?.id]);
+
+  // Resolve video URL - must be called unconditionally
+  useEffect(() => {
+    let isActive = true;
+
+    const resolveProgramVideoUrl = async () => {
+      // Only proceed if we have data
+      if (!hasData || !programData?.program) {
+        if (isActive) setResolvedVideoUrl(null);
+        return;
+      }
+
+      const videoUrl =
+        programData.program.videoUrl ||
+        programData.program.videos?.[0]?.videoUrl;
+
+      if (!videoUrl) {
+        if (isActive) setResolvedVideoUrl(null);
+        return;
+      }
+
+      if (String(videoUrl).startsWith("http")) {
+        if (isActive) setResolvedVideoUrl(videoUrl);
+        return;
+      }
+
+      const normalizedPath = String(videoUrl).trim();
+      const filename = normalizedPath
+        .split("?")[0]
+        .split("#")[0]
+        .split("/")
+        .filter(Boolean)
+        .pop();
+
+      if (!filename) {
+        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
+        return;
+      }
+
+      const requiresProtectedStream =
+        normalizedPath.startsWith("/Courses_Videos/");
+
+      if (!requiresProtectedStream) {
+        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
+        return;
+      }
+
+      try {
+        const response = await axios.get(`/media/signed-url/video/${filename}`);
+        if (isActive) {
+          setResolvedVideoUrl(
+            response.data?.url ||
+              `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
+          );
+        }
+      } catch {
+        if (isActive) {
+          setResolvedVideoUrl(
+            `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
+          );
+        }
+      }
+    };
+
+    resolveProgramVideoUrl();
+
+    return () => {
+      isActive = false;
+    };
+  }, [hasData, programData]);
 
   const formatCurrency = (amount, currencyCode) => {
     if (!amount || parseFloat(amount) === 0) return t("Free", "Free") || "Free";
@@ -198,8 +271,10 @@ export const ProgramDetails = () => {
         <Seo
           title={t("Program", "Program") || "Program"}
           description={
-            t("Program details and enrollment on healthpathglobal.", "Program details and enrollment on healthpathglobal.") ||
-            "Program details and enrollment on healthpathglobal."
+            t(
+              "Program details and enrollment on healthpathglobal.",
+              "Program details and enrollment on healthpathglobal.",
+            ) || "Program details and enrollment on healthpathglobal."
           }
           canonicalPath={location.pathname}
         />
@@ -212,8 +287,14 @@ export const ProgramDetails = () => {
     return (
       <>
         <Seo
-          title={t("Something went wrong", "Something went wrong") || "Something went wrong"}
-          description={t("Failed to load program", "Failed to load program") || "Failed to load program"}
+          title={
+            t("Something went wrong", "Something went wrong") ||
+            "Something went wrong"
+          }
+          description={
+            t("Failed to load program", "Failed to load program") ||
+            "Failed to load program"
+          }
           canonicalPath={location.pathname}
           noIndex={true}
         />
@@ -221,10 +302,13 @@ export const ProgramDetails = () => {
           <div className="text-center max-w-md mx-auto p-8">
             <div className="text-red-500 text-6xl mb-4"></div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {t("Something went wrong", "Something went wrong") || "Something went wrong"}
+              {t("Something went wrong", "Something went wrong") ||
+                "Something went wrong"}
             </h2>
             <p className="text-gray-600 mb-6">
-              {error || t("Failed to load program", "Failed to load program") || "Failed to load program"}
+              {error ||
+                t("Failed to load program", "Failed to load program") ||
+                "Failed to load program"}
             </p>
             <div className="flex gap-4 justify-center">
               <button
@@ -251,10 +335,14 @@ export const ProgramDetails = () => {
     return (
       <>
         <Seo
-          title={t("Program not found", "Program not found") || "Program not found"}
+          title={
+            t("Program not found", "Program not found") || "Program not found"
+          }
           description={
-            t("This program doesn't exist or has been removed.", "This program doesn't exist or has been removed.") ||
-            "This program doesn't exist or has been removed."
+            t(
+              "This program doesn't exist or has been removed.",
+              "This program doesn't exist or has been removed.",
+            ) || "This program doesn't exist or has been removed."
           }
           canonicalPath={location.pathname}
           noIndex={true}
@@ -263,11 +351,14 @@ export const ProgramDetails = () => {
           <div className="text-center max-w-md mx-auto p-8">
             <div className="text-gray-400 text-6xl mb-4"></div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {t("Program not found", "Program not found") || "Program not found"}
+              {t("Program not found", "Program not found") ||
+                "Program not found"}
             </h2>
             <p className="text-gray-600 mb-6">
-              {t("This program doesn't exist or has been removed.", "This program doesn't exist or has been removed.") ||
-                "This program doesn't exist or has been removed."}
+              {t(
+                "This program doesn't exist or has been removed.",
+                "This program doesn't exist or has been removed.",
+              ) || "This program doesn't exist or has been removed."}
             </p>
             <button
               onClick={() => navigate("/Programs")}
@@ -286,69 +377,6 @@ export const ProgramDetails = () => {
   const status = (applicationStatus || "").toString().toLowerCase();
   const isEnrolled =
     hasApplied && ["approved", "completed", "enrolled"].includes(status);
-
-  // Resolve playable URL for program intro video.
-  // If a protected course-video path is reused, request signed URL fallback.
-  const videoUrl = program.videoUrl || program.videos?.[0]?.videoUrl;
-
-  useEffect(() => {
-    let isActive = true;
-
-    const resolveProgramVideoUrl = async () => {
-      if (!videoUrl) {
-        if (isActive) setResolvedVideoUrl(null);
-        return;
-      }
-
-      if (String(videoUrl).startsWith("http")) {
-        if (isActive) setResolvedVideoUrl(videoUrl);
-        return;
-      }
-
-      const normalizedPath = String(videoUrl).trim();
-      const filename = normalizedPath
-        .split("?")[0]
-        .split("#")[0]
-        .split("/")
-        .filter(Boolean)
-        .pop();
-
-      if (!filename) {
-        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
-        return;
-      }
-
-      const requiresProtectedStream =
-        normalizedPath.startsWith("/Courses_Videos/");
-
-      if (!requiresProtectedStream) {
-        if (isActive) setResolvedVideoUrl(buildApiUrl(normalizedPath));
-        return;
-      }
-
-      try {
-        const response = await axios.get(`/media/signed-url/video/${filename}`);
-        if (isActive) {
-          setResolvedVideoUrl(
-            response.data?.url ||
-              `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
-          );
-        }
-      } catch {
-        if (isActive) {
-          setResolvedVideoUrl(
-            `${getApiBaseUrl()}/media/stream/video/${encodeURIComponent(filename)}`,
-          );
-        }
-      }
-    };
-
-    resolveProgramVideoUrl();
-
-    return () => {
-      isActive = false;
-    };
-  }, [videoUrl]);
 
   const programTitle =
     i18n.language === "ar" && program.Title_ar
@@ -370,8 +398,10 @@ export const ProgramDetails = () => {
     ? programSeoDescription.length > 160
       ? `${programSeoDescription.slice(0, 157)}...`
       : programSeoDescription
-    : t("Program details and enrollment on healthpathglobal.", "Program details and enrollment on healthpathglobal.") ||
-      "Program details and enrollment on healthpathglobal.";
+    : t(
+        "Program details and enrollment on healthpathglobal.",
+        "Program details and enrollment on healthpathglobal.",
+      ) || "Program details and enrollment on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
     ? "ar"
@@ -423,7 +453,8 @@ export const ProgramDetails = () => {
                 </button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {t("Program Details", "Program Details") || "Program Details"}
+                    {t("Program Details", "Program Details") ||
+                      "Program Details"}
                   </h1>
                   <p className="text-gray-600">{programTitle}</p>
                 </div>
@@ -631,7 +662,8 @@ export const ProgramDetails = () => {
                       <span>{program.rating}</span>
                       {program.reviewsCount && (
                         <span className="text-gray-500">
-                          ({program.reviewsCount} {t("reviews", "Reviews") || "reviews"})
+                          ({program.reviewsCount}{" "}
+                          {t("reviews", "Reviews") || "reviews"})
                         </span>
                       )}
                     </div>
@@ -669,9 +701,28 @@ export const ProgramDetails = () => {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               {/* Program Information Card */}
-              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {t("Program Information", "Program Information") || "Program Information"}
+              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 space-y-6">
+                {/* Program Image */}
+                <div className="relative mb-4 group">
+                  <div className="aspect-video bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center overflow-hidden">
+                    <ImageWithFallback
+                      type="program"
+                      src={buildApiUrl(program.Image)}
+                      alt={programTitle}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 bg-black/30 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center">
+                      <PlayCircle className="text-purple-600 text-xl" />
+                    </div>
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {t("Program Information", "Program Information") ||
+                    "Program Information"}
                 </h3>
 
                 {/* Price */}
@@ -942,6 +993,23 @@ export const ProgramDetails = () => {
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* Contact Section */}
+                <div className="border-t pt-6 mt-6">
+                  <h4 className="font-semibold text-gray-900 mb-4">
+                    {t(
+                      "Questions about this program?",
+                      "Questions about this program?",
+                    ) || "Questions about this program?"}
+                  </h4>
+                  <button
+                    onClick={() => setShowContactForm(true)}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare size={18} />
+                    {t("Contact Us", "Contact Us") || "Contact Us"}
+                  </button>
                 </div>
               </div>
             </div>

@@ -13,6 +13,7 @@ import {
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
+import { buildApiUrl } from "../../utils/apiBaseUrl";
 
 // Individual list-row item - mirrors CourseCard logic in a horizontal layout
 function CourseListItem({ course }) {
@@ -102,7 +103,7 @@ function CourseListItem({ course }) {
         <div className="relative sm:w-52 sm:flex-shrink-0 h-44 sm:h-auto bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden">
           <ImageWithFallback
             type="course"
-            src={Image ? import.meta.env.VITE_API_URL + Image : null}
+            src={buildApiUrl(Image)}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />

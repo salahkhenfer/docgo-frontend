@@ -20,6 +20,7 @@ import { CourseList } from "../components/courses/CourseList";
 import FilterSidebar from "../components/courses/FilterSidebar";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
+import { buildApiUrl } from "../utils/apiBaseUrl";
 
 // Stats Overview Component
 function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
@@ -199,10 +200,19 @@ export default function Courses() {
 
           setError(null);
         } else {
-          throw new Error(response.message || t("Failed to fetch courses", "Failed to fetch courses"));
+          throw new Error(
+            response.message ||
+              t("Failed to fetch courses", "Failed to fetch courses"),
+          );
         }
       } catch (err) {
-        setError(err.message || t("An error occurred while fetching courses", "An error occurred while fetching courses"));
+        setError(
+          err.message ||
+            t(
+              "An error occurred while fetching courses",
+              "An error occurred while fetching courses",
+            ),
+        );
         setCourses([]);
         setPagination((prev) => ({
           ...prev,
@@ -502,7 +512,8 @@ export default function Courses() {
           <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
             <div className="text-red-500 text-6xl mb-4"></div>
             <h3 className="text-xl font-semibold text-red-800 mb-2">
-              {t("Error Loading Courses", "Error Loading Courses") || "Error Loading Courses"}
+              {t("Error Loading Courses", "Error Loading Courses") ||
+                "Error Loading Courses"}
             </h3>
             <p className="text-red-600 mb-4">{error}</p>
             <button
@@ -527,7 +538,10 @@ export default function Courses() {
               {t("TousLesCours", "All Courses") || "All Courses"}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("ExploreCoursesDescription", "Explore our online courses designed to enhance your skills and knowledge.") ||
+              {t(
+                "ExploreCoursesDescription",
+                "Explore our online courses designed to enhance your skills and knowledge.",
+              ) ||
                 "Explore our comprehensive collection of courses to enhance your skills and knowledge"}
             </p>
           </div>
@@ -544,7 +558,10 @@ export default function Courses() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
             <input
               type="text"
-              placeholder={t("Search courses...", "Search courses...") || "Search courses..."}
+              placeholder={
+                t("Search courses...", "Search courses...") ||
+                "Search courses..."
+              }
               value={searchQuery}
               onChange={(e) => handleFilterChange("search", e.target.value)}
               onKeyPress={handleSearchKeyPress}
@@ -561,7 +578,8 @@ export default function Courses() {
             {filters.search && !searchLoading && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
-                  {t("Press Enter or wait...", "Press Enter or wait...") || "Press Enter or wait..."}
+                  {t("Press Enter or wait...", "Press Enter or wait...") ||
+                    "Press Enter or wait..."}
                 </span>
               </div>
             )}
@@ -579,7 +597,8 @@ export default function Courses() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white">
-                  {t("Continue Learning", "Continue Learning") || "Continue Learning"}
+                  {t("Continue Learning", "Continue Learning") ||
+                    "Continue Learning"}
                 </h2>
                 <p className="text-teal-100 text-sm">
                   {enrolledCourses.length}{" "}
@@ -611,11 +630,7 @@ export default function Courses() {
                     <div className="h-28 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
                       <ImageWithFallback
                         type="course"
-                        src={
-                          course.Image
-                            ? import.meta.env.VITE_API_URL + course.Image
-                            : null
-                        }
+                        src={buildApiUrl(course.Image)}
                         alt={course.Title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />

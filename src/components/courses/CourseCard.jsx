@@ -6,6 +6,7 @@ import { useFavorite } from "../../hooks/useFavorite";
 import { Award, Star, BookOpen, PlayCircle } from "lucide-react";
 import PropTypes from "prop-types";
 import ImageWithFallback from "../Common/ImageWithFallback";
+import { buildApiUrl } from "../../utils/apiBaseUrl";
 export function CourseCard({
   course,
   id,
@@ -24,7 +25,7 @@ export function CourseCard({
   hasImage = true,
 }) {
   const defaultThumbnail =
-    "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
+    "https://backend.healthpathglobal.com/Courses_Pictures/default-course-thumbnail.jpeg";
 
   const {
     isFavorited,
@@ -131,7 +132,7 @@ export function CourseCard({
       >
         <ImageWithFallback
           type="course"
-          src={Image ? import.meta.env.VITE_API_URL + Image : null}
+          src={buildApiUrl(Image)}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />

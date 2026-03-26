@@ -154,7 +154,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 ${
+        className={`fixed top-5 ${
           isRTL ? "right-0" : "left-0"
         } flex flex-col w-64 bg-white border-r border-gray-200
             z-40 transform transition-transform duration-300 ease-in-out  overflow-auto

@@ -21,6 +21,7 @@ import ProgramsList from "../components/programs/ProgramsList";
 import StatsOverview from "../components/programs/StatsOverview";
 import apiClient from "../services/apiClient";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
+import { buildApiUrl } from "../utils/apiBaseUrl";
 
 export function Programs() {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
@@ -638,13 +639,16 @@ export function Programs() {
     },
     {
       value: "scholarship_desc",
-      label: t("Highest Scholarship", "Highest Scholarship") || "Highest Scholarship",
+      label:
+        t("Highest Scholarship", "Highest Scholarship") ||
+        "Highest Scholarship",
       sortBy: "scholarship",
       sortOrder: "desc",
     },
     {
       value: "scholarship_asc",
-      label: t("Lowest Scholarship", "Lowest Scholarship") || "Lowest Scholarship",
+      label:
+        t("Lowest Scholarship", "Lowest Scholarship") || "Lowest Scholarship",
       sortBy: "scholarship",
       sortOrder: "asc",
     },
@@ -668,7 +672,10 @@ export function Programs() {
               {t("TrouverUnProgramme", "Find a Program") || "Find a Program"}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("TrouverUnProgrammeDes", "Choose country, specialty and search") ||
+              {t(
+                "TrouverUnProgrammeDes",
+                "Choose country, specialty and search",
+              ) ||
                 "Discover amazing scholarship opportunities from universities worldwide"}
             </p>
           </div>
@@ -685,7 +692,10 @@ export function Programs() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
             <input
               type="text"
-              placeholder={t("Search programs...", "Search programs...") || "Search programs..."}
+              placeholder={
+                t("Search programs...", "Search programs...") ||
+                "Search programs..."
+              }
               value={searchQuery}
               onChange={(e) => handleFilterChange("search", e.target.value)}
               onKeyPress={handleSearchKeyPress}
@@ -702,7 +712,8 @@ export function Programs() {
             {filters.search && !searchLoading && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
-                  {t("Press Enter or wait...", "Press Enter or wait...") || "Press Enter or wait..."}
+                  {t("Press Enter or wait...", "Press Enter or wait...") ||
+                    "Press Enter or wait..."}
                 </span>
               </div>
             )}
@@ -724,7 +735,8 @@ export function Programs() {
                 </h2>
                 <p className="text-purple-200 text-sm">
                   {enrolledPrograms.length}{" "}
-                  {t("enrolled program", "Enrolled program") || "enrolled program"}
+                  {t("enrolled program", "Enrolled program") ||
+                    "enrolled program"}
                   {enrolledPrograms.length !== 1 ? "s" : ""}
                 </p>
               </div>
@@ -760,11 +772,7 @@ export function Programs() {
                       <div className="h-24 bg-gradient-to-br from-purple-400 to-indigo-500 relative overflow-hidden">
                         <ImageWithFallback
                           type="program"
-                          src={
-                            program.Image
-                              ? import.meta.env.VITE_API_URL + program.Image
-                              : null
-                          }
+                          src={buildApiUrl(program.Image)}
                           alt={programTitle}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
@@ -887,7 +895,8 @@ export function Programs() {
                     ) : (
                       <>
                         {t("Showing", "Showing") || "Showing"} {programs.length}{" "}
-                        {t("of", "of") || "of"} {pagination.totalPrograms} programs
+                        {t("of", "of") || "of"} {pagination.totalPrograms}{" "}
+                        programs
                       </>
                     )}
                   </p>
@@ -990,13 +999,17 @@ export function Programs() {
                 filters.isRemote ? (
                   <div>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                      {t("No programs match your criteria", "No programs match your criteria") ||
-                        "No programs match your criteria"}
+                      {t(
+                        "No programs match your criteria",
+                        "No programs match your criteria",
+                      ) || "No programs match your criteria"}
                     </h3>
                     <div className="text-gray-600 mb-6">
                       {debouncedSearch && (
                         <p className="mb-2">
-                          {t("No results found for", "No results found for") || "No results found for"}:{" "}
+                          {t("No results found for", "No results found for") ||
+                            "No results found for"}
+                          :{" "}
                           <span className="font-semibold text-gray-800">
                             &ldquo;{debouncedSearch}
                             &rdquo;
@@ -1005,15 +1018,18 @@ export function Programs() {
                       )}
 
                       <p className="text-gray-600">
-                        {t("Try adjusting your search criteria or filters", "Try adjusting your search criteria or filters") ||
-                          "Try adjusting your search criteria or filters"}
+                        {t(
+                          "Try adjusting your search criteria or filters",
+                          "Try adjusting your search criteria or filters",
+                        ) || "Try adjusting your search criteria or filters"}
                       </p>
                     </div>
                   </div>
                 ) : (
                   <div>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                      {t("No programs available", "No programs available") || "No programs available"}
+                      {t("No programs available", "No programs available") ||
+                        "No programs available"}
                     </h3>
                     <p className="text-gray-600 mb-6">
                       {t(
@@ -1040,7 +1056,8 @@ export function Programs() {
                       <div className="bg-white rounded-lg shadow-lg px-4 py-2 flex items-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                         <span className="text-sm text-gray-600">
-                          {t("Updating results...", "Updating results...") || "Updating results..."}
+                          {t("Updating results...", "Updating results...") ||
+                            "Updating results..."}
                         </span>
                       </div>
                     </div>

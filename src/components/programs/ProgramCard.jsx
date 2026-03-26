@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
+import { buildApiUrl } from "../../utils/apiBaseUrl";
 
 export function ProgramCard({
   program,
@@ -212,9 +213,7 @@ export function ProgramCard({
       >
         <ImageWithFallback
           type="program"
-          src={
-            program.Image ? import.meta.env.VITE_API_URL + program.Image : null
-          }
+          src={buildApiUrl(program.Image)}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />

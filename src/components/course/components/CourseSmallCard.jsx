@@ -3,6 +3,7 @@ import { FaCheckCircle, FaDollarSign, FaPlay } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ImageWithFallback from "../../Common/ImageWithFallback";
+import { buildApiUrl } from "../../../utils/apiBaseUrl";
 
 const CourseSmallCard = ({
   course,
@@ -28,13 +29,7 @@ const CourseSmallCard = ({
         <div className="aspect-video bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center overflow-hidden">
           <ImageWithFallback
             type="course"
-            src={
-              course.thumbnail
-                ? import.meta.env.VITE_API_URL + course.thumbnail
-                : course.Image
-                  ? import.meta.env.VITE_API_URL + course.Image
-                  : null
-            }
+            src={buildApiUrl(course.thumbnail || course.Image)}
             alt={course.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />

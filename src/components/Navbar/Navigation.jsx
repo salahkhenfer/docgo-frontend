@@ -286,7 +286,7 @@ function Navigation({ branding = null }) {
 
   return (
     <>
-      <div className="h-[126px] lg:h-[132px]" />
+      <div className="lg:h-[132px]" />
       <div
         className={`fixed inset-x-0 top-0 z-50 w-full transform transition-transform duration-300 ${
           isNavVisible ? "translate-y-0" : "-translate-y-full"
