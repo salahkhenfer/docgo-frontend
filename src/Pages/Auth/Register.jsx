@@ -47,6 +47,9 @@ const Register = () => {
     studyField: "",
     studyDomain: "",
     phoneNumber: "",
+    university: "",
+    professionalStatus: "",
+    academicStatus: "",
   });
 
   // Handle form field changes - use callback to prevent re-renders

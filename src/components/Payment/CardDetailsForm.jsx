@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import { showSimpleSuccess } from "../../utils/sweetAlertHelper";
 
 // Compact FormField component
 const FormField = ({
@@ -46,27 +47,34 @@ const validationSchema = Yup.object({
   cardNumber: Yup.string()
     .required(t("required", "Required"))
     .matches(/^[0-9\s]{13,19}$/, t("invalidCardNumber", "Invalid card number"))
-    .test("test-number", t("invalidCardNumber", "Invalid card number"), (value) => {
-      const cardNumber = (value || "").replace(/\s/g, "");
-      if (cardNumber.length < 13) return false;
+    .test(
+      "test-number",
+      t("invalidCardNumber", "Invalid card number"),
+      (value) => {
+        const cardNumber = (value || "").replace(/\s/g, "");
+        if (cardNumber.length < 13) return false;
 
-      // Simplified Luhn check
-      let sum = 0;
-      let shouldDouble = false;
-      for (let i = cardNumber.length - 1; i >= 0; i--) {
-        let digit = parseInt(cardNumber.charAt(i));
-        if (shouldDouble) {
-          digit *= 2;
-          if (digit > 9) digit -= 9;
+        // Simplified Luhn check
+        let sum = 0;
+        let shouldDouble = false;
+        for (let i = cardNumber.length - 1; i >= 0; i--) {
+          let digit = parseInt(cardNumber.charAt(i));
+          if (shouldDouble) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+          }
+          sum += digit;
+          shouldDouble = !shouldDouble;
         }
-        sum += digit;
-        shouldDouble = !shouldDouble;
-      }
-      return sum % 10 === 0;
-    }),
+        return sum % 10 === 0;
+      },
+    ),
   expiryDate: Yup.string()
     .required(t("required", "Required"))
-    .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, t("invalidExpiryFormat", "MM/YY format"))
+    .matches(
+      /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
+      t("invalidExpiryFormat", "MM/YY format"),
+    )
     .test("test-expiry", t("expiredCard", "Card expired"), (value) => {
       if (!value) return false;
       const [month, year] = value.split("/");
@@ -108,7 +116,9 @@ const CardDetailsForm = () => {
   const { t } = useTranslation();
   return (
     <div className="w-full max-w-md mx-auto p-3 bg-white shadow-sm rounded-lg">
-      <h2 className="text-lg font-bold mb-3 text-zinc-800">{t("payment", "Payment")}</h2>
+      <h2 className="text-lg font-bold mb-3 text-zinc-800">
+        {t("payment", "Payment")}
+      </h2>
 
       <Formik
         initialValues={{
@@ -119,8 +129,8 @@ const CardDetailsForm = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(t("paymentSuccess", "Payment Success"));
+          setTimeout(async () => {
+            await showSimpleSuccess(t("paymentSuccess", "Payment Success"));
             setSubmitting(false);
           }, 500);
         }}

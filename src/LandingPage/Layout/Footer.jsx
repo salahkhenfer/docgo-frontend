@@ -13,6 +13,7 @@ import {
   Mail,
   Phone,
   MapPin,
+  MessageSquare,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { clientProgramsAPI } from "../../API/Programs";
@@ -158,6 +159,17 @@ function Footer({ contactInfo, branding = null }) {
                   title="Telegram"
                 >
                   <Send className="w-6 h-6" />
+                </a>
+              )}
+              {contactInfo?.viber && (
+                <a
+                  href={getSocialLink("viber")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-purple-600 transition-colors"
+                  title="Viber"
+                >
+                  <MessageSquare className="w-6 h-6" />
                 </a>
               )}
             </div>

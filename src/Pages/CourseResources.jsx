@@ -6,6 +6,7 @@ import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
 import { buildApiUrl } from "../utils/apiBaseUrl";
 import axios from "../utils/axios";
+import { showSimpleError } from "../utils/sweetAlertHelper";
 
 export default function CourseResources() {
   const { courseId } = useParams();
@@ -120,7 +121,12 @@ export default function CourseResources() {
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-slate-600 px-6 text-center">
-                  <p>{t("Preview unavailable, open document in a new tab", "Preview unavailable, open document in a new tab")}</p>
+                  <p>
+                    {t(
+                      "Preview unavailable, open document in a new tab",
+                      "Preview unavailable, open document in a new tab",
+                    )}
+                  </p>
                   <a
                     href={viewingPdf.url}
                     target="_blank"
@@ -153,7 +159,10 @@ export default function CourseResources() {
                 {t("Course Resources", "Course Resources")}
               </h2>
               <p className="text-slate-600 mt-2 text-lg">
-                {t("Download PDFs and course materials", "Download PDFs and course materials")}
+                {t(
+                  "Download PDFs and course materials",
+                  "Download PDFs and course materials",
+                )}
               </p>
             </div>
           </div>
@@ -209,7 +218,7 @@ export default function CourseResources() {
 
                 const handleOpenPDF = () => {
                   if (!resourceUrl) {
-                    alert("PDF URL not available");
+                    showSimpleError("PDF URL not available");
                     return;
                   }
                   // Set the viewing PDF to show it in embedded viewer
@@ -224,7 +233,7 @@ export default function CourseResources() {
 
                 const handleDownloadPDF = () => {
                   if (!resourceUrl) {
-                    alert("PDF URL not available");
+                    showSimpleError("PDF URL not available");
                     return;
                   }
 

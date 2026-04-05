@@ -1,12 +1,62 @@
 import React, { useState, useEffect } from "react";
-import {
-  StudyFields as DefaultStudyFields,
-  StudyDomains as DefaultStudyDomains,
-} from "../../data/fields";
-import { Countries as DefaultCountries } from "../../data/Countries";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
 import { getApiBaseUrl } from "../../utils/apiBaseUrl";
+
+// Emoji flags for countries (same as admin dashboard)
+const EMOJI_FLAGS = {
+  France: "🇫🇷",
+  Canada: "🇨🇦",
+  Belgique: "🇧🇪",
+  Suisse: "🇨🇭",
+  Maroc: "🇲🇦",
+  Algérie: "🇩🇿",
+  Tunisie: "🇹🇳",
+  Sénégal: "🇸🇳",
+  "Côte d'Ivoire": "🇨🇮",
+  Luxembourg: "🇱🇺",
+  "États-Unis": "🇺🇸",
+  "Royaume-Uni": "🇬🇧",
+  Allemagne: "🇩🇪",
+  Espagne: "🇪🇸",
+  Italie: "🇮🇹",
+  "Pays-Bas": "🇳🇱",
+  Autriche: "🇦🇹",
+  Portugal: "🇵🇹",
+  Grèce: "🇬🇷",
+  Suède: "🇸🇪",
+  Norvège: "🇳🇴",
+  Danemark: "🇩🇰",
+  Finlande: "🇫🇮",
+  Pologne: "🇵🇱",
+  Turquie: "🇹🇷",
+  Japon: "🇯🇵",
+  Chine: "🇨🇳",
+  Inde: "🇮🇳",
+  Brésil: "🇧🇷",
+  Mexique: "🇲🇽",
+  "Afrique du Sud": "🇿🇦",
+  Australie: "🇦🇺",
+};
+
+// Bilingual country names mapping
+const BILINGUAL_COUNTRIES = {
+  France: { fr: "France", ar: "فرنسا" },
+  Canada: { fr: "Canada", ar: "كندا" },
+  Belgique: { fr: "Belgique", ar: "بلجيكا" },
+  Suisse: { fr: "Suisse", ar: "سويسرا" },
+  Maroc: { fr: "Maroc", ar: "المغرب" },
+  Algérie: { fr: "Algérie", ar: "الجزائر" },
+  Tunisie: { fr: "Tunisie", ar: "تونس" },
+  Sénégal: { fr: "Sénégal", ar: "السنغال" },
+  "Côte d'Ivoire": { fr: "Côte d'Ivoire", ar: "ساحل العاج" },
+  Luxembourg: { fr: "Luxembourg", ar: "لوكسمبرغ" },
+  "États-Unis": { fr: "États-Unis", ar: "الولايات المتحدة" },
+  "Royaume-Uni": { fr: "Royaume-Uni", ar: "المملكة المتحدة" },
+  Allemagne: { fr: "Allemagne", ar: "ألمانيا" },
+  Espagne: { fr: "Espagne", ar: "إسبانيا" },
+  Italie: { fr: "Italie", ar: "إيطاليا" },
+};
 
 const Register_Sterp_2 = ({
   formData,
@@ -27,37 +77,57 @@ const Register_Sterp_2 = ({
   // Add local validation state
   const [phoneError, setPhoneError] = useState("");
 
-  // Options loaded from API (with static fallback)
-  const [countries, setCountries] = useState(DefaultCountries);
-  const [studyFields, setStudyFields] = useState(DefaultStudyFields);
-  const [studyDomains, setStudyDomains] = useState(DefaultStudyDomains);
+  // Options loaded from API (admin controls all options - empty by default)
+  const [userOriginCountries, setUserOriginCountries] = useState([]);
+  const [userSpecialties, setUserSpecialties] = useState([]);
+  const [professionalStatuses, setProfessionalStatuses] = useState([]);
+  const [academicStatuses, setAcademicStatuses] = useState([]);
 
   useEffect(() => {
     const apiBase = getApiBaseUrl();
     fetch(`${apiBase}/public/register-options`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (data) {
-          if (Array.isArray(data.countries) && data.countries.length > 0)
-            setCountries(data.countries);
-          if (Array.isArray(data.studyFields) && data.studyFields.length > 0)
-            setStudyFields(data.studyFields);
-          if (Array.isArray(data.studyDomains) && data.studyDomains.length > 0)
-            setStudyDomains(data.studyDomains);
+        if (data?.options) {
+          // Use new field names from admin-controlled API
+          if (
+            Array.isArray(data.options.userOriginCountries) &&
+            data.options.userOriginCountries.length > 0
+          )
+            setUserOriginCountries(data.options.userOriginCountries);
+          if (
+            Array.isArray(data.options.userSpecialties) &&
+            data.options.userSpecialties.length > 0
+          )
+            setUserSpecialties(data.options.userSpecialties);
+          if (
+            Array.isArray(data.options.professionalStatuses) &&
+            data.options.professionalStatuses.length > 0
+          )
+            setProfessionalStatuses(data.options.professionalStatuses);
+          if (
+            Array.isArray(data.options.academicStatuses) &&
+            data.options.academicStatuses.length > 0
+          )
+            setAcademicStatuses(data.options.academicStatuses);
         }
       })
       .catch(() => {
-        // silent: static fallback already set
+        // silent: empty defaults already set - user will see empty dropdowns until admin configures options
       });
   }, []);
 
   // Function to get localized display name
   const getLocalizedOption = (optionString) => {
-    if (!optionString || !optionString.includes(" / ")) {
-      return optionString;
-    }
-    const [french, arabic] = optionString.split(" / ");
-    return i18n.language === "ar" ? arabic : french;
+    if (!optionString) return optionString;
+    const country = BILINGUAL_COUNTRIES[optionString];
+    if (!country) return optionString;
+    return i18n.language === "ar" ? country.ar : country.fr;
+  };
+
+  // Function to get emoji flag for country
+  const getCountryEmoji = (countryString) => {
+    return EMOJI_FLAGS[countryString] || "🌍";
   };
 
   // Custom handler for phone number changes
@@ -81,7 +151,8 @@ const Register_Sterp_2 = ({
 
       if (!phoneRegex.test(phone)) {
         const errorMessage =
-          t("register.phoneValidationError", "Invalid phone number format.") || "Invalid phone format.";
+          t("register.phoneValidationError", "Invalid phone number format.") ||
+          "Invalid phone format.";
         setPhoneError(errorMessage);
         return;
       }
@@ -97,8 +168,10 @@ const Register_Sterp_2 = ({
         {t("register.title", "Register") || "Register"}
       </h2>
       <p className="text-gray-600 mb-6">
-        {t("register.welcome", "Welcome to healthpathglobal, your first step towards success") ||
-          "Welcome to healthpathglobal, your first step towards success"}
+        {t(
+          "register.welcome",
+          "Welcome to healthpathglobal, your first step towards success",
+        ) || "Welcome to healthpathglobal, your first step towards success"}
       </p>
 
       {error && (
@@ -108,11 +181,13 @@ const Register_Sterp_2 = ({
       )}
 
       <form onSubmit={validateAndSubmit} className="space-y-4">
-        {/* Country Selection */}
+        {/* Country Selection with Emoji Flags */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.countryQuestion", "In which country do you want to pursue your studies?") ||
-              "In which country do you want to pursue your studies?"}
+            {t(
+              "register.countryQuestion",
+              "In which country do you want to pursue your studies?",
+            ) || "In which country do you want to pursue your studies?"}
           </label>
           <select
             name="country"
@@ -125,21 +200,36 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectCountry", "Select Country") || "Select Country"}
+              {t("register.selectCountry", "Select Country") ||
+                "Select Country"}
             </option>
-            {countries.map((country) => (
-              <option key={country} value={country}>
-                {getLocalizedOption(country)}
-              </option>
-            ))}
+            {userOriginCountries.map((country) => {
+              const emoji = getCountryEmoji(country);
+              const displayName = getLocalizedOption(country);
+              return (
+                <option key={country} value={country}>
+                  {emoji} {displayName}
+                </option>
+              );
+            })}
           </select>
+          {formData.country && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+              <span className="text-2xl">
+                {EMOJI_FLAGS[formData.country] || "🌍"}
+              </span>
+              <span>{getLocalizedOption(formData.country)}</span>
+            </div>
+          )}
         </div>
 
         {/* Study Field Selection */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.fieldQuestion", "In which field do you want to pursue your studies?") ||
-              "In which field do you want to pursue your studies?"}
+            {t(
+              "register.fieldQuestion",
+              "In which field do you want to pursue your studies?",
+            ) || "In which field do you want to pursue your studies?"}
           </label>
           <select
             name="studyField"
@@ -152,37 +242,12 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectField", "Select Study Field") || "Select Study Field"}
+              {t("register.selectField", "Select Study Field") ||
+                "Select Study Field"}
             </option>
-            {studyFields.map((field) => (
+            {userSpecialties.map((field) => (
               <option key={field} value={field}>
                 {getLocalizedOption(field)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Study Domain Selection */}
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.domainQuestion", "What is your specialization?") || "What is your specialization?"}
-          </label>
-          <select
-            name="studyDomain"
-            value={formData.studyDomain}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            style={{
-              direction: i18n.language === "ar" ? "rtl" : "ltr",
-              textAlign: i18n.language === "ar" ? "right" : "left",
-            }}
-          >
-            <option value="">
-              {t("register.selectDomain", "Select Specialization") || "Select Specialization"}
-            </option>
-            {studyDomains.map((domain) => (
-              <option key={domain} value={domain}>
-                {getLocalizedOption(domain)}
               </option>
             ))}
           </select>
@@ -191,12 +256,15 @@ const Register_Sterp_2 = ({
         {/* Phone Number Input */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.phoneOptional", "Phone Number (optional)") || "Phone Number (optional)"}
+            {t("register.phoneOptional", "Phone Number (optional)") ||
+              "Phone Number (optional)"}
           </label>
           <input
             type="tel"
             name="phoneNumber"
-            placeholder={t("register.phoneNumber", "Phone Number") || "Phone Number"}
+            placeholder={
+              t("register.phoneNumber", "Phone Number") || "Phone Number"
+            }
             value={formData.phoneNumber || ""}
             onChange={handlePhoneChange}
             className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -210,6 +278,103 @@ const Register_Sterp_2 = ({
           {phoneError && (
             <p className="text-red-500 text-sm mt-1">{phoneError}</p>
           )}
+        </div>
+
+        {/* University/Institution Input */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t(
+              "register.universityOptional",
+              "University / Institution (optional)",
+            ) || "University / Institution (optional)"}
+          </label>
+          <input
+            type="text"
+            name="university"
+            placeholder={
+              t(
+                "register.universityPlaceholder",
+                "Enter your university or institution name",
+              ) || "Enter your university or institution name"
+            }
+            value={formData.university || ""}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            style={{
+              direction: i18n.language === "ar" ? "rtl" : "ltr",
+              textAlign: i18n.language === "ar" ? "right" : "left",
+            }}
+          />
+        </div>
+
+        {/* Professional Status Selection */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t(
+              "register.professionalStatus",
+              "Professional Status (optional)",
+            ) || "Professional Status (optional)"}
+          </label>
+          <select
+            name="professionalStatus"
+            value={formData.professionalStatus || ""}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            style={{
+              direction: i18n.language === "ar" ? "rtl" : "ltr",
+              textAlign: i18n.language === "ar" ? "right" : "left",
+            }}
+          >
+            <option value="">
+              {t(
+                "register.selectProfessionalStatus",
+                "Select Professional Status",
+              ) || "Select Professional Status"}
+            </option>
+            {professionalStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status === "student"
+                  ? t("register.student", "Student") || "Student"
+                  : status === "worker"
+                    ? t("register.worker", "Working Professional") ||
+                      "Working Professional"
+                    : t("register.other", "Other") || "Other"}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Academic Status Selection */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("register.academicStatus", "Academic Status (optional)") ||
+              "Academic Status (optional)"}
+          </label>
+          <select
+            name="academicStatus"
+            value={formData.academicStatus || ""}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            style={{
+              direction: i18n.language === "ar" ? "rtl" : "ltr",
+              textAlign: i18n.language === "ar" ? "right" : "left",
+            }}
+          >
+            <option value="">
+              {t("register.selectAcademicStatus", "Select Academic Status") ||
+                "Select Academic Status"}
+            </option>
+            {academicStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status === "student"
+                  ? t("register.currentStudent", "Current Student") ||
+                    "Current Student"
+                  : status === "graduated"
+                    ? t("register.graduated", "Graduated") || "Graduated"
+                    : t("register.other", "Other") || "Other"}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Action Buttons */}

@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import { toast } from "react-toastify";
-import { StudyFields, StudyDomains } from "../../data/fields";
-import { Countries } from "../../data/Countries";
+import { fetchUserOptions } from "../../API/UserOptions";
 import { User } from "lucide-react";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -11,12 +10,56 @@ import ValidationErrorPanel from "../../components/Common/FormValidation/Validat
 import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
 import { getApiErrorMessage } from "../../utils/apiErrorTranslate";
 
+// Emoji flags for countries (same as admin dashboard and registration)
+const EMOJI_FLAGS = {
+  France: "🇫🇷",
+  Canada: "🇨🇦",
+  Belgique: "🇧🇪",
+  Suisse: "🇨🇭",
+  Maroc: "🇲🇦",
+  Algérie: "🇩🇿",
+  Tunisie: "🇹🇳",
+  Sénégal: "🇸🇳",
+  "Côte d'Ivoire": "🇨🇮",
+  Luxembourg: "🇱🇺",
+  "États-Unis": "🇺🇸",
+  "Royaume-Uni": "🇬🇧",
+  Allemagne: "🇩🇪",
+  Espagne: "🇪🇸",
+  Italie: "🇮🇹",
+};
+
+// Bilingual country names mapping
+const BILINGUAL_COUNTRIES = {
+  France: { fr: "France", ar: "فرنسا" },
+  Canada: { fr: "Canada", ar: "كندا" },
+  Belgique: { fr: "Belgique", ar: "بلجيكا" },
+  Suisse: { fr: "Suisse", ar: "سويسرا" },
+  Maroc: { fr: "Maroc", ar: "المغرب" },
+  Algérie: { fr: "Algérie", ar: "الجزائر" },
+  Tunisie: { fr: "Tunisie", ar: "تونس" },
+  Sénégal: { fr: "Sénégal", ar: "السنغال" },
+  "Côte d'Ivoire": { fr: "Côte d'Ivoire", ar: "ساحل العاج" },
+  Luxembourg: { fr: "Luxembourg", ar: "لوكسمبرغ" },
+  "États-Unis": { fr: "États-Unis", ar: "الولايات المتحدة" },
+  "Royaume-Uni": { fr: "Royaume-Uni", ar: "المملكة المتحدة" },
+  Allemagne: { fr: "Allemagne", ar: "ألمانيا" },
+  Espagne: { fr: "Espagne", ar: "إسبانيا" },
+  Italie: { fr: "Italie", ar: "إيطاليا" },
+};
+
 const EditProfile = () => {
   const { user, updateUserProfile } = useAppContext();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [options, setOptions] = useState({
+    userOriginCountries: [],
+    userSpecialties: [],
+    professionalStatuses: [],
+    academicStatuses: [],
+  });
   const {
     errors: validationErrors,
     showPanel,
@@ -29,16 +72,19 @@ const EditProfile = () => {
     email: "",
     country: "",
     studyField: "",
-    studyDomain: "",
     phoneNumber: "",
+    university: "",
+    professionalStatus: "",
+    academicStatus: "",
     profile_pic_link: "",
   });
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   // Function to get country name based on current language
   const getCountryDisplayName = (countryString) => {
-    const [french, arabic] = countryString.split(" / ");
-    return i18n.language === "ar" ? arabic : french;
+    const country = BILINGUAL_COUNTRIES[countryString];
+    if (!country) return countryString;
+    return i18n.language === "ar" ? country.ar : country.fr;
   };
   // Function to get placeholder text based on language
   const getSelectCountryText = () => {
@@ -237,6 +283,21 @@ const EditProfile = () => {
     }
   };
   useEffect(() => {
+    // Fetch dropdown options from API on component mount
+    const loadOptions = async () => {
+      const fetchedOptions = await fetchUserOptions();
+      setOptions({
+        userOriginCountries: fetchedOptions.userOriginCountries || [],
+        userSpecialties: fetchedOptions.userSpecialties || [],
+        professionalStatuses: fetchedOptions.professionalStatuses || [],
+        academicStatuses: fetchedOptions.academicStatuses || [],
+      });
+    };
+
+    loadOptions();
+  }, []);
+
+  useEffect(() => {
     if (user) {
       fetch_data();
     }
@@ -247,8 +308,10 @@ const EditProfile = () => {
         email: user.email || "",
         country: user.country || "",
         studyField: user.studyField || "",
-        studyDomain: user.studyDomain || "",
         phoneNumber: user.phoneNumber || "",
+        university: user.university || "",
+        professionalStatus: user.professionalStatus || "",
+        academicStatus: user.academicStatus || "",
         profile_pic_link: user.profile_pic_link || "",
       });
     } else {
@@ -428,12 +491,23 @@ const EditProfile = () => {
                 }}
               >
                 <option value="">{getSelectCountryText()}</option>
-                {Countries.map((country) => (
-                  <option key={country} value={country}>
-                    {getCountryDisplayName(country)}
-                  </option>
-                ))}
+                {options.userOriginCountries.map((country) => {
+                  const emoji = EMOJI_FLAGS[country] || "🌍";
+                  return (
+                    <option key={country} value={country}>
+                      {emoji} {getCountryDisplayName(country)}
+                    </option>
+                  );
+                })}
               </select>
+              {formData.country && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                  <span className="text-2xl">
+                    {EMOJI_FLAGS[formData.country] || "🌍"}
+                  </span>
+                  <span>{getCountryDisplayName(formData.country)}</span>
+                </div>
+              )}
             </div>
             {/* Academic Information */}
             <div className="border-t pt-6">
@@ -463,12 +537,82 @@ const EditProfile = () => {
                     }}
                   >
                     <option value="">
-                      {t("editProfile.selectStudyField") ||
-                        "Select Study Field"}
+                      {t("editProfile.selectStudyField", "Select Study Field")}
                     </option>
-                    {StudyFields.map((field) => (
+                    {options.userSpecialties.map((field) => (
                       <option key={field} value={field}>
                         {getFields(field)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Professional Information */}
+            <div className="border-t pt-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                {t(
+                  "editProfile.professionalInformation",
+                  "Professional Information",
+                ) || "Professional Information"}
+              </h3>
+
+              <div className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="university"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("editProfile.university", "University / Institution") ||
+                      "University / Institution"}
+                  </label>
+                  <input
+                    type="text"
+                    id="university"
+                    name="university"
+                    value={formData.university}
+                    onChange={handleChange}
+                    placeholder={
+                      t(
+                        "editProfile.universityPlaceholder",
+                        "Enter your university or institution name",
+                      ) || "Enter your university or institution name"
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="professionalStatus"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t(
+                      "editProfile.professionalStatus",
+                      "Professional Status",
+                    ) || "Professional Status"}
+                  </label>
+                  <select
+                    id="professionalStatus"
+                    name="professionalStatus"
+                    value={formData.professionalStatus}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">
+                      {t(
+                        "editProfile.selectProfessionalStatus",
+                        "Select Professional Status",
+                      )}
+                    </option>
+                    {options.professionalStatuses.map((status) => (
+                      <option key={status} value={status}>
+                        {status === "student"
+                          ? t("editProfile.student", "Student")
+                          : status === "worker"
+                            ? t("editProfile.worker", "Working Professional")
+                            : t("editProfile.other", "Other")}
                       </option>
                     ))}
                   </select>
@@ -476,36 +620,39 @@ const EditProfile = () => {
 
                 <div>
                   <label
-                    htmlFor="studyDomain"
+                    htmlFor="academicStatus"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    {t("editProfile.studyDomain", "Specialization") ||
-                      "Study Domain"}
+                    {t("editProfile.academicStatus", "Academic Status") ||
+                      "Academic Status"}
                   </label>
                   <select
-                    id="studyDomain"
-                    name="studyDomain"
-                    value={formData.studyDomain}
+                    id="academicStatus"
+                    name="academicStatus"
+                    value={formData.academicStatus}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    style={{
-                      direction: i18n.language === "ar" ? "rtl" : "ltr",
-                      textAlign: i18n.language === "ar" ? "right" : "left",
-                    }}
                   >
                     <option value="">
-                      {t("editProfile.selectStudyDomain") ||
-                        "Select Study Domain"}
+                      {t(
+                        "editProfile.selectAcademicStatus",
+                        "Select Academic Status",
+                      )}
                     </option>
-                    {StudyDomains.map((domain) => (
-                      <option key={domain} value={domain}>
-                        {getFields(domain)}
+                    {options.academicStatuses.map((status) => (
+                      <option key={status} value={status}>
+                        {status === "student"
+                          ? t("editProfile.currentStudent", "Current Student")
+                          : status === "graduated"
+                            ? t("editProfile.graduated", "Graduated")
+                            : t("editProfile.other", "Other")}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
             </div>
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <button

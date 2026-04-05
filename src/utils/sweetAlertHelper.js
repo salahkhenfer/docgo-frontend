@@ -145,7 +145,12 @@ export const showEnrollmentError = async (errorMessage = null) => {
   const { t } = i18n;
 
   return showError("alerts.enrollment.failedTitle", null, {
-    text: errorMessage || t("alerts.enrollment.failedText", "Could not enroll in the course. Please try again."),
+    text:
+      errorMessage ||
+      t(
+        "alerts.enrollment.failedText",
+        "Could not enroll in the course. Please try again.",
+      ),
   });
 };
 
@@ -159,7 +164,10 @@ export const showApplicationSuccess = async () => {
     "alerts.application.successTitle",
     "alerts.application.successText",
     {
-      confirmButtonText: t("alerts.application.viewApplications", "View applications"),
+      confirmButtonText: t(
+        "alerts.application.viewApplications",
+        "View applications",
+      ),
     },
   );
 };
@@ -171,7 +179,12 @@ export const showApplicationError = async (errorMessage = null) => {
   const { t } = i18n;
 
   return showError("alerts.application.failedTitle", null, {
-    text: errorMessage || t("alerts.application.failedText", "Could not submit your application for the program. Please try again."),
+    text:
+      errorMessage ||
+      t(
+        "alerts.application.failedText",
+        "Could not submit your application for the program. Please try again.",
+      ),
   });
 };
 
@@ -197,7 +210,10 @@ export const showCertificateGenerating = async () => {
 
   return showAlert({
     title: t("alerts.certificate.generatingTitle", "Generating Certificate"),
-    html: t("alerts.certificate.generatingText", "Please wait while your certificate is being created..."),
+    html: t(
+      "alerts.certificate.generatingText",
+      "Please wait while your certificate is being created...",
+    ),
     allowOutsideClick: false,
     allowEscapeKey: false,
     didOpen: (modal) => {
@@ -224,7 +240,10 @@ export const showQuizIncomplete = async () => {
 export const showQuizSuccess = async (score) => {
   const { t } = i18n;
 
-  const passText = t("alerts.quiz.passText", "You scored {{score}}%. You can now obtain your certificate.").replace("{{score}}", score);
+  const passText = t(
+    "alerts.quiz.passText",
+    "You scored {{score}}%. You can now obtain your certificate.",
+  ).replace("{{score}}", score);
 
   return showSuccess("alerts.quiz.successTitle", null, {
     html: `<strong>${passText}</strong>`,
@@ -238,12 +257,51 @@ export const showQuizSuccess = async (score) => {
 export const showQuizFail = async (score) => {
   const { t } = i18n;
 
-  const failText = t("alerts.quiz.failText", "You scored {{score}}%. At least 50% is needed to unlock the certificate.").replace("{{score}}", score);
+  const failText = t(
+    "alerts.quiz.failText",
+    "You scored {{score}}%. At least 50% is needed to unlock the certificate.",
+  ).replace("{{score}}", score);
 
   return showInfo("alerts.quiz.failTitle", null, {
     html: failText,
     confirmButtonText: t("alerts.quiz.viewResults", "View my results"),
   });
+};
+
+/**
+ * Show simple text alert (without translation)
+ * Use this for direct text messages, not translation keys
+ */
+export const showSimpleAlert = async (title, text = "", type = "info") => {
+  return showAlert({
+    icon: type,
+    title: title,
+    html: text,
+    confirmButtonColor:
+      type === "error" ? "#ef4444" : type === "warning" ? "#f59e0b" : "#3b82f6",
+    confirmButtonText: "OK",
+  });
+};
+
+/**
+ * Show simple success message (without translation)
+ */
+export const showSimpleSuccess = async (message) => {
+  return showSimpleAlert("Success", message, "success");
+};
+
+/**
+ * Show simple error message (without translation)
+ */
+export const showSimpleError = async (message) => {
+  return showSimpleAlert("Error", message, "error");
+};
+
+/**
+ * Show simple info message (without translation)
+ */
+export const showSimpleInfo = async (message) => {
+  return showSimpleAlert("Information", message, "info");
 };
 
 /**

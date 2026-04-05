@@ -24,6 +24,7 @@ import { clientProgramsAPI } from "../../../API/Programs";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../../InlineLoading";
 import { buildApiUrl } from "../../../utils/apiBaseUrl";
+import { showSimpleSuccess } from "../../../utils/sweetAlertHelper";
 
 const resolveProgramMediaUrl = (mediaPath) => {
   if (!mediaPath) return null;
@@ -162,8 +163,7 @@ const ProgramDetail = () => {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    // You might want to show a toast notification here
-    alert(t("programs.linkCopied", "Link copied to clipboard"));
+    showSimpleSuccess(t("programs.linkCopied", "Link copied to clipboard"));
   };
 
   if (loading) {
@@ -308,7 +308,8 @@ const ProgramDetail = () => {
                     <div className="flex items-center gap-2 text-gray-600">
                       <Users className="w-5 h-5" />
                       <span className="text-sm">
-                        {program.Users_count} {t("programs.applicants", "applicants")}
+                        {program.Users_count}{" "}
+                        {t("programs.applicants", "applicants")}
                       </span>
                     </div>
                   )}
@@ -598,7 +599,10 @@ const ProgramDetail = () => {
                 controls
                 className="w-full h-auto max-h-[60vh]"
               >
-                {t("programs.videoNotSupported", "Your browser does not support HTML5 video")}
+                {t(
+                  "programs.videoNotSupported",
+                  "Your browser does not support HTML5 video",
+                )}
               </video>
             </div>
           </div>
