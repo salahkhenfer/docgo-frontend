@@ -256,7 +256,7 @@ function Navigation({ branding = null }) {
                     </svg>
                     {t("Favorites", "Favorites")}
                 </Link> */}
-        {!isAuth && (
+        {/* {!isAuth && (
           <>
             <button
               onClick={() => handleScrollToSection("ourServices")}
@@ -279,7 +279,7 @@ function Navigation({ branding = null }) {
               <ActiveIndicator isActive={activeSection === "aboutUs"} />
             </button>
           </>
-        )}
+        )} */}
       </div>
     );
   };

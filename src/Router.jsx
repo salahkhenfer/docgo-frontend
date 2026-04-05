@@ -9,6 +9,7 @@ import Register from "./Pages/Auth/Register";
 import Blocked from "./Pages/Auth/Blocked";
 import Deleted from "./Pages/Auth/Deleted";
 import ForgotPassword from "./Pages/Auth/ForgotPassword";
+import ResetPassword from "./Pages/Auth/ResetPassword";
 import Courses from "./Pages/Courses";
 import FAQPage from "./Pages/FAQPage";
 import FavoritesPage from "./Pages/FavoritesPage";
@@ -390,6 +391,15 @@ const Routers = createBrowserRouter([
     element: (
       <ProtectedRoute requireAuth={false}>
         <ForgotPassword />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "reset-password",
+    caseSensitive: false,
+    element: (
+      <ProtectedRoute requireAuth={false}>
+        <ResetPassword />
       </ProtectedRoute>
     ),
   },

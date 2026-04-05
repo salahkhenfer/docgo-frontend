@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { clientProgramsAPI } from "../API/Programs";
 
-const API_BASE =
-  import.meta.env.VITE_API_URL || "https://backend.healthpathglobal.com";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const recordSearch = async (what, where, lang) => {
   try {
