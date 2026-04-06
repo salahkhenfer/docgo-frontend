@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
-import axios from "../../utils/axios";
+import apiClient from "../../utils/apiClient";
 
 // Emoji flags for countries (same as admin dashboard)
 const EMOJI_FLAGS = {
@@ -111,10 +111,11 @@ const Register_Sterp_2 = ({
           )
             setAcademicStatuses(data.options.academicStatuses);
         }
-      })
-      .catch(() => {
+      } catch (error) {
         // silent: empty defaults already set - user will see empty dropdowns until admin configures options
-      });
+      }
+    };
+    loadRegisterOptions();
   }, []);
 
   // Function to get localized display name
@@ -164,25 +165,28 @@ const Register_Sterp_2 = ({
 
   return (
     <div className="w-full transition-all duration-300 ease-in-out">
-      <h2 className="text-2xl font-bold mb-2">
-        {t("register.title", "Register") || "Register"}
-      </h2>
-      <p className="text-gray-600 mb-6">
-        {t(
-          "register.welcome",
-          "Welcome to healthpathglobal, your first step towards success",
-        ) || "Welcome to healthpathglobal, your first step towards success"}
-      </p>
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+          {t("auth.completeProfile", "Complete Your Profile")}
+        </h1>
+        <p className="text-gray-600 text-base sm:text-lg">
+          {t(
+            "auth.completeProfileSubtitle",
+            "Help us personalize your learning experience",
+          )}
+        </p>
+      </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-          {error}
+        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg text-sm sm:text-base">
+          <div className="font-semibold mb-1">Error</div>
+          <div>{error}</div>
         </div>
       )}
 
-      <form onSubmit={validateAndSubmit} className="space-y-4">
+      <form onSubmit={validateAndSubmit} className="space-y-5">
         {/* Country Selection with Emoji Flags */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t(
               "register.countryQuestion",
@@ -193,7 +197,7 @@ const Register_Sterp_2 = ({
             name="country"
             value={formData.country}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
               textAlign: i18n.language === "ar" ? "right" : "left",
@@ -214,17 +218,19 @@ const Register_Sterp_2 = ({
             })}
           </select>
           {formData.country && (
-            <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+            <div className="mt-3 flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
               <span className="text-2xl">
                 {EMOJI_FLAGS[formData.country] || "🌍"}
               </span>
-              <span>{getLocalizedOption(formData.country)}</span>
+              <span className="text-gray-700 font-medium">
+                {getLocalizedOption(formData.country)}
+              </span>
             </div>
           )}
         </div>
 
         {/* Study Domain Selection */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t(
               "register.fieldQuestion",
@@ -235,7 +241,7 @@ const Register_Sterp_2 = ({
             name="studyDomain"
             value={formData.studyDomain}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
               textAlign: i18n.language === "ar" ? "right" : "left",
@@ -254,21 +260,19 @@ const Register_Sterp_2 = ({
         </div>
 
         {/* Phone Number Input */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.phoneOptional", "Phone Number (optional)") ||
-              "Phone Number (optional)"}
+            {t("register.phoneOptional", "Phone Number") || "Phone Number"}
+            <span className="text-gray-400 font-normal"> (optional)</span>
           </label>
           <input
             type="tel"
             name="phoneNumber"
-            placeholder={
-              t("register.phoneNumber", "Phone Number") || "Phone Number"
-            }
+            placeholder="+1 (555) 123-4567"
             value={formData.phoneNumber || ""}
             onChange={handlePhoneChange}
-            className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              phoneError ? "border-red-500" : ""
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
+              phoneError ? "border-red-500" : "border-gray-300"
             }`}
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
@@ -276,30 +280,24 @@ const Register_Sterp_2 = ({
             }}
           />
           {phoneError && (
-            <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+            <p className="text-red-500 text-sm mt-2">{phoneError}</p>
           )}
         </div>
 
         {/* University/Institution Input */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t(
-              "register.universityOptional",
-              "University / Institution (optional)",
-            ) || "University / Institution (optional)"}
+            {t("register.universityOptional", "University / Institution") ||
+              "University / Institution"}
+            <span className="text-gray-400 font-normal"> (optional)</span>
           </label>
           <input
             type="text"
             name="university"
-            placeholder={
-              t(
-                "register.universityPlaceholder",
-                "Enter your university or institution name",
-              ) || "Enter your university or institution name"
-            }
+            placeholder="Enter your university or institution name"
             value={formData.university || ""}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
               textAlign: i18n.language === "ar" ? "right" : "left",
@@ -308,18 +306,17 @@ const Register_Sterp_2 = ({
         </div>
 
         {/* Professional Status Selection */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t(
-              "register.professionalStatus",
-              "Professional Status (optional)",
-            ) || "Professional Status (optional)"}
+            {t("register.professionalStatus", "Professional Status") ||
+              "Professional Status"}
+            <span className="text-gray-400 font-normal"> (optional)</span>
           </label>
           <select
             name="professionalStatus"
             value={formData.professionalStatus || ""}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
               textAlign: i18n.language === "ar" ? "right" : "left",
@@ -345,16 +342,17 @@ const Register_Sterp_2 = ({
         </div>
 
         {/* Academic Status Selection */}
-        <div className="relative">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("register.academicStatus", "Academic Status (optional)") ||
-              "Academic Status (optional)"}
+            {t("register.academicStatus", "Academic Status") ||
+              "Academic Status"}
+            <span className="text-gray-400 font-normal"> (optional)</span>
           </label>
           <select
             name="academicStatus"
             value={formData.academicStatus || ""}
             onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             style={{
               direction: i18n.language === "ar" ? "rtl" : "ltr",
               textAlign: i18n.language === "ar" ? "right" : "left",
@@ -379,31 +377,29 @@ const Register_Sterp_2 = ({
 
         {/* Action Buttons */}
         <div
-          className="flex space-x-4"
+          className="flex gap-4"
           style={{
             flexDirection: i18n.language === "ar" ? "row-reverse" : "row",
-            gap: i18n.language === "ar" ? "1rem" : "0",
           }}
         >
           <button
             type="button"
             onClick={() => setStep(1)}
-            className="w-1/3 bg-gray-300 text-gray-700 p-3 rounded-lg hover:bg-gray-400 transition-colors"
-            style={{
-              marginLeft: i18n.language === "ar" ? "0" : "1rem",
-            }}
+            className="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition-all duration-200"
           >
-            {t("register.back", "Back") || "Back"}
+            {t("auth.back", "Back") || "Back"}
           </button>
           <button
             type="submit"
-            className="w-2/3 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-blue-300"
             disabled={loading}
+            className="w-2/3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
           >
             {loading ? (
-              <InlineLoading borderColor="white" />
+              <span className="flex items-center justify-center gap-2">
+                <InlineLoading borderColor="white" /> Processing...
+              </span>
             ) : (
-              t("register.finish", "Finish") || "Finish"
+              t("auth.createAccount", "Create Account") || "Create Account"
             )}
           </button>
         </div>

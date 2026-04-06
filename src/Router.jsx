@@ -48,6 +48,7 @@ import UserSettings from "./Pages/Dashboard/UserSettings";
 
 import MyLearning from "./Pages/Dashboard/MyLearning";
 import MyPrograms from "./Pages/Dashboard/MyPrograms";
+import UserAllPaymentsPage from "./Pages/Dashboard/UserAllPaymentsPage";
 import ProgramApplicationStatus from "./Pages/ProgramApplicationStatus";
 
 // Auth protection loader
@@ -343,6 +344,11 @@ const Routers = createBrowserRouter([
             path: "certificates",
             caseSensitive: false,
             element: <UserCertificates />,
+          },
+          {
+            path: "all-payments",
+            caseSensitive: false,
+            element: <UserAllPaymentsPage />,
           },
         ],
       },

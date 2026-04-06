@@ -74,6 +74,7 @@
   "retry": "Retry",
   "no_data": "No data available",
   "ImageNotFound": "Image not found",
+  "NoResultsFound": "No results found",
 
   "profile_data": {
     "noCourses": "No courses available",

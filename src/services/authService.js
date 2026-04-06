@@ -1,21 +1,10 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-// Create axios instance for auth service (without interceptors to avoid circular dependency)
-const authApi = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import apiClient from "../utils/apiClient";
 
 export const authService = {
   // Check if user is authenticated
   isAuthenticated: () => {
-    // fetch to check if user is authenticated from  the server
-    const response = authApi.get("/check_Auth");
+    // fetch to check if user is authenticated from the server
+    const response = apiClient.get("/check_Auth");
     return response.status === 200;
   },
 
@@ -64,7 +53,7 @@ export const authService = {
         ? options.redirectTo
         : "/";
     try {
-      await authApi.post("/Logout");
+      await apiClient.post("/Logout");
     } catch (error) {
     } finally {
       // Clear local storage regardless of API call success

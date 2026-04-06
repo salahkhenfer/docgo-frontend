@@ -29,6 +29,7 @@ import ProgramFAQSection from "../components/Program/ProgramFAQSection";
 import ProgramReviews from "../components/Program/ProgramReviews";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
 import VideoPlayer from "../components/Common/VideoPlayer";
+import CoursePaymentButton from "../components/PaymentHistory/CoursePaymentButton";
 import reviewsAPI from "../API/Reviews";
 
 export const ProgramDetails = () => {
@@ -139,7 +140,9 @@ export const ProgramDetails = () => {
       }
 
       try {
-        const response = await apiClient.get(`/media/signed-url/video/${filename}`);
+        const response = await apiClient.get(
+          `/media/signed-url/video/${filename}`,
+        );
         if (isActive) {
           setResolvedVideoUrl(
             response.data?.url ||
@@ -768,6 +771,12 @@ export const ProgramDetails = () => {
                         "Go to My Programs",
                       )}
                     </button>
+                    {/* View Payment History Button */}
+                    <CoursePaymentButton
+                      itemId={program.id}
+                      itemType="program"
+                      itemTitle={programTitle}
+                    />
                   </div>
                 ) : paymentStatus?.status === "pending" ? (
                   // ── Payment pending — block the button ──

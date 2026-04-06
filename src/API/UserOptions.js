@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import apiClient from "../utils/apiClient";
 
 /**
  * Fetch admin-managed user options:
@@ -11,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
  */
 export const fetchUserOptions = async () => {
   try {
-    const response = await axios.get(`${API_URL}/public/register-options`);
+    const response = await apiClient.get("/public/register-options");
     const data = response.data?.options || response.data || {};
 
     return {

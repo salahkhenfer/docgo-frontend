@@ -70,6 +70,7 @@
   "retry": "Réessayer",
   "no_data": "Aucune donnée disponible",
   "ImageNotFound": "Image non trouvée",
+  "NoResultsFound": "Il n'y a rien de ce que vous avez demandé",
   "profile_data": {
     "noCourses": "Aucun cours disponible",
     "noCoursesDescription": "Explorez notre large gamme de cours disponibles.",

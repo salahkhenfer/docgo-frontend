@@ -122,9 +122,6 @@ export default function Courses() {
     maxPrice: searchParams.get("maxPrice") || "",
     language: searchParams.get("language") || "",
   });
-  // Use ref to avoid dependency issues
-  const filtersRef = useRef(filters);
-  filtersRef.current = filters;
 
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -160,7 +157,7 @@ export default function Courses() {
           page,
           limit: pagination.limit,
           search: debouncedSearch,
-          ...filtersRef.current,
+          ...filters,
           sortBy,
           sortOrder,
         };
@@ -181,12 +178,12 @@ export default function Courses() {
           // Extract filter data and stats from courses
           extractFiltersData(coursesData);
 
-          setPagination({
+          setPagination((prev) => ({
+            ...prev,
             currentPage: response.data.pagination?.currentPage || page,
             totalPages: response.data.pagination?.totalPages || 1,
             totalCourses: response.data.pagination?.totalCourses || 0,
-            limit: pagination.limit,
-          });
+          }));
 
           // Update stats - count featured courses from current data
           const featuredCount = coursesData.filter(
@@ -265,7 +262,7 @@ export default function Courses() {
       const params = new URLSearchParams();
 
       // Add search and filter params
-      Object.entries(filtersRef.current).forEach(([key, value]) => {
+      Object.entries(filters).forEach(([key, value]) => {
         if (value && value !== "") {
           params.set(key, value);
         }
@@ -287,6 +284,7 @@ export default function Courses() {
   );
 
   // Effects
+  // Initial load on mount
   useEffect(() => {
     fetchCourses(1, false, false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -333,9 +331,13 @@ export default function Courses() {
     };
   }, []);
 
-  // Effect for when search or filters change
+  // Effect for search, filters, and sorting changes - reset pagination and fetch
   useEffect(() => {
-    fetchCourses(1, false, true);
+    // Always reset to page 1 when search/filters/sorting changes
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    // Fetch with page 1 after state updates
+    const timer = setTimeout(() => fetchCourses(1, false, true), 0);
+    return () => clearTimeout(timer);
   }, [
     debouncedSearch,
     filters.category,
@@ -349,8 +351,14 @@ export default function Courses() {
     filters.language,
     sortBy,
     sortOrder,
-    fetchCourses,
   ]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Effect for pagination changes only
+  useEffect(() => {
+    if (pagination.currentPage > 1) {
+      fetchCourses(pagination.currentPage, false, false);
+    }
+  }, [pagination.currentPage, fetchCourses]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle search with debouncing
   const handleSearch = useCallback((value) => {

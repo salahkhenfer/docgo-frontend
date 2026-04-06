@@ -107,90 +107,129 @@ const Login = () => {
   );
 
   return (
-    <div className="flex items-center h-screen">
-      <div className="hidden lg:flex md:w-1/2 relative">
-        <div className="absolute inset-0 from-black/40 to-transparent"></div>
-        <div className="w-[80%] h-full px-16">
-          <img
-            src={backgroundImage}
-            alt="Airplane in sky"
-            className="3xl:w-full 3xl:h-full md:max-2xl:w-[400px] xl:max-2xl:h-full object-cover"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4 sm:p-6 lg:p-0">
+      {/* Side Image - Hidden on Mobile */}
+      <div className="hidden lg:flex lg:w-1/2 h-screen items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full mix-blend-multiply"></div>
+        </div>
+        <div className="relative z-10 px-12 text-center text-white max-w-md">
+          <div className="mb-8">
+            <img
+              src={backgroundImage}
+              alt="Login Visual"
+              className="w-full h-auto max-h-96 object-contain rounded-2xl shadow-2xl"
+            />
+          </div>
+          <h3 className="text-3xl font-bold mb-4">Welcome Back</h3>
+          <p className="text-blue-100 text-lg">
+            Join thousands of learners on their journey to success
+          </p>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-2">Se connecter</h2>
-          <p className="text-gray-600 mb-6">
-            Bienvenue à healthpathglobal. Si possible signer sur votre compte
-          </p>
+      {/* Login Form Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+        <div className="w-full max-w-md">
+          {/* Logo/Title */}
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+              {t("auth.login", "Sign In")}
+            </h1>
+            <p className="text-gray-600 text-base sm:text-lg">
+              {t(
+                "auth.loginSubtitle",
+                "Welcome to HealthPathGlobal. Sign in to your account to continue.",
+              )}
+            </p>
+          </div>
 
+          {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-              {error}
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg text-sm sm:text-base">
+              <div className="font-semibold mb-1">Error</div>
+              <div>{error}</div>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-5">
+            {/* Email Input */}
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t("auth.email", "Email Address")}
+              </label>
               <input
                 type="email"
                 name="email"
-                placeholder="Votre email"
+                placeholder="you@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                 required
               />
             </div>
+
+            {/* Password Input */}
             <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {t("auth.password", "Password")}
+                </label>
+                <a
+                  href="/forgot-password"
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                >
+                  {t("auth.forgotPassword", "Forgot Password?")}
+                </a>
+              </div>
               <input
                 type="password"
                 name="password"
-                placeholder="Votre mot de passe"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                 required
               />
-              <div className="text-right mt-1">
-                <a
-                  href="/forgot-password"
-                  className="text-sm text-blue-500 hover:underline"
-                >
-                  Mot de passe oublié ?
-                </a>
-              </div>
             </div>
+
+            {/* Sign In Button */}
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-blue-300"
               disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
             >
-              {loading ? <InlineLoading borderColor="white" /> : "Se connecter"}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <InlineLoading borderColor="white" /> Signing in...
+                </span>
+              ) : (
+                t("auth.signIn", "Sign In")
+              )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                {/* <span className="px-2 bg-white text-gray-500">
-                                    OU
-                                </span> */}
-              </div>
+          {/* Divider */}
+          <div className="my-6 relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
             </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">or</span>
+            </div>
+          </div>
 
-            <p className="mt-4 text-sm text-gray-600">
-              Vous n'avez pas de compte?
+          {/* Sign Up Link */}
+          <div className="text-center">
+            <p className="text-gray-700">
+              {t("auth.noAccount", "Don't have an account?")} {"  "}
               <a
                 href="/register"
-                className="text-blue-500 hover:underline ml-1"
+                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               >
-                S'inscrire
+                {t("auth.signUp", "Sign up now")}
               </a>
             </p>
           </div>

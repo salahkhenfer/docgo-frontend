@@ -1,11 +1,9 @@
-import axios from "axios";
 import Swal from "sweetalert2";
-const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
-  const API_URL = import.meta.env.VITE_API_URL;
+import apiClient from "../utils/apiClient";
 
+const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
   try {
-    const response = await apiClient.post(`${API_URL}/Login`, userData, {
-      withCredentials: true,
+    const response = await apiClient.post("/Login", userData, {
       validateStatus: () => true,
     });
 
@@ -16,23 +14,23 @@ const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
       }
 
       // Update authentication state
-    //   if (setAuth) setAuth(true);
-    //   if (setUser) setUser(user);
+      //   if (setAuth) setAuth(true);
+      //   if (setUser) setUser(user);
 
-    //   // Store user data in local and session storage
-    //   localStorage.setItem("user", JSON.stringify(user));
-    //   sessionStorage.setItem("user", JSON.stringify(user));
+      //   // Store user data in local and session storage
+      //   localStorage.setItem("user", JSON.stringify(user));
+      //   sessionStorage.setItem("user", JSON.stringify(user));
 
-    //   Swal.fire({
-    //     title: "Login Successful",
-    //     text: "You have successfully logged in.",
-    //     icon: "success",
-    //     confirmButtonText: "OK",
-    //     timer: 2000,
-    //     timerProgressBar: true,
-    //   }).then(() => {
-    //     window.location.href = "/dashboard";
-    //   });
+      //   Swal.fire({
+      //     title: "Login Successful",
+      //     text: "You have successfully logged in.",
+      //     icon: "success",
+      //     confirmButtonText: "OK",
+      //     timer: 2000,
+      //     timerProgressBar: true,
+      //   }).then(() => {
+      //     window.location.href = "/dashboard";
+      //   });
 
       return {
         success: true,

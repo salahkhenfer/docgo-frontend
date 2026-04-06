@@ -178,81 +178,129 @@ const Register = () => {
   // Render step 1 form
   const renderStep1Form = () => (
     <div className="w-full transition-all duration-300 ease-in-out">
-      <h2 className="text-2xl font-bold mb-2">S'inscrire</h2>
-      <p className="text-gray-600 mb-6">
-        Bienvenue à healthpathglobal, si premier pas vers votre réussite
-      </p>
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+          {t("auth.register", "Create Account")}
+        </h1>
+        <p className="text-gray-600 text-base sm:text-lg">
+          {t(
+            "auth.registerSubtitle",
+            "Join HealthPathGlobal and start your learning journey today.",
+          )}
+        </p>
+      </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-          {error}
+        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg text-sm sm:text-base">
+          <div className="font-semibold mb-1">Error</div>
+          <div>{error}</div>
         </div>
       )}
 
-      <form onSubmit={handleFirstStep} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleFirstStep} className="space-y-5">
+        {/* First Name and Last Name */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t("auth.firstName", "First Name")}
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="John"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t("auth.lastName", "Last Name")}
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Doe"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("auth.email", "Email Address")}
+          </label>
           <input
-            type="text"
-            name="firstName"
-            placeholder="Nom"
-            value={formData.firstName}
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={formData.email}
             onChange={handleChange}
-            className="p-3 border rounded-lg"
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Prénom"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="p-3 border rounded-lg"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             required
           />
         </div>
-        <input
-          type="email"
-          name="email"
-          placeholder="Votre email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-lg"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Votre mot de passe"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-lg"
-          required
-          minLength={8}
-        />
 
+        {/* Password */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("auth.password", "Password")}
+          </label>
+          <input
+            type="password"
+            name="password"
+            placeholder="At least 8 characters"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+            required
+            minLength={8}
+          />
+          <p className="text-xs text-gray-500 mt-2">
+            {t("auth.passwordHint", "Must be at least 8 characters")}
+          </p>
+        </div>
+
+        {/* Next Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-blue-300"
           disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
         >
-          {loading ? <InlineLoading borderColor="white" /> : "continuer"}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <InlineLoading borderColor="white" /> Processing...
+            </span>
+          ) : (
+            t("auth.continue", "Continue")
+          )}
         </button>
       </form>
 
-      <div className="mt-6 text-center">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            {/* <span className="px-2 bg-white text-gray-500">OU</span> */}
-          </div>
+      {/* Divider */}
+      <div className="my-6 relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
         </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">or</span>
+        </div>
+      </div>
 
-        <p className="mt-4 text-sm text-gray-600">
-          Si vous avez un compte{" "}
-          <a href="/Login" className="text-blue-500 hover:underline">
-            Se connecter
+      {/* Sign In Link */}
+      <div className="text-center">
+        <p className="text-gray-700">
+          {t("auth.haveAccount", "Already have an account?")} {"  "}
+          <a
+            href="/login"
+            className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+          >
+            {t("auth.signIn", "Sign in")}
           </a>
         </p>
       </div>
@@ -260,20 +308,31 @@ const Register = () => {
   );
 
   return (
-    <div className="flex items-center h-[92vh]">
-      <div className="hidden lg:flex md:w-1/2 relative px-20">
-        <div className="absolute inset-0 from-black/40 to-transparent"></div>
-        <div className="w-full h-full p-16">
-          <img
-            src={backgroundImage}
-            alt="Airplane in sky"
-            className="3xl:w-full 3xl:h-full md:max-2xl:w-[400px] xl:max-2xl:h-full object-cover"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4 sm:p-6 lg:p-0">
+      {/* Side Image - Hidden on Mobile */}
+      <div className="hidden lg:flex lg:w-1/2 h-screen items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full mix-blend-multiply"></div>
+        </div>
+        <div className="relative z-10 px-12 text-center text-white max-w-md">
+          <div className="mb-8">
+            <img
+              src={backgroundImage}
+              alt="Register Visual"
+              className="w-full h-auto max-h-96 object-contain rounded-2xl shadow-2xl"
+            />
+          </div>
+          <h3 className="text-3xl font-bold mb-4">Get Started</h3>
+          <p className="text-blue-100 text-lg">
+            Learn from experts and advance your career with us
+          </p>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
-        <div className="max-w-md w-full">
+      {/* Registration Form Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 min-h-screen lg:min-h-auto">
+        <div className="w-full max-w-md">
           <div className="transition-all duration-300 ease-in-out">
             {step === 1 ? renderStep1Form() : step_2()}
           </div>

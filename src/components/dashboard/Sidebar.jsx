@@ -10,6 +10,7 @@ import {
   UserIcon,
   CogIcon,
   TrophyIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
@@ -114,6 +115,13 @@ const UserSidebar = ({ isOpen, onClose }) => {
       name: t("dashboard.sidebar.certificates", "My Certificates"),
       icon: TrophyIcon,
       path: "/dashboard/certificates",
+      badge: null,
+    },
+    {
+      id: "all-payments",
+      name: t("dashboard.sidebar.payments", "All Payments"),
+      icon: CreditCardIcon,
+      path: "/dashboard/all-payments",
       badge: null,
     },
     {

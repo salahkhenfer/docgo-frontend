@@ -3,6 +3,7 @@ import { FaCheckCircle, FaDollarSign, FaPlay } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ImageWithFallback from "../../Common/ImageWithFallback";
+import CoursePaymentButton from "../../PaymentHistory/CoursePaymentButton";
 import { buildApiUrl } from "../../../utils/apiBaseUrl";
 
 const CourseSmallCard = ({
@@ -121,6 +122,13 @@ const CourseSmallCard = ({
               <FaPlay className="mr-2" />
               Continue Learning
             </button>
+
+            {/* View Payment History Button */}
+            <CoursePaymentButton
+              itemId={course.id}
+              itemType="course"
+              itemTitle={course.Title || course.title || "Course"}
+            />
           </div>
         ) : paymentStatus && paymentStatus.status === "pending" ? (
           // Payment Pending State
