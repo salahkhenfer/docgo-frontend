@@ -13,7 +13,7 @@ const handleLogout = async ({
 
     try {
         // Send a request to the logout endpoint on the server
-        await axios.post(
+        await apiClient.post(
             `${API_URL}/Logout`,
             {},
             {

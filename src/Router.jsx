@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./ProtectedRoute";
 import { getApiBaseUrl } from "./utils/apiBaseUrl";
+import apiClient from "./utils/apiClient";
 
 import ErrorElement from "./erorrhandle/ErrorElement";
 import Login from "./Pages/Auth/Login";
@@ -69,14 +70,12 @@ const protectedLoader = async ({ request }) => {
   // This prevents the login<->dashboard bounce on hard refresh.
   if (!hasValidUser) {
     try {
-      const resp = await fetch(`${API_URL}/check_Auth`, {
-        method: "GET",
-        credentials: "include",
-        headers: { Accept: "application/json" },
+      const resp = await apiClient.get("/check_Auth", {
+        validateStatus: () => true, // accept any status
       });
 
-      if (resp.ok) {
-        const data = await resp.json().catch(() => null);
+      if (resp.status === 200) {
+        const data = resp.data;
         const authedUser = data?.user;
         if (authedUser?.id) {
           try {

@@ -111,8 +111,8 @@ export const defaultHomePageContent = {
   service2Cta_fr: "Découvrir tous les cours",
   service2Cta_ar: "اكتشف جميع الدورات",
 
-  //  Filter study fields
-  filterStudyFields: [
+  //  Filter study domains
+  filterStudyDomains: [
     { id: "1", en: "Medicine", fr: "Médecine", ar: "الطب" },
     { id: "2", en: "Engineering", fr: "Ingénierie", ar: "الهندسة" },
     {

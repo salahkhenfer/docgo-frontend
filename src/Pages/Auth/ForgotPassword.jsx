@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import { useTranslation } from "react-i18next";
 
 const ForgotPassword = () => {
@@ -65,7 +65,7 @@ const ForgotPassword = () => {
     setSelectedOption("email");
 
     try {
-      const response = await axios.post("/forgot-password/send-email", {
+      const response = await apiClient.post("/forgot-password/send-email", {
         email,
       });
 
@@ -103,7 +103,7 @@ const ForgotPassword = () => {
     setSelectedOption("admin");
 
     try {
-      await axios.post("/forgot-password/request-admin-help", { email });
+      await apiClient.post("/forgot-password/request-admin-help", { email });
       setCurrentStep("admin_sent");
     } catch (err) {
       setActionError(
@@ -125,7 +125,7 @@ const ForgotPassword = () => {
     setResendLoading(true);
 
     try {
-      await axios.post("/forgot-password/resend-email", { tokenId });
+      await apiClient.post("/forgot-password/resend-email", { tokenId });
       setResendSuccess(
         t("forgot_password.resent_success", "Email resent successfully!"),
       );

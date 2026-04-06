@@ -19,7 +19,7 @@ import Certificate from "./Certificate";
 import CourseResources from "./CourseResources";
 import QuizContent from "./QuizContent";
 import Swal from "sweetalert2";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 
 export function CourseVideos() {
@@ -187,7 +187,9 @@ export function CourseVideos() {
       }
 
       try {
-        const response = await axios.get(`/media/signed-url/video/${filename}`);
+        const response = await apiClient.get(
+          `/media/signed-url/video/${filename}`,
+        );
         if (isActive) {
           setResolvedVideoUrl(response.data?.url || null);
         }
@@ -286,7 +288,10 @@ export function CourseVideos() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">
-            {t("Course data is incomplete. Please try again.", "Course data is incomplete. Please try again.")}
+            {t(
+              "Course data is incomplete. Please try again.",
+              "Course data is incomplete. Please try again.",
+            )}
           </p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
@@ -465,7 +470,9 @@ export function CourseVideos() {
           : "";
 
     const result = await Swal.fire({
-      title: t("certificate.realNameTitle", "Your Certificate Name") || "Certificate Name",
+      title:
+        t("certificate.realNameTitle", "Your Certificate Name") ||
+        "Certificate Name",
       html: `
                 <p style="margin-bottom:10px;color:#374151">
                     ${t("certificate.realNameWarning", "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.") || "Your certificate will be issued under your real name. This cannot be changed later."}
@@ -483,7 +490,8 @@ export function CourseVideos() {
       showCancelButton: true,
       confirmButtonColor: "#7c3aed",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: t("certificate.proceed", "Get Certificate") || "Get Certificate",
+      confirmButtonText:
+        t("certificate.proceed", "Get Certificate") || "Get Certificate",
       cancelButtonText: t("certificate.cancel", "Cancel") || "Cancel",
       focusCancel: !studentName,
     });
@@ -506,7 +514,9 @@ export function CourseVideos() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">{t("No videos available", "No videos available")}</p>
+          <p className="text-gray-600">
+            {t("No videos available", "No videos available")}
+          </p>
           <button
             onClick={() => navigate(`/Courses/${courseId}`)}
             className="mt-4 text-blue-600 hover:underline"
@@ -766,7 +776,9 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-green-700 hover:text-green-800 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
-                        <span className="flex-1">{t("Quiz unlocked", "Quiz unlocked")}</span>
+                        <span className="flex-1">
+                          {t("Quiz unlocked", "Quiz unlocked")}
+                        </span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
@@ -794,7 +806,9 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-purple-700 hover:text-purple-800 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                        <span className="flex-1">{t("Certificate", "certificate")}</span>
+                        <span className="flex-1">
+                          {t("Certificate", "certificate")}
+                        </span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
@@ -973,7 +987,9 @@ export function CourseVideos() {
                         className="w-full flex items-center gap-3 text-green-700 font-semibold"
                       >
                         <FaCheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
-                        <span className="flex-1">{t("Quiz unlocked", "Quiz unlocked")}</span>
+                        <span className="flex-1">
+                          {t("Quiz unlocked", "Quiz unlocked")}
+                        </span>
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
@@ -1000,7 +1016,9 @@ export function CourseVideos() {
                       className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                     >
                       <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                      <span className="flex-1">{t("Certificate", "certificate")}</span>
+                      <span className="flex-1">
+                        {t("Certificate", "certificate")}
+                      </span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   ) : (
@@ -1213,14 +1231,19 @@ export function CourseVideos() {
                             className="w-full flex items-center gap-3 text-purple-700 font-semibold"
                           >
                             <FaCheckCircle className="w-5 h-5 text-purple-600 animate-bounce" />
-                            <span className="flex-1">{t("Certificate", "certificate")}</span>
+                            <span className="flex-1">
+                              {t("Certificate", "certificate")}
+                            </span>
                             <ChevronRight className="w-4 h-4" />
                           </button>
                         ) : (
                           <div className="flex items-center gap-3 text-gray-400">
                             <FaLock className="w-5 h-5" />
                             <span className="flex-1 text-sm">
-                              {t("Certificate (locked)", "Certificate (locked)")}
+                              {t(
+                                "Certificate (locked)",
+                                "Certificate (locked)",
+                              )}
                             </span>
                           </div>
                         )}

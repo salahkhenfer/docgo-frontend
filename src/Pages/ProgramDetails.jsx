@@ -139,7 +139,7 @@ export const ProgramDetails = () => {
       }
 
       try {
-        const response = await axios.get(`/media/signed-url/video/${filename}`);
+        const response = await apiClient.get(`/media/signed-url/video/${filename}`);
         if (isActive) {
           setResolvedVideoUrl(
             response.data?.url ||
@@ -203,7 +203,7 @@ export const ProgramDetails = () => {
             }),
       };
 
-      const response = await axios.post("/contact", requestData);
+      const response = await apiClient.post("/contact", requestData);
 
       if (response.status === 200) {
         toast.success(tGlobal("common.messageSentSuccess"));

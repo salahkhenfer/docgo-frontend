@@ -4,7 +4,7 @@ import { useAppContext } from "../../AppContext";
 import { toast } from "react-toastify";
 import { fetchUserOptions } from "../../API/UserOptions";
 import { User } from "lucide-react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useTranslation } from "react-i18next";
 import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
 import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
@@ -71,7 +71,7 @@ const EditProfile = () => {
     lastName: "",
     email: "",
     country: "",
-    studyField: "",
+    studyDomain: "",
     phoneNumber: "",
     university: "",
     professionalStatus: "",
@@ -141,7 +141,7 @@ const EditProfile = () => {
       const formDataImage = new FormData();
       formDataImage.append("ProfilePic", ProfilePic);
 
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${import.meta.env.VITE_API_URL}/upload/User/ProfilePic`,
         formDataImage,
         {
@@ -220,7 +220,7 @@ const EditProfile = () => {
     setLoading(true);
 
     try {
-      const response = await axios.put(
+      const response = await apiClient.put(
         `${import.meta.env.VITE_API_URL}/Users/${user.id}/Profile`,
         formData,
         {
@@ -258,7 +258,7 @@ const EditProfile = () => {
   const fetch_data = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${import.meta.env.VITE_API_URL}/Users/${user.id}/Profile`,
         {
           withCredentials: true,
@@ -307,7 +307,7 @@ const EditProfile = () => {
         lastName: user.lastName || "",
         email: user.email || "",
         country: user.country || "",
-        studyField: user.studyField || "",
+        studyDomain: user.studyDomain || "",
         phoneNumber: user.phoneNumber || "",
         university: user.university || "",
         professionalStatus: user.professionalStatus || "",
@@ -519,16 +519,16 @@ const EditProfile = () => {
               <div className="space-y-4">
                 <div>
                   <label
-                    htmlFor="studyField"
+                    htmlFor="studyDomain"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    {t("editProfile.studyField", "Study Field") ||
-                      "Study Field"}
+                    {t("editProfile.studyDomain", "Study Domain") ||
+                      "Study Domain"}
                   </label>
                   <select
-                    id="studyField"
-                    name="studyField"
-                    value={formData.studyField}
+                    id="studyDomain"
+                    name="studyDomain"
+                    value={formData.studyDomain}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     style={{
@@ -537,7 +537,10 @@ const EditProfile = () => {
                     }}
                   >
                     <option value="">
-                      {t("editProfile.selectStudyField", "Select Study Field")}
+                      {t(
+                        "editProfile.selectStudyDomain",
+                        "Select Study Domain",
+                      )}
                     </option>
                     {options.userSpecialties.map((field) => (
                       <option key={field} value={field}>

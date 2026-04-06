@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
 import { buildApiUrl } from "../utils/apiBaseUrl";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import { showSimpleError } from "../utils/sweetAlertHelper";
 
 export default function CourseResources() {

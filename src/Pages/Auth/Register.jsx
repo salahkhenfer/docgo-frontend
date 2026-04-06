@@ -44,7 +44,6 @@ const Register = () => {
     email: "",
     password: "",
     country: "",
-    studyField: "",
     studyDomain: "",
     phoneNumber: "",
     university: "",

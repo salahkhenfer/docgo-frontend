@@ -6,7 +6,7 @@ export const validateFirstStep = async (userData) => {
 
     try {
         const API_URL = import.meta.env.VITE_API_URL;
-        const response = await axios.post(
+        const response = await apiClient.post(
             `${API_URL}/Register/validate-step1`,
             { firstName, lastName, email, password },
             {
@@ -41,7 +41,7 @@ const handleRegister = async ({
     const API_URL = import.meta.env.VITE_API_URL;
 
     try {
-        const response = await axios.post(`${API_URL}/Register`, userData, {
+        const response = await apiClient.post(`${API_URL}/Register`, userData, {
             headers: {
                 "Content-Type": "application/json",
             },

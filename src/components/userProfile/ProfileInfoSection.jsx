@@ -169,12 +169,12 @@ const ProfileInfoSection = ({ profile }) => {
                 {profile?.country}
               </div>
             )}
-            {profile?.studyField && (
+            {profile?.studyDomain && (
               <div className="text-gray-600">
                 <span className="font-medium">
-                  {t("profile_data.study_field", "Study Field")}:{" "}
+                  {t("profile_data.study_field", "Study Domain")}:{" "}
                 </span>
-                {profile?.studyField}
+                {profile?.studyDomain}
               </div>
             )}
             {profile?.studyDomain && (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import Swal from "sweetalert2";
 import "./OtherServices.css";
 
@@ -40,7 +40,7 @@ const MyOtherServicesApplications = () => {
   // Fetch user's CV application
   const fetchCVApplication = async () => {
     try {
-      const response = await axios.get("/api/other-services/cv-application");
+      const response = await apiClient.get("/other-services/cv-application");
       if (response.data.success && response.data.data) {
         setCvApplication(response.data.data);
       }
@@ -53,8 +53,8 @@ const MyOtherServicesApplications = () => {
   // Fetch user's internship applications
   const fetchInternshipApplications = async () => {
     try {
-      const response = await axios.get(
-        "/api/other-services/my-internship-applications",
+      const response = await apiClient.get(
+        "/other-services/my-internship-applications",
       );
       if (response.data.success && response.data.data) {
         setInternshipApplications(response.data.data);

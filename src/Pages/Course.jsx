@@ -21,7 +21,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../AppContext"; // Add auth context
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import Seo from "../components/SEO/Seo";
 import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
@@ -85,13 +85,17 @@ export const Course = () => {
 
     // Validate required fields
     if (!contactForm.subject || !contactForm.message) {
-      toast.error(t("common.fillAllFields", "Please fill all required fields."));
+      toast.error(
+        t("common.fillAllFields", "Please fill all required fields."),
+      );
       return;
     }
 
     // For non-authenticated users, validate name and email
     if (!user && (!contactForm.name || !contactForm.email)) {
-      toast.error(t("common.fillAllFields", "Please fill all required fields."));
+      toast.error(
+        t("common.fillAllFields", "Please fill all required fields."),
+      );
       return;
     }
 
@@ -112,9 +116,11 @@ export const Course = () => {
       }
 
       const endpoint = user ? "/contact" : "/contact";
-      await axios.post(endpoint, requestData);
+      await apiClient.post(endpoint, requestData);
 
-      toast.success(t("common.messageSentSuccess", "Message sent successfully!"));
+      toast.success(
+        t("common.messageSentSuccess", "Message sent successfully!"),
+      );
 
       setContactForm({
         subject: "",
@@ -152,7 +158,8 @@ export const Course = () => {
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success(
-        t("Link copied to clipboard", "Link copied to clipboard") || "Link copied to clipboard",
+        t("Link copied to clipboard", "Link copied to clipboard") ||
+          "Link copied to clipboard",
       );
     }
   };
@@ -161,7 +168,8 @@ export const Course = () => {
     setIsFavorite(!isFavorite);
     toast.success(
       isFavorite
-        ? t("Removed from favorites", "Removed from favorites") || "Removed from favorites"
+        ? t("Removed from favorites", "Removed from favorites") ||
+            "Removed from favorites"
         : t("Added to favorites", "Added to favorites") || "Added to favorites",
     );
   };
@@ -172,8 +180,10 @@ export const Course = () => {
         <Seo
           title={t("Course", "Course") || "Course"}
           description={
-            t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
-            "Course details and learning content on healthpathglobal."
+            t(
+              "Course details and learning content on healthpathglobal.",
+              "Course details and learning content on healthpathglobal.",
+            ) || "Course details and learning content on healthpathglobal."
           }
           canonicalPath={location.pathname}
         />
@@ -186,10 +196,16 @@ export const Course = () => {
     return (
       <>
         <Seo
-          title={t("Unable to Load Course", "Unable to Load Course") || "Unable to Load Course"}
+          title={
+            t("Unable to Load Course", "Unable to Load Course") ||
+            "Unable to Load Course"
+          }
           description={
             error ||
-            t("Something went wrong while loading the course details.", "Something went wrong while loading the course details.") ||
+            t(
+              "Something went wrong while loading the course details.",
+              "Something went wrong while loading the course details.",
+            ) ||
             "Something went wrong while loading the course details."
           }
           canonicalPath={location.pathname}
@@ -199,11 +215,15 @@ export const Course = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
             <div className="text-red-500 text-4xl sm:text-5xl mb-4"></div>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-              {t("Unable to Load Course", "Unable to Load Course") || "Unable to Load Course"}
+              {t("Unable to Load Course", "Unable to Load Course") ||
+                "Unable to Load Course"}
             </h2>
             <p className="text-sm sm:text-base text-gray-600 mb-6">
               {error ||
-                t("Something went wrong while loading the course details.", "Something went wrong while loading the course details.") ||
+                t(
+                  "Something went wrong while loading the course details.",
+                  "Something went wrong while loading the course details.",
+                ) ||
                 "Something went wrong while loading the course details."}
             </p>
             <button
@@ -229,7 +249,9 @@ export const Course = () => {
     return (
       <>
         <Seo
-          title={t("Course Not Found", "Course Not Found") || "Course Not Found"}
+          title={
+            t("Course Not Found", "Course Not Found") || "Course Not Found"
+          }
           description={
             t(
               "The course you're looking for doesn't exist or has been removed.",
@@ -364,8 +386,10 @@ export const Course = () => {
     ? courseSeoDescription.length > 160
       ? `${courseSeoDescription.slice(0, 157)}...`
       : courseSeoDescription
-    : t("Course details and learning content on healthpathglobal.", "Course details and learning content on healthpathglobal.") ||
-      "Course details and learning content on healthpathglobal.";
+    : t(
+        "Course details and learning content on healthpathglobal.",
+        "Course details and learning content on healthpathglobal.",
+      ) || "Course details and learning content on healthpathglobal.";
 
   const seoLang = (i18n.language || "en").toLowerCase().startsWith("ar")
     ? "ar"
@@ -495,7 +519,8 @@ export const Course = () => {
                     <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-2">
                       <PlayCircle className="w-4 h-4 text-white" />
                       <span className="text-white text-sm font-medium">
-                        {t("Watch Intro Video", "Watch Intro Video") || "Watch Intro Video"}
+                        {t("Watch Intro Video", "Watch Intro Video") ||
+                          "Watch Intro Video"}
                       </span>
                     </div>
                   </div>
@@ -713,7 +738,8 @@ export const Course = () => {
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <Mail className="w-5 h-5" />
-                    {t("Contact for this course", "Contact for this course") || "Contact for this course"}
+                    {t("Contact for this course", "Contact for this course") ||
+                      "Contact for this course"}
                   </h3>
                   <form onSubmit={handleContactSubmit} className="space-y-4">
                     {/* Name and Email fields for non-authenticated users */}
@@ -735,7 +761,8 @@ export const Course = () => {
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder={
-                              t("Your full name", "Your full name") || "Your full name"
+                              t("Your full name", "Your full name") ||
+                              "Your full name"
                             }
                             required
                           />
@@ -756,7 +783,8 @@ export const Course = () => {
                             }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder={
-                              t("Your email address", "Your email address") || "Your email address"
+                              t("Your email address", "Your email address") ||
+                              "Your email address"
                             }
                             required
                           />
@@ -779,7 +807,10 @@ export const Course = () => {
                           })
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder={t("Message subject", "Message subject") || "Message subject"}
+                        placeholder={
+                          t("Message subject", "Message subject") ||
+                          "Message subject"
+                        }
                         required
                       />
                     </div>
@@ -799,8 +830,10 @@ export const Course = () => {
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                         placeholder={
-                          t("Your message about this course...", "Your message about this course...") ||
-                          "Your message about this course..."
+                          t(
+                            "Your message about this course...",
+                            "Your message about this course...",
+                          ) || "Your message about this course..."
                         }
                         required
                       />
@@ -852,12 +885,16 @@ export const Course = () => {
                   <div className="text-center">
                     <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
                     <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                      {t("Questions about this course?", "Questions about this course?") ||
-                        "Questions about this course?"}
+                      {t(
+                        "Questions about this course?",
+                        "Questions about this course?",
+                      ) || "Questions about this course?"}
                     </h3>
                     <p className="text-blue-700 text-sm mb-4">
-                      {t("Click the Contact button to get in touch with us", "Click the Contact button to get in touch with us") ||
-                        "Click the Contact button to get in touch with us"}
+                      {t(
+                        "Click the Contact button to get in touch with us",
+                        "Click the Contact button to get in touch with us",
+                      ) || "Click the Contact button to get in touch with us"}
                     </p>
                     <button
                       onClick={() => setShowContactForm(true)}
@@ -899,7 +936,8 @@ export const Course = () => {
                   <div className="bg-gray-900 p-8 text-center min-h-[400px] flex flex-col items-center justify-center">
                     <PlayCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-400">
-                      {t("Video not available", "Video not available") || "Video not available"}
+                      {t("Video not available", "Video not available") ||
+                        "Video not available"}
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
                       Check console for video data structure

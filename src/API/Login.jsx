@@ -4,7 +4,7 @@ const handleLogin = async ({ userData, setAuth, setUser, onError = null }) => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   try {
-    const response = await axios.post(`${API_URL}/Login`, userData, {
+    const response = await apiClient.post(`${API_URL}/Login`, userData, {
       withCredentials: true,
       validateStatus: () => true,
     });

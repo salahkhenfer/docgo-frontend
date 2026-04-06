@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -34,10 +34,7 @@ const Profile = () => {
         return;
       }
 
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await axios.get(`${API_URL}/Users/${userId}/Profile`, {
-        withCredentials: true,
-      });
+      const response = await apiClient.get(`/Users/${userId}/Profile`);
 
       // Backend returns the data in response.data.data structure
       if (response.data.success) {
@@ -111,7 +108,6 @@ const Profile = () => {
       </svg>
     ),
     country: profileData.user.country,
-    studyField: profileData.user.studyField,
     studyDomain: profileData.user.studyDomain,
     phoneNumber: profileData.user.phoneNumber,
     stats: profileData.statistics,

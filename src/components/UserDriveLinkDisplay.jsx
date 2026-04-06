@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import { Link as LinkIcon, ExternalLink, Loader } from "lucide-react";
 
 const UserDriveLinkDisplay = () => {
@@ -13,7 +13,7 @@ const UserDriveLinkDisplay = () => {
     const fetchDriveLink = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/drive-links/my-drive-link");
+        const response = await apiClient.get("/drive-links/my-drive-link");
         if (response.data.success && response.data.data) {
           setDriveLink(response.data.data);
         }

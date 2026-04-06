@@ -3,19 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { clientProgramsAPI } from "../API/Programs";
-
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import apiClient from "../utils/apiClient";
 
 const recordSearch = async (what, where, lang) => {
   try {
-    await fetch(`${API_BASE}/home/search`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        what: what || null,
-        where: where || null,
-        lang,
-      }),
+    await apiClient.post("/home/search", {
+      what: what || null,
+      where: where || null,
+      lang,
     });
   } catch {
     // Non-critical - silent failure
@@ -92,7 +87,7 @@ const StudyForm = ({ customFields, customLocations }) => {
         ? customLocations.map((f) => ({
             label: f[lang] || f.en || f.fr || f.ar || "",
             value: f.en || f[lang] || "",
-            // fields[] links this location to specific study fields
+            // fields[] links this location to specific study domains
             linkedFields: Array.isArray(f.fields) ? f.fields : [],
           }))
         : apiFilteredCountries.map((c) => ({
@@ -213,7 +208,7 @@ const StudyForm = ({ customFields, customLocations }) => {
 
   return (
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 space-y-3 sm:space-y-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-      {/* What - Study Field */}
+      {/* What - Study Domain */}
       <div className="relative">
         <select
           value={selectedCategory}

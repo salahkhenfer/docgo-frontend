@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 
 export default function InternshipsList() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function InternshipsList() {
             : undefined,
       };
 
-      const response = await axios.get("/api/other-services/internships", {
+      const response = await apiClient.get("/other-services/internships", {
         params,
       });
       setInternships(response.data.data || []);

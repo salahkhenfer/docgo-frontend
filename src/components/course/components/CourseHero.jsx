@@ -96,18 +96,10 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
           <div className="absolute top-5 right-20 text-white/10 text-4xl lg:text-6xl animate-pulse">
             <FaVideo />
           </div>
-          <div className="absolute top-40 right-32 text-white/15 text-3xl lg:text-4xl animate-bounce">
-            
-          </div>
-          <div className="absolute bottom-32 left-32 text-white/20 text-4xl lg:text-5xl animate-pulse">
-            
-          </div>
-          <div className="absolute bottom-20 right-20 text-white/20 text-5xl lg:text-6xl animate-bounce">
-            
-          </div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-6xl lg:text-8xl">
-            
-          </div>
+          <div className="absolute top-40 right-32 text-white/15 text-3xl lg:text-4xl animate-bounce"></div>
+          <div className="absolute bottom-32 left-32 text-white/20 text-4xl lg:text-5xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 text-white/20 text-5xl lg:text-6xl animate-bounce"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white/5 text-6xl lg:text-8xl"></div>
         </div>
 
         {/* Gradient Overlay */}
@@ -140,16 +132,34 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
           {/* Course Tags */}
           <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             <span className="bg-green-500/20 text-green-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-green-400/30">
-               {course.Level || course.level || "Beginner"}
+              {course.Level || course.level || "Beginner"}
             </span>
+            {course.uploadType === "zip" && (
+              <span className="bg-purple-500/20 text-purple-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-purple-400/30 flex items-center gap-1">
+                <svg
+                  className="w-3 h-3 sm:w-4 sm:h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v8m0 0l3-3m-3 3l-3-3M7 12h10"
+                  />
+                </svg>
+                ZIP Course
+              </span>
+            )}
             <span className="bg-blue-500/20 text-blue-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-blue-400/30">
-               {course.Language || course.language || "English"}
+              {course.Language || course.language || "English"}
             </span>
             <span className="bg-purple-500/20 text-purple-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-purple-400/30">
-               {course.Category || course.category || "Medical Education"}
+              {course.Category || course.category || "Medical Education"}
             </span>
             <span className="bg-orange-500/20 text-orange-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-orange-400/30">
-               {course.Field || course.field || "Healthcare"}
+              {course.Field || course.field || "Healthcare"}
             </span>
           </div>
 

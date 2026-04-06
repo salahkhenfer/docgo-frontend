@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import MDEditor from "@uiw/react-md-editor";
 import Swal from "sweetalert2";
 
@@ -23,8 +23,8 @@ export default function CVService() {
     try {
       setIsLoading(true);
       const [serviceRes, appRes] = await Promise.all([
-        axios.get("/api/other-services/cv-service"),
-        axios.get("/api/other-services/cv-application"),
+        apiClient.get("/other-services/cv-service"),
+        apiClient.get("/other-services/cv-application"),
       ]);
 
       setCVService(serviceRes.data.data);
@@ -59,7 +59,7 @@ export default function CVService() {
 
     try {
       setIsSaving(true);
-      const response = await axios.post("/api/other-services/cv-application", {
+      const response = await apiClient.post("/other-services/cv-application", {
         content,
       });
 

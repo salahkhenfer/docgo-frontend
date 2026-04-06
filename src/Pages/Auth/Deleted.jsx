@@ -8,8 +8,7 @@ import {
   FaSignInAlt,
   FaHome,
 } from "react-icons/fa";
-import axios from "axios";
-import { getApiBaseUrl } from "../../utils/apiBaseUrl";
+import apiClient from "../../utils/apiClient";
 import { useAppContext } from "../../AppContext";
 
 const RECHECK_INTERVAL = 10;
@@ -18,7 +17,6 @@ const Deleted = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { contactInfo } = useAppContext();
-  const API_URL = getApiBaseUrl();
 
   const [countdown, setCountdown] = useState(RECHECK_INTERVAL);
   const [checking, setChecking] = useState(false);
@@ -27,7 +25,7 @@ const Deleted = () => {
     if (checking) return;
     setChecking(true);
     try {
-      const res = await axios.get(API_URL + "/check_Auth", {
+      const res = await apiClient.get("/check_Auth", {
         withCredentials: true,
         validateStatus: () => true,
       });
@@ -69,7 +67,10 @@ const Deleted = () => {
             {t("deleted.title", "Account Removed")}
           </h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            {t("deleted.message", "Your account has been permanently removed from this platform by an administrator. Please contact support for more information.")}
+            {t(
+              "deleted.message",
+              "Your account has been permanently removed from this platform by an administrator. Please contact support for more information.",
+            )}
           </p>
         </div>
 
@@ -81,15 +82,24 @@ const Deleted = () => {
           <ul className="space-y-2.5 text-sm text-gray-600">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step1", "Contact our support team to understand why your account was removed.")}
+              {t(
+                "deleted.step1",
+                "Contact our support team to understand why your account was removed.",
+              )}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step2", "You may register a new account if you wish to continue using the platform.")}
+              {t(
+                "deleted.step2",
+                "You may register a new account if you wish to continue using the platform.",
+              )}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
-              {t("deleted.step3", "This page will automatically check every 10 seconds in case access is restored.")}
+              {t(
+                "deleted.step3",
+                "This page will automatically check every 10 seconds in case access is restored.",
+              )}
             </li>
           </ul>
         </div>

@@ -4,7 +4,7 @@ import { useAppContext } from "../../AppContext";
 import InlineLoading from "../../InlineLoading";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import loginImage from "../../assets/login.png";
 const Login = () => {
   const backgroundImage = loginImage;

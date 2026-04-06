@@ -15,6 +15,7 @@ import {
 import { TbTargetArrow } from "react-icons/tb";
 import RichTextDisplay from "../../Common/RichTextEditor/RichTextDisplay";
 import CourseInfo from "./CourseInfo";
+import ZipCourseBrowser from "../../Courses/ZipCourseBrowser";
 
 /* ────────── helpers ────────── */
 const ITEM_META = {
@@ -284,7 +285,8 @@ const LegacyVideoList = ({
                   </h4>
                   {video.isFree && (
                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full ml-2">
-                      {t("course.freePreview", "Free Preview") || "Free Preview"}
+                      {t("course.freePreview", "Free Preview") ||
+                        "Free Preview"}
                     </span>
                   )}
                 </div>
@@ -347,7 +349,8 @@ const CourseContent = ({
           />
         ) : (
           <p className="text-gray-500">
-            {t("course_data.no_prerequisites", "No prerequisites") || "No prerequisites"}
+            {t("course_data.no_prerequisites", "No prerequisites") ||
+              "No prerequisites"}
           </p>
         )}
       </div>
@@ -358,7 +361,8 @@ const CourseContent = ({
           <div className="flex items-center mb-4">
             <TbTargetArrow className="text-green-500 text-xl mr-3" />
             <h3 className="text-xl font-bold text-gray-900">
-              {t("course_data.whatYouLearn", "What you'll learn") || "What You'll Learn"}
+              {t("course_data.whatYouLearn", "What you'll learn") ||
+                "What You'll Learn"}
             </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-3">
@@ -397,12 +401,28 @@ const CourseContent = ({
           )}
           {!hasSections && hasVideos && (
             <span className="text-sm text-gray-500">
-              {course.videos.length} {t("course_data.videos", "videos") || "vidéos"}
+              {course.videos.length}{" "}
+              {t("course_data.videos", "videos") || "vidéos"}
             </span>
           )}
         </div>
 
-        {hasSections ? (
+        {/* ZIP Course Content Browser */}
+        {course.uploadType === "zip" ? (
+          isEnrolled ? (
+            <ZipCourseBrowser courseId={course.id || course.ID} />
+          ) : (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+              <p className="text-yellow-800">
+                {t(
+                  "enroll_to_access_materials",
+                  "Please enroll or purchase to access course materials",
+                ) ||
+                  "Veuillez vous inscrire ou acheter pour accéder aux matériaux du cours"}
+              </p>
+            </div>
+          )
+        ) : hasSections ? (
           <SectionsCurriculum
             sections={course.sections}
             isEnrolled={isEnrolled}
@@ -421,7 +441,8 @@ const CourseContent = ({
           <div className="text-center py-8">
             <div className="text-gray-400 text-4xl mb-4">📚</div>
             <p className="text-gray-500">
-              {t("course_data.noVideos", "No videos available yet") || "Aucun contenu disponible"}
+              {t("course_data.noVideos", "No videos available yet") ||
+                "Aucun contenu disponible"}
             </p>
           </div>
         )}
@@ -433,7 +454,8 @@ const CourseContent = ({
           <div className="flex items-center mb-4">
             <span className="text-purple-500 text-xl mr-3">📎</span>
             <h3 className="text-xl font-bold text-gray-900">
-              {t("course_data.materials", "Course materials") || "Course Materials"}
+              {t("course_data.materials", "Course materials") ||
+                "Course Materials"}
             </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-4">

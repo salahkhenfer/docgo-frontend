@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 import { useTranslation } from "react-i18next";
 
 const ResetPassword = () => {
@@ -33,7 +33,7 @@ const ResetPassword = () => {
       }
 
       try {
-        const response = await axios.get(
+        const response = await apiClient.get(
           `/reset-password-with-token/validate-token/${token}`,
         );
         if (response.data.valid) {
@@ -97,7 +97,7 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      await axios.post("/reset-password-with-token", {
+      await apiClient.post("/reset-password-with-token", {
         token,
         newPassword: formData.newPassword,
       });

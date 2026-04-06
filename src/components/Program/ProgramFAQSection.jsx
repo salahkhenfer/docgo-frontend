@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { useAppContext } from "../../AppContext";
 import RichTextDisplay from "../Common/RichTextDisplay";
 import { showSimpleInfo, showSimpleError } from "../../utils/sweetAlertHelper";
+import apiClient from "../../utils/apiClient";
 
 const ProgramFAQSection = ({ faqs = [] }) => {
   const { t, i18n } = useTranslation();
@@ -67,25 +68,17 @@ const ProgramFAQSection = ({ faqs = [] }) => {
     }));
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/faqs/${faqId}/helpful`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+        const response = await apiClient.post(
+          `/faqs/${faqId}/helpful`,
+          { voteType: "helpful" },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
           },
-          body: JSON.stringify({ voteType: "helpful" }),
-        },
-      );
+        );
 
-      const result = await response.json();
-
-      if (result.success) {
-        // Update vote state
-        setVoteStates((prev) => ({
-          ...prev,
-          [faqId]: {
+        const result = response.data;
             hasVoted: true,
             isVoting: false,
             helpfulCount: result.helpfulCount,

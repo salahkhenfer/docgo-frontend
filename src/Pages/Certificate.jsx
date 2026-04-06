@@ -18,6 +18,7 @@ import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
 import { EnrollmentAPI } from "../API/Enrollment";
 import { useAppContext } from "../AppContext";
 import generatePDFCertificate from "../components/certificate/generatePDFCertificate";
+import apiClient from "../utils/apiClient";
 import { useCourse } from "../hooks/useCourse";
 import { getApiBaseUrl } from "../utils/apiBaseUrl";
 
@@ -142,12 +143,10 @@ export default function Certificate() {
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
-        const API_URL = getApiBaseUrl();
-        const res = await fetch(
-          `${API_URL}/certificate-templates/public/for-course/${courseId}`,
-          { credentials: "include" },
+        const res = await apiClient.get(
+          `/certificate-templates/public/for-course/${courseId}`,
         );
-        const data = await res.json();
+        const data = res.data;
         if (data.success && data.template) {
           setCertTemplate(data.template);
         }
@@ -352,11 +351,10 @@ export default function Certificate() {
         const blob = await (await fetch(dataUrl)).blob();
         const fd = new FormData();
         fd.append("image", blob, "certificate.png");
-        const res = await fetch(
+        const res = await apiClient.patch(
           `/enrollment/courses/${courseId}/certificate/image`,
-          { method: "PATCH", credentials: "include", body: fd },
+          fd,
         );
-        const json = await res.json();
         if (json.success) {
           setCertImageUrl(
             `/enrollment/certificates/${dbCertificate.certificateId}/image`,
@@ -383,11 +381,11 @@ export default function Certificate() {
           if (!blob || cancelled) return;
           const fd = new FormData();
           fd.append("image", blob, "certificate.png");
-          const res = await fetch(
+          const res = await apiClient.patch(
             `/enrollment/courses/${courseId}/certificate/image`,
-            { method: "PATCH", credentials: "include", body: fd },
+            fd,
           );
-          const json = await res.json();
+          const json = res.data;
           if (json.success && !cancelled) {
             setCertImageUrl(
               `/enrollment/certificates/${dbCertificate.certificateId}/image`,
@@ -447,8 +445,10 @@ export default function Certificate() {
       if (certImageUrl) {
         // certImageUrl is the authoritative snapshot — Fabric canvas is not in
         // the DOM at this point so fabricInstanceRef.current would be null.
-        const resp = await fetch(certImageUrl, { credentials: "include" });
-        const blob = await resp.blob();
+        const resp = await apiClient.get(certImageUrl, {
+          responseType: "blob",
+        });
+        const blob = resp.data;
         imgData = await new Promise((resolve) => {
           const reader = new FileReader();
           reader.onloadend = () => resolve(reader.result);

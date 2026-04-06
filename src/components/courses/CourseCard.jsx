@@ -111,6 +111,24 @@ export function CourseCard({
               FREE
             </span>
           )}
+          {course.uploadType === "zip" && (
+            <span className="bg-purple-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v8m0 0l3-3m-3 3l-3-3M7 12h10"
+                />
+              </svg>
+              ZIP
+            </span>
+          )}
           {course.isFeatured && (
             <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
               <Star className="w-3 h-3 fill-amber-900" />
@@ -186,6 +204,11 @@ export function CourseCard({
           {level && (
             <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
               {level}
+            </span>
+          )}
+          {course.uploadType === "zip" && (
+            <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
+              ZIP Course
             </span>
           )}
           {course.Category && (

@@ -8,8 +8,7 @@ import {
   FaSignInAlt,
   FaHome,
 } from "react-icons/fa";
-import axios from "axios";
-import { getApiBaseUrl } from "../../utils/apiBaseUrl";
+import apiClient from "../../utils/apiClient";
 import { useAppContext } from "../../AppContext";
 
 const RECHECK_INTERVAL = 10;
@@ -18,7 +17,6 @@ const Blocked = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { contactInfo } = useAppContext();
-  const API_URL = getApiBaseUrl();
 
   const [countdown, setCountdown] = useState(RECHECK_INTERVAL);
   const [checking, setChecking] = useState(false);
@@ -27,7 +25,7 @@ const Blocked = () => {
     if (checking) return;
     setChecking(true);
     try {
-      const res = await axios.get(API_URL + "/check_Auth", {
+      const res = await apiClient.get("/check_Auth", {
         withCredentials: true,
         validateStatus: () => true,
       });
@@ -69,7 +67,10 @@ const Blocked = () => {
             {t("blocked.title", "Account Blocked")}
           </h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            {t("blocked.message", "Your account has been temporarily suspended by an administrator. If you believe this is a mistake, please contact support.")}
+            {t(
+              "blocked.message",
+              "Your account has been temporarily suspended by an administrator. If you believe this is a mistake, please contact support.",
+            )}
           </p>
         </div>
 
@@ -81,15 +82,24 @@ const Blocked = () => {
           <ul className="space-y-2.5 text-sm text-gray-600">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step1", "Contact our support team to understand the reason for the suspension.")}
+              {t(
+                "blocked.step1",
+                "Contact our support team to understand the reason for the suspension.",
+              )}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step2", "If you believe this is a mistake, provide any relevant information to help resolve it.")}
+              {t(
+                "blocked.step2",
+                "If you believe this is a mistake, provide any relevant information to help resolve it.",
+              )}
             </li>
             <li className="flex items-start gap-2.5">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
-              {t("blocked.step3", "This page will automatically check your account status every 10 seconds.")}
+              {t(
+                "blocked.step3",
+                "This page will automatically check your account status every 10 seconds.",
+              )}
             </li>
           </ul>
         </div>

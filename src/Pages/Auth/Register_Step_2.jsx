@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
-import { getApiBaseUrl } from "../../utils/apiBaseUrl";
+import axios from "../../utils/axios";
 
 // Emoji flags for countries (same as admin dashboard)
 const EMOJI_FLAGS = {
@@ -84,10 +84,10 @@ const Register_Sterp_2 = ({
   const [academicStatuses, setAcademicStatuses] = useState([]);
 
   useEffect(() => {
-    const apiBase = getApiBaseUrl();
-    fetch(`${apiBase}/public/register-options`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+    const loadRegisterOptions = async () => {
+      try {
+        const resp = await apiClient.get("/public/register-options");
+        const data = resp.data;
         if (data?.options) {
           // Use new field names from admin-controlled API
           if (
@@ -223,7 +223,7 @@ const Register_Sterp_2 = ({
           )}
         </div>
 
-        {/* Study Field Selection */}
+        {/* Study Domain Selection */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t(
@@ -232,8 +232,8 @@ const Register_Sterp_2 = ({
             ) || "In which field do you want to pursue your studies?"}
           </label>
           <select
-            name="studyField"
-            value={formData.studyField}
+            name="studyDomain"
+            value={formData.studyDomain}
             onChange={handleChange}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             style={{
@@ -242,8 +242,8 @@ const Register_Sterp_2 = ({
             }}
           >
             <option value="">
-              {t("register.selectField", "Select Study Field") ||
-                "Select Study Field"}
+              {t("register.selectField", "Select Study Domain") ||
+                "Select Study Domain"}
             </option>
             {userSpecialties.map((field) => (
               <option key={field} value={field}>

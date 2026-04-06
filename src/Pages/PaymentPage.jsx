@@ -11,7 +11,7 @@ import ccpIcon from "../assets/ccp.png";
 import CCPPayment from "../components/Payment/CCPPayment";
 import PaymentMethodSelector from "../components/Payment/PaymentMethodSelector";
 import MainLoading from "../MainLoading";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
 const PaymentPage = () => {
@@ -45,7 +45,7 @@ const PaymentPage = () => {
         const itemId = courseId || programId;
         const itemType = courseId ? "course" : "program";
 
-        const response = await axios.get(
+        const response = await apiClient.get(
           `/user-payments/check-application/${itemType}/${itemId}`,
         );
 
@@ -238,7 +238,7 @@ const PaymentPage = () => {
         try {
           // Send cleanup request - this will be sent even if page is closing
           navigator.sendBeacon(
-            `/api/upload/Payment/${
+            `/upload/Payment/${
               itemType === "course" ? "Courses" : "Programs"
             }/${itemData.id}`,
             JSON.stringify({ method: "DELETE" }),
@@ -384,7 +384,10 @@ const PaymentPage = () => {
   };
 
   const handlePaymentSuccess = (paymentData) => {
-    let successMessage = t("alerts.payment.successTitle", "Payment Successful!");
+    let successMessage = t(
+      "alerts.payment.successTitle",
+      "Payment Successful!",
+    );
     let redirectMessage = t(
       "common.redirecting",
       "Redirecting to your dashboard...",
@@ -410,7 +413,7 @@ const PaymentPage = () => {
       allowEscapeKey: false,
     }).then((result) => {
       // if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-        navigate("/dashboard");
+      navigate("/dashboard");
       // }
     });
   };
@@ -538,7 +541,8 @@ const PaymentPage = () => {
             >
               <FaArrowLeft />
               <span>
-                {t("paymentPage.backToItem", "Back")} {t(`paymentPage.${itemType}`)}
+                {t("paymentPage.backToItem", "Back")}{" "}
+                {t(`paymentPage.${itemType}`)}
               </span>
             </button>
 
@@ -549,7 +553,10 @@ const PaymentPage = () => {
               </h1>
             </div>
             <p className="text-gray-600 mt-2">
-              {t("paymentPage.enrollmentMessage", "Complete your enrollment in this course")}
+              {t(
+                "paymentPage.enrollmentMessage",
+                "Complete your enrollment in this course",
+              )}
             </p>
           </div>
         </div>
@@ -577,7 +584,10 @@ const PaymentPage = () => {
                             {t("paymentPage.rejectionNotice.reason", "Reason")}:
                           </strong>{" "}
                           {existingPayment.rejectionReason ||
-                            t("paymentPage.rejectionNotice.noReason", "No Reason")}
+                            t(
+                              "paymentPage.rejectionNotice.noReason",
+                              "No Reason",
+                            )}
                         </p>
                         <p className="text-red-600">
                           <strong>Transaction ID:</strong>{" "}
@@ -653,7 +663,7 @@ const PaymentPage = () => {
                       </div>
                       <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                         <p className="text-sm text-gray-800">
-                          â¹ï <strong>Note:</strong> Your previous payment was
+                          <strong>Note:</strong> Your previous payment was
                           removed by the administrator. You can submit a new
                           payment below.
                         </p>
@@ -761,19 +771,28 @@ const PaymentPage = () => {
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.securePayment", "SSL Secure & Encrypted Payment")}
+                      {t(
+                        "paymentPage.securePayment",
+                        "SSL Secure & Encrypted Payment",
+                      )}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.instantAccess", "Instant access after payment")}
+                      {t(
+                        "paymentPage.instantAccess",
+                        "Instant access after payment",
+                      )}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <FaCheckCircle className="text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700 leading-relaxed">
-                      {t("paymentPage.moneyBackGuarantee", "30-day money-back guarantee")}
+                      {t(
+                        "paymentPage.moneyBackGuarantee",
+                        "30-day money-back guarantee",
+                      )}
                     </span>
                   </div>
                 </div>

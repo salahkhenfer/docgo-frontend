@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../../utils/axios";
 import MDEditor from "@uiw/react-md-editor";
 import Swal from "sweetalert2";
 
@@ -20,7 +20,7 @@ export default function InternshipDetail() {
   const fetchInternship = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`/api/other-services/internships/${id}`);
+      const response = await apiClient.get(`/other-services/internships/${id}`);
       setInternship(response.data.data);
     } catch (error) {
       Swal.fire({
@@ -37,7 +37,7 @@ export default function InternshipDetail() {
   const handleApply = async () => {
     try {
       setIsSaving(true);
-      await axios.post("/api/other-services/internship-application", {
+      await apiClient.post("/other-services/internship-application", {
         internshipId: id,
         content,
       });

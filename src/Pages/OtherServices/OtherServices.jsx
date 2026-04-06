@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 
 export default function OtherServices() {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ export default function OtherServices() {
     try {
       setIsLoading(true);
       const [cvRes, internshipsRes] = await Promise.all([
-        axios.get("/api/other-services/cv-service"),
-        axios.get("/api/other-services/internships"),
+        apiClient.get("/other-services/cv-service"),
+        apiClient.get("/other-services/internships"),
       ]);
 
       setCVService(cvRes.data.data);
