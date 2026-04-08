@@ -83,7 +83,6 @@ const UserSettings = () => {
     phoneNumber: "",
     country: "",
     studyDomain: "",
-    studyDomain: "",
   });
   const [profileSaving, setProfileSaving] = useState(false);
 
@@ -120,7 +119,6 @@ const UserSettings = () => {
         email: user.email || "",
         phoneNumber: user.phoneNumber || "",
         country: user.country || "",
-        studyDomain: user.studyDomain || "",
         studyDomain: user.studyDomain || "",
       });
     }

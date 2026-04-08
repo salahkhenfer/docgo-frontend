@@ -18,7 +18,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../AppContext";
 import { useProgram } from "../hooks/useProgram";
 import MainLoading from "../MainLoading";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import Seo from "../components/SEO/Seo";
 import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 import { useEffect } from "react";

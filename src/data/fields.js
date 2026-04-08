@@ -100,21 +100,3 @@ export const StudyDomains = [
   "Quality Management / إدارة الجودة",
   "Project Management / إدارة المشاريع",
 ];
-
-export const StudyDomains = [
-  "Sciences et Technologies / العلوم والتكنولوجيا",
-  "Sciences Humaines et Sociales / العلوم الإنسانية والاجتماعية",
-  "Arts et Lettres / الآداب والفنون",
-  "Droit et Sciences Politiques / القانون والعلوم السياسية",
-  "Économie et Gestion / الاقتصاد والإدارة",
-  "Médecine et Santé / الطب والصحة",
-  "Sciences de l'Éducation / علوم التربية",
-  "Ingénierie et Architecture / الهندسة والعمارة",
-  "Agriculture et Sciences Vétérinaires / الزراعة والعلوم البيطرية",
-  "Communication et Médias / الاتصال والإعلام",
-  "Tourisme et Hôtellerie / السياحة والضيافة",
-  "Sports et Loisirs / الرياضة والترفيه",
-  "Théologie et Études Religieuses / اللاهوت والدراسات الدينية",
-  "Sciences de l'Information / علوم المعلومات",
-  "Études Environnementales / الدراسات البيئية",
-];

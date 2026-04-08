@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { clientProgramsAPI } from "../API/Programs";
 import { useAppContext } from "../AppContext";
-import axios from "../utils/axios";
-import apiClient from "../services/apiClient";
+import apiClient from "../utils/apiClient";
 
 export const useProgram = (programId) => {
   const [programData, setProgramData] = useState(null);
@@ -435,7 +434,10 @@ export const useProgram = (programId) => {
           showCancelButton: true,
           confirmButtonColor: "#3b82f6",
           cancelButtonColor: "#6b7280",
-          confirmButtonText: t("alerts.payment.submitNew", "Submit new payment"),
+          confirmButtonText: t(
+            "alerts.payment.submitNew",
+            "Submit new payment",
+          ),
           cancelButtonText: t("common.cancel", "Cancel"),
         });
 

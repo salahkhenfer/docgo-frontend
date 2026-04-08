@@ -1,4 +1,4 @@
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 
 const reviewsAPI = {
   submitCourseReview: (courseId, { rate, comment }) =>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../../utils/axios";
+import apiClient from "../../utils/apiClient";
 import MDEditor from "@uiw/react-md-editor";
 import Swal from "sweetalert2";
 

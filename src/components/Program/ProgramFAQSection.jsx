@@ -68,17 +68,22 @@ const ProgramFAQSection = ({ faqs = [] }) => {
     }));
 
     try {
-        const response = await apiClient.post(
-          `/faqs/${faqId}/helpful`,
-          { voteType: "helpful" },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+      const response = await apiClient.post(
+        `/faqs/${faqId}/helpful`,
+        { voteType: "helpful" },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
           },
-        );
+        },
+      );
 
-        const result = response.data;
+      const result = response.data;
+      if (result.success) {
+        setVoteStates((prev) => ({
+          ...prev,
+          [faqId]: {
+            ...prev[faqId],
             hasVoted: true,
             isVoting: false,
             helpfulCount: result.helpfulCount,

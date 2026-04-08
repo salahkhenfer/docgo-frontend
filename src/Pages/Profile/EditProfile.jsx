@@ -4,7 +4,7 @@ import { useAppContext } from "../../AppContext";
 import { toast } from "react-toastify";
 import { fetchUserOptions } from "../../API/UserOptions";
 import { User } from "lucide-react";
-import axios from "../../utils/axios";
+import apiClient from "../../utils/apiClient";
 import { useTranslation } from "react-i18next";
 import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
 import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";

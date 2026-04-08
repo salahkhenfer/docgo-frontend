@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { useAppContext } from "../AppContext";
 import courseService from "../services/courseService";
-import axios from "../utils/axios";
+import apiClient from "../utils/apiClient";
 import {
   showEnrollmentSuccess,
   showEnrollmentError,
