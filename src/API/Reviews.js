@@ -2,20 +2,21 @@ import apiClient from "../utils/apiClient";
 
 const reviewsAPI = {
   submitCourseReview: (courseId, { rate, comment }) =>
-    axios.post(`/Courses/${courseId}/reviews`, { rate, comment }),
+    apiClient.post(`/Courses/${courseId}/reviews`, { rate, comment }),
 
   deleteCourseReview: (courseId) =>
-    axios.delete(`/Courses/${courseId}/reviews`),
+    apiClient.delete(`/Courses/${courseId}/reviews`),
 
-  getCourseReviews: (courseId) => axios.get(`/Courses/${courseId}/reviews`),
+  getCourseReviews: (courseId) => apiClient.get(`/Courses/${courseId}/reviews`),
 
   submitProgramReview: (programId, { rate, comment }) =>
-    axios.post(`/Programs/${programId}/reviews`, { rate, comment }),
+    apiClient.post(`/Programs/${programId}/reviews`, { rate, comment }),
 
   deleteProgramReview: (programId) =>
-    axios.delete(`/Programs/${programId}/reviews`),
+    apiClient.delete(`/Programs/${programId}/reviews`),
 
-  getProgramReviews: (programId) => axios.get(`/Programs/${programId}/reviews`),
+  getProgramReviews: (programId) =>
+    apiClient.get(`/Programs/${programId}/reviews`),
 };
 
 export default reviewsAPI;

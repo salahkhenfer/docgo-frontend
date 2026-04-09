@@ -322,7 +322,7 @@ const ProgramCard = ({ program, isRecommendation = false }) => {
 
       {/* View Button */}
       <Link
-        to={`/program/${program.id}`}
+        to={`/Programs/${program.id}`}
         className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 group"
       >
         {t("viewDetails", "View Details")}

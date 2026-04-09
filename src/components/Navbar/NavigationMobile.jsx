@@ -59,7 +59,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <div className="block lg:hidden">
+    <div className="block lg:hidden ">
       <div className="border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-md">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="min-w-0 flex-1" onClick={closeMobileMenu}>
@@ -78,20 +78,21 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
               ) : null}
             </div>
           </Link>
-
-          <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl transition-all duration-300 ${
-              isOpen
-                ? "rotate-180 bg-red-50 text-red-500"
-                : "text-[#0086C9] hover:bg-blue-50 hover:text-blue-600"
-            }`}
-            aria-label={
-              isOpen ? "Close navigation menu" : "Open navigation menu"
-            }
-          >
-            {isOpen ? <FaTimes /> : <FaBars />}
-          </button>
+          <div className="flex h-10 w-20 flex-shrink-0 items-center justify-center rounded-xl text-xl transition-all duration-300">
+            <button
+              onClick={() => setIsOpen((prev) => !prev)}
+              className={` ${
+                isOpen
+                  ? "rotate-180 bg-red-50 text-red-500"
+                  : "text-[#0086C9] hover:bg-blue-50 hover:text-blue-600"
+              }`}
+              aria-label={
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+              }
+            >
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
         </div>
 
         <div className="border-t border-gray-100 px-4 py-2.5">
@@ -168,7 +169,9 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                         }`}
                   onClick={closeMobileMenu}
                 >
-                  <span className="relative z-10">{t("Profile_nav", "Profile")}</span>
+                  <span className="relative z-10">
+                    {t("Profile_nav", "Profile")}
+                  </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                 </Link>
               )}
@@ -260,7 +263,9 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("Programs_nav", "Programs")}</span>
+                <span className="relative z-10">
+                  {t("Programs_nav", "Programs")}
+                </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -274,7 +279,9 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                                     }`}
                 onClick={closeMobileMenu}
               >
-                <span className="relative z-10">{t("Courses_nav", "Courses")}</span>
+                <span className="relative z-10">
+                  {t("Courses_nav", "Courses")}
+                </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
@@ -318,7 +325,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
 
-              {!user && !isAuth && (
+              {/* {!user && !isAuth && (
                 <>
                   <button
                     onClick={() => handleScrollToSection("ourServices")}
@@ -339,7 +346,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                     <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                   </button>
                 </>
-              )}
+              )} */}
             </div>
           </div>
         </div>

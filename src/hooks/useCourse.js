@@ -30,7 +30,7 @@ export const useCourse = (courseId) => {
     if (!isAuth || !courseId) return;
 
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/user-payments/check-application/course/${courseId}`,
       );
 

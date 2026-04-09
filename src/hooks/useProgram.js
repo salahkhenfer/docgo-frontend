@@ -24,7 +24,7 @@ export const useProgram = (programId) => {
     if (!isAuth || !programId) return;
 
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/user-payments/check-application/program/${programId}`,
       );
 
