@@ -142,7 +142,7 @@ const CountryFlagSelector = ({
     <div className={`flex flex-col gap-2 ${className}`}>
       {showLabel && (
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {label}
+          {/* {label} */}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
