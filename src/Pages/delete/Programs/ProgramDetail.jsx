@@ -212,10 +212,10 @@ const ProgramDetail = () => {
     i18n.language === "ar" && program.benefits_ar
       ? program.benefits_ar
       : program.benefits;
-  const organization =
-    i18n.language === "ar" && program.organization_ar
-      ? program.organization_ar
-      : program.organization;
+  const university =
+    i18n.language === "ar" && program.university_ar
+      ? program.university_ar
+      : program.university;
   const category =
     i18n.language === "ar" && program.Category_ar
       ? program.Category_ar
@@ -281,10 +281,10 @@ const ProgramDetail = () => {
 
                 {/* Quick Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                  {organization && (
+                  {university && (
                     <div className="flex items-center gap-2 text-gray-600">
                       <Building2 className="w-5 h-5" />
-                      <span className="text-sm">{organization}</span>
+                      <span className="text-sm">{university}</span>
                     </div>
                   )}
 

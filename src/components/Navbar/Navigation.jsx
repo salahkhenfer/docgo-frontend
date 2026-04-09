@@ -199,7 +199,7 @@ function Navigation({ branding = null }) {
       .startsWith("/dashboard");
 
     return (
-      <div className="flex w-full items-center justify-center gap-1.5 overflow-x-auto whitespace-nowrap px-1 xl:gap-3 [&::-webkit-scrollbar]:hidden">
+      <div className="flex w-full items-center justify-center gap-1.5 overflow-x-auto whitespace-nowrap px-1 xl:gap-3 [&::-webkit-scrollbar]:hidden mb-32 lg:mb-0">
         <Link to="/" className={getNavLinkClass("home")}>
           {t("Home_nav", "Home")}
           <ActiveIndicator isActive={isHomeActive} />
@@ -287,6 +287,8 @@ function Navigation({ branding = null }) {
   return (
     <>
       <div className="lg:h-[132px]" />
+      {/* <div className="h-20 sm:h-24 md:h-28 " /> */}
+
       <div
         className={`fixed inset-x-0 top-0 z-50 w-full transform transition-transform duration-300 ${
           isNavVisible ? "translate-y-0" : "-translate-y-full"

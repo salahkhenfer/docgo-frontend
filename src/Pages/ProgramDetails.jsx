@@ -424,7 +424,7 @@ export const ProgramDetails = () => {
     url: absoluteUrl,
     image: programSeoImage || undefined,
     provider: {
-      "@type": "Organization",
+      "@type": "university",
       name: siteName,
       url: siteUrl || undefined,
     },

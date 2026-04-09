@@ -15,7 +15,9 @@ const NavBarDropDown = ({
   const { t } = useTranslation();
   const { user, set_Auth, set_user, store_logout } = useAppContext();
   const avatarDropdownRef = useRef(null);
+  const dropdownRef = useRef(null);
   const [showImageFallback, setShowImageFallback] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({});
 
   const { i18n } = useTranslation();
   // Add click outside handler
@@ -32,6 +34,33 @@ const NavBarDropDown = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setIsDropdownOpen]);
+
+  // Calculate dropdown position to keep it in view
+  useEffect(() => {
+    if (isDropdownOpen && avatarDropdownRef.current && dropdownRef.current) {
+      const buttonRect = avatarDropdownRef.current.getBoundingClientRect();
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+
+      let left = buttonRect.left + buttonRect.width / 2;
+      let adjustedLeft = left - dropdownRect.width / 2;
+
+      // Check if dropdown goes off the right edge
+      if (adjustedLeft + dropdownRect.width > viewportWidth - 8) {
+        adjustedLeft = viewportWidth - dropdownRect.width - 8;
+      }
+
+      // Check if dropdown goes off the left edge
+      if (adjustedLeft < 8) {
+        adjustedLeft = 8;
+      }
+
+      setDropdownPosition({
+        left: adjustedLeft,
+        top: buttonRect.bottom + 8,
+      });
+    }
+  }, [isDropdownOpen]);
   const logout = () => {
     handleLogout({
       setAuth: set_Auth,
@@ -75,13 +104,18 @@ const NavBarDropDown = ({
 
       {isDropdownOpen && (
         <div
-          className={`absolute ${
-            i18n.language === "ar" ? "right-0" : "left-0"
-          } top-12 w-56 bg-white rounded-lg shadow-xl py-2 z-50
+          ref={dropdownRef}
+          className={`fixed w-40 sm:w-48 md:w-56 z-50
                     animate-in slide-in-from-top-2 fade-in duration-200 ${menuClassName}`}
           style={{
+            left: `${dropdownPosition.left}px`,
+            top: `${dropdownPosition.top}px`,
             boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
             border: "1px solid rgba(0,0,0,0.1)",
+            backgroundColor: "white",
+            borderRadius: "0.5rem",
+            paddingTop: "0.5rem",
+            paddingBottom: "0.5rem",
           }}
         >
           <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">

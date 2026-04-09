@@ -38,7 +38,7 @@ export function Programs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  const [universities, setUniversities] = useState([]);
   const [locations, setLocations] = useState([]);
   const [viewMode, setViewMode] = useState("grid"); // grid or list
   const [searchLoading, setSearchLoading] = useState(false);
@@ -47,7 +47,7 @@ export function Programs() {
     total: 0,
     published: 0,
     featured: 0,
-    organizations: 0,
+    universities: 0,
   });
   // Debouncing state
   const [searchQuery, setSearchQuery] = useState(
@@ -64,7 +64,7 @@ export function Programs() {
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
-    organization: searchParams.get("organization") || "",
+    university: searchParams.get("university") || "",
     status: searchParams.get("status") || "",
     featured: searchParams.get("featured") || "",
     programType: searchParams.get("programType") || "",
@@ -82,7 +82,7 @@ export function Programs() {
     const newFilters = {
       search: searchParams.get("search") || "",
       category: searchParams.get("category") || "",
-      organization: searchParams.get("organization") || "",
+      university: searchParams.get("university") || "",
       status: searchParams.get("status") || "",
       featured: searchParams.get("featured") || "",
       programType: searchParams.get("programType") || "",
@@ -157,7 +157,7 @@ export function Programs() {
         const hasSearch = debouncedSearch?.trim();
         const hasFilters =
           filters.category ||
-          filters.organization ||
+          filters.university ||
           filters.status ||
           filters.programType ||
           filters.featured ||
@@ -176,7 +176,7 @@ export function Programs() {
           const searchParams = {
             search: debouncedSearch?.trim() || "",
             category: filters.category || "",
-            organization: filters.organization || "",
+            university: filters.university || "",
             status: filters.status || "",
             programType: filters.programType || "",
             featured: filters.featured || "",
@@ -288,7 +288,8 @@ export function Programs() {
             total: response.stats.total || 0,
             published: response.stats.published || 0,
             featured: response.stats.featured || 0,
-            organizations: prevStats.organizations || 0,
+            universities:
+              response.stats.universities || prevStats.universities || 0,
           }));
         }
 
@@ -322,11 +323,9 @@ export function Programs() {
         programsData.map((p) => p.category || p.Category).filter(Boolean),
       ),
     ];
-    const uniqueOrganizations = [
+    const uniqueUniversities = [
       ...new Set(
-        programsData
-          .map((p) => p.organization || p.Organization)
-          .filter(Boolean),
+        programsData.map((p) => p.university || p.University).filter(Boolean),
       ),
     ];
     const uniqueLocations = [
@@ -336,11 +335,11 @@ export function Programs() {
     ];
 
     setCategories(uniqueCategories);
-    setOrganizations(uniqueOrganizations);
+    setUniversities(uniqueUniversities);
     setLocations(uniqueLocations);
     setStats((prev) => ({
       ...prev,
-      organizations: uniqueOrganizations.length,
+      universities: uniqueUniversities.length,
     }));
   }, []);
 
@@ -357,7 +356,7 @@ export function Programs() {
     }
   };
 
-  // Fetch categories and organizations
+  // Fetch categories and universities
   const fetchFiltersData = async () => {
     try {
       const response = await clientProgramsAPI.getProgramCategories();
@@ -366,25 +365,25 @@ export function Programs() {
       const categories = Array.isArray(response.categories)
         ? response.categories
         : [];
-      const organizations = Array.isArray(response.organizations)
-        ? response.organizations
+      const universities = Array.isArray(response.universities)
+        ? response.universities
         : [];
 
       setCategories(categories);
-      setOrganizations(organizations);
+      setUniversities(universities);
 
       // Fetch locations separately
       fetchLocations();
 
-      // Update organizations count in stats
+      // Update universities count in stats
       setStats((prevStats) => ({
         ...prevStats,
-        organizations: organizations.length || 0,
+        universities: universities.length || 0,
       }));
     } catch (error) {
       // Set empty arrays on error to prevent crashes
       setCategories([]);
-      setOrganizations([]);
+      setUniversities([]);
       setLocations([]);
     }
   };
@@ -455,7 +454,7 @@ export function Programs() {
   }, [
     debouncedSearch,
     filters.category,
-    filters.organization,
+    filters.university,
     filters.status,
     filters.featured,
     filters.programType,
@@ -583,7 +582,7 @@ export function Programs() {
     const cleared = {
       search: "",
       category: "",
-      organization: "",
+      university: "",
       status: "",
       featured: "",
       programType: "",
@@ -684,7 +683,7 @@ export function Programs() {
             totalPrograms={stats.total}
             openPrograms={stats.published}
             featuredPrograms={stats.featured}
-            totalOrganizations={stats.organizations}
+            totalUniversities={stats.universities}
           />
 
           {/* Search Bar */}
@@ -759,9 +758,9 @@ export function Programs() {
                       ? program.title_ar
                       : program.title;
                   const orgText =
-                    i18n.language === "ar" && program.organization_ar
-                      ? program.organization_ar
-                      : program.organization;
+                    i18n.language === "ar" && program.university_ar
+                      ? program.university_ar
+                      : program.university;
                   return (
                     <div
                       key={program.id}
@@ -819,7 +818,7 @@ export function Programs() {
               filters={filters}
               onFilterChange={handleFilterChange}
               categories={categories}
-              organizations={organizations}
+              universities={universities}
               locations={locations}
               onReset={resetFilters}
             />
@@ -872,7 +871,7 @@ export function Programs() {
                   <p className="text-gray-600">
                     {debouncedSearch ||
                     filters.category ||
-                    filters.organization ||
+                    filters.university ||
                     filters.programType ||
                     filters.featured ||
                     filters.location ||
@@ -992,7 +991,7 @@ export function Programs() {
                 {/* Dynamic message based on search and filters */}
                 {debouncedSearch ||
                 filters.category ||
-                filters.organization ||
+                filters.university ||
                 filters.programType ||
                 filters.featured ||
                 filters.location ||

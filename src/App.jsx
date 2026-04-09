@@ -231,7 +231,9 @@ function App() {
           siteName={brand}
         />
         {!shouldHideNavAndFooter && <Navigation branding={siteSettings} />}
-        <Outlet />
+        <div className="pt-24 md:pt-28 lg:pt-0">
+          <Outlet />
+        </div>
         {!shouldHideNavAndFooter && (
           <Reveal>
             <Footer contactInfo={contactInfo} branding={siteSettings} />

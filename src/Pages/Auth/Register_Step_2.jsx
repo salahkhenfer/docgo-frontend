@@ -2,61 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../InlineLoading";
 import apiClient from "../../utils/apiClient";
-
-// Emoji flags for countries (same as admin dashboard)
-const EMOJI_FLAGS = {
-  France: "🇫🇷",
-  Canada: "🇨🇦",
-  Belgique: "🇧🇪",
-  Suisse: "🇨🇭",
-  Maroc: "🇲🇦",
-  Algérie: "🇩🇿",
-  Tunisie: "🇹🇳",
-  Sénégal: "🇸🇳",
-  "Côte d'Ivoire": "🇨🇮",
-  Luxembourg: "🇱🇺",
-  "États-Unis": "🇺🇸",
-  "Royaume-Uni": "🇬🇧",
-  Allemagne: "🇩🇪",
-  Espagne: "🇪🇸",
-  Italie: "🇮🇹",
-  "Pays-Bas": "🇳🇱",
-  Autriche: "🇦🇹",
-  Portugal: "🇵🇹",
-  Grèce: "🇬🇷",
-  Suède: "🇸🇪",
-  Norvège: "🇳🇴",
-  Danemark: "🇩🇰",
-  Finlande: "🇫🇮",
-  Pologne: "🇵🇱",
-  Turquie: "🇹🇷",
-  Japon: "🇯🇵",
-  Chine: "🇨🇳",
-  Inde: "🇮🇳",
-  Brésil: "🇧🇷",
-  Mexique: "🇲🇽",
-  "Afrique du Sud": "🇿🇦",
-  Australie: "🇦🇺",
-};
-
-// Bilingual country names mapping
-const BILINGUAL_COUNTRIES = {
-  France: { fr: "France", ar: "فرنسا" },
-  Canada: { fr: "Canada", ar: "كندا" },
-  Belgique: { fr: "Belgique", ar: "بلجيكا" },
-  Suisse: { fr: "Suisse", ar: "سويسرا" },
-  Maroc: { fr: "Maroc", ar: "المغرب" },
-  Algérie: { fr: "Algérie", ar: "الجزائر" },
-  Tunisie: { fr: "Tunisie", ar: "تونس" },
-  Sénégal: { fr: "Sénégal", ar: "السنغال" },
-  "Côte d'Ivoire": { fr: "Côte d'Ivoire", ar: "ساحل العاج" },
-  Luxembourg: { fr: "Luxembourg", ar: "لوكسمبرغ" },
-  "États-Unis": { fr: "États-Unis", ar: "الولايات المتحدة" },
-  "Royaume-Uni": { fr: "Royaume-Uni", ar: "المملكة المتحدة" },
-  Allemagne: { fr: "Allemagne", ar: "ألمانيا" },
-  Espagne: { fr: "Espagne", ar: "إسبانيا" },
-  Italie: { fr: "Italie", ar: "إيطاليا" },
-};
+import CountryFlagSelector from "../../components/CountryFlagSelector";
+import { BILINGUAL_COUNTRIES } from "../../utils/countryCodeMap";
 
 const Register_Sterp_2 = ({
   formData,
@@ -90,28 +37,22 @@ const Register_Sterp_2 = ({
         const data = resp.data;
         if (data?.options) {
           // Use new field names from admin-controlled API
-          if (
-            Array.isArray(data.options.userOriginCountries) &&
-            data.options.userOriginCountries.length > 0
-          )
+          if (Array.isArray(data.options.userOriginCountries)) {
             setUserOriginCountries(data.options.userOriginCountries);
-          if (
-            Array.isArray(data.options.userSpecialties) &&
-            data.options.userSpecialties.length > 0
-          )
+          }
+          if (Array.isArray(data.options.userSpecialties)) {
             setUserSpecialties(data.options.userSpecialties);
-          if (
-            Array.isArray(data.options.professionalStatuses) &&
-            data.options.professionalStatuses.length > 0
-          )
+          }
+          if (Array.isArray(data.options.professionalStatuses)) {
             setProfessionalStatuses(data.options.professionalStatuses);
-          if (
-            Array.isArray(data.options.academicStatuses) &&
-            data.options.academicStatuses.length > 0
-          )
+          }
+          if (Array.isArray(data.options.academicStatuses)) {
             setAcademicStatuses(data.options.academicStatuses);
+          }
         }
+        // Log for debugging
       } catch (error) {
+        console.error("Failed to load register options:", error);
         // silent: empty defaults already set - user will see empty dropdowns until admin configures options
       }
     };
@@ -124,11 +65,6 @@ const Register_Sterp_2 = ({
     const country = BILINGUAL_COUNTRIES[optionString];
     if (!country) return optionString;
     return i18n.language === "ar" ? country.ar : country.fr;
-  };
-
-  // Function to get emoji flag for country
-  const getCountryEmoji = (countryString) => {
-    return EMOJI_FLAGS[countryString] || "🌍";
   };
 
   // Custom handler for phone number changes
@@ -185,7 +121,7 @@ const Register_Sterp_2 = ({
       )}
 
       <form onSubmit={validateAndSubmit} className="space-y-5">
-        {/* Country Selection with Emoji Flags */}
+        {/* Country Selection with Professional Flags */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t(
@@ -193,38 +129,20 @@ const Register_Sterp_2 = ({
               "In which country do you want to pursue your studies?",
             ) || "In which country do you want to pursue your studies?"}
           </label>
-          <select
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-            style={{
-              direction: i18n.language === "ar" ? "rtl" : "ltr",
-              textAlign: i18n.language === "ar" ? "right" : "left",
-            }}
-          >
-            <option value="">
-              {t("register.selectCountry", "Select Country") ||
-                "Select Country"}
-            </option>
-            {userOriginCountries.map((country) => {
-              const emoji = getCountryEmoji(country);
-              const displayName = getLocalizedOption(country);
-              return (
-                <option key={country} value={country}>
-                  {emoji} {displayName}
-                </option>
-              );
-            })}
-          </select>
-          {formData.country && (
-            <div className="mt-3 flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-              <span className="text-2xl">
-                {EMOJI_FLAGS[formData.country] || "🌍"}
-              </span>
-              <span className="text-gray-700 font-medium">
-                {getLocalizedOption(formData.country)}
-              </span>
+          {userOriginCountries && userOriginCountries.length > 0 ? (
+            <CountryFlagSelector
+              value={formData.country}
+              onChange={(country) => handleSelectChange("country", country)}
+              countries={userOriginCountries}
+              placeholder={t("register.selectCountry", "Select Country")}
+              showLabel={false}
+            />
+          ) : (
+            <div className="w-full px-4 py-3 border border-yellow-300 rounded-lg bg-yellow-50 text-yellow-800 text-sm">
+              {t(
+                "register.noCountriesAvailable",
+                "Countries are not yet configured. Please check back later.",
+              ) || "Countries are not yet configured. Please check back later."}
             </div>
           )}
         </div>
@@ -237,26 +155,36 @@ const Register_Sterp_2 = ({
               "In which field do you want to pursue your studies?",
             ) || "In which field do you want to pursue your studies?"}
           </label>
-          <select
-            name="studyDomain"
-            value={formData.studyDomain}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-            style={{
-              direction: i18n.language === "ar" ? "rtl" : "ltr",
-              textAlign: i18n.language === "ar" ? "right" : "left",
-            }}
-          >
-            <option value="">
-              {t("register.selectField", "Select Study Domain") ||
-                "Select Study Domain"}
-            </option>
-            {userSpecialties.map((field) => (
-              <option key={field} value={field}>
-                {getLocalizedOption(field)}
+          {userSpecialties && userSpecialties.length > 0 ? (
+            <select
+              name="studyDomain"
+              value={formData.studyDomain}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              style={{
+                direction: i18n.language === "ar" ? "rtl" : "ltr",
+                textAlign: i18n.language === "ar" ? "right" : "left",
+              }}
+            >
+              <option value="">
+                {t("register.selectField", "Select Study Domain") ||
+                  "Select Study Domain"}
               </option>
-            ))}
-          </select>
+              {userSpecialties.map((field) => (
+                <option key={field} value={field}>
+                  {getLocalizedOption(field)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className="w-full px-4 py-3 border border-yellow-300 rounded-lg bg-yellow-50 text-yellow-800 text-sm">
+              {t(
+                "register.noSpecialtiesAvailable",
+                "Study domains are not yet configured. Please check back later.",
+              ) ||
+                "Study domains are not yet configured. Please check back later."}
+            </div>
+          )}
         </div>
 
         {/* Phone Number Input */}
@@ -306,7 +234,7 @@ const Register_Sterp_2 = ({
         </div>
 
         {/* Professional Status Selection */}
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t("register.professionalStatus", "Professional Status") ||
               "Professional Status"}
@@ -339,10 +267,10 @@ const Register_Sterp_2 = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Academic Status Selection */}
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {t("register.academicStatus", "Academic Status") ||
               "Academic Status"}
@@ -373,7 +301,7 @@ const Register_Sterp_2 = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Action Buttons */}
         <div
@@ -396,7 +324,8 @@ const Register_Sterp_2 = ({
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <InlineLoading borderColor="white" /> Processing...
+                <InlineLoading borderColor="white" />{" "}
+                {t("auth.processing", "Processing...")}
               </span>
             ) : (
               t("auth.createAccount", "Create Account") || "Create Account"

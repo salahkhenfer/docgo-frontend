@@ -147,8 +147,8 @@ const Profile = () => {
       id: app.id,
       program: app.Program?.Title || app.Program?.Title_ar || "Unknown Program",
       university:
-        app.Program?.organization ||
-        app.Program?.organization_ar ||
+        app.Program?.university ||
+        app.Program?.university_ar ||
         "Unknown University",
       country: app.Program?.location || "Unknown",
       status: app.status, // "opened", "pending", "approved", "completed"

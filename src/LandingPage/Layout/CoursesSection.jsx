@@ -16,22 +16,13 @@ function CoursesSection({ featuredCourses, latestCourses }) {
   const [maxScroll, setMaxScroll] = useState(0);
   const carouselRef = useRef(null);
 
-  // Use featured courses or fallback to latest courses or placeholder
+  // Use featured courses or fallback to latest courses or null
   const coursesToDisplay =
     featuredCourses && featuredCourses.length > 0
       ? featuredCourses
       : latestCourses && latestCourses.length > 0
         ? latestCourses
-        : Array(6).fill({
-            url: img,
-            title: "UI UX Design Course",
-            description:
-              "The UI/UX design specialization adopts a design-centered approach...",
-            price: "1356",
-            hours: 10,
-            lessonNumber: 5,
-            starsNumber: 5,
-          });
+        : null;
 
   useEffect(() => {
     const updateMaxScroll = () => {
@@ -103,61 +94,65 @@ function CoursesSection({ featuredCourses, latestCourses }) {
   };
 
   return (
-    <Container>
-      <div id="Coureses" className="relative px-2 sm:px-4 md:px-6">
-        <h2 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium  text-gray-700 text-center mb-8">
-          {t("DeepenYourKnowledgeWithOurCourses", "Deepen your knowledge with our courses")}
-        </h2>
+    <>
+      {coursesToDisplay && coursesToDisplay.length > 0 ? (
+        <Container>
+          <div id="Coureses" className="relative px-2 sm:px-4 md:px-6">
+            {/* <h2 className="lg:text-2xl sm:text-xl sm-sm:text-lg font-medium  text-gray-700 text-center mb-8">
+              {t("DeepenYourKnowledgeWithOurCourses", "Deepen your knowledge with our courses")}
+            </h2> */}
 
-        <div
-          ref={carouselRef}
-          className="flex gap-4 overflow-x-auto scrollbar-hide"
-          style={{
-            direction: isRTL ? "rtl" : "ltr",
-          }}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-        >
-          {coursesToDisplay.map((course, index) => (
-            <div key={course.id || index} className="flex-shrink-0">
-              <CardCourse
-                id={course.id}
-                url={
-                  course.Image
-                    ? `${import.meta.env.VITE_API_URL}${course.Image}`
-                    : course.url || img
-                }
-                title={course.Title || course.title}
-                description={course.Description || course.description}
-                price={course.Price || course.price}
-              />
+            <div
+              ref={carouselRef}
+              className="flex gap-4 overflow-x-auto scrollbar-hide"
+              style={{
+                direction: isRTL ? "rtl" : "ltr",
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+            >
+              {coursesToDisplay.map((course, index) => (
+                <div key={course.id || index} className="flex-shrink-0">
+                  <CardCourse
+                    id={course.id}
+                    url={
+                      course.Image
+                        ? `${import.meta.env.VITE_API_URL}${course.Image}`
+                        : course.url || img
+                    }
+                    title={course.Title || course.title}
+                    description={course.Description || course.description}
+                    price={course.Price || course.price}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <button
-          className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
-            scrollPosition <= 0 ? "hidden" : ""
-          }`}
-          onClick={() => handleScrollButton("left")}
-          aria-label={t("Previous", "Previous")}
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
+            <button
+              className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
+                scrollPosition <= 0 ? "hidden" : ""
+              }`}
+              onClick={() => handleScrollButton("left")}
+              aria-label={t("Previous", "Previous")}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
 
-        <button
-          className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
-            scrollPosition >= maxScroll ? "hidden" : ""
-          }`}
-          onClick={() => handleScrollButton("right")}
-          aria-label={t("Next", "Next")}
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
-    </Container>
+            <button
+              className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ${
+                scrollPosition >= maxScroll ? "hidden" : ""
+              }`}
+              onClick={() => handleScrollButton("right")}
+              aria-label={t("Next", "Next")}
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+        </Container>
+      ) : null}
+    </>
   );
 }
 

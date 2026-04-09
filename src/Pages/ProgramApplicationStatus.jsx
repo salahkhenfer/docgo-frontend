@@ -220,10 +220,10 @@ export default function ProgramApplicationStatus() {
   }
 
   const currentStatus = application?.status || enrollment?.status || "unknown";
-  const organization =
-    i18n.language === "ar" && program?.organization_ar
-      ? program.organization_ar
-      : program?.organization;
+  const university =
+    i18n.language === "ar" && program?.university_ar
+      ? program.university_ar
+      : program?.university;
 
   return (
     <div
@@ -284,10 +284,10 @@ export default function ProgramApplicationStatus() {
                   <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
                     {title}
                   </h1>
-                  {organization && (
+                  {university && (
                     <p className="text-blue-100 flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
-                      {organization}
+                      {university}
                     </p>
                   )}
                 </div>
@@ -307,10 +307,10 @@ export default function ProgramApplicationStatus() {
                 <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
                   {title}
                 </h1>
-                {organization && (
+                {university && (
                   <p className="text-blue-100 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
-                    {organization}
+                    {university}
                   </p>
                 )}
               </div>

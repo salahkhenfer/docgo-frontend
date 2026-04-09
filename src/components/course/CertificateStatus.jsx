@@ -52,8 +52,7 @@ const CertificateStatus = ({ courseId, isCompleted, userId }) => {
           }
         } catch (err) {
           // Certificate might not be issued yet
-          console.log("No certificate issued yet");
-        }
+          console.warn("Certificate not issued yet:", err);}
       }
     } catch (err) {
       setStatus("error");

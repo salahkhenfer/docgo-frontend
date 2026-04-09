@@ -16,7 +16,7 @@ const FilterSidebar = ({
     filters,
     onFilterChange,
     categories,
-    organizations,
+    universities,
     locations = [],
     onReset,
 }) => {
@@ -195,30 +195,30 @@ const FilterSidebar = ({
                     </select>
                 </div>
 
-                {/* Organization Filter */}
+                {/* University Filter */}
                 <div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
                         <Building className="w-3.5 h-3.5 text-green-600" />
-                        {t("Organization", "Organization") || "Organization"}
+                        {t("University", "University") || "University"}
                     </label>
                     <select
-                        value={filters.organization}
+                        value={filters.university}
                         onChange={(e) =>
-                            onFilterChange("organization", e.target.value)
+                            onFilterChange("university", e.target.value)
                         }
                         className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
                     >
                         <option value="">
-                            {t("All Organizations", "All Organizations") || "All Organizations"}
+                            {t("All Universities", "All Universities") || "All Universities"}
                         </option>
-                        {organizations.map((org, index) => {
+                        {universities.map((uni, index) => {
                             const orgValue =
                                 typeof org === "object"
-                                    ? org.organization || org.value
+                                    ? uni.university || uni.value
                                     : org;
                             const orgLabel =
                                 typeof org === "object"
-                                    ? org.organization || org.label
+                                    ? uni.university || uni.label
                                     : org;
                             return (
                                 <option
@@ -363,7 +363,7 @@ const FilterSidebar = ({
 FilterSidebar.propTypes = {
     filters: PropTypes.shape({
         category: PropTypes.string,
-        organization: PropTypes.string,
+        university: PropTypes.string,
         status: PropTypes.string,
         programType: PropTypes.string,
         featured: PropTypes.string,
@@ -388,12 +388,12 @@ FilterSidebar.propTypes = {
             }),
         ]),
     ).isRequired,
-    organizations: PropTypes.arrayOf(
+    universities: PropTypes.arrayOf(
         PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.shape({
-                organization: PropTypes.string,
-                organization_ar: PropTypes.string,
+                university: PropTypes.string,
+                university_ar: PropTypes.string,
                 value: PropTypes.string,
                 label: PropTypes.string,
             }),

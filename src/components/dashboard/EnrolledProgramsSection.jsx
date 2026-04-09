@@ -133,9 +133,9 @@ const EnrolledProgramsSection = ({ enrollments }) => {
                   {/* <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm text-gray-600">
                     {i18n.language === "ar" &&
-                    enrollment.Program?.organization_ar
-                      ? enrollment.Program.organization_ar
-                      : enrollment.Program?.organization}
+                    enrollment.Program?.university_ar
+                      ? enrollment.Program.university_ar
+                      : enrollment.Program?.university}
                   </span>
                   <span className="text-gray-400"></span>
                   <span className="text-sm text-gray-600">
@@ -290,7 +290,7 @@ EnrolledProgramsSection.propTypes = {
       Program: PropTypes.shape({
         Title: PropTypes.string,
         Image: PropTypes.string,
-        organization: PropTypes.string,
+        university: PropTypes.string,
         location: PropTypes.string,
         currency: PropTypes.string,
       }),

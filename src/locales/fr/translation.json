@@ -181,7 +181,7 @@
     },
     "filters": {
       "allCategories": "Toutes les catégories",
-      "allOrganizations": "Toutes les organisations",
+      "allUniversities": "Toutes les universités",
       "allPrograms": "Tous les programmes",
       "featuredOnly": "Programmes vedettes uniquement"
     },
@@ -213,7 +213,7 @@
     "About this program": "À propos de ce programme",
     "Program Information": "Informations du programme",
     "Type": "Type",
-    "Organization": "Organisation",
+    "University": "Université",
     "Category": "Catégorie",
     "Language": "Langue",
     "Financial Information": "Informations financières",
@@ -469,7 +469,7 @@
   "Total Programs": "Total des Programmes",
   "Open Programs": "Programmes Ouverts",
   "Featured": "En Vedette",
-  "Organizations": "Organisations",
+  "Universities": "Universités",
   "Search programs...": "Rechercher des programmes...",
   "Searching...": "Recherche en cours...",
   "Press Enter or wait...": "Appuyez sur Entrée ou attendez...",
@@ -903,7 +903,44 @@
       "registrationSuccessTitle": "Inscription réussie",
       "registrationSuccessText": "Vous êtes maintenant inscrit. Vous pouvez vous connecter.",
       "logoutSuccessTitle": "Déconnexion réussie!",
-      "logoutSuccessText": "Vous avez été déconnecté avec succès."
+      "logoutSuccessText": "Vous avez été déconnecté avec succès.",
+      "login": "Se connecter",
+      "loginSubtitle": "Bienvenue sur HealthPathGlobal. Connectez-vous à votre compte pour continuer.",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié?",
+      "signIn": "Se connecter",
+      "noAccount": "Vous n'avez pas de compte?",
+      "signUp": "S'inscrire maintenant",
+      "register": "Créer un compte",
+      "registerSubtitle": "Rejoignez HealthPathGlobal et commencez votre parcours d'apprentissage aujourd'hui.",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "continue": "Continuer",
+      "passwordHint": "Doit contenir au moins 8 caractères",
+      "haveAccount": "Vous avez déjà un compte?",
+      "guest": "Invité",
+      "welcomeBack": "Bienvenue",
+      "profile": "Profil",
+      "home": "Accueil",
+      "myApplications": "Mes candidatures",
+      "logout": "Déconnexion",
+      "error": "Erreur",
+      "step2": "Complétez votre profil",
+      "country": "Pays",
+      "studyDomain": "Domaine d'études",
+      "phoneNumber": "Numéro de téléphone",
+      "university": "Université",
+      "professionalStatus": "Statut professionnel",
+      "academicStatus": "Statut académique",
+      "selectAnOption": "Sélectionnez une option",
+      "studyDomainsNotConfigured": "Les domaines d'études ne sont pas encore configurés. Veuillez revérifier plus tard.",
+      "countriesNotConfigured": "Les pays ne sont pas encore configurés. Veuillez revérifier plus tard.",
+      "processing": "Traitement...",
+      "validation_failed": "La validation a échoué",
+      "fillAllFields": "Veuillez remplir tous les champs obligatoires",
+      "signingIn": "Connexion en cours...",
+      "loginError": "Une erreur s'est produite lors de la connexion"
     },
     "messages": {
       "sentTitle": "Message envoyé",
@@ -1152,5 +1189,64 @@
     "error_message": "Le lien de réinitialisation du mot de passe est invalide ou a expiré.",
     "request_new_link": "Demander un nouveau lien de réinitialisation",
     "back_to_login": "Retour à la connexion"
+  },
+
+  "homepage": {
+    "hero": {
+      "badge": "Explorez les opportunités",
+      "title": "Plongez dans les possibilités",
+      "subtitle": "Rejoignez-nous pour découvrir des programmes et des cours qui ouvrent les portes de votre avenir.",
+      "cta": "Découvrir les programmes"
+    },
+    "about": {
+      "title": "À propos de nous",
+      "description": "Nous habilitons les étudiants à accéder aux opportunités d'études à l'étranger et à la croissance professionnelle. Nous offrons des conseils personnalisés, des cours en ligne et une communauté solidaire pour vous aider à atteindre vos objectifs académiques et professionnels. Déverrouillez votre potentiel avec nous!"
+    },
+    "steps": {
+      "title": "Comment étudier à l'étranger",
+      "step1": {
+        "title": "S'inscrire",
+        "description": "Créez votre compte et soumettez vos informations."
+      },
+      "step2": {
+        "title": "Se connecter",
+        "description": "Notre équipe vous guide tout au long du processus."
+      },
+      "step3": {
+        "title": "Soumettre",
+        "description": "Complétez votre candidature."
+      },
+      "step4": {
+        "title": "Nous vous contacterons",
+        "description": "Nous vous contacterons pour confirmer votre inscription."
+      }
+    },
+    "services": {
+      "title": "Nos services",
+      "service1": {
+        "title": "Orientation pour étudier à l'étranger",
+        "description": "Étudier à l'étranger change les perspectives.",
+        "cta": "Inscrivez-vous & Découvrez"
+      },
+      "service2": {
+        "title": "Cours en ligne",
+        "description": "Apprenez n'importe quoi, partout, à tout moment.",
+        "cta": "Découvrir tous les cours"
+      }
+    },
+    "programSearcher": {
+      "title": "Trouvez votre programme parfait",
+      "description": "Parcourez des centaines de programmes adaptés à vos aspirations.",
+      "placeholder": "Rechercher des programmes par pays.",
+      "buttonText": "Rechercher des programmes"
+    },
+    "countries": {
+      "title": "Opportunités d'études dans le monde entier",
+      "subtitle": "Explorez les programmes dans ces destinations et bien d'autres"
+    },
+    "faq": {
+      "title": "Questions fréquemment posées",
+      "subtitle": "Trouvez des réponses aux questions courantes sur nos programmes et nos cours."
+    }
   }
 }

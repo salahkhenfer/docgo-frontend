@@ -64,7 +64,7 @@ const Login = () => {
 
       // Basic validation
       if (!formData.email || !formData.password) {
-        setError("Veuillez remplir tous les champs requis");
+        setError(t("auth.fillAllFields", "Please fill all required fields"));
         setLoading(false);
         return;
       }
@@ -81,7 +81,10 @@ const Login = () => {
           return;
         }
         if (!result?.success) {
-          throw new Error(result?.message || "Échec de la connexion");
+          throw new Error(
+            result?.message ||
+              t("auth.loginError", "An error occurred during login"),
+          );
         }
 
         Swal.fire({
@@ -98,7 +101,9 @@ const Login = () => {
           navigate(redirectTo, { replace: true });
         });
       } catch (err) {
-        setError(err.message || "Une erreur est survenue lors de la connexion");
+        setError(
+          err.message || t("auth.loginError", "An error occurred during login"),
+        );
       } finally {
         setLoading(false);
       }
@@ -107,30 +112,34 @@ const Login = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4 sm:p-6 lg:p-0">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 lg:p-0">
       {/* Side Image - Hidden on Mobile */}
-      <div className="hidden lg:flex lg:w-1/2 h-screen items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply"></div>
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full mix-blend-multiply"></div>
-        </div>
-        <div className="relative z-10 px-12 text-center text-white max-w-md">
+      <div className="hidden lg:flex lg:w-1/2 h-screen items-center justify-center  relative overflow-hidden">
+        {/* Simplified: Removed complex gradients and decorative blobs */}
+        {/* Original had: bg-gradient-to-br from-blue-600 to-indigo-700 with absolute positioned blob animations */}
+
+        <div className="relative z-10 px-12 text-center max-w-md">
           <div className="mb-8">
             <img
               src={backgroundImage}
               alt="Login Visual"
-              className="w-full h-auto max-h-96 object-contain rounded-2xl shadow-2xl"
+              className="w-full h-auto max-h-96 object-contain rounded-2xl "
             />
           </div>
-          <h3 className="text-3xl font-bold mb-4">Welcome Back</h3>
-          <p className="text-blue-100 text-lg">
-            Join thousands of learners on their journey to success
+          <h3 className="text-3xl font-bold mb-4 text-gray-900">
+            {t("auth.welcomeBack", "Welcome Back")}
+          </h3>
+          <p className="text-gray-600 text-lg">
+            {t(
+              "auth.registerSubtitle",
+              "Join thousands of learners on their journey to success",
+            )}
           </p>
         </div>
       </div>
 
-      {/* Login Form Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+      {/* Login Form Section - Simplified and centered */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 min-h-screen lg:min-h-auto">
         <div className="w-full max-w-md">
           {/* Logo/Title */}
           <div className="mb-8">
@@ -148,7 +157,9 @@ const Login = () => {
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg text-sm sm:text-base">
-              <div className="font-semibold mb-1">Error</div>
+              <div className="font-semibold mb-1">
+                {t("auth.error", "Error")}
+              </div>
               <div>{error}</div>
             </div>
           )}
@@ -203,7 +214,8 @@ const Login = () => {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <InlineLoading borderColor="white" /> Signing in...
+                  <InlineLoading borderColor="white" />{" "}
+                  {t("auth.signingIn", "Signing in...")}
                 </span>
               ) : (
                 t("auth.signIn", "Sign In")
@@ -217,7 +229,9 @@ const Login = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">or</span>
+              <span className="px-2 bg-white text-gray-500">
+                {t("or", "or")}
+              </span>
             </div>
           </div>
 

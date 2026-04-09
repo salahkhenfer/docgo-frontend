@@ -23,16 +23,16 @@ function Footer({ contactInfo, branding = null }) {
   const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    clientProgramsAPI
-      .getProgramCategories()
-      .then((res) => {
-        if (res?.success && Array.isArray(res.data?.categories)) {
-          setCategories(res.data.categories.filter(Boolean).slice(0, 8));
-        }
-      })
-      .catch(() => {});
-  }, []);
+  // useEffect(() => {
+  //   clientProgramsAPI
+  //     .getProgramCategories()
+  //     .then((res) => {
+  //       if (res?.success && Array.isArray(res.data?.categories)) {
+  //         setCategories(res.data.categories.filter(Boolean).slice(0, 8));
+  //       }
+  //     })
+  //     .catch(() => {});
+  // }, []);
 
   const brandName = branding?.brandName || "";
   const brandLogoSrc = (() => {
@@ -166,7 +166,7 @@ function Footer({ contactInfo, branding = null }) {
                   href={getSocialLink("viber")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-purple-600 transition-colors"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
                   title="Viber"
                 >
                   <MessageSquare className="w-6 h-6" />
@@ -206,8 +206,8 @@ function Footer({ contactInfo, branding = null }) {
             </div>
           </div>
           {/* Dynamic program categories */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">
+          {/* <div className="space-y-2"> */}
+          {/* <h3 className="text-lg font-semibold text-gray-900">
               {t("Specialites", "Specialties")}
             </h3>
             {categories.length > 0 ? (
@@ -252,16 +252,16 @@ function Footer({ contactInfo, branding = null }) {
                   ))}
                 </ul>
               </>
-            )}
+            )} */}
 
-            {/* View all link */}
-            <a
+          {/* View all link */}
+          {/* <a
               href="/programs?status=open"
               className="inline-block pt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
             >
               {t("StudyAbroad", "Study Abroad")}{" "}
-            </a>
-          </div>
+            </a> */}
+          {/* </div> */}
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">

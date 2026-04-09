@@ -136,7 +136,10 @@ const FeaturedPrograms = ({
             <Star className="w-6 h-6 text-yellow-500 fill-current" />
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("programs.featured.subtitle", "Discover our most popular and highly rated programs")}
+            {t(
+              "programs.featured.subtitle",
+              "Discover our most popular and highly rated programs",
+            )}
           </p>
         </div>
 
@@ -228,11 +231,11 @@ const FeaturedPrograms = ({
                         : program.Category}
                     </span>
                   )}
-                  {program.organization && (
+                  {program.university && (
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                      {i18n.language === "ar" && program.organization_ar
-                        ? program.organization_ar
-                        : program.organization}
+                      {i18n.language === "ar" && program.university_ar
+                        ? program.university_ar
+                        : program.university}
                     </span>
                   )}
                 </div>
@@ -253,7 +256,8 @@ const FeaturedPrograms = ({
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4" />
                       <span>
-                        {program.Users_count} {t("programs.applicants", "applicants")}
+                        {program.Users_count}{" "}
+                        {t("programs.applicants", "applicants")}
                       </span>
                     </div>
                   )}
@@ -278,7 +282,9 @@ const FeaturedPrograms = ({
               onClick={handleViewAllClick}
               className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg border border-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
             >
-              <span>{t("programs.viewAllFeatured", "View all featured programs")}</span>
+              <span>
+                {t("programs.viewAllFeatured", "View all featured programs")}
+              </span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>

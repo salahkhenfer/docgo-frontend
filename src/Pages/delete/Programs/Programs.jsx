@@ -45,12 +45,12 @@ const Programs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  const [universities, setUniversities] = useState([]);
 
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
-    organization: searchParams.get("organization") || "",
+    university: searchParams.get("university") || "",
     status: searchParams.get("status") || "open",
     featured: searchParams.get("featured") || "",
   });
@@ -102,13 +102,13 @@ const Programs = () => {
     }
   };
 
-  // Fetch categories and organizations
+  // Fetch categories and universities
   const fetchFiltersData = async () => {
     try {
       const response = await clientProgramsAPI.getProgramCategories();
       if (response.success) {
         setCategories(response.data.categories || []);
-        setOrganizations(response.data.organizations || []);
+        setUniversities(response.data.universities || []);
       }
     } catch (err) {}
   };
@@ -258,22 +258,20 @@ const Programs = () => {
               ))}
             </select>
 
-            {/* Organization Filter */}
+            {/* University Filter */}
             <select
-              value={filters.organization}
-              onChange={(e) =>
-                handleFilterChange("organization", e.target.value)
-              }
+              value={filters.university}
+              onChange={(e) => handleFilterChange("university", e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">
-                {t("programs.filters.allOrganizations", "All Organizations")}
+                {t("programs.filters.allUniversities", "All Universities")}
               </option>
-              {organizations.map((org, index) => (
-                <option key={index} value={org.organization}>
-                  {i18n.language === "ar" && org.organization_ar
-                    ? org.organization_ar
-                    : org.organization}
+              {universities.map((uni, index) => (
+                <option key={index} value={uni.university}>
+                  {i18n.language === "ar" && uni.university_ar
+                    ? uni.university_ar
+                    : uni.university}
                 </option>
               ))}
             </select>
@@ -466,11 +464,11 @@ const Programs = () => {
                           : program.Category}
                       </span>
                     )}
-                    {program.organization && (
+                    {program.university && (
                       <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                        {i18n.language === "ar" && program.organization_ar
-                          ? program.organization_ar
-                          : program.organization}
+                        {i18n.language === "ar" && program.university_ar
+                          ? program.university_ar
+                          : program.university}
                       </span>
                     )}
                   </div>

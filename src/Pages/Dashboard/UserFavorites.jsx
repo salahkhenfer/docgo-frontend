@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import ImageWithFallback from "../../components/Common/ImageWithFallback";
 import {
   HeartIcon,
@@ -47,14 +48,20 @@ const UserFavorites = () => {
   };
 
   const handleRemoveFavorite = async (itemId, type) => {
-    if (
-      window.confirm(
-        t(
-          "favorites.confirmRemove",
-          "Are you sure you want to remove this from favorites?",
-        ),
-      )
-    ) {
+    const result = await Swal.fire({
+      title: "Remove from Favorites?",
+      text: t(
+        "favorites.confirmRemove",
+        "Are you sure you want to remove this from favorites?",
+      ),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, remove",
+      cancelButtonText: "Cancel",
+    });
+    if (result.isConfirmed) {
       try {
         // API call to remove favorite
         const endpoint =

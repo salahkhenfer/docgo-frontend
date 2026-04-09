@@ -409,7 +409,7 @@ export const Course = () => {
     url: absoluteUrl,
     image: courseSeoImage || undefined,
     provider: {
-      "@type": "Organization",
+      "@type": "university",
       name: siteName,
       url: siteUrl || undefined,
     },

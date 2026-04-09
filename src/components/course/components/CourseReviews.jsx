@@ -2,6 +2,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import reviewsAPI from "../../../API/Reviews";
 
@@ -103,15 +104,37 @@ const CourseReviews = ({
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("Delete your review?")) return;
+    const result = await Swal.fire({
+      title: "Delete Review?",
+      text: "Are you sure you want to delete your review permanently?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       setDeleting(true);
       await reviewsAPI.deleteCourseReview(course.id);
       setUserReview(null);
       setRateValue(0);
       setComment("");
+      await Swal.fire({
+        title: "Success!",
+        text: "Review deleted.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       toast.success("Review deleted.");
     } catch (err) {
+      await Swal.fire({
+        title: "Error!",
+        text: err?.response?.data?.message || "Failed to delete review.",
+        icon: "error",
+      });
       toast.error(err?.response?.data?.message || "Failed to delete review.");
     } finally {
       setDeleting(false);
@@ -210,7 +233,8 @@ const CourseReviews = ({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <h3 className="text-xl font-bold text-gray-900 mb-6">
-        {t("course_data.studentReviews", "Student reviews") || "Student Reviews"}
+        {t("course_data.studentReviews", "Student reviews") ||
+          "Student Reviews"}
       </h3>
 
       {totalReviews > 0 ? (
@@ -267,10 +291,14 @@ const CourseReviews = ({
         <div className="text-center py-8 text-gray-400">
           <FaRegStar className="text-4xl mx-auto mb-3" />
           <p className="text-gray-500">
-            {t("course_data.noReviewsYet", "No reviews yet") || "No reviews yet"}
+            {t("course_data.noReviewsYet", "No reviews yet") ||
+              "No reviews yet"}
           </p>
           <p className="text-sm">
-            {t("course_data.beFirstToReview", "Be the first to review this course!") || "Be the first to review!"}
+            {t(
+              "course_data.beFirstToReview",
+              "Be the first to review this course!",
+            ) || "Be the first to review!"}
           </p>
         </div>
       )}

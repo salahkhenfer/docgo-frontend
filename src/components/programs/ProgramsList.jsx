@@ -98,10 +98,10 @@ function ProgramListItem({
     language === "ar" && program.short_description_ar
       ? program.short_description_ar
       : program.short_description;
-  const organizationText =
-    language === "ar" && program.organization_ar
-      ? program.organization_ar
-      : program.organization;
+  const universityText =
+    language === "ar" && program.university_ar
+      ? program.university_ar
+      : program.university;
   const categoryText =
     language === "ar" && program.category_ar
       ? program.category_ar
@@ -161,7 +161,7 @@ function ProgramListItem({
       Price: program.Price,
       discountPrice: program.discountPrice,
       currency: program.currency,
-      organization: organizationText,
+      university: universityText,
       location: locationText,
       Image: program.Image,
     });
@@ -257,10 +257,10 @@ function ProgramListItem({
         <div className="flex-1 p-5 flex flex-col sm:flex-row gap-4">
           {/* Left: main info */}
           <div className="flex-1 flex flex-col min-w-0">
-            {/* Organization */}
-            {organizationText && (
+            {/* University */}
+            {universityText && (
               <p className="text-blue-600 text-xs font-semibold uppercase tracking-wide mb-1">
-                {organizationText}
+                {universityText}
               </p>
             )}
 

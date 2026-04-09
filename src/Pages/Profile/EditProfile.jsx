@@ -9,44 +9,8 @@ import { useTranslation } from "react-i18next";
 import ValidationErrorPanel from "../../components/Common/FormValidation/ValidationErrorPanel";
 import { useFormValidation } from "../../components/Common/FormValidation/useFormValidation";
 import { getApiErrorMessage } from "../../utils/apiErrorTranslate";
-
-// Emoji flags for countries (same as admin dashboard and registration)
-const EMOJI_FLAGS = {
-  France: "🇫🇷",
-  Canada: "🇨🇦",
-  Belgique: "🇧🇪",
-  Suisse: "🇨🇭",
-  Maroc: "🇲🇦",
-  Algérie: "🇩🇿",
-  Tunisie: "🇹🇳",
-  Sénégal: "🇸🇳",
-  "Côte d'Ivoire": "🇨🇮",
-  Luxembourg: "🇱🇺",
-  "États-Unis": "🇺🇸",
-  "Royaume-Uni": "🇬🇧",
-  Allemagne: "🇩🇪",
-  Espagne: "🇪🇸",
-  Italie: "🇮🇹",
-};
-
-// Bilingual country names mapping
-const BILINGUAL_COUNTRIES = {
-  France: { fr: "France", ar: "فرنسا" },
-  Canada: { fr: "Canada", ar: "كندا" },
-  Belgique: { fr: "Belgique", ar: "بلجيكا" },
-  Suisse: { fr: "Suisse", ar: "سويسرا" },
-  Maroc: { fr: "Maroc", ar: "المغرب" },
-  Algérie: { fr: "Algérie", ar: "الجزائر" },
-  Tunisie: { fr: "Tunisie", ar: "تونس" },
-  Sénégal: { fr: "Sénégal", ar: "السنغال" },
-  "Côte d'Ivoire": { fr: "Côte d'Ivoire", ar: "ساحل العاج" },
-  Luxembourg: { fr: "Luxembourg", ar: "لوكسمبرغ" },
-  "États-Unis": { fr: "États-Unis", ar: "الولايات المتحدة" },
-  "Royaume-Uni": { fr: "Royaume-Uni", ar: "المملكة المتحدة" },
-  Allemagne: { fr: "Allemagne", ar: "ألمانيا" },
-  Espagne: { fr: "Espagne", ar: "إسبانيا" },
-  Italie: { fr: "Italie", ar: "إيطاليا" },
-};
+import CountryFlagSelector from "../../components/CountryFlagSelector";
+import { BILINGUAL_COUNTRIES } from "../../utils/countryCodeMap";
 
 const EditProfile = () => {
   const { user, updateUserProfile } = useAppContext();
@@ -479,35 +443,15 @@ const EditProfile = () => {
               >
                 {t("editProfile.country", "Country") || "Country"}
               </label>
-              <select
-                id="country"
-                name="country"
+              <CountryFlagSelector
                 value={formData.country}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                style={{
-                  direction: i18n.language === "ar" ? "rtl" : "ltr",
-                  textAlign: i18n.language === "ar" ? "right" : "left",
-                }}
-              >
-                <option value="">{getSelectCountryText()}</option>
-                {options.userOriginCountries.map((country) => {
-                  const emoji = EMOJI_FLAGS[country] || "🌍";
-                  return (
-                    <option key={country} value={country}>
-                      {emoji} {getCountryDisplayName(country)}
-                    </option>
-                  );
-                })}
-              </select>
-              {formData.country && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-                  <span className="text-2xl">
-                    {EMOJI_FLAGS[formData.country] || "🌍"}
-                  </span>
-                  <span>{getCountryDisplayName(formData.country)}</span>
-                </div>
-              )}
+                onChange={(country) =>
+                  setFormData((prev) => ({ ...prev, country }))
+                }
+                countries={options.userOriginCountries}
+                placeholder={t("editProfile.selectCountry", "Select Country") || "Select Country"}
+                showLabel={false}
+              />
             </div>
             {/* Academic Information */}
             <div className="border-t pt-6">

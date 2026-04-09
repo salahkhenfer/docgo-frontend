@@ -385,7 +385,10 @@ function SectionQuiz({ item, courseId, onComplete, isCompleted }) {
       {isCompleted && !submitted && (
         <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-green-700 text-sm text-center">
           <FaCheckCircle className="inline mr-2" />
-          {t("You have already completed this quiz", "You have already completed this quiz")}
+          {t(
+            "You have already completed this quiz",
+            "You have already completed this quiz",
+          )}
         </div>
       )}
     </div>
@@ -518,7 +521,9 @@ function TextReader({ item, onComplete, isCompleted }) {
       <div
         className="prose prose-gray max-w-none p-6 bg-white rounded-xl border border-gray-200 shadow-sm leading-relaxed"
         dangerouslySetInnerHTML={{
-          __html: content || `<p>${t("No content available", "No content available")}</p>`,
+          __html:
+            content ||
+            `<p>${t("No content available", "No content available")}</p>`,
         }}
       />
     </div>
@@ -703,15 +708,37 @@ function CourseReviewWidget({ courseId, courseData }) {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("Delete your review?")) return;
+    const result = await Swal.fire({
+      title: "Delete Review?",
+      text: "Are you sure you want to delete your review permanently?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       setDeleting(true);
       await reviewsAPI.deleteCourseReview(courseId);
       setUserReview(null);
       setRateValue(0);
       setComment("");
+      await Swal.fire({
+        title: "Success!",
+        text: "Review deleted.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       toast.success("Review deleted.");
     } catch (err) {
+      await Swal.fire({
+        title: "Error!",
+        text: err?.response?.data?.message || "Failed to delete review.",
+        icon: "error",
+      });
       toast.error(err?.response?.data?.message || "Failed to delete review.");
     } finally {
       setDeleting(false);
@@ -892,7 +919,10 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
                 <p className="text-sm text-gray-500">
-                  {t("report_desc", "Describe the problem you encountered with this lesson or content.") ||
+                  {t(
+                    "report_desc",
+                    "Describe the problem you encountered with this lesson or content.",
+                  ) ||
                     "Describe the issue with this lesson (e.g. video not loading, wrong content, etc.) and we'll fix it as soon as possible."}
                 </p>
                 <textarea
@@ -902,7 +932,10 @@ function CourseSupportWidget({ courseId, currentItem, user }) {
                   required
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
                   placeholder={
-                    t("report_placeholder", "e.g. Video won't play, audio is out of sync, subtitle error…") ||
+                    t(
+                      "report_placeholder",
+                      "e.g. Video won't play, audio is out of sync, subtitle error…",
+                    ) ||
                     "e.g. The video is not loading / The content is incorrect…"
                   }
                 />
@@ -1089,11 +1122,16 @@ export function CourseSections() {
           : user?.name || "";
 
     const result = await Swal.fire({
-      title: t("certificate.realNameTitle", "Your Certificate Name") || "Certificate Name",
+      title:
+        t("certificate.realNameTitle", "Your Certificate Name") ||
+        "Certificate Name",
       html: `
                 <p style="margin-bottom:10px;color:#374151">
                     ${
-                      t("certificate.realNameWarning", "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.") ||
+                      t(
+                        "certificate.realNameWarning",
+                        "Your full name will appear on the certificate exactly as entered. Please make sure it is correct.",
+                      ) ||
                       "Your certificate will be issued under your real name. This cannot be changed later."
                     }
                 </p>
@@ -1110,7 +1148,8 @@ export function CourseSections() {
       showCancelButton: true,
       confirmButtonColor: "#7c3aed",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: t("certificate.proceed", "Get Certificate") || "Get Certificate",
+      confirmButtonText:
+        t("certificate.proceed", "Get Certificate") || "Get Certificate",
       cancelButtonText: t("certificate.cancel", "Cancel") || "Cancel",
       focusCancel: !studentName,
     });
@@ -1231,7 +1270,10 @@ export function CourseSections() {
                 <BookOpen className="w-8 h-8 text-blue-400" />
               </div>
               <h2 className="text-xl font-semibold text-gray-700">
-                {t("This course has no content yet", "This course has no content yet")}
+                {t(
+                  "This course has no content yet",
+                  "This course has no content yet",
+                )}
               </h2>
               <p className="text-gray-500 text-sm max-w-xs">
                 {t(
@@ -1297,7 +1339,8 @@ export function CourseSections() {
           />
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {completedItems.size} / {totalItems} {t("items completed", "Items completed")}
+          {completedItems.size} / {totalItems}{" "}
+          {t("items completed", "Items completed")}
         </p>
       </div>
       {/* Certificate button */}
@@ -1355,7 +1398,8 @@ export function CourseSections() {
                     {section.title}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {sectionDone}/{sectionItems.length} {t("completed", "Completed")}
+                    {sectionDone}/{sectionItems.length}{" "}
+                    {t("completed", "Completed")}
                   </p>
                 </div>
                 {sectionItems.length > 0 &&
@@ -1454,7 +1498,12 @@ export function CourseSections() {
     if (!currentItem) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
-          <p>{t("Select an item from the sidebar to begin", "Select an item from the sidebar to begin")}</p>
+          <p>
+            {t(
+              "Select an item from the sidebar to begin",
+              "Select an item from the sidebar to begin",
+            )}
+          </p>
         </div>
       );
     }
@@ -1629,8 +1678,10 @@ export function CourseSections() {
                   disabled={!canFinishCourse}
                   title={
                     !canFinishCourse
-                      ? t("Pass the quiz to continue", "Pass the quiz to continue") ||
-                        "Pass the quiz to continue"
+                      ? t(
+                          "Pass the quiz to continue",
+                          "Pass the quiz to continue",
+                        ) || "Pass the quiz to continue"
                       : ""
                   }
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm font-medium ${

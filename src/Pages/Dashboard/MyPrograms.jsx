@@ -127,9 +127,9 @@ const MyPrograms = () => {
                       )}
                       {(() => {
                         const org =
-                          (i18n.language === "ar" && program?.organization_ar
-                            ? program.organization_ar
-                            : program?.organization) || "";
+                          (i18n.language === "ar" && program?.university_ar
+                            ? program.university_ar
+                            : program?.university) || "";
                         const loc =
                           (i18n.language === "ar" && program?.location_ar
                             ? program.location_ar

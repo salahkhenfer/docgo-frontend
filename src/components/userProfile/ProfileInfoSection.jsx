@@ -1,43 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CheckCircle, Clock, Award, FileText, User } from "lucide-react";
+import { CheckCircle, Clock, Award, FileText, User, Globe } from "lucide-react";
 import { useEffect } from "react";
-
-// Emoji flags for countries (same as dashboard and registration)
-const EMOJI_FLAGS = {
-  France: "🇫🇷",
-  Canada: "🇨🇦",
-  Belgique: "🇧🇪",
-  Suisse: "🇨🇭",
-  Maroc: "🇲🇦",
-  Algérie: "🇩🇿",
-  Tunisie: "🇹🇳",
-  Sénégal: "🇸🇳",
-  "Côte d'Ivoire": "🇨🇮",
-  Luxembourg: "🇱🇺",
-  "États-Unis": "🇺🇸",
-  "Royaume-Uni": "🇬🇧",
-  Allemagne: "🇩🇪",
-  Espagne: "🇪🇸",
-  Italie: "🇮🇹",
-  "Pays-Bas": "🇳🇱",
-  Autriche: "🇦🇹",
-  Portugal: "🇵🇹",
-  Grèce: "🇬🇷",
-  Suède: "🇸🇪",
-  Norvège: "🇳🇴",
-  Danemark: "🇩🇰",
-  Finlande: "🇫🇮",
-  Pologne: "🇵🇱",
-  Turquie: "🇹🇷",
-  Japon: "🇯🇵",
-  Chine: "🇨🇳",
-  Inde: "🇮🇳",
-  Brésil: "🇧🇷",
-  Mexique: "🇲🇽",
-  "Afrique du Sud": "🇿🇦",
-  Australie: "🇦🇺",
-};
+import {
+  BILINGUAL_COUNTRIES,
+  getCountryCode,
+} from "../../utils/countryCodeMap";
+import ReactFlagsSelect from "react-flags-select";
+// CSS is bundled with the component in newer versions
+// import "react-flags-select/css/react-flags-select.css";
 
 const ProfileInfoSection = ({ profile }) => {
   const { t } = useTranslation();
@@ -159,14 +130,19 @@ const ProfileInfoSection = ({ profile }) => {
               </div>
             )}
             {profile?.country && (
-              <div className="text-gray-600">
+              <div className="text-gray-600 flex items-center gap-2">
                 <span className="font-medium">
                   {t("profile_data.country", "Country")}:{" "}
                 </span>
-                <span className="mr-2">
-                  {EMOJI_FLAGS[profile?.country] || "🌍"}
-                </span>
-                {profile?.country}
+                <div className="flex items-center gap-1">
+                  <ReactFlagsSelect
+                    selected={getCountryCode(profile?.country)}
+                    disabled={true}
+                    showOptionLabel={false}
+                    countries={[getCountryCode(profile?.country)]}
+                  />
+                  <span>{profile?.country}</span>
+                </div>
               </div>
             )}
             {profile?.studyDomain && (

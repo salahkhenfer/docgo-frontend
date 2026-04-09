@@ -1,6 +1,7 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import reviewsAPI from "../../API/Reviews";
 
@@ -102,15 +103,37 @@ const ProgramReviews = ({
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("Delete your review?")) return;
+    const result = await Swal.fire({
+      title: "Delete Review?",
+      text: "Are you sure you want to delete your review permanently?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
     try {
       setDeleting(true);
       await reviewsAPI.deleteProgramReview(programId);
       setUserReview(null);
       setRateValue(0);
       setComment("");
+      await Swal.fire({
+        title: "Success!",
+        text: "Review deleted.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
       toast.success("Review deleted.");
     } catch (err) {
+      await Swal.fire({
+        title: "Error!",
+        text: err?.response?.data?.message || "Failed to delete review.",
+        icon: "error",
+      });
       toast.error(err?.response?.data?.message || "Failed to delete review.");
     } finally {
       setDeleting(false);

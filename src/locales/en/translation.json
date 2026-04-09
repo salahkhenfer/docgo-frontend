@@ -193,7 +193,7 @@
     },
     "filters": {
       "allCategories": "All Categories",
-      "allOrganizations": "All Organizations",
+      "allUniversities": "All Universities",
       "allPrograms": "All Programs",
       "featuredOnly": "Featured Programs Only"
     },
@@ -225,7 +225,7 @@
     "About this program": "About this program",
     "Program Information": "Program Information",
     "Type": "Type",
-    "Organization": "Organization",
+    "University": "University",
     "Category": "Category",
     "Language": "Language",
     "Financial Information": "Financial Information",
@@ -487,7 +487,7 @@
   "Total Programs": "Total Programs",
   "Open Programs": "Open Programs",
   "Featured": "Featured",
-  "Organizations": "Organizations",
+  "Universities": "Universities",
   "Search programs...": "Search programs...",
   "Searching...": "Searching...",
   "Press Enter or wait...": "Press Enter or wait...",
@@ -935,7 +935,44 @@
       "registrationSuccessTitle": "Registration Successful",
       "registrationSuccessText": "You are now registered. You can log in.",
       "logoutSuccessTitle": "Logged Out Successfully!",
-      "logoutSuccessText": "You have been logged out successfully."
+      "logoutSuccessText": "You have been logged out successfully.",
+      "login": "Sign In",
+      "loginSubtitle": "Welcome to HealthPathGlobal. Sign in to your account to continue.",
+      "email": "Email Address",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up now",
+      "register": "Create Account",
+      "registerSubtitle": "Join HealthPathGlobal and start your learning journey today.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "continue": "Continue",
+      "passwordHint": "Must be at least 8 characters",
+      "haveAccount": "Already have an account?",
+      "guest": "Guest",
+      "welcomeBack": "Welcome Back",
+      "profile": "Profile",
+      "home": "Home",
+      "myApplications": "My Applications",
+      "logout": "Logout",
+      "error": "Error",
+      "step2": "Complete Your Profile",
+      "country": "Country",
+      "studyDomain": "Study Domain",
+      "phoneNumber": "Phone Number",
+      "university": "University",
+      "professionalStatus": "Professional Status",
+      "academicStatus": "Academic Status",
+      "selectAnOption": "Select an option",
+      "studyDomainsNotConfigured": "Study domains are not yet configured. Please check back later.",
+      "countriesNotConfigured": "Countries are not yet configured. Please check back later.",
+      "processing": "Processing...",
+      "validation_failed": "Validation failed",
+      "fillAllFields": "Please fill all required fields",
+      "signingIn": "Signing in...",
+      "loginError": "An error occurred during login"
     },
     "messages": {
       "sentTitle": "Message Sent",
@@ -1187,5 +1224,64 @@
     "error_message": "The password reset link is invalid or has expired.",
     "request_new_link": "Request a New Reset Link",
     "back_to_login": "Back to Sign In"
+  },
+
+  "homepage": {
+    "hero": {
+      "badge": "Explore Opportunities",
+      "title": "Dive Into Possibilities",
+      "subtitle": "Join us to discover programs and courses that open doors to your future.",
+      "cta": "Discover Programs"
+    },
+    "about": {
+      "title": "About Us",
+      "description": "We empower students to access study abroad opportunities and professional growth. We offer personalized guidance, online courses, and a supportive community to help you achieve your academic and professional goals. Unlock your potential with us!"
+    },
+    "steps": {
+      "title": "What To Do To Study Abroad",
+      "step1": {
+        "title": "Register",
+        "description": "Create your account and submit your information."
+      },
+      "step2": {
+        "title": "Connect",
+        "description": "Our team guides you through the process."
+      },
+      "step3": {
+        "title": "Submit",
+        "description": "Complete your application."
+      },
+      "step4": {
+        "title": "We Will Contact You",
+        "description": "We will contact you to confirm your enrollment."
+      }
+    },
+    "services": {
+      "title": "Our Services",
+      "service1": {
+        "title": "Guidance for Studying Abroad",
+        "description": "Studying abroad changes perspectives.",
+        "cta": "Sign Up & Discover"
+      },
+      "service2": {
+        "title": "Online Courses",
+        "description": "Learn anything, anywhere, anytime.",
+        "cta": "Discover All Courses"
+      }
+    },
+    "programSearcher": {
+      "title": "Find Your Perfect Program",
+      "description": "Search through hundreds of programs tailored to your aspirations.",
+      "placeholder": "Search programs by country, field, or type...",
+      "buttonText": "Search Programs"
+    },
+    "countries": {
+      "title": "Study Opportunities Around the World",
+      "subtitle": "Explore programs in these destinations and more"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Find answers to common questions about our programs and courses."
+    }
   }
 }

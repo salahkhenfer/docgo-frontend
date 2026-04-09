@@ -173,7 +173,7 @@ const PendingApplicationsSection = ({ applications }) => {
                             : t("dashboard.course", "Course")}
                         </span>
                         {application.type === "program" && (
-                          <span>{item?.organization}</span>
+                          <span>{item?.university}</span>
                         )}
                         {application.type === "course" && (
                           <span>{item?.Category}</span>
@@ -324,7 +324,7 @@ PendingApplicationsSection.propTypes = {
         applicationProgram: PropTypes.shape({
           Title: PropTypes.string,
           Image: PropTypes.string,
-          organization: PropTypes.string,
+          university: PropTypes.string,
           applicationDeadline: PropTypes.string,
           scholarshipAmount: PropTypes.number,
           currency: PropTypes.string,

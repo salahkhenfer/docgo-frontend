@@ -36,7 +36,7 @@ export function ProgramCard({
       Price: program.Price,
       discountPrice: program.discountPrice,
       currency: program.currency,
-      organization: organizationText,
+      university: universityText,
       location: locationText,
       Image: program.Image || defaultThumbnail,
     };
@@ -50,10 +50,10 @@ export function ProgramCard({
     language === "ar" && program.short_description_ar
       ? program.short_description_ar
       : program.short_description;
-  const organizationText =
-    language === "ar" && program.organization_ar
-      ? program.organization_ar
-      : program.organization;
+  const universityText =
+    language === "ar" && program.university_ar
+      ? program.university_ar
+      : program.university;
   const categoryText =
     language === "ar" && program.category_ar
       ? program.category_ar
@@ -221,10 +221,10 @@ export function ProgramCard({
 
       {/* Program Info */}
       <div className="p-5 flex flex-col flex-1">
-        {/* Organization */}
-        {organizationText && (
+        {/* University */}
+        {universityText && (
           <p className="text-blue-600 text-xs font-semibold uppercase tracking-wide mb-1">
-            {organizationText}
+            {universityText}
           </p>
         )}
 
@@ -405,8 +405,8 @@ ProgramCard.propTypes = {
     title_ar: PropTypes.string,
     short_description: PropTypes.string,
     short_description_ar: PropTypes.string,
-    organization: PropTypes.string,
-    organization_ar: PropTypes.string,
+    university: PropTypes.string,
+    university_ar: PropTypes.string,
     category: PropTypes.string,
     category_ar: PropTypes.string,
     location: PropTypes.string,

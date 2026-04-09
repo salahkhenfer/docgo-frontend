@@ -182,7 +182,7 @@
     },
     "filters": {
       "allCategories": "جميع الفئات",
-      "allOrganizations": "جميع المنظمات",
+      "allUniversities": "جميع الجامعات",
       "allPrograms": "جميع البرامج",
       "featuredOnly": "البرامج المميزة فقط"
     },
@@ -214,7 +214,7 @@
     "About this program": "حول هذا البرنامج",
     "Program Information": "معلومات البرنامج",
     "Type": "النوع",
-    "Organization": "المنظمة",
+    "University": "الجامعة",
     "Category": "الفئة",
     "Language": "اللغة",
     "Financial Information": "المعلومات المالية",
@@ -438,7 +438,7 @@
   "Total Programs": "إجمالي البرامج",
   "Open Programs": "البرامج المفتوحة",
   "Featured": "مميز",
-  "Organizations": "المنظمات",
+  "Universities": "الجامعات",
   "Search programs...": "البحث عن البرامج...",
   "Searching...": "جاري البحث...",
   "Press Enter or wait...": "اضغط على Enter أو انتظر...",
@@ -922,7 +922,44 @@
       "registrationSuccessTitle": "نجح التسجيل",
       "registrationSuccessText": "أنت الآن مسجل. يمكنك تسجيل الدخول.",
       "logoutSuccessTitle": "تم تسجيل الخروج بنجاح!",
-      "logoutSuccessText": "تم تسجيل خروجك بنجاح."
+      "logoutSuccessText": "تم تسجيل خروجك بنجاح.",
+      "login": "تسجيل الدخول",
+      "loginSubtitle": "مرحبًا بك في HealthPathGlobal. سجل دخولك للمتابعة.",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "forgotPassword": "هل نسيت كلمة المرور؟",
+      "signIn": "دخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "سجل الآن",
+      "register": "إنشاء حساب",
+      "registerSubtitle": "انضم إلى HealthPathGlobal وابدأ رحلة التعلم الخاصة بك اليوم.",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "continue": "متابعة",
+      "passwordHint": "يجب أن يكون 8 أحرف على الأقل",
+      "haveAccount": "هل لديك حساب بالفعل؟",
+      "guest": "ضيف",
+      "welcomeBack": "أهلا بعودتك",
+      "profile": "الملف الشخصي",
+      "home": "الرئيسية",
+      "myApplications": "طلباتي",
+      "logout": "تسجيل الخروج",
+      "error": "خطأ",
+      "step2": "أكمل ملفك الشخصي",
+      "country": "الدولة",
+      "studyDomain": "مجال الدراسة",
+      "phoneNumber": "رقم الهاتف",
+      "university": "الجامعة",
+      "professionalStatus": "الحالة المهنية",
+      "academicStatus": "الحالة الأكاديمية",
+      "selectAnOption": "اختر خيارًا",
+      "studyDomainsNotConfigured": "لم يتم تكوين مجالات الدراسة بعد. يرجى المحاولة لاحقًا.",
+      "countriesNotConfigured": "لم يتم تكوين الدول بعد. يرجى المحاولة لاحقًا.",
+      "processing": "جاري المعالجة...",
+      "validation_failed": "فشلت المصادقة",
+      "fillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+      "signingIn": "جاري تسجيل الدخول...",
+      "loginError": "حدث خطأ أثناء تسجيل الدخول"
     },
     "messages": {
       "sentTitle": "تم إرسال الرسالة",
@@ -1140,5 +1177,64 @@
     "error_message": "رابط إعادة تعيين كلمة المرور غير صالح أو انتهت صلاحيته.",
     "request_new_link": "طلب رابط إعادة تعيين جديد",
     "back_to_login": "العودة إلى تسجيل الدخول"
+  },
+
+  "homepage": {
+    "hero": {
+      "badge": "استكشف الفرص",
+      "title": "انغمس في الإمكانيات",
+      "subtitle": "انضم إلينا لاكتشاف برامج ودورات تفتح أبواب مستقبلك.",
+      "cta": "اكتشف البرامج"
+    },
+    "about": {
+      "title": "من نحن",
+      "description": "نحن نمكّن الطلاب من الوصول إلى فرص الدراسة بالخارج والنمو المهني. نقدم إرشادات شخصية وفصول إلكترونية ومجتمعًا داعمًا لمساعدتك على تحقيق أهدافك الأكاديمية والمهنية. أطلق العنان لإمكاناتك معنا!"
+    },
+    "steps": {
+      "title": "ما يجب فعله للدراسة في الخارج",
+      "step1": {
+        "title": "التسجيل",
+        "description": "أنشئ حسابك وأرسل معلوماتك."
+      },
+      "step2": {
+        "title": "الاتصال",
+        "description": "يرشدك فريقنا خلال العملية."
+      },
+      "step3": {
+        "title": "التقديم",
+        "description": "أكمل طلبك."
+      },
+      "step4": {
+        "title": "سنتواصل معك",
+        "description": "سنتواصل معك لتأكيد تسجيلك."
+      }
+    },
+    "services": {
+      "title": "خدماتنا",
+      "service1": {
+        "title": "التوجيه للدراسة في الخارج",
+        "description": "الدراسة في الخارج تغير الآفاق.",
+        "cta": "سجّل واكتشف"
+      },
+      "service2": {
+        "title": "دورات عبر الإنترنت",
+        "description": "تعلم أي شيء، في أي مكان، في أي وقت.",
+        "cta": "اكتشف جميع الدورات"
+      }
+    },
+    "programSearcher": {
+      "title": "ابحث عن برنامجك المثالي",
+      "description": "ابحث عن مئات البرامج المصممة لطموحاتك.",
+      "placeholder": "ابحث عن البرامج حسب الدولة أو المجال أو النوع...",
+      "buttonText": "ابحث عن البرامج"
+    },
+    "countries": {
+      "title": "فرص الدراسة حول العالم",
+      "subtitle": "استكشف البرامج في هذه الوجهات وغيرها"
+    },
+    "faq": {
+      "title": "الأسئلة الشائعة",
+      "subtitle": "ابحث عن إجابات للأسئلة الشائعة حول برامجنا وفصولنا."
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 // Bypass function for proxy entries that overlap with SPA routes.
 // When a browser navigates to e.g. /Programs/3 (Accept: text/html, GET),
@@ -39,6 +40,11 @@ const spaBypass = (req) => {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   server: {
     // Serve index.html for any path Vite doesn't recognise — the final safety net
     // for routes that are purely SPA-only (no backend overlap).
