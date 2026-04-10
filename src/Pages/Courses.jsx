@@ -277,11 +277,6 @@ export default function Courses() {
   );
 
   // Effects
-  // Initial load on mount
-  useEffect(() => {
-    fetchCourses(1, false, false);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   // Fetch enrolled courses for authenticated users
   useEffect(() => {
     if (!isAuth) return;
@@ -315,13 +310,10 @@ export default function Courses() {
     fetchEnrolled();
   }, [isAuth]);
 
-  // Effect for search, filters, and sorting changes - reset pagination and fetch
+  // Fetch courses whenever APPLIED filters/pagination/sort changes.
+  // FilterSidebar edits are local until user clicks Search/Apply.
   useEffect(() => {
-    // Always reset to page 1 when search/filters/sorting changes
-    setPagination((prev) => ({ ...prev, currentPage: 1 }));
-    // Fetch with page 1 after state updates
-    const timer = setTimeout(() => fetchCourses(1, false, true), 0);
-    return () => clearTimeout(timer);
+    fetchCourses(pagination.currentPage, false, true);
   }, [
     filters.search,
     filters.category,
@@ -333,16 +325,11 @@ export default function Courses() {
     filters.minPrice,
     filters.maxPrice,
     filters.language,
+    pagination.currentPage,
     sortBy,
     sortOrder,
-  ]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Effect for pagination changes only
-  useEffect(() => {
-    if (pagination.currentPage > 1) {
-      fetchCourses(pagination.currentPage, false, false);
-    }
-  }, [pagination.currentPage, fetchCourses]); // eslint-disable-line react-hooks/exhaustive-deps
+    fetchCourses,
+  ]);
 
   const applySearch = useCallback(() => {
     const nextSearch = (searchQuery || "").trim();
@@ -357,26 +344,30 @@ export default function Courses() {
     updateURLParams();
   }, [updateURLParams]);
 
-  // Event handlers
-  const handleFilterChange = (key, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  // Apply multiple filters at once (used by FilterSidebar Apply/Search button)
+  const handleApplyAllFilters = useCallback(
+    (newFilters) => {
+      setFilters(newFilters);
+      setSearchQuery(newFilters?.search || "");
+      setPagination((prev) => ({ ...prev, currentPage: 1 }));
+      setShowFilters(false);
 
-    // Reset to first page when filters change (except search)
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: 1,
-    }));
-  };
+      const params = new URLSearchParams();
+      Object.entries(newFilters || {}).forEach(([k, v]) => {
+        if (v && v !== "") params.set(k, v);
+      });
+      if (sortBy !== "createdAt") params.set("sortBy", sortBy);
+      if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
+      setSearchParams(params, { replace: true });
+    },
+    [setSearchParams, sortBy, sortOrder],
+  );
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({
       ...prev,
       currentPage: newPage,
     }));
-    fetchCourses(newPage, false, false);
   };
 
   const handleCourseClick = (courseId) => {
@@ -645,7 +636,7 @@ export default function Courses() {
           >
             <FilterSidebar
               filters={filters}
-              onFilterChange={handleFilterChange}
+              onApplyFilters={handleApplyAllFilters}
               categories={categories || []}
               specialties={specialties || []}
               onReset={resetFilters}

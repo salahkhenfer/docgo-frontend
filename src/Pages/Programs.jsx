@@ -64,6 +64,7 @@ export function Programs() {
     country: searchParams.get("country") || "",
     specialty: searchParams.get("specialty") || "",
     type: searchParams.get("type") || "",
+    university: searchParams.get("university") || "",
   });
 
   // Sync filters from URL parameters whenever they change
@@ -79,6 +80,7 @@ export function Programs() {
       country: searchParams.get("country") || "",
       specialty: searchParams.get("specialty") || "",
       type: searchParams.get("type") || "",
+      university: searchParams.get("university") || "",
     };
 
     setFilters(newFilters);
@@ -164,7 +166,8 @@ export function Programs() {
           filters.tags ||
           filters.country ||
           filters.specialty ||
-          filters.type;
+          filters.type ||
+          filters.university;
 
         const hasExactLocationFilters =
           !!filters.country || !!filters.specialty || !!filters.type;
@@ -190,6 +193,7 @@ export function Programs() {
             filters.maxPrice !== "" && filters.maxPrice !== null
               ? Number(filters.maxPrice)
               : null;
+          const priceType = String(filters.priceRange || "").toLowerCase();
 
           return list.filter((p) => {
             if (requiredTags.length > 0) {
@@ -208,6 +212,20 @@ export function Programs() {
                 programTagSet.has(String(tag).toLowerCase()),
               );
               if (!hasAllTags) return false;
+            }
+
+            // Price type filter (free/paid)
+            if (priceType === "free" || priceType === "paid") {
+              const rawPrice =
+                p.Price !== undefined
+                  ? Number(p.Price)
+                  : p.price !== undefined
+                    ? Number(p.price)
+                    : null;
+              const priceValue =
+                rawPrice === null || Number.isNaN(rawPrice) ? 0 : rawPrice;
+              if (priceType === "free" && priceValue !== 0) return false;
+              if (priceType === "paid" && priceValue <= 0) return false;
             }
 
             if (minPrice !== null && !Number.isNaN(minPrice)) {
@@ -245,6 +263,10 @@ export function Programs() {
           const params = {
             search: filters.search?.trim() || "",
             featured: filters.featured || "",
+            university: filters.university || "",
+            priceRange: filters.priceRange || "",
+            minPrice: filters.minPrice || "",
+            maxPrice: filters.maxPrice || "",
             ...(includeProgramType
               ? { programType: effectiveProgramType || "" }
               : {}),
@@ -520,6 +542,7 @@ export function Programs() {
     filters.country,
     filters.specialty,
     filters.type,
+    filters.university,
     pagination.currentPage,
     sortBy,
     sortOrder,
@@ -631,6 +654,7 @@ export function Programs() {
       country: "",
       specialty: "",
       type: "",
+      university: "",
     };
     setFilters(cleared);
     setSearchQuery("");
@@ -915,7 +939,8 @@ export function Programs() {
                     filters.featured ||
                     filters.country ||
                     filters.specialty ||
-                    filters.type ? (
+                    filters.type ||
+                    filters.university ? (
                       <>
                         {isSplitMode ? (
                           <>

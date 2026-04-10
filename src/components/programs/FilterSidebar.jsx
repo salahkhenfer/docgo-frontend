@@ -1,16 +1,26 @@
-import { Globe, Filter, RotateCcw, Star, Tag, Zap, Search } from "lucide-react";
+import {
+  Globe,
+  Filter,
+  RotateCcw,
+  Star,
+  Tag,
+  Zap,
+  Search,
+  GraduationCap,
+} from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { clientProgramsAPI } from "../../API/Programs";
 
 const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState({
     countries: [],
     specialtiesPerCountry: {},
     typesPerCountrySpecialty: {},
+    universities: [],
   });
 
   // Local form state (doesn't trigger URL changes)
@@ -21,14 +31,26 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
     const fetchAllFilters = async () => {
       setLoading(true);
       try {
-        const opts = await clientProgramsAPI.getRegisterOptions();
-        setOptions(opts);
+        const [opts, categories] = await Promise.all([
+          clientProgramsAPI.getRegisterOptions(),
+          clientProgramsAPI.getProgramCategories().catch(() => null),
+        ]);
+
+        const universities =
+          categories?.data?.universities ||
+          categories?.data?.data?.universities;
+
+        setOptions({
+          ...opts,
+          universities: Array.isArray(universities) ? universities : [],
+        });
       } catch (error) {
         console.error("Failed to fetch filter options:", error);
         setOptions({
           countries: [],
           specialtiesPerCountry: {},
           typesPerCountrySpecialty: {},
+          universities: [],
         });
       } finally {
         setLoading(false);
@@ -60,6 +82,35 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
     setLocalFilters(updated);
   };
 
+  const handlePriceTypeChange = (value) => {
+    // priceRange is used as a simple "type" selector: free | paid | "" (all)
+    const updated = { ...localFilters, priceRange: value };
+
+    // Keep the state unambiguous: switching type clears custom min/max.
+    if (value === "free" || value === "paid") {
+      updated.minPrice = "";
+      updated.maxPrice = "";
+    }
+
+    setLocalFilters(updated);
+  };
+
+  const handleMinPriceChange = (value) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      minPrice: value,
+      priceRange: "", // custom range overrides free/paid selector
+    }));
+  };
+
+  const handleMaxPriceChange = (value) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      maxPrice: value,
+      priceRange: "", // custom range overrides free/paid selector
+    }));
+  };
+
   // Apply filters to parent (triggered by search button)
   const handleApplyFilters = () => {
     // Pass all local filters to parent at once
@@ -80,6 +131,21 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
           `${localFilters.country}::${localFilters.specialty}`
         ] || []
       : [];
+
+  const universityLabelFor = (u) => {
+    if (!u) return "";
+    const lang = String(i18n.language || "").toLowerCase();
+    const isArabic = lang.startsWith("ar");
+    return isArabic ? u.university_ar || u.university : u.university;
+  };
+
+  const availableUniversities = Array.isArray(options.universities)
+    ? [...options.universities]
+        .filter((u) => u?.university)
+        .sort((a, b) =>
+          universityLabelFor(a).localeCompare(universityLabelFor(b)),
+        )
+    : [];
 
   const hasActiveFilters = Object.entries(localFilters).some(
     ([key, value]) => key !== "search" && value !== "",
@@ -128,6 +194,7 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
               country: "",
               specialty: "",
               type: "",
+              university: "",
             });
             onReset();
           }}
@@ -196,6 +263,123 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
             {options.countries.map((country, index) => (
               <option key={`country-${index}`} value={country}>
                 {country}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Price Filter */}
+        <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+          <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-2">
+            {t("Price", "Price") || "Price"}
+          </label>
+
+          {/* Price Type */}
+          <div className="space-y-1 mb-3">
+            {[
+              {
+                value: "",
+                label: t("All", "All") || "All",
+              },
+              {
+                value: "free",
+                label: t("Free Only", "Free Only") || "Free Only",
+              },
+              {
+                value: "paid",
+                label: t("Paid Only", "Paid Only") || "Paid Only",
+              },
+            ].map((opt) => (
+              <label
+                key={opt.value}
+                className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-1.5 rounded text-xs"
+              >
+                <input
+                  type="radio"
+                  name="priceType"
+                  value={opt.value}
+                  checked={(localFilters.priceRange || "") === opt.value}
+                  onChange={(e) => handlePriceTypeChange(e.target.value)}
+                  className="w-3 h-3 text-green-600"
+                />
+                <span>{opt.label}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* Min/Max */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[11px] text-green-700 mb-1 block">
+                {t("Min", "Min") || "Min"}
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder="0"
+                value={localFilters.minPrice || ""}
+                onChange={(e) => handleMinPriceChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleApplyFilters();
+                  }
+                }}
+                className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-green-700 mb-1 block">
+                {t("Max", "Max") || "Max"}
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                placeholder=""
+                value={localFilters.maxPrice || ""}
+                onChange={(e) => handleMaxPriceChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleApplyFilters();
+                  }
+                }}
+                className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white"
+              />
+            </div>
+          </div>
+
+          <p className="mt-2 text-[11px] text-gray-600">
+            {t(
+              "Tip: use Free/Paid, or set Min/Max for a custom range.",
+              "Tip: use Free/Paid, or set Min/Max for a custom range.",
+            ) || "Tip: use Free/Paid, or set Min/Max for a custom range."}
+          </p>
+        </div>
+
+        {/* University Filter */}
+        <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+          <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+            <GraduationCap className="w-3.5 h-3.5 text-emerald-700" />
+            {t("University", "University") || "University"}
+          </label>
+          <select
+            value={localFilters.university || ""}
+            onChange={(e) =>
+              handleLocalFilterChange("university", e.target.value)
+            }
+            disabled={loading}
+            className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            <option value="">
+              {loading
+                ? t("Loading...", "Loading...")
+                : t("All Universities", "All Universities") ||
+                  "All Universities"}
+            </option>
+            {availableUniversities.map((u, index) => (
+              <option key={`university-${index}`} value={u.university}>
+                {universityLabelFor(u)}
               </option>
             ))}
           </select>
@@ -291,6 +475,7 @@ FilterSidebar.propTypes = {
     country: PropTypes.string,
     specialty: PropTypes.string,
     type: PropTypes.string,
+    university: PropTypes.string,
   }).isRequired,
   onApplyFilters: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
