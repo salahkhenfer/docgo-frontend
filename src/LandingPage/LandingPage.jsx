@@ -8,7 +8,6 @@ import AboutUsSection from "./Layout/AboutUsSection";
 import CoursesSection from "./Layout/CoursesSection";
 import FrequentlyAskedQuestions from "./Layout/FrequentlyAskedQuestions";
 import HelpSection from "./Layout/Helpsection";
-import HereoSection from "./Layout/HereoSection";
 import AdvancedSearchHero from "./Layout/AdvancedSearchHero";
 import OurServices from "./Layout/OurServices";
 import WhatToDoSection from "./Layout/WhatToDoSection";
@@ -111,7 +110,7 @@ function LandingPage() {
                             </Reveal> */}
               {show("showProgramSearcher") && (
                 <Reveal>
-                  <AdvancedSearchHero />
+                  <AdvancedSearchHero cms={cms} />
                 </Reveal>
               )}
               {show("showStepsSection") && (

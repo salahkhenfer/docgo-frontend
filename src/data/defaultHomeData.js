@@ -16,6 +16,8 @@ export const defaultHomePageContent = {
   showAboutSection: true,
   showServicesSection: true,
   showStepsSection: true,
+  showProgramSearcher: true,
+  showAboutCountries: true,
 
   //  Hero
   heroBadge_en: "Explore Opportunities",
@@ -47,6 +49,35 @@ export const defaultHomePageContent = {
     "healthpathglobal est une plateforme dédiée à aider les étudiants à étudier à l'étranger. Nous vous connectons avec des universités partenaires, guidons votre processus de visa et soutenons votre parcours académique à chaque étape.",
   aboutDescription_ar:
     "healthpathglobal منصة مخصصة لمساعدة الطلاب على الدراسة في الخارج. نربطك بالجامعات الشريكة، ونرشدك خلال إجراءات التأشيرة، وندعم رحلتك الأكاديمية في كل خطوة.",
+
+  studyQuote_en: '"Studying abroad can change the way you see the world"',
+  studyQuote_fr:
+    '"Étudier à l\'étranger peut changer la façon dont vous voyez le monde"',
+  studyQuote_ar: '"الدراسة في الخارج يمكن أن تغير نظرتك للعالم"',
+
+  featuredCountries: [
+    { code: "fr", name_en: "France", name_fr: "France", name_ar: "فرنسا" },
+    { code: "ca", name_en: "Canada", name_fr: "Canada", name_ar: "كندا" },
+    {
+      code: "gb",
+      name_en: "England",
+      name_fr: "Angleterre",
+      name_ar: "إنجلترا",
+    },
+    {
+      code: "de",
+      name_en: "Germany",
+      name_fr: "Allemagne",
+      name_ar: "ألمانيا",
+    },
+    { code: "be", name_en: "Belgium", name_fr: "Belgique", name_ar: "بلجيكا" },
+    {
+      code: "us",
+      name_en: "United States",
+      name_fr: "États-Unis",
+      name_ar: "الولايات المتحدة",
+    },
+  ],
 
   //  Steps
   stepsTitle_en: "What To Do To Study Abroad?",
@@ -110,6 +141,26 @@ export const defaultHomePageContent = {
   service2Cta_en: "Discover All Courses",
   service2Cta_fr: "Découvrir tous les cours",
   service2Cta_ar: "اكتشف جميع الدورات",
+
+  // Program Search Engine
+  programSearcherTitle_en: "Find Your Perfect Program",
+  programSearcherTitle_fr: "Trouvez votre programme idéal",
+  programSearcherTitle_ar: "اعثر على برنامجك المثالي",
+
+  programSearcherDescription_en:
+    "Search for programs by country, specialty, and type. Discover exactly what you're looking for.",
+  programSearcherDescription_fr:
+    "Recherchez des programmes par pays, spécialité et type. Trouvez exactement ce que vous cherchez.",
+  programSearcherDescription_ar:
+    "ابحث عن البرامج حسب الدولة والتخصص والنوع. اكتشف بالضبط ما تبحث عنه.",
+
+  programSearcherPlaceholder_en: "Select Country",
+  programSearcherPlaceholder_fr: "Sélectionner un pays",
+  programSearcherPlaceholder_ar: "اختر الدولة",
+
+  programSearcherButtonText_en: "Search Programs",
+  programSearcherButtonText_fr: "Rechercher",
+  programSearcherButtonText_ar: "بحث",
 
   //  Filter study domains
   filterStudyDomains: [

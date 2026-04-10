@@ -220,22 +220,22 @@ export function ProgramCard({
       </div>
 
       {/* Program Info */}
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-5 flex flex-col flex-1 min-w-0">
         {/* University */}
         {universityText && (
-          <p className="text-blue-600 text-xs font-semibold uppercase tracking-wide mb-1">
+          <p className="text-blue-600 text-xs font-semibold uppercase tracking-wide mb-1 break-words">
             {universityText}
           </p>
         )}
 
         {/* Title */}
-        <h3 className="text-base font-semibold text-gray-900 mb-1.5 line-clamp-2 leading-snug">
+        <h3 className="text-base font-semibold text-gray-900 mb-1.5 line-clamp-2 leading-snug break-words">
           {title}
         </h3>
 
         {/* Description */}
         {shortDescription && (
-          <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed mb-3">
+          <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed mb-3 break-words">
             {shortDescription}
           </p>
         )}

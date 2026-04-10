@@ -44,6 +44,18 @@ body {
   overflow-x: hidden;
 }
 
+/* Prevent layout breakage from very long unbroken strings (titles, tags, etc.) */
+:where(h1, h2, h3, h4, h5, h6, p, span, a, li, td, th) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Ensure Tailwind line-clamp content can still wrap long tokens */
+:where([class*="line-clamp-"]) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 /* ==== loading  ===  */
 .loader {
   width: 20px;

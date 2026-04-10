@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, MapPin, Sparkles, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 import CountryFlagSelector from "../../components/CountryFlagSelector";
 import ProgramSearchModal from "./ProgramSearchModal";
 import apiClient from "../../utils/apiClient";
-import { getCountryCode } from "../../utils/countryCodeMap";
-import { useHomePageContent } from "../../hooks/useHomePageContent";
 
 /**
  * Advanced Professional Search Hero Section
  * Allows users to filter programs by Country -> Specialty -> Type
  * Content (title, description, button text) is managed via HomePageManagement dashboard
  */
-const AdvancedSearchHero = () => {
+const AdvancedSearchHero = ({ cms }) => {
   const { t, i18n } = useTranslation();
+  const lang = i18n.language?.split("-")[0] || "en";
+  const c = (key) => cms?.[`${key}_${lang}`] || cms?.[`${key}_en`] || null;
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState({
     countries: [],
     specialtiesPerCountry: {},
     typesPerCountrySpecialty: {},
   });
-
-  // Fetch managed homepage content
-  const { content: pageContent } = useHomePageContent();
 
   // Form state
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -125,19 +123,20 @@ const AdvancedSearchHero = () => {
     }
   };
 
-  // Get content from database or fallback to i18n
+  // Get content from CMS (/home) or fallback to i18n
   const programSearcherTitle =
-    pageContent?.programSearcher?.title ||
+    c("programSearcherTitle") ||
     t("findYourPerfectProgram", "Find Your Perfect Program");
   const programSearcherDescription =
-    pageContent?.programSearcher?.description ||
+    c("programSearcherDescription") ||
     t(
       "advancedSearchDesc",
       "Search for programs by country, specialty, and type. Discover exactly what you're looking for.",
     );
+  const programSearcherPlaceholder =
+    c("programSearcherPlaceholder") || t("selectCountry", "Select Country");
   const searchButtonText =
-    pageContent?.programSearcher?.buttonText ||
-    t("searchPrograms", "Search Programs");
+    c("programSearcherButtonText") || t("searchPrograms", "Search Programs");
 
   return (
     <>
@@ -195,10 +194,7 @@ const AdvancedSearchHero = () => {
                   value={selectedCountry}
                   onChange={setSelectedCountry}
                   countries={options.countries}
-                  placeholder={
-                    pageContent?.programSearcher?.placeholder ||
-                    t("selectCountry", "Select Country")
-                  }
+                  placeholder={programSearcherPlaceholder}
                   disabled={loading}
                 />
               </div>
@@ -345,6 +341,10 @@ const AdvancedSearchHero = () => {
       />
     </>
   );
+};
+
+AdvancedSearchHero.propTypes = {
+  cms: PropTypes.object,
 };
 
 export default AdvancedSearchHero;

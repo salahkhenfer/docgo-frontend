@@ -1,7 +1,5 @@
 import { useTranslation } from "react-i18next";
-import Flag from "../../components/Flag";
 import BackgroundImage from "../../assets/About us.png";
-import { useHomePageContent } from "../../hooks/useHomePageContent";
 
 function AboutUsSection({ cms }) {
   const { t, i18n } = useTranslation();
@@ -9,29 +7,27 @@ function AboutUsSection({ cms }) {
   const lang = i18n.language?.split("-")[0] || "en";
   const c = (key) => cms?.[`${key}_${lang}`] || cms?.[`${key}_en`] || null;
 
-  // Fetch managed homepage content including featured countries and quote
-  const { content: pageContent } = useHomePageContent();
-
-  // Check if About section should be visible
-  const isVisible = pageContent?.visibility?.aboutSection !== false;
+  const isVisible = cms?.showAboutSection !== false;
 
   if (!isVisible) {
     return null;
   }
 
-  // Get featured countries from the countries section
-  const featuredCountries = pageContent?.countries?.list || [];
+  const showCountries = cms?.showAboutCountries !== false;
+  const featuredCountries = Array.isArray(cms?.featuredCountries)
+    ? cms.featuredCountries
+    : [];
 
   // Get managed about section content with fallbacks to i18n
-  const aboutTitle = pageContent?.about?.title || t("AboutUs", "About Us");
+  const aboutTitle = c("aboutTitle") || t("AboutUs", "About Us");
   const aboutDescription =
-    pageContent?.about?.description ||
+    c("aboutDescription") ||
     t(
       "AboutUsDescription",
       "We empower students to access study abroad opportunities and professional growth. We offer personalized guidance, online courses, and a supportive community to help you achieve your academic and professional goals. Unlock your potential with us!",
     );
   const studyQuote =
-    pageContent?.about?.quote ||
+    c("studyQuote") ||
     t(
       "StudyAbroadQuote",
       '"Studying abroad can change the way you see the world"',
@@ -73,24 +69,25 @@ function AboutUsSection({ cms }) {
             </p>
 
             <div className="grid grid-cols-2 place-items-center sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 md:gap-4 lg:gap-6 py-6 md:py-8">
-              {flags.map((flag) => (
-                <div
-                  key={flag.code}
-                  className="flex flex-col items-center gap-3"
-                >
-                  <img
-                    src={`https://flagcdn.com/256x192/${flag.code.toLowerCase()}.png`}
-                    alt={flag.name}
-                    className="w-16 h-12 md:w-20 md:h-14 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                    onError={(e) => {
-                      e.target.src = `https://via.placeholder.com/80x60?text=${flag.code}`;
-                    }}
-                  />
-                  <p className="text-xs md:text-sm text-center text-gray-700 font-medium">
-                    {flag.name}
-                  </p>
-                </div>
-              ))}
+              {showCountries &&
+                flags.map((flag) => (
+                  <div
+                    key={flag.code}
+                    className="flex flex-col items-center gap-3"
+                  >
+                    <img
+                      src={`https://flagcdn.com/256x192/${flag.code.toLowerCase()}.png`}
+                      alt={flag.name}
+                      className="w-16 h-12 md:w-20 md:h-14 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                      onError={(e) => {
+                        e.target.src = `https://via.placeholder.com/80x60?text=${flag.code}`;
+                      }}
+                    />
+                    <p className="text-xs md:text-sm text-center text-gray-700 font-medium">
+                      {flag.name}
+                    </p>
+                  </div>
+                ))}
             </div>
 
             <div

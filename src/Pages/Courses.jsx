@@ -9,7 +9,7 @@ import {
   Star,
 } from "lucide-react";
 import PropTypes from "prop-types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getCourses } from "../API/Courses";
@@ -98,16 +98,10 @@ export default function Courses() {
     categories: 0,
   });
 
-  // Debouncing state
+  // Search input (applied only when user clicks Search / presses Enter)
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || "",
   );
-  const [debouncedSearch, setDebouncedSearch] = useState(
-    searchParams.get("search") || "",
-  );
-
-  // Timeout ref for debouncing
-  const timeoutRef = useRef(null);
 
   // Filter and search state
   const [filters, setFilters] = useState({
@@ -156,7 +150,6 @@ export default function Courses() {
         const params = {
           page,
           limit: pagination.limit,
-          search: debouncedSearch,
           ...filters,
           sortBy,
           sortOrder,
@@ -221,7 +214,7 @@ export default function Courses() {
         setSearchLoading(false);
       }
     },
-    [debouncedSearch, filters, pagination.limit, sortBy, sortOrder, t],
+    [filters, pagination.limit, sortBy, sortOrder, t],
   );
 
   // Extract categories and specialties from courses data
@@ -322,15 +315,6 @@ export default function Courses() {
     fetchEnrolled();
   }, [isAuth]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
   // Effect for search, filters, and sorting changes - reset pagination and fetch
   useEffect(() => {
     // Always reset to page 1 when search/filters/sorting changes
@@ -339,7 +323,7 @@ export default function Courses() {
     const timer = setTimeout(() => fetchCourses(1, false, true), 0);
     return () => clearTimeout(timer);
   }, [
-    debouncedSearch,
+    filters.search,
     filters.category,
     filters.specialty,
     filters.status,
@@ -360,33 +344,14 @@ export default function Courses() {
     }
   }, [pagination.currentPage, fetchCourses]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Handle search with debouncing
-  const handleSearch = useCallback((value) => {
-    setSearchQuery(value);
-    setSearchLoading(true);
-
-    // Clear existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    // Set new timeout for debouncing
-    timeoutRef.current = setTimeout(() => {
-      setDebouncedSearch(value);
-      setSearchLoading(false);
-    }, 500);
-  }, []);
-
-  // Handle enter key press for immediate search
-  const handleSearchKeyPress = (e) => {
-    if (e.key === "Enter") {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setDebouncedSearch(searchQuery);
-      setSearchLoading(false);
-    }
-  };
+  const applySearch = useCallback(() => {
+    const nextSearch = (searchQuery || "").trim();
+    setFilters((prev) => ({
+      ...prev,
+      search: nextSearch,
+    }));
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  }, [searchQuery]);
 
   useEffect(() => {
     updateURLParams();
@@ -398,12 +363,6 @@ export default function Courses() {
       ...prev,
       [key]: value,
     }));
-
-    // For search, use debounced handler
-    if (key === "search") {
-      handleSearch(value);
-      return;
-    }
 
     // Reset to first page when filters change (except search)
     setPagination((prev) => ({
@@ -434,10 +393,6 @@ export default function Courses() {
   };
 
   const resetFilters = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
     const resetFilters = {
       search: "",
       category: "",
@@ -453,7 +408,6 @@ export default function Courses() {
 
     setFilters(resetFilters);
     setSearchQuery("");
-    setDebouncedSearch("");
     setSearchLoading(false);
     setPagination((prev) => ({
       ...prev,
@@ -571,26 +525,31 @@ export default function Courses() {
                 "Search courses..."
               }
               value={searchQuery}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
-              onKeyPress={handleSearchKeyPress}
-              className="w-full pl-12 pr-12 py-4 text-lg border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  applySearch();
+                }
+              }}
+              className="w-full pl-12 pr-24 py-4 text-lg border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
             />
-            {searchLoading && (
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
-                <span className="text-sm text-gray-500">
-                  {t("Searching...", "Searching...") || "Searching..."}
-                </span>
-              </div>
-            )}
-            {filters.search && !searchLoading && (
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
-                  {t("Press Enter or wait...", "Press Enter or wait...") ||
-                    "Press Enter or wait..."}
-                </span>
-              </div>
-            )}
+
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <button
+                type="button"
+                onClick={applySearch}
+                disabled={searchLoading}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
+              >
+                {searchLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                ) : (
+                  <Search className="w-4 h-4" />
+                )}
+                <span>{t("Search", "Search") || "Search"}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

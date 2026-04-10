@@ -31,7 +31,8 @@ export function Programs() {
 
   // State management
   const [programs, setPrograms] = useState([]);
-  const [allPrograms, setAllPrograms] = useState([]); // Store all programs for filtering
+  const [exactPrograms, setExactPrograms] = useState([]);
+  const [otherPrograms, setOtherPrograms] = useState([]);
   const [enrolledProgramIds, setEnrolledProgramIds] = useState(new Set());
   const [enrolledPrograms, setEnrolledPrograms] = useState([]);
   const [enrolledProgramsLoading, setEnrolledProgramsLoading] = useState(false);
@@ -46,16 +47,10 @@ export function Programs() {
     featured: 0,
     universities: 0,
   });
-  // Debouncing state
+  // Search input (applied only when user clicks Search / presses Enter)
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || "",
   );
-  const [debouncedSearch, setDebouncedSearch] = useState(
-    searchParams.get("search") || "",
-  );
-
-  // Timeout ref for debouncing
-  const timeoutRef = useRef(null);
 
   // Filter and search state
   const [filters, setFilters] = useState({
@@ -91,7 +86,6 @@ export function Programs() {
     // Also sync search query
     const urlSearch = searchParams.get("search") || "";
     setSearchQuery(urlSearch);
-    setDebouncedSearch(urlSearch);
 
     // Sync pagination
     const page = parseInt(searchParams.get("page")) || 1;
@@ -123,6 +117,22 @@ export function Programs() {
     searchParams.get("sortOrder") || "desc",
   );
 
+  // Extract filter options from program data
+  const extractFiltersFromPrograms = useCallback((programsData) => {
+    if (!Array.isArray(programsData) || programsData.length === 0) return;
+
+    // Update stats based on program data
+    const uniqueUniversities = [
+      ...new Set(
+        programsData.map((p) => p.university || p.University).filter(Boolean),
+      ),
+    ];
+
+    setStats((prev) => ({
+      ...prev,
+      universities: uniqueUniversities.length,
+    }));
+  }, []);
   // UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showSortMenu, setShowSortMenu] = useState(false);
@@ -144,8 +154,7 @@ export function Programs() {
           setLoading(false);
         }
 
-        // Determine if we have any active filters or search
-        const hasSearch = debouncedSearch?.trim();
+        const hasSearch = filters.search?.trim();
         const hasFilters =
           filters.programType ||
           filters.featured ||
@@ -157,56 +166,187 @@ export function Programs() {
           filters.specialty ||
           filters.type;
 
-        let response;
+        const hasExactLocationFilters =
+          !!filters.country || !!filters.specialty || !!filters.type;
 
-        if (hasSearch || hasFilters) {
-          // Use search endpoint with all parameters
-          const searchParams = {
-            search: debouncedSearch?.trim() || "",
-            programType: filters.programType || "",
+        const effectiveProgramType = filters.type || filters.programType || "";
+
+        const normalizeTagsInput = (value) => {
+          if (!value) return [];
+          return String(value)
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+        };
+
+        const applyClientFilters = (list) => {
+          if (!Array.isArray(list)) return [];
+          const requiredTags = normalizeTagsInput(filters.tags);
+          const minPrice =
+            filters.minPrice !== "" && filters.minPrice !== null
+              ? Number(filters.minPrice)
+              : null;
+          const maxPrice =
+            filters.maxPrice !== "" && filters.maxPrice !== null
+              ? Number(filters.maxPrice)
+              : null;
+
+          return list.filter((p) => {
+            if (requiredTags.length > 0) {
+              const programTags = Array.isArray(p.tags)
+                ? p.tags
+                : typeof p.tags === "string"
+                  ? p.tags
+                      .split(",")
+                      .map((t) => t.trim())
+                      .filter(Boolean)
+                  : [];
+              const programTagSet = new Set(
+                programTags.map((t) => String(t).toLowerCase()),
+              );
+              const hasAllTags = requiredTags.every((tag) =>
+                programTagSet.has(String(tag).toLowerCase()),
+              );
+              if (!hasAllTags) return false;
+            }
+
+            if (minPrice !== null && !Number.isNaN(minPrice)) {
+              const price =
+                p.Price !== undefined
+                  ? Number(p.Price)
+                  : p.price !== undefined
+                    ? Number(p.price)
+                    : null;
+              if (price !== null && !Number.isNaN(price) && price < minPrice)
+                return false;
+            }
+
+            if (maxPrice !== null && !Number.isNaN(maxPrice)) {
+              const price =
+                p.Price !== undefined
+                  ? Number(p.Price)
+                  : p.price !== undefined
+                    ? Number(p.price)
+                    : null;
+              if (price !== null && !Number.isNaN(price) && price > maxPrice)
+                return false;
+            }
+
+            return true;
+          });
+        };
+
+        const buildBaseParams = ({
+          page,
+          limit,
+          includeLocationFilters,
+          includeProgramType,
+        }) => {
+          const params = {
+            search: filters.search?.trim() || "",
             featured: filters.featured || "",
-            priceRange: filters.priceRange || "",
-            minPrice: filters.minPrice || "",
-            maxPrice: filters.maxPrice || "",
-            tags: filters.tags || "",
-            country: filters.country || "",
-            specialty: filters.specialty || "",
-            type: filters.type || "",
-            page,
-            limit: pagination.limit,
+            ...(includeProgramType
+              ? { programType: effectiveProgramType || "" }
+              : {}),
             sortBy,
             sortOrder,
-            includeUnpublished: true, // Show unpublished programs (for testing/admin)
+            page,
+            limit,
+            includeUnpublished: "true",
+            status: "all",
           };
 
+          if (includeLocationFilters) {
+            if (filters.country) params.programCountry = filters.country;
+            if (filters.specialty) params.programSpecialty = filters.specialty;
+          }
+
           // Remove empty parameters
-          Object.keys(searchParams).forEach((key) => {
-            if (!searchParams[key] && searchParams[key] !== 0) {
-              delete searchParams[key];
+          Object.keys(params).forEach((key) => {
+            if (params[key] === "" || params[key] === undefined) {
+              delete params[key];
             }
           });
 
-          response = await clientProgramsAPI.searchPrograms(searchParams);
-        } else {
-          // Use regular getPrograms endpoint for all programs
-          const getParams = {
+          return params;
+        };
+
+        let response;
+
+        if (hasExactLocationFilters) {
+          const limitAll = 1000;
+          const [exactResponse, broadResponse] = await Promise.all([
+            clientProgramsAPI.getPrograms(
+              buildBaseParams({
+                page: 1,
+                limit: limitAll,
+                includeLocationFilters: true,
+                includeProgramType: true,
+              }),
+            ),
+            clientProgramsAPI.getPrograms(
+              buildBaseParams({
+                page: 1,
+                limit: limitAll,
+                includeLocationFilters: false,
+                includeProgramType: false,
+              }),
+            ),
+          ]);
+
+          const exactProgramsData =
+            exactResponse?.programs ||
+            exactResponse?.data?.programs ||
+            exactResponse?.data?.data?.programs ||
+            [];
+          const broadProgramsData =
+            broadResponse?.programs ||
+            broadResponse?.data?.programs ||
+            broadResponse?.data?.data?.programs ||
+            [];
+
+          const exactFiltered = applyClientFilters(exactProgramsData);
+          const broadFiltered = applyClientFilters(broadProgramsData);
+
+          const exactIds = new Set(exactFiltered.map((p) => p.id));
+          const others = broadFiltered.filter((p) => !exactIds.has(p.id));
+
+          setExactPrograms(exactFiltered);
+          setOtherPrograms(others);
+          setPrograms([]);
+          setShowingFeatured(false);
+
+          setPagination((prev) => ({
+            ...prev,
+            currentPage: 1,
+            totalPages: 1,
+            totalPrograms: exactFiltered.length + others.length,
+          }));
+
+          // Use broad response stats if available
+          if (broadResponse?.stats) {
+            setStats((prevStats) => ({
+              total: broadResponse.stats.total || 0,
+              published: broadResponse.stats.published || 0,
+              featured: broadResponse.stats.featured || 0,
+              universities:
+                broadResponse.stats.universities || prevStats.universities || 0,
+            }));
+          }
+
+          setError(null);
+          return;
+        }
+
+        // Default (non split-mode): use the main Programs endpoint (search endpoint is inconsistent)
+        response = await clientProgramsAPI.getPrograms(
+          buildBaseParams({
             page,
             limit: pagination.limit,
-            sortBy,
-            sortOrder,
-            featured: filters.featured || "",
-            programType: filters.programType || "",
-            priceRange: filters.priceRange || "",
-            minPrice: filters.minPrice || "",
-            maxPrice: filters.maxPrice || "",
-            tags: filters.tags || "",
-            country: filters.country || "",
-            specialty: filters.specialty || "",
-            type: filters.type || "",
-            includeUnpublished: true, // Show unpublished programs (for testing/admin)
-          };
-          response = await clientProgramsAPI.getPrograms(getParams);
-        }
+            includeLocationFilters: true,
+            includeProgramType: true,
+          }),
+        );
 
         // Parse programs from response
         const programsData =
@@ -216,8 +356,7 @@ export function Programs() {
           (Array.isArray(response?.data) ? response.data : []) ||
           (Array.isArray(response) ? response : []);
 
-        // No additional client-side filtering needed - backend handles it
-        const filteredPrograms = programsData;
+        const filteredPrograms = applyClientFilters(programsData);
 
         // If first page and no search/filters, get featured programs too
         if (page === 1 && !hasSearch && !hasFilters) {
@@ -240,20 +379,24 @@ export function Programs() {
               ...nonFeaturedPrograms,
             ];
 
-            setAllPrograms(combinedPrograms);
             setPrograms(combinedPrograms);
+            setExactPrograms([]);
+            setOtherPrograms([]);
             setShowingFeatured(true);
             extractFiltersFromPrograms(combinedPrograms);
-          } catch (featuredError) {
+          } catch {
             // Fallback to regular programs if featured fetch fails
-            setAllPrograms(filteredPrograms);
             setPrograms(filteredPrograms);
+            setExactPrograms([]);
+            setOtherPrograms([]);
             setShowingFeatured(false);
             extractFiltersFromPrograms(filteredPrograms);
           }
         } else {
           // When filters are active, only update displayed programs
           setPrograms(filteredPrograms);
+          setExactPrograms([]);
+          setOtherPrograms([]);
           setShowingFeatured(false);
         }
 
@@ -276,42 +419,26 @@ export function Programs() {
         }
 
         setError(null);
-      } catch (error) {
+      } catch {
         setError("Failed to load programs. Please try again.");
         toast.error(t("Failed to load programs", "Failed to load programs"));
         setPrograms([]);
+        setExactPrograms([]);
+        setOtherPrograms([]);
       } finally {
         setLoading(false);
         setSearchLoading(false);
       }
     },
     [
-      debouncedSearch,
       filters,
       pagination.limit,
       sortBy,
       sortOrder,
       t,
-      enrolledProgramIds,
+      extractFiltersFromPrograms,
     ],
   );
-
-  // Extract filter options from program data
-  const extractFiltersFromPrograms = useCallback((programsData) => {
-    if (!Array.isArray(programsData) || programsData.length === 0) return;
-
-    // Update stats based on program data
-    const uniqueUniversities = [
-      ...new Set(
-        programsData.map((p) => p.university || p.University).filter(Boolean),
-      ),
-    ];
-
-    setStats((prev) => ({
-      ...prev,
-      universities: uniqueUniversities.length,
-    }));
-  }, []);
 
   // Fetch categories and universities (no longer needed but kept for reference)
   // const fetchFiltersData = async () => {
@@ -364,7 +491,8 @@ export function Programs() {
           .map((app) => app.Program || null)
           .filter((p) => p && p.id);
         setEnrolledPrograms(programs);
-      } catch (error) {
+      } catch {
+        // ignore (non-blocking)
       } finally {
         setEnrolledProgramsLoading(false);
       }
@@ -382,7 +510,7 @@ export function Programs() {
   useEffect(() => {
     fetchPrograms(pagination.currentPage, false, true);
   }, [
-    debouncedSearch,
+    filters.search,
     filters.featured,
     filters.programType,
     filters.priceRange,
@@ -398,41 +526,6 @@ export function Programs() {
     fetchPrograms,
   ]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Handle search with debouncing
-  const handleSearch = useCallback((value) => {
-    setSearchQuery(value);
-
-    // Clear existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    // Set new timeout for debouncing
-    timeoutRef.current = setTimeout(() => {
-      setDebouncedSearch(value);
-    }, 500); // 500ms delay like in courses
-  }, []);
-
-  // Handle enter key press for immediate search
-  const handleSearchKeyPress = (e) => {
-    if (e.key === "Enter") {
-      // Clear any pending timeout and search immediately
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setDebouncedSearch(searchQuery);
-    }
-  };
-
   useEffect(() => {
     // This is for filter changes - use replace: true to preserve scroll
     // Only update URL when filters change from user interaction, not from URL sync
@@ -442,31 +535,35 @@ export function Programs() {
   }, [filters, updateURLParams]);
 
   // Event handlers
-  const handleFilterChange = (key, value) => {
-    const newFilters = {
-      ...filters,
-      [key]: value,
-    };
-    setFilters(newFilters);
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: 1,
-    }));
+  const handleFilterChange = useCallback(
+    (key, value) => {
+      const newFilters = {
+        ...filtersRef.current,
+        [key]: value,
+      };
 
-    // Update URL params immediately
-    const params = new URLSearchParams();
-    Object.entries(newFilters).forEach(([k, v]) => {
-      if (v) params.set(k, v);
-    });
-    if (sortBy !== "createdAt") params.set("sortBy", sortBy);
-    if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
-    setSearchParams(params, { replace: true });
+      setFilters(newFilters);
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
 
-    // For search, use debounced handler
-    if (key === "search") {
-      handleSearch(value);
-    }
-  };
+      // Update URL params immediately
+      const params = new URLSearchParams();
+      Object.entries(newFilters).forEach(([k, v]) => {
+        if (v) params.set(k, v);
+      });
+      if (sortBy !== "createdAt") params.set("sortBy", sortBy);
+      if (sortOrder !== "desc") params.set("sortOrder", sortOrder);
+      setSearchParams(params, { replace: true });
+    },
+    [sortBy, sortOrder, setSearchParams],
+  );
+
+  const applySearch = useCallback(() => {
+    const trimmed = (searchQuery || "").trim();
+    handleFilterChange("search", trimmed);
+  }, [searchQuery, handleFilterChange]);
 
   // Handle applying all filters at once from FilterSidebar
   const handleApplyAllFilters = (newFilters) => {
@@ -475,6 +572,9 @@ export function Programs() {
       ...prev,
       currentPage: 1,
     }));
+
+    // Close filters on mobile after applying
+    setShowFilters(false);
 
     // Update URL params with all new filters
     const params = new URLSearchParams();
@@ -520,11 +620,6 @@ export function Programs() {
   };
 
   const resetFilters = () => {
-    // Clear any pending search timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
     const cleared = {
       search: "",
       featured: "",
@@ -539,7 +634,6 @@ export function Programs() {
     };
     setFilters(cleared);
     setSearchQuery("");
-    setDebouncedSearch("");
     setPagination((prev) => ({
       ...prev,
       currentPage: 1,
@@ -596,7 +690,13 @@ export function Programs() {
     },
   ];
 
-  if (loading && programs.length === 0) {
+  const isSplitMode =
+    !!filters.country || !!filters.specialty || !!filters.type;
+  const totalDisplayedCount = isSplitMode
+    ? exactPrograms.length + otherPrograms.length
+    : programs.length;
+
+  if (loading && totalDisplayedCount === 0) {
     return (
       <div className="min-h-screen flex items-col justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 ">
         <LoadingSpinner />
@@ -639,26 +739,33 @@ export function Programs() {
                 "Search programs..."
               }
               value={searchQuery}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
-              onKeyPress={handleSearchKeyPress}
-              className="w-full pl-10 sm:pl-12 pr-12 py-3 sm:py-4 text-base sm:text-lg border border-gray-200 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  applySearch();
+                }
+              }}
+              className="w-full pl-10 sm:pl-12 pr-24 sm:pr-28 py-3 sm:py-4 text-base sm:text-lg border border-gray-200 rounded-xl sm:rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
             />
-            {searchLoading && (
-              <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1 sm:gap-2">
-                <div className="animate-spin rounded-full h-4 sm:h-5 w-4 sm:w-5 border-b-2 border-blue-500"></div>
-                <span className="text-xs sm:text-sm text-gray-500 hidden sm:inline">
-                  {t("Searching...", "Searching...") || "Searching..."}
+
+            <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
+              <button
+                type="button"
+                onClick={applySearch}
+                disabled={searchLoading}
+                className="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
+              >
+                {searchLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                ) : (
+                  <Search className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">
+                  {t("Search", "Search") || "Search"}
                 </span>
-              </div>
-            )}
-            {filters.search && !searchLoading && (
-              <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
-                <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full hidden sm:inline-block">
-                  {t("Press Enter or wait...", "Press Enter or wait...") ||
-                    "Press Enter or wait..."}
-                </span>
-              </div>
-            )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -803,22 +910,36 @@ export function Programs() {
                     )}
                   </div>
                   <p className="text-gray-600 text-sm sm:text-base">
-                    {debouncedSearch ||
+                    {filters.search ||
                     filters.programType ||
                     filters.featured ||
                     filters.country ||
                     filters.specialty ||
                     filters.type ? (
                       <>
-                        {programs.length} {t("program", "Program") || "program"}
-                        {programs.length !== 1 ? "s" : ""}{" "}
+                        {isSplitMode ? (
+                          <>
+                            {exactPrograms.length}{" "}
+                            {t("program", "Program") || "program"}
+                            {exactPrograms.length !== 1 ? "s" : ""} exact
+                            {otherPrograms.length > 0 && (
+                              <> • {otherPrograms.length} other</>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {programs.length}{" "}
+                            {t("program", "Program") || "program"}
+                            {programs.length !== 1 ? "s" : ""}
+                          </>
+                        )}{" "}
                         {t("found", "found") || "found"}
-                        {debouncedSearch && (
+                        {filters.search && (
                           <span className="ml-1">
                             {t("for", "for") || "for"}{" "}
                             <span className="font-medium text-gray-800">
                               &ldquo;
-                              {debouncedSearch}
+                              {filters.search}
                               &rdquo;
                             </span>
                           </span>
@@ -921,20 +1042,23 @@ export function Programs() {
                   {t("Try Again", "Try Again") || "Try Again"}
                 </button>
               </div>
-            ) : programs.length === 0 ? (
+            ) : totalDisplayedCount === 0 ? (
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-6 sm:p-12 text-center">
                 <div className="w-16 sm:w-24 h-16 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                   <Search className="w-8 sm:w-12 h-8 sm:h-12 text-gray-400" />
                 </div>
 
                 {/* Dynamic message based on search and filters */}
-                {debouncedSearch ||
-                filters.category ||
-                filters.university ||
+                {filters.search ||
                 filters.programType ||
                 filters.featured ||
-                filters.location ||
-                filters.isRemote ? (
+                filters.priceRange ||
+                filters.minPrice ||
+                filters.maxPrice ||
+                filters.tags ||
+                filters.country ||
+                filters.specialty ||
+                filters.type ? (
                   <div>
                     <h3 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
                       {t(
@@ -943,13 +1067,13 @@ export function Programs() {
                       ) || "No programs match your criteria"}
                     </h3>
                     <div className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                      {debouncedSearch && (
+                      {filters.search && (
                         <p className="mb-2">
                           {t("No results found for", "No results found for") ||
                             "No results found for"}
                           :{" "}
                           <span className="font-semibold text-gray-800">
-                            &ldquo;{debouncedSearch}
+                            &ldquo;{filters.search}
                             &rdquo;
                           </span>
                         </p>
@@ -1002,7 +1126,86 @@ export function Programs() {
                   </div>
                 )}
 
-                {viewMode === "grid" ? (
+                {isSplitMode ? (
+                  <div className="space-y-8">
+                    {/* Exact matches section */}
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                          {t("Exact Matches", "Exact Matches") ||
+                            "Exact Matches"}
+                        </h3>
+                        <span className="text-xs sm:text-sm text-gray-600">
+                          {exactPrograms.length}
+                        </span>
+                      </div>
+
+                      {exactPrograms.length === 0 ? (
+                        <div className="text-sm text-gray-600">
+                          {t(
+                            "No exact matches for selected filters",
+                            "No exact matches for selected filters",
+                          )}
+                        </div>
+                      ) : viewMode === "grid" ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+                          {exactPrograms.map((program) => (
+                            <ProgramCard
+                              key={program.id}
+                              program={program}
+                              onClick={() => handleProgramClick(program.id)}
+                              language={i18n.language}
+                              isEnrolled={enrolledProgramIds.has(program.id)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <ProgramsList
+                          programs={exactPrograms}
+                          onProgramClick={handleProgramClick}
+                          language={i18n.language}
+                          enrolledProgramIds={enrolledProgramIds}
+                        />
+                      )}
+                    </div>
+
+                    {/* Other results section */}
+                    {otherPrograms.length > 0 && (
+                      <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                            {t("Other Results", "Other Results") ||
+                              "Other Results"}
+                          </h3>
+                          <span className="text-xs sm:text-sm text-gray-600">
+                            {otherPrograms.length}
+                          </span>
+                        </div>
+
+                        {viewMode === "grid" ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+                            {otherPrograms.map((program) => (
+                              <ProgramCard
+                                key={program.id}
+                                program={program}
+                                onClick={() => handleProgramClick(program.id)}
+                                language={i18n.language}
+                                isEnrolled={enrolledProgramIds.has(program.id)}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <ProgramsList
+                            programs={otherPrograms}
+                            onProgramClick={handleProgramClick}
+                            language={i18n.language}
+                            enrolledProgramIds={enrolledProgramIds}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : viewMode === "grid" ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                     {programs.map((program) => (
                       <ProgramCard
@@ -1024,7 +1227,7 @@ export function Programs() {
                 )}
 
                 {/* Pagination */}
-                {pagination.totalPages > 1 && (
+                {!isSplitMode && pagination.totalPages > 1 && (
                   <Pagination
                     currentPage={pagination.currentPage}
                     totalPages={pagination.totalPages}
