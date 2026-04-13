@@ -364,15 +364,6 @@ const UserApplications = () => {
                 </span>
               </div>
             )}
-            {type === "program" && application.ScholarshipAmount && (
-              <div className="flex items-center">
-                <CurrencyDollarIcon className="h-4 w-4 mr-2 text-gray-400" />
-                <span>
-                  {t("applications.scholarshipAmount", "Scholarship")}: $
-                  {application.ScholarshipAmount}
-                </span>
-              </div>
-            )}
           </div>
 
           {/* Application Message */}
@@ -451,13 +442,21 @@ const UserApplications = () => {
                     to={
                       type === "program"
                         ? `/Programs/${application.ProgramId}`
-                        : `/Courses/${application.CourseId}/watch`
+                        : String(
+                              application.Course?.uploadType || "",
+                            ).toLowerCase() === "zip"
+                          ? `/Courses/${application.CourseId}/explore`
+                          : `/Courses/${application.CourseId}/watch`
                     }
                     className="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
                   >
                     {type === "program"
                       ? t("applications.viewProgram", "View Program")
-                      : t("applications.startCourse", "Start Course")}
+                      : String(
+                            application.Course?.uploadType || "",
+                          ).toLowerCase() === "zip"
+                        ? t("exploreCourse", "Explore the course")
+                        : t("applications.startCourse", "Start Course")}
                   </Link>
                 )}
             </div>

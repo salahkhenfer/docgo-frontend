@@ -178,7 +178,9 @@ const NavBarDropDown = ({
               onClick={() => setIsDropdownOpen(false)}
             >
               <div className="absolute left-0 top-0 h-full w-1 bg-[#0086C9] scale-y-0 group-hover:scale-y-100 transition-transform duration-200" />
-              <span className="ml-2">{t("MyPrograms", "My Programs")}</span>
+              <span className="ml-2">
+                {t("MyPrograms", "Mes études à l’étranger")}
+              </span>
             </Link>
 
             <Link

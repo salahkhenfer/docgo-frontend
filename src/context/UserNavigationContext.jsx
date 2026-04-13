@@ -23,8 +23,13 @@ export const UserNavigationProvider = ({ children }) => {
     () => ({
       "/": "healthpathglobal - Home",
       "/home": "healthpathglobal - Home",
-      "/programs": "healthpathglobal - Explore Programs",
-      "/courses": "healthpathglobal - Browse Courses",
+      "/programs": "healthpathglobal - Explorer les études à l’étranger",
+      "/courses": "healthpathglobal - Parcourir l'apprentissage",
+      "/other-services": "healthpathglobal - Services",
+      "/other-services/cv": "healthpathglobal - CV Service",
+      "/other-services/internships": "healthpathglobal - Internships",
+      "/other-services/my-applications":
+        "healthpathglobal - My Service Applications",
       "/faq": "healthpathglobal - Frequently Asked Questions",
       "/favorites": "healthpathglobal - My Favorites",
       "/notifications": "healthpathglobal - Notifications",
@@ -34,7 +39,11 @@ export const UserNavigationProvider = ({ children }) => {
       "/profile/edit": "healthpathglobal - Edit Profile",
       "/dashboard": "healthpathglobal - Dashboard",
       "/dashboard/my-learning": "healthpathglobal - My Learning",
-      "/dashboard/my-programs": "healthpathglobal - My Programs",
+      "/dashboard/my-programs": "healthpathglobal - Mes études à l’étranger",
+      "/dashboard/cv": "healthpathglobal - CV Service",
+      "/dashboard/internships": "healthpathglobal - Internships",
+      "/dashboard/service-applications":
+        "healthpathglobal - My Service Applications",
     }),
     [],
   );
@@ -85,7 +94,15 @@ export const UserNavigationProvider = ({ children }) => {
 
     // Handle program details
     if (currentPath.startsWith("/programs/")) {
-      const title = "healthpathglobal - Program Details";
+      const title = "healthpathglobal - Détails des études à l’étranger";
+      setPageTitle(title);
+      document.title = title;
+      return;
+    }
+
+    // Handle dashboard internship details
+    if (currentPath.startsWith("/dashboard/internships/")) {
+      const title = "healthpathglobal - Internship Details";
       setPageTitle(title);
       document.title = title;
       return;
@@ -124,7 +141,7 @@ export const UserNavigationProvider = ({ children }) => {
         notifications: "healthpathglobal - Dashboard - Notifications",
         settings: "healthpathglobal - Dashboard - Settings",
         "my-learning": "healthpathglobal - My Learning",
-        "my-programs": "healthpathglobal - My Programs",
+        "my-programs": "healthpathglobal - Mes études à l’étranger",
       };
       const title =
         dashboardTitles[pathSegment] || "healthpathglobal - Dashboard";
@@ -148,6 +165,8 @@ export const UserNavigationProvider = ({ children }) => {
       currentPath === "/dashboard"
     ) {
       return "home";
+    } else if (currentPath.startsWith("/other-services")) {
+      return "services";
     } else if (
       currentPath === "/programs" ||
       currentPath.startsWith("/programs/")

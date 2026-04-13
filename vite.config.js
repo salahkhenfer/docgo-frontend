@@ -56,93 +56,93 @@ export default defineConfig({
     proxy: {
       // Auth — POST to backend, GET renders SPA login/register pages
       "/Login": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/login": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/Register": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/register": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/forgot-password": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
 
       // Pure API — no SPA route with these exact paths
-      "/Logout": "http://localhost:3000",
-      "/check_Auth": "http://localhost:3000",
-      "/Users": "http://localhost:3000",
-      "/enrollment": "http://localhost:3000",
+      "/Logout": "https://backend.healthpathglobal.com",
+      "/check_Auth": "https://backend.healthpathglobal.com",
+      "/Users": "https://backend.healthpathglobal.com",
+      "/enrollment": "https://backend.healthpathglobal.com",
 
       // Shared prefix: SPA page + backend API
       "/Courses": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/Programs": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/Favorites": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/favorites": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/notifications": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/payments": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/payment": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
       "/faqs": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },
 
       // Pure API — no SPA route
-      "/user-payments": "http://localhost:3000",
-      "/comprehensive-payments": "http://localhost:3000",
-      "/payment-status": "http://localhost:3000",
-      "/coupons": "http://localhost:3000",
-      "/media": "http://localhost:3000",
-      "/public": "http://localhost:3000",
-      "/home": "http://localhost:3000",
-      "/contact": "http://localhost:3000",
-      "/upload": "http://localhost:3000",
-      "/visit": "http://localhost:3000",
+      "/user-payments": "https://backend.healthpathglobal.com",
+      "/comprehensive-payments": "https://backend.healthpathglobal.com",
+      "/payment-status": "https://backend.healthpathglobal.com",
+      "/coupons": "https://backend.healthpathglobal.com",
+      "/media": "https://backend.healthpathglobal.com",
+      "/public": "https://backend.healthpathglobal.com",
+      "/home": "https://backend.healthpathglobal.com",
+      "/contact": "https://backend.healthpathglobal.com",
+      "/upload": "https://backend.healthpathglobal.com",
+      "/visit": "https://backend.healthpathglobal.com",
       // Public certificate verification endpoint (also a SPA route — spaBypass handles navigation)
       "/verify": {
-        target: "http://localhost:3000",
+        target: "https://backend.healthpathglobal.com",
         changeOrigin: true,
         bypass: spaBypass,
       },

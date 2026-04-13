@@ -116,6 +116,24 @@ export const AppProvider = ({ children }) => {
     [dispatch],
   );
 
+  const updateUserProfile = useCallback(
+    (partialUser) => {
+      const mergedUser = {
+        ...(state.user || {}),
+        ...(partialUser || {}),
+      };
+
+      dispatch({ type: "SET_USER", payload: mergedUser });
+      try {
+        localStorage.setItem("user", JSON.stringify(mergedUser));
+        sessionStorage.setItem("user", JSON.stringify(mergedUser));
+      } catch {
+        // ignore storage errors
+      }
+    },
+    [state.user],
+  );
+
   const set_Notifications = useCallback(
     (Notifications) => {
       dispatch({
@@ -336,6 +354,7 @@ export const AppProvider = ({ children }) => {
       store_logout,
       set_Auth,
       set_user,
+      updateUserProfile,
       checkAuthStatus,
       login,
       register,
@@ -347,6 +366,7 @@ export const AppProvider = ({ children }) => {
       store_logout,
       set_Auth,
       set_user,
+      updateUserProfile,
       checkAuthStatus,
       login,
       register,

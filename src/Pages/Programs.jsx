@@ -804,7 +804,8 @@ export function Programs() {
               </div>
               <div className="min-w-0">
                 <h2 className="text-base sm:text-lg font-bold text-white">
-                  {t("My Programs", "My Programs") || "My Programs"}
+                  {t("My Programs", "Mes études à l’étranger") ||
+                    "Mes études à l’étranger"}
                 </h2>
                 <p className="text-purple-200 text-xs sm:text-sm">
                   {enrolledPrograms.length}{" "}

@@ -193,6 +193,7 @@ function Navigation({ branding = null }) {
     const isHomeActive = activeNavItem === "home";
     const isProgramsActive = activeNavItem === "programs";
     const isCoursesActive = activeNavItem === "courses";
+    const isServicesActive = activeNavItem === "services";
     const isFaqActive = activeNavItem === "faq";
     const isDashboardActive = location.pathname
       .toLowerCase()
@@ -211,12 +212,16 @@ function Navigation({ branding = null }) {
           </Link>
         )}
         <Link to="/programs" className={getNavLinkClass("programs")}>
-          {t("Programs_nav", "Programs")}
+          {t("Programs_nav", "Études à l’étranger")}
           <ActiveIndicator isActive={isProgramsActive} />
         </Link>
         <Link to="/courses" className={getNavLinkClass("courses")}>
-          {t("Courses_nav", "Courses")}
+          {t("Courses_nav", "Apprentissage")}
           <ActiveIndicator isActive={isCoursesActive} />
+        </Link>
+        <Link to="/other-services" className={getNavLinkClass("services")}>
+          {t("Services_nav", "Services")}
+          <ActiveIndicator isActive={isServicesActive} />
         </Link>
         {/* {isAuth && (
                     <>

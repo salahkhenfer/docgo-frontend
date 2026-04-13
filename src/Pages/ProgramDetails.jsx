@@ -772,11 +772,13 @@ export const ProgramDetails = () => {
                       )}
                     </button>
                     {/* View Payment History Button */}
-                    <CoursePaymentButton
-                      itemId={program.id}
-                      itemType="program"
-                      itemTitle={programTitle}
-                    />
+                    {paymentStatus?.status === "approved" && (
+                      <CoursePaymentButton
+                        itemId={program.id}
+                        itemType="program"
+                        itemTitle={programTitle}
+                      />
+                    )}
                   </div>
                 ) : paymentStatus?.status === "pending" ? (
                   // ── Payment pending — block the button ──

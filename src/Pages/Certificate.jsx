@@ -32,6 +32,7 @@ export default function Certificate() {
   const { courseId } = useParams();
   const { user } = useAppContext();
   const { courseData, loading } = useCourse(courseId);
+  const course = courseData?.course;
 
   // DB-issued certificate state
   const [dbCertificate, setDbCertificate] = useState(null);
@@ -96,6 +97,17 @@ export default function Certificate() {
   useEffect(() => {
     const issueCert = async () => {
       if (!courseId || !user) return;
+      if (!course) return;
+
+      if (course.uploadType === "zip" || course.certificate !== true) {
+        setCertError(
+          t(
+            "certificate.notAvailable",
+            "This course does not offer a certificate",
+          ),
+        );
+        return;
+      }
 
       const studentName =
         user.firstName && user.lastName
@@ -137,12 +149,15 @@ export default function Certificate() {
     if (courseId && user && courseData?.course) {
       issueCert();
     }
-  }, [courseId, user, courseData]);
+  }, [courseId, user, courseData, course, t]);
 
   // Fetch admin certificate template (Fabric.js JSON) for this course
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
+        if (course?.uploadType === "zip" || course?.certificate !== true) {
+          return;
+        }
         const res = await apiClient.get(
           `/certificate-templates/public/for-course/${courseId}`,
         );
@@ -157,7 +172,7 @@ export default function Certificate() {
       }
     };
     if (courseId) fetchTemplate();
-  }, [courseId]);
+  }, [courseId, course]);
 
   // Build certificate data from real course and user data
   const certificateData = {

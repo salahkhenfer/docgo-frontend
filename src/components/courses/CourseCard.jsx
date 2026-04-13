@@ -25,7 +25,7 @@ export function CourseCard({
   hasImage = true,
 }) {
   const defaultThumbnail =
-    "http://localhost:3000/Courses_Pictures/default-course-thumbnail.jpeg";
+    "https://backend.healthpathglobal.com/Courses_Pictures/default-course-thumbnail.jpeg";
 
   const {
     isFavorited,
@@ -78,7 +78,10 @@ export function CourseCard({
         : "bg-red-100 text-red-700 border-red-200";
 
   const shouldShowProgress =
-    isEnrolled && enrollmentStatus === "approved" && progress > 0;
+    isEnrolled &&
+    enrollmentStatus === "approved" &&
+    progress > 0 &&
+    course.uploadType !== "zip";
 
   return (
     <article className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden relative group flex flex-col h-full">
@@ -126,7 +129,7 @@ export function CourseCard({
                   d="M12 8v8m0 0l3-3m-3 3l-3-3M7 12h10"
                 />
               </svg>
-              ZIP
+              {t("zipCourse", "ZIP Course") || "ZIP Course"}
             </span>
           )}
           {course.isFeatured && (
@@ -208,7 +211,7 @@ export function CourseCard({
           )}
           {course.uploadType === "zip" && (
             <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
-              ZIP Course
+              {t("zipCourse", "ZIP Course") || "ZIP Course"}
             </span>
           )}
           {course.Category && (
@@ -291,8 +294,12 @@ export function CourseCard({
           }`}
         >
           {isEnrolled && enrollmentStatus === "approved"
-            ? t("ContinueCourse", "Continue Course") || "Continue Course"
-            : t("View Details", "View Details") || "View Details"}
+            ? course.uploadType === "zip"
+              ? t("openZipContent", "Open ZIP Content") || "Open ZIP Content"
+              : t("ContinueCourse", "Continue Course") || "Continue Course"
+            : course.uploadType === "zip"
+              ? t("viewZipCourse", "View ZIP Course") || "View ZIP Course"
+              : t("View Details", "View Details") || "View Details"}
         </Link>
       </div>
     </article>

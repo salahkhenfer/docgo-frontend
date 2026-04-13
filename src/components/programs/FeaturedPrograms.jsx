@@ -224,11 +224,15 @@ const FeaturedPrograms = ({
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {program.Category && (
+                  {(program.programSpecialty ||
+                    program.Category ||
+                    program.category) && (
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                      {i18n.language === "ar" && program.Category_ar
-                        ? program.Category_ar
-                        : program.Category}
+                      {program.programSpecialty ||
+                        (i18n.language === "ar" &&
+                        (program.Category_ar || program.category_ar)
+                          ? program.Category_ar || program.category_ar
+                          : program.Category || program.category)}
                     </span>
                   )}
                   {program.university && (

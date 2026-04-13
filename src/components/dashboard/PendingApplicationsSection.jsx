@@ -224,18 +224,6 @@ const PendingApplicationsSection = ({ applications }) => {
                         </div>
                       )}
 
-                    {application.type === "program" &&
-                      item?.scholarshipAmount && (
-                        <div>
-                          <span className="text-gray-500">
-                            {t("dashboard.amount", "Amount")}:
-                          </span>
-                          <span className="ml-2 text-green-600 font-bold">
-                            {item.scholarshipAmount} {item.currency || "DZD"}
-                          </span>
-                        </div>
-                      )}
-
                     {application.type === "course" && item?.Price && (
                       <div>
                         <span className="text-gray-500">
@@ -326,8 +314,6 @@ PendingApplicationsSection.propTypes = {
           Image: PropTypes.string,
           university: PropTypes.string,
           applicationDeadline: PropTypes.string,
-          scholarshipAmount: PropTypes.number,
-          currency: PropTypes.string,
         }),
       }),
     ),

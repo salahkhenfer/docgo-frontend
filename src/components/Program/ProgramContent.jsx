@@ -2,11 +2,8 @@ import {
   Award,
   Calendar,
   CheckCircle,
-  ClipboardList,
   Clock,
-  DollarSign,
   FileText,
-  Gift,
   Globe,
   MapPin,
   Target,
@@ -16,9 +13,14 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { TbTargetArrow } from "react-icons/tb";
 import RichTextDisplay from "../Common/RichTextEditor/RichTextDisplay";
+import {
+  getCountryDisplayName,
+  getCountryName,
+} from "../../utils/countryCodeMap";
 
 const ProgramContent = ({ program }) => {
   const { t, i18n } = useTranslation("", { keyPrefix: "programs" });
+  const { t: tCommon } = useTranslation();
 
   // Get localized full description
   const programDescription =
@@ -32,16 +34,6 @@ const ProgramContent = ({ program }) => {
       ? program.eligibilityCriteria_ar
       : program.eligibilityCriteria;
 
-  const benefits =
-    i18n.language === "ar" && program.benefits_ar
-      ? program.benefits_ar
-      : program.benefits;
-
-  const applicationProcess =
-    i18n.language === "ar" && program.applicationProcess_ar
-      ? program.applicationProcess_ar
-      : program.applicationProcess;
-
   const requiredDocuments =
     i18n.language === "ar" && program.requiredDocuments_ar
       ? program.requiredDocuments_ar
@@ -53,15 +45,26 @@ const ProgramContent = ({ program }) => {
       ? program.university_ar
       : program.university;
 
-  const category =
-    i18n.language === "ar" && program.category_ar
+  const specialty =
+    program.programSpecialty ||
+    (i18n.language === "ar" && program.category_ar
       ? program.category_ar
-      : program.category;
+      : program.category);
 
-  const location =
-    i18n.language === "ar" && program.location_ar
-      ? program.location_ar
-      : program.location;
+  const getProgramCountryText = () => {
+    const raw = program?.programCountry || program?.country || "";
+    if (!raw) return "";
+
+    const rawStr = String(raw);
+    const isIso2 = /^[a-z]{2}$/i.test(rawStr);
+    const frName = isIso2 ? getCountryName(rawStr.toUpperCase()) : rawStr;
+
+    return i18n.language === "ar"
+      ? getCountryDisplayName(frName, "ar")
+      : frName;
+  };
+
+  const countryText = getProgramCountryText();
 
   // Helper function to check if content is empty
   const hasContent = (content) => {
@@ -114,7 +117,7 @@ const ProgramContent = ({ program }) => {
       )}
 
       {/* Program Type & University Info */}
-      {(program.programType || university || category) && (
+      {(program.programType || university || specialty) && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <Award className="text-purple-600 w-6 h-6" />
@@ -177,7 +180,7 @@ const ProgramContent = ({ program }) => {
               </div>
             )}
 
-            {category && (
+            {specialty && (
               <div className="flex items-start gap-3 bg-gradient-to-br from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200">
                 <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg
@@ -196,9 +199,9 @@ const ProgramContent = ({ program }) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 text-sm">
-                    {t("Category", "Category")}
+                    {tCommon("Specialites", "Specialty")}
                   </p>
-                  <p className="text-gray-700">{category}</p>
+                  <p className="text-gray-700">{specialty}</p>
                 </div>
               </div>
             )}
@@ -233,7 +236,7 @@ const ProgramContent = ({ program }) => {
       )}
 
       {/* Financial Information */}
-      {(program.Price || program.scholarshipAmount) && (
+      {program.Price && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             {/* <DollarSign className="text-emerald-600 w-6 h-6" /> */}
@@ -253,37 +256,15 @@ const ProgramContent = ({ program }) => {
                     {t("Program Fee", "Program Fee") || "Program Fee"}
                   </p>
                   <p className="text-gray-700 text-lg font-semibold">
-                    {program.Price} DZD
-                    {program.paymentFrequency && (
-                      <span className="text-sm text-gray-600 ml-2">
-                        / {program.paymentFrequency}
-                      </span>
-                    )}
+                    {program.Price}
                   </p>
                   {program.discountPrice && (
                     <p className="text-sm text-emerald-600 mt-1">
                       {t("Discount Price", "Discount Price") ||
                         "Discount Price"}
-                      : {program.discountPrice} DZD
+                      : {program.discountPrice}
                     </p>
                   )}
-                </div>
-              </div>
-            )}
-
-            {program.scholarshipAmount && (
-              <div className="flex items-start gap-3 bg-gradient-to-br from-amber-50 to-yellow-50 p-4 rounded-lg border border-amber-200">
-                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Award className="w-4 h-4 text-amber-600" />
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900 text-sm">
-                    {t("Scholarship Available", "Scholarship Available") ||
-                      "Scholarship Available"}
-                  </p>
-                  <p className="text-gray-700 text-lg font-semibold">
-                    {program.scholarshipAmount} DZD
-                  </p>
                 </div>
               </div>
             )}
@@ -296,8 +277,7 @@ const ProgramContent = ({ program }) => {
         program.applicationDeadline ||
         program.programStartDate ||
         program.programEndDate ||
-        location ||
-        program.country) && (
+        countryText) && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <Calendar className="text-blue-600 w-6 h-6" />
@@ -367,17 +347,17 @@ const ProgramContent = ({ program }) => {
               </div>
             )}
 
-            {location && (
+            {countryText && (
               <div className="flex items-start gap-3 bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
                 <MapPin className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="font-medium text-gray-900 text-sm">
-                    {t("Location", "Location") || "Location"}
+                    {tCommon("country", "Country") || "Country"}
                   </p>
-                  <p className="text-gray-700">{location}</p>
-                  {program.country && (
+                  <p className="text-gray-700">{countryText}</p>
+                  {program.programCountry && program.country && (
                     <p className="text-sm text-gray-600 mt-0.5">
-                      {program.country}
+                      {String(program.country)}
                     </p>
                   )}
                 </div>
@@ -449,7 +429,7 @@ const ProgramContent = ({ program }) => {
               <MapPin className="text-blue-600 w-5 h-5 mr-3 mt-1 flex-shrink-0" />
               <div>
                 <p className="font-medium text-gray-900">
-                  {t("Location", "Location") || "Location"}
+                  {t("Format", "Format") || "Format"}
                 </p>
                 <p className="text-gray-600 text-sm">
                   {program.isRemote
@@ -493,36 +473,6 @@ const ProgramContent = ({ program }) => {
         </div>
       )}
 
-      {/* Benefits */}
-      {hasContent(benefits) && (
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl shadow-sm border border-green-100 p-6">
-          <div className="flex items-center mb-4">
-            <Gift className="text-green-600 w-6 h-6 mr-3" />
-            <h3 className="text-xl font-bold text-gray-900">
-              {t("Program Benefits", "Program Benefits") || "Program Benefits"}
-            </h3>
-          </div>
-          <RichTextDisplay textClassName="text-gray-700" content={benefits} />
-        </div>
-      )}
-
-      {/* Application Process */}
-      {hasContent(applicationProcess) && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center mb-4">
-            <ClipboardList className="text-purple-600 w-6 h-6 mr-3" />
-            <h3 className="text-xl font-bold text-gray-900">
-              {t("Application Process", "Application Process") ||
-                "Application Process"}
-            </h3>
-          </div>
-          <RichTextDisplay
-            textClassName="text-gray-700"
-            content={applicationProcess}
-          />
-        </div>
-      )}
-
       {/* Required Documents */}
       {hasContent(requiredDocuments) && (
         <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl shadow-sm border border-orange-100 p-6">
@@ -536,23 +486,6 @@ const ProgramContent = ({ program }) => {
           <RichTextDisplay
             textClassName="text-gray-700"
             content={requiredDocuments}
-          />
-        </div>
-      )}
-
-      {/* What You'll Learn (keeping for backward compatibility) */}
-      {hasContent(program.benefits) && !hasContent(benefits) && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center mb-4">
-            <TbTargetArrow className="text-green-500 text-2xl mr-3" />
-            <h3 className="text-xl font-bold text-gray-900">
-              {t("What you'll learn", "What you'll learn") ||
-                "What you'll learn"}
-            </h3>
-          </div>
-          <RichTextDisplay
-            textClassName="text-gray-700"
-            content={program.benefits}
           />
         </div>
       )}
@@ -583,110 +516,6 @@ const ProgramContent = ({ program }) => {
             textClassName="text-gray-700"
             content={program.structure}
           />
-        </div>
-      )}
-
-      {/* Contact & Additional Information */}
-      {(program.contactEmail || program.contactPhone || program.website) && (
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-sm border border-indigo-100 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            {t("Contact Information", "Contact Information") ||
-              "Contact Information"}
-          </h3>
-          <div className="space-y-3">
-            {program.contactEmail && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-indigo-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">
-                    {t("Email", "Email") || "Email"}
-                  </p>
-                  <a
-                    href={`mailto:${program.contactEmail}`}
-                    className="text-indigo-600 hover:text-indigo-800 font-medium"
-                  >
-                    {program.contactEmail}
-                  </a>
-                </div>
-              </div>
-            )}
-            {program.contactPhone && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-indigo-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">
-                    {t("Phone", "Phone") || "Phone"}
-                  </p>
-                  <a
-                    href={`tel:${program.contactPhone}`}
-                    className="text-indigo-600 hover:text-indigo-800 font-medium"
-                  >
-                    {program.contactPhone}
-                  </a>
-                </div>
-              </div>
-            )}
-            {program.website && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                  <svg
-                    className="w-5 h-5 text-indigo-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">
-                    {t("Website", "Website") || "Website"}
-                  </p>
-                  <a
-                    href={program.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-indigo-600 hover:text-indigo-800 font-medium"
-                  >
-                    {program.website}
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       )}
     </div>

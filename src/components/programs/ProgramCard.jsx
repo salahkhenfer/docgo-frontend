@@ -7,6 +7,10 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 import { buildApiUrl } from "../../utils/apiBaseUrl";
+import {
+  getCountryDisplayName,
+  getCountryName,
+} from "../../utils/countryCodeMap";
 
 export function ProgramCard({
   program,
@@ -15,6 +19,17 @@ export function ProgramCard({
   isEnrolled = false,
 }) {
   const { t } = useTranslation();
+
+  const getProgramCountryText = () => {
+    const raw = program?.programCountry || program?.country || "";
+    if (!raw) return "";
+
+    const rawStr = String(raw);
+    const isIso2 = /^[a-z]{2}$/i.test(rawStr);
+    const frName = isIso2 ? getCountryName(rawStr.toUpperCase()) : rawStr;
+
+    return language === "ar" ? getCountryDisplayName(frName, "ar") : frName;
+  };
 
   const {
     isFavorited,
@@ -29,15 +44,17 @@ export function ProgramCard({
   const handleToggleFavorite = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    const countryText = getProgramCountryText();
     const programItem = {
       id: program.id,
       title,
       short_description: shortDescription,
       Price: program.Price,
       discountPrice: program.discountPrice,
-      currency: program.currency,
       university: universityText,
-      location: locationText,
+      // Backward-compatible key used by existing favorites UI
+      location: countryText,
+      country: countryText,
       Image: program.Image || defaultThumbnail,
     };
     toggleFavorite(programItem);
@@ -54,14 +71,12 @@ export function ProgramCard({
     language === "ar" && program.university_ar
       ? program.university_ar
       : program.university;
-  const categoryText =
-    language === "ar" && program.category_ar
+  const specialtyText =
+    program.programSpecialty ||
+    (language === "ar" && program.category_ar
       ? program.category_ar
-      : program.category;
-  const locationText =
-    language === "ar" && program.location_ar
-      ? program.location_ar
-      : program.location;
+      : program.category);
+  const countryText = getProgramCountryText();
 
   const tags = (() => {
     if (!program.tags) return [];
@@ -95,7 +110,7 @@ export function ProgramCard({
 
   const formatPrice = (p) => {
     if (!p || p === 0) return t("free", "Free") || "Free";
-    return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${program.currency || "DZD"}`;
+    return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
   const isFree =
@@ -249,15 +264,15 @@ export function ProgramCard({
               {getProgramTypeIcon(program.programType)} {program.programType}
             </span>
           )}
-          {categoryText && (
+          {specialtyText && (
             <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-              {categoryText}
+              {specialtyText}
             </span>
           )}
-          {locationText && (
+          {countryText && (
             <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium flex items-center gap-1">
               <MapPin className="w-2.5 h-2.5" />
-              {locationText}
+              {countryText}
             </span>
           )}
           {program.isRemote && (
@@ -275,13 +290,6 @@ export function ProgramCard({
               <span>{t("Deadline", "Deadline") || "Deadline"}:</span>
               <span className="font-medium text-gray-700">
                 {formatDate(program.applicationDeadline)}
-              </span>
-            </div>
-          )}
-          {program.scholarshipAmount && (
-            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-              <span className="text-emerald-600 font-semibold">
-                {program.scholarshipAmount} {program.currency}
               </span>
             </div>
           )}
@@ -407,23 +415,20 @@ ProgramCard.propTypes = {
     short_description_ar: PropTypes.string,
     university: PropTypes.string,
     university_ar: PropTypes.string,
+    programSpecialty: PropTypes.string,
+    // Backward-compat (old model fields)
     category: PropTypes.string,
     category_ar: PropTypes.string,
-    location: PropTypes.string,
-    location_ar: PropTypes.string,
+    programCountry: PropTypes.string,
+    country: PropTypes.string,
     Price: PropTypes.number,
     discountPrice: PropTypes.number,
-    currency: PropTypes.string,
     programType: PropTypes.string,
     status: PropTypes.string,
     isFeatured: PropTypes.bool,
     isRemote: PropTypes.bool,
     Image: PropTypes.string,
     applicationDeadline: PropTypes.string,
-    scholarshipAmount: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]),
     tags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   }).isRequired,
   onClick: PropTypes.func,

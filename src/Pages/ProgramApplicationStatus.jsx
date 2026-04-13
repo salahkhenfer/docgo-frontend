@@ -26,6 +26,7 @@ import {
 import MainLoading from "../MainLoading";
 import { useAppContext } from "../AppContext";
 import apiClient from "../services/apiClient";
+import RichTextDisplay from "../components/Common/RichTextEditor/RichTextDisplay";
 
 const statusBadgeClass = (status) => {
   const base =
@@ -340,9 +341,11 @@ export default function ProgramApplicationStatus() {
                     "About This Program",
                   )}
                 </h2>
-                <div className="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {description}
-                </div>
+                <RichTextDisplay
+                  content={description}
+                  className="prose max-w-none"
+                  textClassName="text-gray-700 leading-relaxed"
+                />
               </div>
             )}
 
@@ -444,14 +447,14 @@ export default function ProgramApplicationStatus() {
                     </p>
                   </div>
                 )}
-                {program?.location && (
+                {(program?.programCountry || program?.country) && (
                   <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100">
                     <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide flex items-center gap-1">
                       <MapPinIcon className="w-4 h-4" />
-                      {t("enrolledProgram.location", "Location", "Location")}
+                      {t("country", "Country")}
                     </label>
                     <p className="text-lg font-semibold text-gray-900 mt-2">
-                      {program.location}
+                      {program?.programCountry || program?.country}
                     </p>
                   </div>
                 )}

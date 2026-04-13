@@ -25,6 +25,15 @@ export default function CourseResources() {
   }, [hasData, canAccessContent, courseId, navigate]);
 
   useEffect(() => {
+    const uploadType = String(
+      courseData?.course?.uploadType || "",
+    ).toLowerCase();
+    if (hasData && uploadType === "zip") {
+      navigate(`/Courses/${courseId}/explore`, { replace: true });
+    }
+  }, [hasData, courseData?.course?.uploadType, courseId, navigate]);
+
+  useEffect(() => {
     if (!viewingPdf?.url) {
       setViewingPdfBlobUrl(null);
       setLoadingPdfPreview(false);

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 import apiClient from "../../utils/apiClient";
 import Swal from "sweetalert2";
-import "./OtherServices.css";
+import RichTextDisplay from "../../components/Common/RichTextEditor/RichTextDisplay";
 
 // Status badge component
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status, t }) => {
   const statusColors = {
     pending: "bg-yellow-100 text-yellow-800",
     accepted: "bg-green-100 text-green-800",
@@ -13,9 +14,9 @@ const StatusBadge = ({ status }) => {
   };
 
   const statusLabels = {
-    pending: "Pending Review",
-    accepted: "Accepted",
-    rejected: "Rejected",
+    pending: t("status_pending", "Pending Review"),
+    accepted: t("status_accepted", "Accepted"),
+    rejected: t("status_rejected", "Rejected"),
   };
 
   return (
@@ -31,22 +32,45 @@ const StatusBadge = ({ status }) => {
 
 const MyOtherServicesApplications = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const [cvApplication, setCvApplication] = useState(null);
+  const [cvApplications, setCvApplications] = useState([]);
   const [internshipApplications, setInternshipApplications] = useState([]);
-  const [expandedApp, setExpandedApp] = useState(null);
+  const [expandedCvApp, setExpandedCvApp] = useState(null);
+  const [expandedInternshipApp, setExpandedInternshipApp] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch user's CV application
-  const fetchCVApplication = async () => {
+  const isDashboardRoute = location.pathname
+    .toLowerCase()
+    .startsWith("/dashboard");
+
+  const navPaths = useMemo(() => {
+    const servicesHomePath = isDashboardRoute
+      ? "/dashboard"
+      : "/other-services";
+    const cvPath = isDashboardRoute ? "/dashboard/cv" : "/other-services/cv";
+    const internshipsPath = isDashboardRoute
+      ? "/dashboard/internships"
+      : "/other-services/internships";
+    const internshipDetailPath = (internshipId) =>
+      `${internshipsPath}/${internshipId}`;
+    return { servicesHomePath, cvPath, internshipsPath, internshipDetailPath };
+  }, [isDashboardRoute]);
+
+  // Fetch user's CV applications (history)
+  const fetchCVApplications = async () => {
     try {
-      const response = await apiClient.get("/other-services/cv-application");
+      const response = await apiClient.get(
+        "/other-services/my-cv-applications",
+      );
       if (response.data.success && response.data.data) {
-        setCvApplication(response.data.data);
+        setCvApplications(response.data.data);
+      } else {
+        setCvApplications([]);
       }
     } catch (err) {
-      console.error("Error fetching CV application:", err);
       // Not an error if no application exists yet
+      setCvApplications([]);
     }
   };
 
@@ -59,8 +83,7 @@ const MyOtherServicesApplications = () => {
       if (response.data.success && response.data.data) {
         setInternshipApplications(response.data.data);
       }
-    } catch (err) {
-      console.error("Error fetching internship applications:", err);
+    } catch {
       setError(t("error_loading_applications", "Error loading applications"));
     }
   };
@@ -69,7 +92,7 @@ const MyOtherServicesApplications = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchCVApplication(), fetchInternshipApplications()]);
+      await Promise.all([fetchCVApplications(), fetchInternshipApplications()]);
       setLoading(false);
     };
     loadData();
@@ -118,104 +141,120 @@ const MyOtherServicesApplications = () => {
             {t("cv_professional_creation", "Professional CV Creation")}
           </h2>
 
-          {cvApplication ? (
-            <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary-600">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {t("cv_application_submitted", "CV Application")}
-                    </h3>
-                    <StatusBadge status={cvApplication.status} />
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    {t("submitted_on", "Submitted on")}:{" "}
-                    {new Date(
-                      cvApplication.submissionDate,
-                    ).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
+          {cvApplications.length > 0 ? (
+            <div className="space-y-4">
+              {cvApplications.map((app) => (
+                <div
+                  key={app.id}
+                  className="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary-600 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() =>
+                    setExpandedCvApp(expandedCvApp === app.id ? null : app.id)
+                  }
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {t("cv_application_submitted", "CV Application")}
+                        </h3>
+                        <StatusBadge status={app.status} t={t} />
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {t("submitted_on", "Submitted on")}:{" "}
+                        {new Date(app.submissionDate).toLocaleDateString()}
+                      </p>
+                    </div>
 
-              {/* CV Content Preview */}
-              <div className="mt-4 p-4 bg-gray-50 rounded border border-gray-200">
-                <p className="text-sm font-semibold text-gray-700 mb-2">
-                  {t("cv_content", "CV Content")}:
-                </p>
-                <div className="prose prose-sm max-w-none text-gray-700">
-                  {cvApplication.content ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: cvApplication.content,
-                      }}
-                    />
-                  ) : (
-                    <p className="text-gray-500 italic">
-                      {t("no_content", "No content")}
-                    </p>
+                    <div className="text-sm text-primary-600 font-semibold">
+                      {expandedCvApp === app.id
+                        ? t("collapse", "Collapse")
+                        : t("view_details", "View Details")}
+                    </div>
+                  </div>
+
+                  {expandedCvApp === app.id && (
+                    <div className="mt-4 space-y-4">
+                      {/* CV Content Preview */}
+                      <div className="p-4 bg-gray-50 rounded border border-gray-200">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">
+                          {t("cv_content", "CV Content")}:
+                        </p>
+                        <div className="prose prose-sm max-w-none text-gray-700">
+                          {app.content ? (
+                            <RichTextDisplay
+                              content={app.content}
+                              textClassName="prose prose-sm max-w-none"
+                            />
+                          ) : (
+                            <p className="text-gray-500 italic">
+                              {t("no_content", "No content")}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Rejection Reason if applicable */}
+                      {app.status === "rejected" && app.rejectionReason && (
+                        <div className="p-4 bg-red-50 border border-red-200 rounded">
+                          <p className="text-sm font-semibold text-red-800 mb-2">
+                            {t("rejection_reason", "Rejection Reason")}:
+                          </p>
+                          <p className="text-red-700">{app.rejectionReason}</p>
+                        </div>
+                      )}
+
+                      {/* Admin Contact Info if Accepted */}
+                      {app.status === "accepted" && (
+                        <div className="p-4 bg-green-50 border border-green-200 rounded">
+                          <p className="text-sm font-semibold text-green-800 mb-2">
+                            {t("congratulations", "Congratulations!")}
+                          </p>
+                          <p className="text-green-700 mb-3">
+                            {t(
+                              "cv_accepted_message",
+                              "Your CV application has been accepted. Our team will contact you with next steps.",
+                            )}
+                          </p>
+                          {app.reviewedDate ? (
+                            <p className="text-xs text-green-600">
+                              {t("review_date", "Reviewed on")}:{" "}
+                              {new Date(app.reviewedDate).toLocaleDateString()}
+                            </p>
+                          ) : null}
+                        </div>
+                      )}
+
+                      {/* Notes if accepted */}
+                      {app.status === "accepted" && app.notes && (
+                        <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+                          <p className="text-sm font-semibold text-blue-800 mb-2">
+                            {t("admin_notes", "Admin Notes")}:
+                          </p>
+                          <p className="text-blue-700">{app.notes}</p>
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3">
+                        {app.status === "pending" && (
+                          <Link
+                            to={navPaths.cvPath}
+                            className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                          >
+                            {t("edit_application", "Edit Application")}
+                          </Link>
+                        )}
+                        <Link
+                          to={navPaths.servicesHomePath}
+                          className="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                          {t("back", "Back")}
+                        </Link>
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
-
-              {/* Rejection Reason if applicable */}
-              {cvApplication.status === "rejected" &&
-                cvApplication.rejectionReason && (
-                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded">
-                    <p className="text-sm font-semibold text-red-800 mb-2">
-                      {t("rejection_reason", "Rejection Reason")}:
-                    </p>
-                    <p className="text-red-700">
-                      {cvApplication.rejectionReason}
-                    </p>
-                  </div>
-                )}
-
-              {/* Admin Contact Info if Accepted */}
-              {cvApplication.status === "accepted" && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
-                  <p className="text-sm font-semibold text-green-800 mb-2">
-                    {t("congratulations", "Congratulations!")}
-                  </p>
-                  <p className="text-green-700 mb-3">
-                    {t(
-                      "cv_accepted_message",
-                      "Your CV application has been accepted. Our team will contact you with next steps.",
-                    )}
-                  </p>
-                  <p className="text-xs text-green-600">
-                    {t("review_date", "Reviewed on")}:{" "}
-                    {new Date(cvApplication.reviewedDate).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-
-              {/* Notes if accepted */}
-              {cvApplication.status === "accepted" && cvApplication.notes && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
-                  <p className="text-sm font-semibold text-blue-800 mb-2">
-                    {t("admin_notes", "Admin Notes")}:
-                  </p>
-                  <p className="text-blue-700">{cvApplication.notes}</p>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="mt-6 flex gap-3">
-                {cvApplication.status === "pending" && (
-                  <a
-                    href="/other-services/cv"
-                    className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                  >
-                    {t("edit_application", "Edit Application")}
-                  </a>
-                )}
-                <a
-                  href="/other-services"
-                  className="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
-                >
-                  {t("back", "Back")}
-                </a>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
@@ -225,12 +264,12 @@ const MyOtherServicesApplications = () => {
                   "You haven't submitted a CV application yet.",
                 )}
               </p>
-              <a
-                href="/other-services/cv"
+              <Link
+                to={navPaths.cvPath}
                 className="inline-block px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 {t("submit_cv_application", "Submit CV Application")}
-              </a>
+              </Link>
             </div>
           )}
         </section>
@@ -248,7 +287,9 @@ const MyOtherServicesApplications = () => {
                   key={app.id}
                   className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() =>
-                    setExpandedApp(expandedApp === app.id ? null : app.id)
+                    setExpandedInternshipApp(
+                      expandedInternshipApp === app.id ? null : app.id,
+                    )
                   }
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -258,7 +299,7 @@ const MyOtherServicesApplications = () => {
                           {app.Internship?.title ||
                             t("internship", "Internship")}
                         </h3>
-                        <StatusBadge status={app.status} />
+                        <StatusBadge status={app.status} t={t} />
                       </div>
                       <div className="text-sm text-gray-600 space-y-1">
                         <p>
@@ -281,13 +322,13 @@ const MyOtherServicesApplications = () => {
                     </div>
                     <div className="text-right">
                       <span className="text-sm text-gray-500">
-                        {expandedApp === app.id ? "▼" : "▶"}
+                        {expandedInternshipApp === app.id ? "▼" : "▶"}
                       </span>
                     </div>
                   </div>
 
                   {/* Expanded Details */}
-                  {expandedApp === app.id && (
+                  {expandedInternshipApp === app.id && (
                     <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
                       {/* Application Content */}
                       <div>
@@ -296,8 +337,9 @@ const MyOtherServicesApplications = () => {
                         </p>
                         <div className="prose prose-sm max-w-none text-gray-700 bg-gray-50 p-3 rounded">
                           {app.content ? (
-                            <div
-                              dangerouslySetInnerHTML={{ __html: app.content }}
+                            <RichTextDisplay
+                              content={app.content}
+                              textClassName="prose prose-sm max-w-none"
                             />
                           ) : (
                             <p className="text-gray-500 italic">
@@ -383,12 +425,12 @@ const MyOtherServicesApplications = () => {
 
                       {/* Action Button */}
                       <div className="flex gap-3 pt-3">
-                        <a
-                          href={`/other-services/internships/${app.internshipId}`}
+                        <Link
+                          to={navPaths.internshipDetailPath(app.internshipId)}
                           className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                         >
                           {t("view_internship", "View Internship")}
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   )}
@@ -403,22 +445,22 @@ const MyOtherServicesApplications = () => {
                   "You haven't applied to any internships yet.",
                 )}
               </p>
-              <a
-                href="/other-services/internships"
+              <Link
+                to={navPaths.internshipsPath}
                 className="inline-block px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 {t("browse_internships", "Browse Internships")}
-              </a>
+              </Link>
             </div>
           )}
         </section>
 
         {/* Summary Stats */}
-        {(cvApplication || internshipApplications.length > 0) && (
+        {(cvApplications.length > 0 || internshipApplications.length > 0) && (
           <section className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-primary-600">
-                {cvApplication ? 1 : 0}
+                {cvApplications.length}
               </div>
               <div className="text-sm text-gray-600">
                 {t("cv_applications", "CV Applications")}
@@ -434,7 +476,7 @@ const MyOtherServicesApplications = () => {
             </div>
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-green-600">
-                {(cvApplication?.status === "accepted" ? 1 : 0) +
+                {cvApplications.filter((a) => a?.status === "accepted").length +
                   internshipApplications.filter((a) => a.status === "accepted")
                     .length}
               </div>

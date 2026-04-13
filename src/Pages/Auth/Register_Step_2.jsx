@@ -51,8 +51,7 @@ const Register_Sterp_2 = ({
           }
         }
         // Log for debugging
-      } catch (error) {
-        console.error("Failed to load register options:", error);
+      } catch {
         // silent: empty defaults already set - user will see empty dropdowns until admin configures options
       }
     };

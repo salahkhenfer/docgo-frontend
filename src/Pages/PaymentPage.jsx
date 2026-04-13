@@ -73,23 +73,68 @@ const PaymentPage = () => {
 
           // If payment is approved, redirect to my courses/programs
           if (application.status === "approved") {
+            // If the backend indicates the user can submit a new payment (e.g. access removed by admin),
+            // do NOT redirect. Let the user proceed with a new submission.
+            if (!response.data.canSubmitNew) {
+              Swal.fire({
+                icon: "success",
+                title: t("alerts.payment.successTitle", "Payment Successful!"),
+                text: `${t("common.alreadyEnrolled", "You are already enrolled in this")} ${itemType}. ${t("common.redirecting", "Redirecting...")}`,
+                timer: 2000,
+                showConfirmButton: false,
+              }).then(() => {
+                const go = async () => {
+                  if (itemType !== "course") {
+                    navigate("/programs");
+                    return;
+                  }
+
+                  // Decide between /watch vs /explore for ZIP courses.
+                  let uploadType = "";
+                  try {
+                    const courseRes =
+                      await clientCoursesAPI.getCourseDetails(courseId);
+                    const course = courseRes?.data?.course || courseRes?.data;
+                    uploadType = String(course?.uploadType || "").toLowerCase();
+                  } catch {
+                    uploadType = "";
+                  }
+
+                  navigate(
+                    uploadType === "zip"
+                      ? `/Courses/${courseId}/explore`
+                      : `/Courses/${courseId}/watch`,
+                  );
+                };
+
+                go();
+              });
+              return;
+            }
+
             Swal.fire({
-              icon: "success",
-              title: t("alerts.payment.successTitle", "Payment Successful!"),
-              text: `${t("common.alreadyEnrolled", "You are already enrolled in this")} ${itemType}. ${t("common.redirecting", "Redirecting...")}`,
-              timer: 2000,
-              showConfirmButton: false,
-            }).then(() => {
-              navigate(
-                itemType === "course" ? `/MyCourses/${courseId}` : "/programs",
-              );
+              icon: "warning",
+              title: t("alerts.payment.accessRemovedTitle", "Access Removed"),
+              text: t(
+                "alerts.payment.accessRemovedText",
+                "Your access was removed by an admin. You can submit a new payment to re-enroll.",
+              ),
+              confirmButtonText: t("common.ok", "OK"),
             });
+
+            setCheckingPayment(false);
             return;
           }
 
           // If payment is rejected, allow resubmission (show the form)
           if (application.status === "rejected") {
             // Show the form but with rejection info
+            setCheckingPayment(false);
+            return;
+          }
+
+          // If payment is cancelled, allow new submission (show the form)
+          if (application.status === "cancelled") {
             setCheckingPayment(false);
             return;
           }
@@ -268,12 +313,11 @@ const PaymentPage = () => {
       // Check for both uppercase and lowercase price fields
       const discountPrice = parseFloat(itemData.discountPrice || 0);
       const regularPrice = parseFloat(itemData.Price || itemData.price || 0);
-      const scholarshipAmount = parseFloat(itemData.scholarshipAmount || 0);
 
-      // Priority: discountPrice > regularPrice > scholarshipAmount
+      // Priority: discountPrice > regularPrice
       if (discountPrice > 0) return discountPrice;
       if (regularPrice > 0) return regularPrice;
-      return scholarshipAmount;
+      return 0;
     }
     return 0;
   };
@@ -325,9 +369,12 @@ const PaymentPage = () => {
     if (itemType === "course") {
       return `${itemData.Level}  ${itemData.language}`;
     } else if (itemType === "program") {
-      return `${itemData.Category || itemData.category || "Program"}  ${
-        itemData.language || "Multiple"
-      }`;
+      return `${
+        itemData.programSpecialty ||
+        itemData.Category ||
+        itemData.category ||
+        "Program"
+      }  ${itemData.language || "Multiple"}`;
     }
     return "";
   };
@@ -622,62 +669,82 @@ const PaymentPage = () => {
                 </div>
               )}
 
-              {/* Deletion Notice */}
-              {existingPayment && existingPayment.status === "deleted" && (
-                <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center"></div>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Previous Payment Deleted
-                      </h3>
-                      <div className="space-y-2 text-sm">
-                        {existingPayment.rejectionReason && (
-                          <p className="text-gray-700">
-                            <strong>Reason:</strong>{" "}
-                            {existingPayment.rejectionReason}
-                          </p>
-                        )}
-                        <p className="text-gray-600">
-                          <strong>Transaction ID:</strong>{" "}
-                          {existingPayment.transactionId}
-                        </p>
-                        <p className="text-gray-600">
-                          <strong>Amount:</strong> {existingPayment.amount}{" "}
-                          {existingPayment.currency}
-                        </p>
-                        <p className="text-gray-600">
-                          <strong>Submitted:</strong>{" "}
-                          {new Date(
-                            existingPayment.createdAt,
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
+              {/* Deletion/Cancellation Notice */}
+              {existingPayment &&
+                (existingPayment.status === "deleted" ||
+                  existingPayment.status === "cancelled") && (
+                  <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6 mb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center"></div>
                       </div>
-                      <div className="mt-4 p-3 bg-gray-100 rounded-lg">
-                        <p className="text-sm text-gray-800">
-                          <strong>Note:</strong> Your previous payment was
-                          removed by the administrator. You can submit a new
-                          payment below.
-                        </p>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          {existingPayment.status === "cancelled"
+                            ? t(
+                                "paymentPage.cancelNotice.title",
+                                "Previous Payment Cancelled",
+                              )
+                            : t(
+                                "paymentPage.deleteNotice.title",
+                                "Previous Payment Deleted",
+                              )}
+                        </h3>
+                        <div className="space-y-2 text-sm">
+                          {existingPayment.rejectionReason && (
+                            <p className="text-gray-700">
+                              <strong>Reason:</strong>{" "}
+                              {existingPayment.rejectionReason}
+                            </p>
+                          )}
+                          <p className="text-gray-600">
+                            <strong>Transaction ID:</strong>{" "}
+                            {existingPayment.transactionId}
+                          </p>
+                          <p className="text-gray-600">
+                            <strong>Amount:</strong> {existingPayment.amount}{" "}
+                            {existingPayment.currency}
+                          </p>
+                          <p className="text-gray-600">
+                            <strong>Submitted:</strong>{" "}
+                            {new Date(
+                              existingPayment.createdAt,
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                        <div className="mt-4 p-3 bg-gray-100 rounded-lg">
+                          <p className="text-sm text-gray-800">
+                            <strong>Note:</strong> Your previous payment was
+                            {existingPayment.status === "cancelled"
+                              ? t(
+                                  "paymentPage.cancelNotice.text",
+                                  "cancelled by the administrator",
+                                )
+                              : t(
+                                  "paymentPage.deleteNotice.text",
+                                  "removed by the administrator",
+                                )}
+                            . You can submit a new payment below.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   {existingPayment && existingPayment.status === "rejected"
                     ? "Resubmit Payment"
-                    : existingPayment && existingPayment.status === "deleted"
+                    : existingPayment &&
+                        (existingPayment.status === "deleted" ||
+                          existingPayment.status === "cancelled")
                       ? "Submit New Payment"
                       : "Choose Payment Method"}
                 </h2>

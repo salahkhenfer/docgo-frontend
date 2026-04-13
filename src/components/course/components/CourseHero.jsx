@@ -149,7 +149,7 @@ const CourseHero = ({ course, courseStats, formatTotalDuration }) => {
                     d="M12 8v8m0 0l3-3m-3 3l-3-3M7 12h10"
                   />
                 </svg>
-                ZIP Course
+                {t("resources", "Resources")}
               </span>
             )}
             <span className="bg-blue-500/20 text-blue-200 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-blue-400/30">

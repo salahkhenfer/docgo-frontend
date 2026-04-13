@@ -28,8 +28,7 @@ const UserCertificates = () => {
       fetchCertificates();
     }
   }, [user?.id]);
-  useEffect(() => {
-  }, [certificates]);
+  useEffect(() => {}, [certificates]);
 
   const fetchCertificates = async () => {
     try {
@@ -161,7 +160,11 @@ const UserCertificates = () => {
             <div className="flex items-center space-x-2 flex-wrap gap-1">
               {course.id && (
                 <Link
-                  to={`/Courses/${course.id}/watch`}
+                  to={
+                    String(course?.uploadType || "").toLowerCase() === "zip"
+                      ? `/Courses/${course.id}/explore`
+                      : `/Courses/${course.id}/watch`
+                  }
                   className="inline-flex items-center px-3 py-1 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm"
                 >
                   <EyeIcon className="h-4 w-4 mr-1" />

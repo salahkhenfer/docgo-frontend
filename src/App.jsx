@@ -72,14 +72,14 @@ function App() {
     if (pathname === "/") {
       return {
         title: "Home",
-        description: `${brand}: explore courses and programs, enroll, and learn online.`,
+        description: `${brand}: explore l'apprentissage et les études à l’étranger, enroll, and learn online.`,
       };
     }
 
     if (pathname === "/courses") {
       return {
-        title: "Courses",
-        description: `Browse all available courses on ${brand}.`,
+        title: "Apprentissage",
+        description: `Parcourez tous les apprentissages disponibles sur ${brand}.`,
       };
     }
 
@@ -92,8 +92,8 @@ function App() {
 
     if (pathname === "/programs") {
       return {
-        title: "Programs",
-        description: `Browse all available programs on ${brand}.`,
+        title: "Études à l’étranger",
+        description: `Parcourez toutes les études à l’étranger disponibles sur ${brand}.`,
       };
     }
 
@@ -114,7 +114,7 @@ function App() {
     if (pathname === "/favorites") {
       return {
         title: "Favorites",
-        description: `Your saved courses and programs on ${brand}.`,
+        description: `Vos apprentissages et études à l’étranger enregistrés sur ${brand}.`,
       };
     }
 
@@ -141,7 +141,7 @@ function App() {
 
     return {
       title: brand,
-      description: `${brand}: explore courses and programs, enroll, and learn online.`,
+      description: `${brand}: explore l'apprentissage et les études à l’étranger, enroll, and learn online.`,
     };
   })();
 

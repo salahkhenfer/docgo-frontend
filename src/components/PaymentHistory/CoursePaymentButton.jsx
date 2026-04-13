@@ -6,7 +6,7 @@
  * Shows as a button that opens a modal with filtered payments for that item
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Download, X, AlertCircle, Clock, Check } from "lucide-react";
 import apiClient from "../../utils/apiClient";
 
@@ -16,6 +16,62 @@ const CoursePaymentButton = ({ itemId, itemType = "course", itemTitle }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedPayment, setExpandedPayment] = useState(null);
+  const [screenshotPreviews, setScreenshotPreviews] = useState({});
+
+  const fetchScreenshotPreview = async (paymentId) => {
+    setScreenshotPreviews((prev) => {
+      if (prev[paymentId]?.url || prev[paymentId]?.loading) return prev;
+      return {
+        ...prev,
+        [paymentId]: { url: null, loading: true, error: null },
+      };
+    });
+
+    try {
+      const response = await apiClient.get(
+        `/user/payment-history/${paymentId}/download`,
+        { responseType: "blob" },
+      );
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      setScreenshotPreviews((prev) => ({
+        ...prev,
+        [paymentId]: { url, loading: false, error: null },
+      }));
+    } catch (err) {
+      setScreenshotPreviews((prev) => ({
+        ...prev,
+        [paymentId]: {
+          url: null,
+          loading: false,
+          error: err?.response?.data?.message || "Failed to load screenshot",
+        },
+      }));
+    }
+  };
+
+  useEffect(() => {
+    if (!expandedPayment) return;
+    const payment = payments.find((p) => p.id === expandedPayment);
+    if (!payment?.hasScreenshot) return;
+    fetchScreenshotPreview(payment.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedPayment]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(screenshotPreviews || {}).forEach((entry) => {
+        if (entry?.url) {
+          try {
+            window.URL.revokeObjectURL(entry.url);
+          } catch {
+            // ignore
+          }
+        }
+      });
+    };
+  }, [screenshotPreviews]);
 
   // Fetch payments for this specific item
   const handleOpenModal = async () => {
@@ -40,7 +96,6 @@ const CoursePaymentButton = ({ itemId, itemType = "course", itemTitle }) => {
       setError(
         err.response?.data?.message || "Failed to fetch your payment history",
       );
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -63,9 +118,8 @@ const CoursePaymentButton = ({ itemId, itemType = "course", itemTitle }) => {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-    } catch (err) {
+    } catch {
       alert("Failed to download screenshot");
-      console.error(err);
     }
   };
 
@@ -214,7 +268,7 @@ const CoursePaymentButton = ({ itemId, itemType = "course", itemTitle }) => {
 
                         {/* Expanded Details */}
                         {expandedPayment === payment.id && (
-                          <div className="mt-4 pt-4 border-t space-y-3">
+                          <div className="mt-4 pt-4 border-t space-y-4">
                             {/* Status Info */}
                             <div className="bg-gray-50 rounded p-3">
                               <p className="text-xs font-medium text-gray-600 uppercase mb-1">
@@ -227,6 +281,53 @@ const CoursePaymentButton = ({ itemId, itemType = "course", itemTitle }) => {
                                     ? `Rejected on ${new Date(payment.verificationDate).toLocaleDateString()}`
                                     : "Waiting for verification"}
                               </p>
+                            </div>
+
+                            {/* Proof Preview */}
+                            <div className="bg-white border border-gray-200 rounded-xl p-3">
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="text-xs font-semibold text-gray-900 uppercase">
+                                  Screenshot Preview
+                                </p>
+                                <span className="text-xs text-gray-500">
+                                  {payment.hasScreenshot ? "Available" : "None"}
+                                </span>
+                              </div>
+                              {payment.hasScreenshot ? (
+                                <div className="w-full aspect-[5/3] rounded-lg bg-gray-50 border border-gray-200 overflow-hidden flex items-center justify-center">
+                                  {screenshotPreviews[payment.id]?.loading ? (
+                                    <div className="text-center">
+                                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                                      <p className="text-xs text-gray-500">
+                                        Loading preview...
+                                      </p>
+                                    </div>
+                                  ) : screenshotPreviews[payment.id]?.url ? (
+                                    <img
+                                      src={screenshotPreviews[payment.id].url}
+                                      alt="Payment proof"
+                                      className="w-full h-full object-contain"
+                                    />
+                                  ) : (
+                                    <div className="text-center px-3">
+                                      <p className="text-xs text-gray-500">
+                                        Preview unavailable
+                                      </p>
+                                      {screenshotPreviews[payment.id]?.error ? (
+                                        <p className="text-[11px] text-gray-400 mt-1">
+                                          {screenshotPreviews[payment.id].error}
+                                        </p>
+                                      ) : null}
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className="w-full aspect-[5/3] rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center">
+                                  <p className="text-xs text-gray-500">
+                                    No screenshot available.
+                                  </p>
+                                </div>
+                              )}
                             </div>
 
                             {/* Rejection Reason */}

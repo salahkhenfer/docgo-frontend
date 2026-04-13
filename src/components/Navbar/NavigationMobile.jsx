@@ -212,7 +212,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                     onClick={closeMobileMenu}
                   >
                     <span className="relative z-10">
-                      {t("MyPrograms", "My Programs")}
+                      {t("MyPrograms", "Mes études à l’étranger")}
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                   </Link>
@@ -264,7 +264,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                 onClick={closeMobileMenu}
               >
                 <span className="relative z-10">
-                  {t("Programs_nav", "Programs")}
+                  {t("Programs_nav", "Études à l’étranger")}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>
@@ -280,7 +280,23 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                 onClick={closeMobileMenu}
               >
                 <span className="relative z-10">
-                  {t("Courses_nav", "Courses")}
+                  {t("Courses_nav", "Apprentissage")}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+              </Link>
+
+              <Link
+                to="/other-services"
+                className={`px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden
+                                    ${
+                                      getActiveNavItem === "services"
+                                        ? "bg-blue-50 text-[#0086C9] border-l-4 border-[#0086C9]"
+                                        : "text-gray-700 hover:bg-blue-50 hover:text-[#0086C9]"
+                                    }`}
+                onClick={closeMobileMenu}
+              >
+                <span className="relative z-10">
+                  {t("Services_nav", "Services")}
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
               </Link>

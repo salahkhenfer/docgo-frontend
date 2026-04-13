@@ -54,7 +54,6 @@ const PaymentDetailsModal = ({
       setError(
         err.response?.data?.message || "Failed to fetch payment details",
       );
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -80,9 +79,8 @@ const PaymentDetailsModal = ({
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-    } catch (err) {
+    } catch {
       alert("Failed to download screenshot");
-      console.error(err);
     }
   };
 

@@ -37,7 +37,6 @@ const UserCertificatesList = ({ userId }) => {
       } else {
         setError("Failed to load your certificates");
       }
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -61,9 +60,8 @@ const UserCertificatesList = ({ userId }) => {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-    } catch (err) {
+    } catch {
       alert("Failed to download certificate");
-      console.error(err);
     }
   };
 

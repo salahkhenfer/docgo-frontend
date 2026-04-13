@@ -577,50 +577,64 @@ export default function Courses() {
               </div>
             ) : (
               <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-teal-400 scrollbar-track-transparent">
-                {enrolledCourses.map((course) => (
-                  <Link
-                    key={course.id}
-                    to={`/Courses/${course.id}/watch`}
-                    onClick={() => window.scrollTo(0, 0)}
-                    className="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
-                  >
-                    {/* Thumbnail */}
-                    <div className="h-28 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
-                      <ImageWithFallback
-                        type="course"
-                        src={buildApiUrl(course.Image)}
-                        alt={course.Title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                        <PlayCircle className="w-10 h-10 text-white opacity-0 group-hover:opacity-90 transition-all duration-300" />
-                      </div>
-                    </div>
-                    {/* Info */}
-                    <div className="p-3">
-                      <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 mb-2">
-                        {course.Title}
-                      </h4>
-                      {/* Progress bar */}
-                      <div>
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>{t("Progress", "Progress") || "Progress"}</span>
-                          <span className="font-semibold text-emerald-600">
-                            {Math.round(course.progress || 0)}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-1.5">
-                          <div
-                            className="bg-gradient-to-r from-emerald-500 to-teal-500 h-1.5 rounded-full transition-all duration-500"
-                            style={{
-                              width: `${course.progress || 0}%`,
-                            }}
-                          />
+                {enrolledCourses.map((course) => {
+                  const uploadType = String(
+                    course?.uploadType || "",
+                  ).toLowerCase();
+                  const accessPath =
+                    uploadType === "zip"
+                      ? `/Courses/${course.id}/explore`
+                      : `/Courses/${course.id}/watch`;
+
+                  return (
+                    <Link
+                      key={course.id}
+                      to={accessPath}
+                      onClick={() => window.scrollTo(0, 0)}
+                      className="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    >
+                      {/* Thumbnail */}
+                      <div className="h-28 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
+                        <ImageWithFallback
+                          type="course"
+                          src={buildApiUrl(course.Image)}
+                          alt={course.Title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                          <PlayCircle className="w-10 h-10 text-white opacity-0 group-hover:opacity-90 transition-all duration-300" />
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                      {/* Info */}
+                      <div className="p-3">
+                        <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 mb-2">
+                          {course.Title}
+                        </h4>
+                        {/* Progress bar */}
+                        {uploadType !== "zip" && (
+                          <div>
+                            <div className="flex justify-between text-xs text-gray-500 mb-1">
+                              <span>
+                                {t("Progress", "Progress") || "Progress"}
+                              </span>
+                              <span className="font-semibold text-emerald-600">
+                                {Math.round(course.progress || 0)}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-100 rounded-full h-1.5">
+                              <div
+                                className="bg-gradient-to-r from-emerald-500 to-teal-500 h-1.5 rounded-full transition-all duration-500"
+                                style={{
+                                  width: `${course.progress || 0}%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -676,7 +690,7 @@ export default function Courses() {
                       <>
                         {t("Showing", "Showing") || "Showing"} {courses.length}{" "}
                         {t("of", "of") || "of"} {pagination?.totalCourses || 0}{" "}
-                        {t("courses", "Courses") || "courses"}
+                        {t("courses", "Apprentissage") || "apprentissage"}
                       </>
                     )}
                   </p>

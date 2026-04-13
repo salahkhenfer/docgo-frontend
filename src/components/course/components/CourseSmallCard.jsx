@@ -78,7 +78,7 @@ const CourseSmallCard = ({
             </div>
 
             {/* Progress Bar */}
-            {courseProgress && (
+            {course?.uploadType !== "zip" && courseProgress && (
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
                   <span>Progress</span>
@@ -116,7 +116,13 @@ const CourseSmallCard = ({
 
             {/* Continue Learning Button */}
             <button
-              onClick={() => navigate(`/Courses/${course.id}/watch`)}
+              onClick={() =>
+                navigate(
+                  String(course?.uploadType || "").toLowerCase() === "zip"
+                    ? `/Courses/${course.id}/explore`
+                    : `/Courses/${course.id}/watch`,
+                )
+              }
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
             >
               <FaPlay className="mr-2" />
@@ -124,11 +130,13 @@ const CourseSmallCard = ({
             </button>
 
             {/* View Payment History Button */}
-            <CoursePaymentButton
-              itemId={course.id}
-              itemType="course"
-              itemTitle={course.Title || course.title || "Course"}
-            />
+            {paymentStatus?.status === "approved" && (
+              <CoursePaymentButton
+                itemId={course.id}
+                itemType="course"
+                itemTitle={course.Title || course.title || "Course"}
+              />
+            )}
           </div>
         ) : paymentStatus && paymentStatus.status === "pending" ? (
           // Payment Pending State

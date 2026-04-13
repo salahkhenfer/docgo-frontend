@@ -13,7 +13,9 @@ function AllContentVideosCourse() {
     getCourseDetails(courseId)
       .then((res) => {
         const course = res?.data?.course || res?.data || res;
-        setHasCertificate(course?.certificate === true);
+        setHasCertificate(
+          course?.certificate === true && String(course?.uploadType) !== "zip",
+        );
       })
       .catch(() => setHasCertificate(false));
   }, [courseId]);

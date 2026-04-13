@@ -37,7 +37,7 @@ const Blocked = () => {
     } finally {
       setChecking(false);
     }
-  }, [API_URL, navigate, checking]);
+  }, [navigate, checking]);
 
   useEffect(() => {
     const tick = setInterval(() => {
@@ -144,7 +144,9 @@ const Blocked = () => {
             <p className="text-xs text-gray-400 mt-0.5 truncate">
               {checking
                 ? t("blocked.checking", "Verifying your account...")
-                : t("blocked.nextCheck", { count: countdown })}
+                : t("blocked.nextCheck", "Next check in {{count}}s", {
+                    count: countdown,
+                  })}
             </p>
           </div>
           <button

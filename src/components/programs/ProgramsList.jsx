@@ -15,6 +15,10 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useFavorite } from "../../hooks/useFavorite";
 import { buildApiUrl } from "../../utils/apiBaseUrl";
+import {
+  getCountryDisplayName,
+  getCountryName,
+} from "../../utils/countryCodeMap";
 
 // - helpers (mirrors ProgramCard) -
 
@@ -91,6 +95,17 @@ function ProgramListItem({
 
   if (!program) return null;
 
+  const getProgramCountryText = () => {
+    const raw = program?.programCountry || program?.country || "";
+    if (!raw) return "";
+
+    const rawStr = String(raw);
+    const isIso2 = /^[a-z]{2}$/i.test(rawStr);
+    const frName = isIso2 ? getCountryName(rawStr.toUpperCase()) : rawStr;
+
+    return language === "ar" ? getCountryDisplayName(frName, "ar") : frName;
+  };
+
   // Multi-language fields - same logic as ProgramCard
   const title =
     language === "ar" && program.title_ar ? program.title_ar : program.title;
@@ -102,14 +117,12 @@ function ProgramListItem({
     language === "ar" && program.university_ar
       ? program.university_ar
       : program.university;
-  const categoryText =
-    language === "ar" && program.category_ar
+  const specialtyText =
+    program.programSpecialty ||
+    (language === "ar" && program.category_ar
       ? program.category_ar
-      : program.category;
-  const locationText =
-    language === "ar" && program.location_ar
-      ? program.location_ar
-      : program.location;
+      : program.category);
+  const countryText = getProgramCountryText();
 
   const tags = (() => {
     if (!program.tags) return [];
@@ -139,7 +152,7 @@ function ProgramListItem({
 
   const formatPrice = (p) => {
     if (!p || p === 0) return t("free", "Free") || "Free";
-    return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${program.currency || "DZD"}`;
+    return `${Number(p).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
   const isFree =
@@ -160,9 +173,10 @@ function ProgramListItem({
       short_description: shortDescription,
       Price: program.Price,
       discountPrice: program.discountPrice,
-      currency: program.currency,
       university: universityText,
-      location: locationText,
+      // Backward-compatible key used by existing favorites UI
+      location: countryText,
+      country: countryText,
       Image: program.Image,
     });
   };
@@ -284,15 +298,15 @@ function ProgramListItem({
                   {program.programType}
                 </span>
               )}
-              {categoryText && (
+              {specialtyText && (
                 <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                  {categoryText}
+                  {specialtyText}
                 </span>
               )}
-              {locationText && (
+              {countryText && (
                 <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium flex items-center gap-1">
                   <MapPin className="w-2.5 h-2.5" />
-                  {locationText}
+                  {countryText}
                 </span>
               )}
               {program.isRemote && (
@@ -323,11 +337,6 @@ function ProgramListItem({
                   </span>
                 </div>
               )}
-              {program.scholarshipAmount && (
-                <span className="text-emerald-600 font-semibold">
-                  {program.scholarshipAmount} {program.currency || "DZD"}
-                </span>
-              )}
             </div>
 
             {/* Tag chips */}
@@ -355,17 +364,7 @@ function ProgramListItem({
           <div className="sm:w-40 flex flex-col items-start sm:items-end justify-between gap-3 flex-shrink-0">
             {/* Price */}
             <div className="flex flex-col items-start sm:items-end gap-0.5">
-              {program.scholarshipAmount && program.scholarshipAmount > 0 ? (
-                <div className="flex flex-col items-end">
-                  <span className="text-xs text-emerald-600 font-medium">
-                    {t("Scholarship", "Scholarship") || "Scholarship"}
-                  </span>
-                  <span className="text-xl font-bold text-emerald-600 whitespace-nowrap">
-                    {Number(program.scholarshipAmount).toLocaleString()}{" "}
-                    {program.currency || "DZD"}
-                  </span>
-                </div>
-              ) : isFree ? (
+              {isFree ? (
                 <span className="text-xl font-bold text-emerald-600">
                   {t("free", "Free") || "Free"}
                 </span>

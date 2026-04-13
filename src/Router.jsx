@@ -30,6 +30,7 @@ import Course from "./Pages/Course";
 import CourseResources from "./Pages/CourseResources";
 import CourseVideos from "./Pages/CourseVideos";
 import CourseSections from "./Pages/CourseSections";
+import CourseExploreZip from "./Pages/CourseExploreZip";
 import UserDashboard from "./Pages/Dashboard/UserDashboard";
 import NotFound from "./pages/NotFound";
 import EditProfile from "./Pages/Profile/EditProfile";
@@ -50,6 +51,13 @@ import MyLearning from "./Pages/Dashboard/MyLearning";
 import MyPrograms from "./Pages/Dashboard/MyPrograms";
 import UserAllPaymentsPage from "./Pages/Dashboard/UserAllPaymentsPage";
 import ProgramApplicationStatus from "./Pages/ProgramApplicationStatus";
+
+// Other Services
+import OtherServices from "./Pages/OtherServices/OtherServices";
+import CVService from "./Pages/OtherServices/CVService";
+import InternshipsList from "./Pages/OtherServices/InternshipsList";
+import InternshipDetail from "./Pages/OtherServices/InternshipDetail";
+import MyOtherServicesApplications from "./Pages/OtherServices/MyOtherServicesApplications";
 
 // Auth protection loader
 const protectedLoader = async ({ request }) => {
@@ -178,6 +186,32 @@ const Routers = createBrowserRouter([
         element: <FavoritesPage />,
       },
       {
+        path: "other-services",
+        caseSensitive: false,
+        element: <OtherServices />,
+      },
+      {
+        path: "other-services/cv",
+        caseSensitive: false,
+        element: <CVService />,
+      },
+      {
+        path: "other-services/internships",
+        caseSensitive: false,
+        element: <InternshipsList />,
+      },
+      {
+        path: "other-services/internships/:id",
+        caseSensitive: false,
+        element: <InternshipDetail />,
+      },
+      {
+        path: "other-services/my-applications",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <MyOtherServicesApplications />,
+      },
+      {
         path: "notifications",
         caseSensitive: false,
         loader: protectedLoader,
@@ -197,6 +231,14 @@ const Routers = createBrowserRouter([
       {
         path: "Courses/:courseId/watch",
         caseSensitive: false,
+        loader: protectedLoader,
+        element: <CourseSections />,
+      },
+      {
+        // Backward-compatible alias used by some payment redirects
+        path: "MyCourses/:courseId",
+        caseSensitive: false,
+        loader: protectedLoader,
         element: <CourseSections />,
       },
       {
@@ -213,7 +255,14 @@ const Routers = createBrowserRouter([
       {
         path: "Courses/:courseId/watch/resources",
         caseSensitive: false,
+        loader: protectedLoader,
         element: <CourseResources />,
+      },
+      {
+        path: "Courses/:courseId/explore",
+        caseSensitive: false,
+        loader: protectedLoader,
+        element: <CourseExploreZip />,
       },
       {
         path: "Courses/:courseId/videos",
@@ -339,6 +388,26 @@ const Routers = createBrowserRouter([
             path: "applications/:type",
             caseSensitive: false,
             element: <UserApplications />,
+          },
+          {
+            path: "service-applications",
+            caseSensitive: false,
+            element: <MyOtherServicesApplications />,
+          },
+          {
+            path: "cv",
+            caseSensitive: false,
+            element: <CVService />,
+          },
+          {
+            path: "internships",
+            caseSensitive: false,
+            element: <InternshipsList />,
+          },
+          {
+            path: "internships/:id",
+            caseSensitive: false,
+            element: <InternshipDetail />,
           },
           {
             path: "certificates",

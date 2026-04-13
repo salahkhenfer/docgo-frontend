@@ -164,8 +164,7 @@ export const useHomePageContent = () => {
         } else {
           throw new Error("Invalid response format");
         }
-      } catch (err) {
-        console.error("Error fetching homepage content:", err);
+      } catch {
         // Use i18n as complete fallback
         setContent({
           hero: {

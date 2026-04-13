@@ -28,8 +28,7 @@ export const fetchUserOptions = async () => {
         data.programTypesPerCountrySpecialty || {},
       countryFlags: data.countryFlags || {},
     };
-  } catch (error) {
-    console.warn("Failed to fetch user options from API", error);
+  } catch {
     // Return empty defaults - admin controls all options
     return {
       userOriginCountries: [],

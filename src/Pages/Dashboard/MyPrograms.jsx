@@ -5,6 +5,10 @@ import { useAppContext } from "../../AppContext";
 import MainLoading from "../../MainLoading";
 import apiClient from "../../services/apiClient";
 import ImageWithFallback from "../../components/Common/ImageWithFallback";
+import {
+  getCountryDisplayName,
+  getCountryName,
+} from "../../utils/countryCodeMap";
 
 const MyPrograms = () => {
   const { t, i18n } = useTranslation();
@@ -46,17 +50,20 @@ const MyPrograms = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-              {t("dashboard.myPrograms", "My Programs")}
+              {t("dashboard.myPrograms", "Mes études à l’étranger")}
             </h1>
             <p className="text-gray-600 mt-1">
-              {t("dashboard.myProgramsSubtitle", "Programs you applied to")}
+              {t(
+                "dashboard.myProgramsSubtitle",
+                "Études à l’étranger auxquelles vous avez postulé",
+              )}
             </p>
           </div>
           <Link
             to="/programs"
             className="text-sm font-medium text-green-600 hover:text-green-700"
           >
-            {t("dashboard.browsePrograms", "Browse Programs")}
+            {t("dashboard.browsePrograms", "Parcourir les études à l’étranger")}
           </Link>
         </div>
       </div>
@@ -64,7 +71,10 @@ const MyPrograms = () => {
       {applications.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm p-10 text-center">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            {t("dashboard.noEnrolledPrograms", "No Enrolled Programs")}
+            {t(
+              "dashboard.noEnrolledPrograms",
+              "Aucune étude à l’étranger inscrite",
+            )}
           </h3>
           <p className="text-gray-600 mb-6">
             {t(
@@ -76,7 +86,7 @@ const MyPrograms = () => {
             onClick={() => navigate("/programs")}
             className="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
-            {t("dashboard.browsePrograms", "Browse Programs")}
+            {t("dashboard.browsePrograms", "Parcourir les études à l’étranger")}
           </button>
         </div>
       ) : (
@@ -130,10 +140,21 @@ const MyPrograms = () => {
                           (i18n.language === "ar" && program?.university_ar
                             ? program.university_ar
                             : program?.university) || "";
-                        const loc =
-                          (i18n.language === "ar" && program?.location_ar
-                            ? program.location_ar
-                            : program?.location) || "";
+                        const loc = (() => {
+                          const raw =
+                            program?.programCountry || program?.country || "";
+                          if (!raw) return "";
+
+                          const rawStr = String(raw);
+                          const isIso2 = /^[a-z]{2}$/i.test(rawStr);
+                          const frName = isIso2
+                            ? getCountryName(rawStr.toUpperCase())
+                            : rawStr;
+
+                          return i18n.language === "ar"
+                            ? getCountryDisplayName(frName, "ar")
+                            : frName;
+                        })();
                         const capitalize = (s) =>
                           s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
                         const parts = [org, loc]

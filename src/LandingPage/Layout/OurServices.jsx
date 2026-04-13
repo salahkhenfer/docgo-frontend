@@ -90,6 +90,20 @@ function OurServices({ cms }) {
             to="/courses"
           />
         </div>
+
+        <div className="flex items-stretch justify-center gap-8 md:gap-12 flex-col md:flex-row w-full">
+          <Service
+            url={Knwoledge2}
+            h1={t("CareerServices", "Career Services")}
+            h3={t("CVAndInternships", "CV & internships")}
+            p={t(
+              "CareerServicesDescription",
+              "Apply for a professional CV and explore internship opportunities to boost your career.",
+            )}
+            btn={t("ExploreServices", "Explore services")}
+            to="/other-services"
+          />
+        </div>
       </Container>
     </div>
   );

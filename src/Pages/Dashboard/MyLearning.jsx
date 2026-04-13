@@ -102,7 +102,14 @@ const MyLearning = () => {
                   type="button"
                   onClick={() => {
                     if (!isDeleted) {
-                      navigate(`/Courses/${enrollment.CourseId}/watch`);
+                      const uploadType = String(
+                        course?.uploadType || "",
+                      ).toLowerCase();
+                      navigate(
+                        uploadType === "zip"
+                          ? `/Courses/${enrollment.CourseId}/explore`
+                          : `/Courses/${enrollment.CourseId}/watch`,
+                      );
                     }
                   }}
                   disabled={isDeleted}
@@ -153,10 +160,12 @@ const MyLearning = () => {
                               ? t("dashboard.completed", "Completed")
                               : t("dashboard.active", "Active")}
                         </span>
-                        <span className="text-xs text-gray-500">
-                          {t("dashboard.progress", "Progress")}:{" "}
-                          {Math.round(enrollment.progressPercentage || 0)}%
-                        </span>
+                        {course?.uploadType !== "zip" && (
+                          <span className="text-xs text-gray-500">
+                            {t("dashboard.progress", "Progress")}:{" "}
+                            {Math.round(enrollment.progressPercentage || 0)}%
+                          </span>
+                        )}
                       </div>
                       {isDeleted && (
                         <p className="mt-2 text-xs text-red-600">

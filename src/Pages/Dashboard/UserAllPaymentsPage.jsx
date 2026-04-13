@@ -7,7 +7,7 @@
  * Can download screenshots and see details
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Download,
   Filter,
@@ -17,6 +17,9 @@ import {
   Clock,
   Eye,
   Search,
+  Image as ImageIcon,
+  BookOpen,
+  GraduationCap,
 } from "lucide-react";
 import apiClient from "../../utils/apiClient";
 
@@ -38,11 +41,94 @@ const UserAllPaymentsPage = () => {
   });
 
   const [expandedRow, setExpandedRow] = useState(null);
+  const [screenshotPreviews, setScreenshotPreviews] = useState({});
   const [stats, setStats] = useState({
     total: 0,
     byStatus: {},
     byType: {},
   });
+
+  const getPaymentLabel = (payment) => {
+    const type = String(payment?.itemType || "").toLowerCase();
+    if (type === "program") return "Program";
+    if (type === "course") return "Course";
+    return "Payment";
+  };
+
+  const getItemTypeIcon = (payment) => {
+    const type = String(payment?.itemType || "").toLowerCase();
+    if (type === "program") return GraduationCap;
+    if (type === "course") return BookOpen;
+    return ImageIcon;
+  };
+
+  const formatAmount = (payment) => {
+    const amount = payment?.amount;
+    const currency = payment?.currency;
+    if (amount === null || amount === undefined) return "—";
+
+    const amountText = String(amount);
+    return currency ? `${amountText} ${currency}` : amountText;
+  };
+
+  const fetchScreenshotPreview = async (paymentId) => {
+    setScreenshotPreviews((prev) => {
+      if (prev[paymentId]?.url || prev[paymentId]?.loading) return prev;
+      return {
+        ...prev,
+        [paymentId]: { url: null, loading: true, error: null },
+      };
+    });
+
+    try {
+      const response = await apiClient.get(
+        `/user/payment-history/${paymentId}/download`,
+        { responseType: "blob" },
+      );
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      setScreenshotPreviews((prev) => ({
+        ...prev,
+        [paymentId]: { url, loading: false, error: null },
+      }));
+    } catch (err) {
+      setScreenshotPreviews((prev) => ({
+        ...prev,
+        [paymentId]: {
+          url: null,
+          loading: false,
+          error: err?.response?.data?.message || "Failed to load screenshot",
+        },
+      }));
+    }
+  };
+
+  const expandedPayment = useMemo(
+    () => payments.find((p) => p.id === expandedRow) || null,
+    [payments, expandedRow],
+  );
+
+  useEffect(() => {
+    if (!expandedPayment?.id) return;
+    if (!expandedPayment?.hasScreenshot) return;
+    fetchScreenshotPreview(expandedPayment.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedPayment?.id]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(screenshotPreviews || {}).forEach((entry) => {
+        if (entry?.url) {
+          try {
+            window.URL.revokeObjectURL(entry.url);
+          } catch {
+            // ignore
+          }
+        }
+      });
+    };
+  }, [screenshotPreviews]);
 
   // Fetch payments
   const fetchPayments = async () => {
@@ -70,7 +156,6 @@ const UserAllPaymentsPage = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch your payments");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -83,8 +168,8 @@ const UserAllPaymentsPage = () => {
       if (response.data.success) {
         setStats(response.data.data);
       }
-    } catch (err) {
-      console.error("Failed to fetch payment stats:", err);
+    } catch {
+      // ignore
     }
   };
 
@@ -113,9 +198,8 @@ const UserAllPaymentsPage = () => {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-    } catch (err) {
+    } catch {
       alert("Failed to download screenshot");
-      console.error(err);
     }
   };
 
@@ -301,18 +385,36 @@ const UserAllPaymentsPage = () => {
                       <React.Fragment key={payment.id}>
                         <tr className="border-b hover:bg-gray-50">
                           <td className="px-6 py-4">
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {payment.item.title}
-                              </p>
-                              <p className="text-sm text-gray-500 capitalize">
-                                {payment.itemType}
-                              </p>
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                                {(() => {
+                                  const Icon = getItemTypeIcon(payment);
+                                  return (
+                                    <Icon className="w-5 h-5 text-blue-700" />
+                                  );
+                                })()}
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-medium text-gray-900 truncate">
+                                  {payment?.item?.title || "Untitled"}
+                                </p>
+                                <div className="mt-1 flex items-center gap-2">
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                    {getPaymentLabel(payment)}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    •
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    #{payment.id}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
                             <p className="font-medium text-gray-900">
-                              {payment.amount} {payment.currency}
+                              {formatAmount(payment)}
                             </p>
                           </td>
                           <td className="px-6 py-4">
@@ -330,7 +432,7 @@ const UserAllPaymentsPage = () => {
                                     : payment.id,
                                 )
                               }
-                              className="text-blue-600 hover:text-blue-800"
+                              className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition"
                             >
                               <Eye className="w-5 h-5" />
                             </button>
@@ -339,63 +441,162 @@ const UserAllPaymentsPage = () => {
 
                         {/* Expanded Row */}
                         {expandedRow === payment.id && (
-                          <tr className="bg-blue-50">
+                          <tr className="bg-blue-50/50">
                             <td colSpan="5" className="px-6 py-4">
-                              <div className="space-y-4">
-                                {payment.rejectionReason && (
-                                  <div className="bg-red-50 border border-red-200 rounded p-4">
-                                    <p className="text-xs font-medium text-red-700 uppercase mb-2">
-                                      Rejection Reason
-                                    </p>
-                                    <p className="text-red-800">
-                                      {payment.rejectionReason}
-                                    </p>
-                                  </div>
-                                )}
+                              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                                {/* Preview */}
+                                <div className="lg:col-span-1">
+                                  <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                      <p className="text-sm font-semibold text-gray-900">
+                                        Payment Preview
+                                      </p>
+                                      <span className="text-xs text-gray-500">
+                                        {payment.hasScreenshot
+                                          ? "Proof"
+                                          : "No proof"}
+                                      </span>
+                                    </div>
 
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                  <div>
-                                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">
-                                      Transaction ID
-                                    </p>
-                                    <p className="text-gray-900 font-mono text-sm">
-                                      {payment.transactionId || "N/A"}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">
-                                      Verification Date
-                                    </p>
-                                    <p className="text-gray-900 text-sm">
-                                      {payment.verificationDate
-                                        ? new Date(
-                                            payment.verificationDate,
-                                          ).toLocaleDateString()
-                                        : "Pending"}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-xs font-medium text-gray-500 uppercase mb-1">
-                                      Upload Date
-                                    </p>
-                                    <p className="text-gray-900 text-sm">
-                                      {new Date(
-                                        payment.uploadDate,
-                                      ).toLocaleDateString()}
-                                    </p>
+                                    {payment.hasScreenshot ? (
+                                      <div className="relative">
+                                        <div className="w-full aspect-[4/3] rounded-xl bg-gray-50 border border-gray-200 overflow-hidden flex items-center justify-center">
+                                          {screenshotPreviews[payment.id]
+                                            ?.loading ? (
+                                            <div className="text-center">
+                                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                                              <p className="text-xs text-gray-500">
+                                                Loading preview...
+                                              </p>
+                                            </div>
+                                          ) : screenshotPreviews[payment.id]
+                                              ?.url ? (
+                                            <img
+                                              src={
+                                                screenshotPreviews[payment.id]
+                                                  .url
+                                              }
+                                              alt="Payment proof"
+                                              className="w-full h-full object-contain"
+                                            />
+                                          ) : (
+                                            <div className="text-center px-4">
+                                              <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                                              <p className="text-xs text-gray-500">
+                                                Preview unavailable
+                                              </p>
+                                              {screenshotPreviews[payment.id]
+                                                ?.error ? (
+                                                <p className="text-[11px] text-gray-400 mt-1">
+                                                  {
+                                                    screenshotPreviews[
+                                                      payment.id
+                                                    ].error
+                                                  }
+                                                </p>
+                                              ) : null}
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        <button
+                                          onClick={() =>
+                                            handleDownload(payment.id)
+                                          }
+                                          className="mt-3 w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                                        >
+                                          <Download className="w-4 h-4" />
+                                          Download Screenshot
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <div className="w-full aspect-[4/3] rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-center px-4">
+                                        <div>
+                                          <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                                          <p className="text-xs text-gray-500">
+                                            No screenshot available for this
+                                            payment.
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
 
-                                <div>
-                                  {payment.hasScreenshot && (
-                                    <button
-                                      onClick={() => handleDownload(payment.id)}
-                                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                                    >
-                                      <Download className="w-4 h-4" />
-                                      Download Screenshot
-                                    </button>
-                                  )}
+                                {/* Details */}
+                                <div className="lg:col-span-2 space-y-4">
+                                  <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                                      <div className="min-w-0">
+                                        <p className="text-xs font-medium text-gray-500 uppercase">
+                                          Item
+                                        </p>
+                                        <p className="text-lg font-semibold text-gray-900 truncate">
+                                          {payment?.item?.title || "Untitled"}
+                                        </p>
+                                        {payment?.item?.description ? (
+                                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                                            {payment.item.description}
+                                          </p>
+                                        ) : null}
+                                      </div>
+                                      <div className="flex items-center gap-3">
+                                        <div className="text-right">
+                                          <p className="text-xs font-medium text-gray-500 uppercase">
+                                            Amount
+                                          </p>
+                                          <p className="text-lg font-bold text-gray-900">
+                                            {formatAmount(payment)}
+                                          </p>
+                                        </div>
+                                        {getStatusBadge(payment.status)}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {payment.rejectionReason ? (
+                                    <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+                                      <p className="text-xs font-medium text-red-700 uppercase mb-2">
+                                        Rejection Reason
+                                      </p>
+                                      <p className="text-red-800">
+                                        {payment.rejectionReason}
+                                      </p>
+                                    </div>
+                                  ) : null}
+
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                                      <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                        Transaction ID
+                                      </p>
+                                      <p className="text-gray-900 font-mono text-sm break-all">
+                                        {payment.transactionId || "N/A"}
+                                      </p>
+                                    </div>
+                                    <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                                      <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                        Verification Date
+                                      </p>
+                                      <p className="text-gray-900 text-sm">
+                                        {payment.verificationDate
+                                          ? new Date(
+                                              payment.verificationDate,
+                                            ).toLocaleDateString()
+                                          : "Pending"}
+                                      </p>
+                                    </div>
+                                    <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                                      <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                        Upload Date
+                                      </p>
+                                      <p className="text-gray-900 text-sm">
+                                        {new Date(
+                                          payment.uploadDate,
+                                        ).toLocaleDateString()}
+                                      </p>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </td>

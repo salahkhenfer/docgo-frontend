@@ -84,13 +84,13 @@ const UserFavorites = () => {
   const tabs = [
     {
       id: "courses",
-      name: t("favorites.courses", "Courses"),
+      name: t("favorites.courses", "Apprentissage"),
       icon: BookOpenIcon,
       count: favorites.courses.length,
     },
     {
       id: "programs",
-      name: t("favorites.programs", "Programs"),
+      name: t("favorites.programs", "Études à l’étranger"),
       icon: AcademicCapIcon,
       count: favorites.programs.length,
     },

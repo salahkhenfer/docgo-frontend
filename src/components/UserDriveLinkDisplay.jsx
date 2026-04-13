@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import apiClient from "../../utils/apiClient";
+import apiClient from "../services/apiClient";
 import { Link as LinkIcon, ExternalLink, Loader } from "lucide-react";
 
 const UserDriveLinkDisplay = () => {
   const { t } = useTranslation();
   const [driveLink, setDriveLink] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDriveLink = async () => {
@@ -17,8 +16,7 @@ const UserDriveLinkDisplay = () => {
         if (response.data.success && response.data.data) {
           setDriveLink(response.data.data);
         }
-      } catch (err) {
-        console.error("Error fetching drive link:", err);
+      } catch {
         // This is not necessarily an error - user just might not have a drive link
       } finally {
         setLoading(false);
@@ -40,28 +38,23 @@ const UserDriveLinkDisplay = () => {
     return null; // Don't show anything if user doesn't have a drive link
   }
 
+  if (!driveLink?.driveLink) return null;
+
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+    <div className="bg-white rounded-lg p-4 border border-gray-200">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 flex-1">
+        <div className="flex items-start gap-3 flex-1 min-w-0">
           <LinkIcon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0">
             <h3 className="font-semibold text-gray-900 text-sm">
-              {t("shared_files", "Shared Files")}
+              {t("drive_link", "Drive link")}
             </h3>
-            {driveLink.description && (
-              <p className="text-sm text-gray-600 mt-1">
-                {driveLink.description}
-              </p>
-            )}
-            <p className="text-xs text-gray-500 mt-2">
-              {t(
-                "access_shared_files",
-                "Access files shared by your instructors and team",
-              )}
+            <p className="text-xs text-gray-500 mt-1">
+              {t("drive_link_help", "This is your shared Google Drive link.")}
             </p>
           </div>
         </div>
+
         <a
           href={driveLink.driveLink}
           target="_blank"
@@ -72,14 +65,6 @@ const UserDriveLinkDisplay = () => {
           <ExternalLink className="w-4 h-4" />
         </a>
       </div>
-
-      {/* Last updated info */}
-      {driveLink.updatedAt && (
-        <p className="text-xs text-gray-500 mt-3">
-          {t("updated", "Updated")}:{" "}
-          {new Date(driveLink.updatedAt).toLocaleDateString()}
-        </p>
-      )}
     </div>
   );
 };

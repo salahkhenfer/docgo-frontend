@@ -82,7 +82,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
     },
     {
       id: "my-programs",
-      name: t("dashboard.sidebar.myPrograms", "My Programs"),
+      name: t("dashboard.sidebar.myPrograms", "Mes études à l’étranger"),
       icon: AcademicCapIcon,
       path: "/dashboard/my-programs",
       badge: null,
@@ -108,6 +108,27 @@ const UserSidebar = ({ isOpen, onClose }) => {
       name: t("dashboard.sidebar.applications", "Applications"),
       icon: DocumentTextIcon,
       path: "/dashboard/applications",
+      badge: null,
+    },
+    {
+      id: "service-applications",
+      name: t("dashboard.sidebar.serviceApplications", "Service Applications"),
+      icon: DocumentTextIcon,
+      path: "/dashboard/service-applications",
+      badge: null,
+    },
+    {
+      id: "cv-service",
+      name: t("dashboard.sidebar.cvService", "CV Service"),
+      icon: DocumentTextIcon,
+      path: "/dashboard/cv",
+      badge: null,
+    },
+    {
+      id: "internships",
+      name: t("dashboard.sidebar.internships", "Internships"),
+      icon: AcademicCapIcon,
+      path: "/dashboard/internships",
       badge: null,
     },
     {

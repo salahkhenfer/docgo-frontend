@@ -40,9 +40,16 @@ const EditProfile = () => {
     university: "",
     professionalStatus: "",
     academicStatus: "",
+    specialty: "",
+    academicAverage: "",
+    currentAcademicLevel: "",
+    hasRedoubledYear: false,
+    yearsOfExperience: "",
+    currentJobTitle: "",
     profile_pic_link: "",
   });
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://backend.healthpathglobal.com";
 
   // Function to get country name based on current language
   const getCountryDisplayName = (countryString) => {
@@ -103,7 +110,7 @@ const EditProfile = () => {
 
     try {
       const formDataImage = new FormData();
-      formDataImage.append("ProfilePic", ProfilePic);
+      formDataImage.append("profilePic", ProfilePic);
 
       const response = await apiClient.post(
         `${import.meta.env.VITE_API_URL}/upload/User/ProfilePic`,
@@ -195,12 +202,9 @@ const EditProfile = () => {
         },
       );
 
-      const data = response;
+      const data = response.data;
 
-      if (
-        response.status === 200 ||
-        (response.status === 201 && data.success)
-      ) {
+      if (response.status === 200 && data?.user) {
         // Update user in context
         if (updateUserProfile) {
           updateUserProfile(data.user);
@@ -230,10 +234,10 @@ const EditProfile = () => {
       );
 
       const data = response.data;
-      if (data) {
+      if (data?.success && data?.user) {
         setFormData((prev) => ({
           ...prev,
-          ...data,
+          ...data.user,
         }));
       } else {
         toast.error(
@@ -276,6 +280,19 @@ const EditProfile = () => {
         university: user.university || "",
         professionalStatus: user.professionalStatus || "",
         academicStatus: user.academicStatus || "",
+        specialty: user.specialty || "",
+        academicAverage:
+          user.academicAverage === null || user.academicAverage === undefined
+            ? ""
+            : String(user.academicAverage),
+        currentAcademicLevel: user.currentAcademicLevel || "",
+        hasRedoubledYear: !!user.hasRedoubledYear,
+        yearsOfExperience:
+          user.yearsOfExperience === null ||
+          user.yearsOfExperience === undefined
+            ? ""
+            : String(user.yearsOfExperience),
+        currentJobTitle: user.currentJobTitle || "",
         profile_pic_link: user.profile_pic_link || "",
       });
     } else {
@@ -449,7 +466,10 @@ const EditProfile = () => {
                   setFormData((prev) => ({ ...prev, country }))
                 }
                 countries={options.userOriginCountries}
-                placeholder={t("editProfile.selectCountry", "Select Country") || "Select Country"}
+                placeholder={
+                  t("editProfile.selectCountry", "Select Country") ||
+                  "Select Country"
+                }
                 showLabel={false}
               />
             </div>
@@ -491,6 +511,100 @@ const EditProfile = () => {
                         {getFields(field)}
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="specialty"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("editProfile.specialty", "Specialty") || "Specialty"}
+                  </label>
+                  <input
+                    type="text"
+                    id="specialty"
+                    name="specialty"
+                    value={formData.specialty}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder={t(
+                      "editProfile.specialtyPlaceholder",
+                      "e.g., Medicine, Pharmacy, Dentistry",
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="academicAverage"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("editProfile.academicAverage", "Academic Average") ||
+                        "Academic Average"}
+                    </label>
+                    <input
+                      type="number"
+                      id="academicAverage"
+                      name="academicAverage"
+                      value={formData.academicAverage}
+                      onChange={handleChange}
+                      min={0}
+                      max={20}
+                      step={0.01}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder={t("editProfile.academicAverageHint", "0-20")}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="currentAcademicLevel"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t(
+                        "editProfile.currentAcademicLevel",
+                        "Current Academic Level",
+                      ) || "Current Academic Level"}
+                    </label>
+                    <input
+                      type="text"
+                      id="currentAcademicLevel"
+                      name="currentAcademicLevel"
+                      value={formData.currentAcademicLevel}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder={t(
+                        "editProfile.currentAcademicLevelPlaceholder",
+                        "e.g., L3, M1, Intern",
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="hasRedoubledYear"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("editProfile.redoubledYear", "Redoubled Year") ||
+                      "Redoubled Year"}
+                  </label>
+                  <select
+                    id="hasRedoubledYear"
+                    name="hasRedoubledYear"
+                    value={formData.hasRedoubledYear ? "true" : "false"}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        hasRedoubledYear: e.target.value === "true",
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="false">{t("common.no", "No")}</option>
+                    <option value="true">{t("common.yes", "Yes")}</option>
                   </select>
                 </div>
               </div>
@@ -596,6 +710,57 @@ const EditProfile = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="yearsOfExperience"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t(
+                        "editProfile.yearsOfExperience",
+                        "Years Of Experience",
+                      ) || "Years Of Experience"}
+                    </label>
+                    <input
+                      type="number"
+                      id="yearsOfExperience"
+                      name="yearsOfExperience"
+                      value={formData.yearsOfExperience}
+                      onChange={handleChange}
+                      min={0}
+                      max={80}
+                      step={1}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder={t(
+                        "editProfile.yearsOfExperiencePlaceholder",
+                        "e.g., 3",
+                      )}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="currentJobTitle"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("editProfile.currentJobTitle", "Current Job Title") ||
+                        "Current Job Title"}
+                    </label>
+                    <input
+                      type="text"
+                      id="currentJobTitle"
+                      name="currentJobTitle"
+                      value={formData.currentJobTitle}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder={t(
+                        "editProfile.currentJobTitlePlaceholder",
+                        "e.g., Pharmacist",
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

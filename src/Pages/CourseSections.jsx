@@ -21,6 +21,7 @@ import { EnrollmentAPI } from "../API/Enrollment";
 import reviewsAPI from "../API/Reviews";
 import apiClient from "../services/apiClient";
 import VideoPlayer from "../components/Common/VideoPlayer";
+import RichTextDisplay from "../components/Common/RichTextEditor/RichTextDisplay";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
 import MainLoading from "../MainLoading";
@@ -518,14 +519,13 @@ function TextReader({ item, onComplete, isCompleted }) {
           </span>
         )}
       </div>
-      <div
-        className="prose prose-gray max-w-none p-6 bg-white rounded-xl border border-gray-200 shadow-sm leading-relaxed"
-        dangerouslySetInnerHTML={{
-          __html:
-            content ||
-            `<p>${t("No content available", "No content available")}</p>`,
-        }}
-      />
+      <div className="prose prose-gray max-w-none p-6 bg-white rounded-xl border border-gray-200 shadow-sm leading-relaxed">
+        {content ? (
+          <RichTextDisplay content={content} className="max-w-none" />
+        ) : (
+          <p>{t("No content available", "No content available")}</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -994,6 +994,16 @@ export function CourseSections() {
     }
   }, [hasData, canAccessContent, courseId, navigate]);
 
+  // ZIP courses don't use the watch experience.
+  useEffect(() => {
+    const uploadType = String(
+      courseData?.course?.uploadType || "",
+    ).toLowerCase();
+    if (hasData && uploadType === "zip") {
+      navigate(`/Courses/${courseId}/explore`, { replace: true });
+    }
+  }, [hasData, courseData?.course?.uploadType, courseId, navigate]);
+
   // Load progress from backend
   useEffect(() => {
     if (!courseId || !user) return;
@@ -1300,7 +1310,8 @@ export function CourseSections() {
     );
   }
 
-  const hasCertificate = course?.certificate === true;
+  const hasCertificate =
+    course?.certificate === true && String(course?.uploadType) !== "zip";
   const isCertificateUnlocked =
     totalItems > 0 && completedItems.size >= totalItems;
 

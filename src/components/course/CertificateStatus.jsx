@@ -50,14 +50,13 @@ const CertificateStatus = ({ courseId, isCompleted, userId }) => {
           if (certResponse.data.data) {
             setUserCertificate(certResponse.data.data);
           }
-        } catch (err) {
+        } catch {
           // Certificate might not be issued yet
-          console.warn("Certificate not issued yet:", err);}
+        }
       }
     } catch (err) {
       setStatus("error");
       setError(err.response?.data?.error || "Failed to load certificate");
-      console.error(err);
     }
   };
 

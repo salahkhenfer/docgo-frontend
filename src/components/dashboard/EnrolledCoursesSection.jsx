@@ -101,7 +101,14 @@ const EnrolledCoursesSection = ({ enrollments }) => {
               }`}
               onClick={() => {
                 if (!isDeleted) {
-                  navigate(`/Courses/${enrollment.CourseId}/watch`);
+                  const uploadType = String(
+                    enrollment.Course?.uploadType || "",
+                  ).toLowerCase();
+                  navigate(
+                    uploadType === "zip"
+                      ? `/Courses/${enrollment.CourseId}/explore`
+                      : `/Courses/${enrollment.CourseId}/watch`,
+                  );
                 }
               }}
             >

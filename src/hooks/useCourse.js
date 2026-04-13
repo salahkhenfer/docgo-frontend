@@ -25,6 +25,16 @@ export const useCourse = (courseId) => {
   const { t } = useTranslation();
   const abortControllerRef = useRef(null);
 
+  const getAccessPathForCourse = useCallback(
+    (course) => {
+      const uploadType = String(course?.uploadType || "").toLowerCase();
+      return uploadType === "zip"
+        ? `/Courses/${courseId}/explore`
+        : `/Courses/${courseId}/watch`;
+    },
+    [courseId],
+  );
+
   // Check payment application status
   const checkPaymentStatus = useCallback(async () => {
     if (!isAuth || !courseId) return;
@@ -158,8 +168,8 @@ export const useCourse = (courseId) => {
       // Show success message with better UX
       await showEnrollmentSuccess();
 
-      // Navigate to course watch page
-      navigate(`/Courses/${courseId}/watch`);
+      // Navigate to course access page
+      navigate(getAccessPathForCourse(courseData?.course));
     } catch (error) {
       let errorMessage = "Failed to enroll in the course. Please try again.";
 
@@ -196,7 +206,7 @@ export const useCourse = (courseId) => {
         });
 
         if (result.isConfirmed) {
-          navigate(`/Courses/${courseId}/watch`);
+          navigate(getAccessPathForCourse(courseData?.course));
         }
       } else {
         await Swal.fire({
@@ -214,7 +224,7 @@ export const useCourse = (courseId) => {
     } finally {
       setEnrolling(false);
     }
-  }, [courseId, fetchCourseData, navigate]);
+  }, [courseId, fetchCourseData, navigate, getAccessPathForCourse, courseData]);
 
   // Enhanced enrollment handler with better error handling and UX
   const handleEnrollClick = useCallback(async () => {
@@ -249,7 +259,7 @@ export const useCourse = (courseId) => {
 
     // Check if already enrolled
     if (courseData?.userStatus?.isEnrolled) {
-      navigate(`/Courses/${courseId}/watch`);
+      navigate(getAccessPathForCourse(courseData?.course));
       return;
     }
 
@@ -348,6 +358,7 @@ export const useCourse = (courseId) => {
     navigate,
     handleFreeCourseEnrollment,
     paymentStatus,
+    getAccessPathForCourse,
   ]);
 
   // Retry function for error states

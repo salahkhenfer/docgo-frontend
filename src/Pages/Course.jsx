@@ -330,7 +330,9 @@ export const Course = () => {
     if (
       normalizedPath.startsWith("/Courses_Intro/") ||
       normalizedPath.startsWith("/Programs/") ||
-      normalizedPath.startsWith("/public/")
+      normalizedPath.startsWith("/public/") ||
+      // Intro videos are served via guarded /storage/* routes on the API.
+      normalizedPath.startsWith("/storage/")
     ) {
       return buildApiUrl(normalizedPath);
     }
@@ -555,7 +557,14 @@ export const Course = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                       {isEnrolled ? (
                         <button
-                          onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                          onClick={() =>
+                            navigate(
+                              String(course?.uploadType || "").toLowerCase() ===
+                                "zip"
+                                ? `/Courses/${courseId}/explore`
+                                : `/Courses/${courseId}/watch`,
+                            )
+                          }
                           className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-6 transition-all transform hover:scale-105 shadow-lg"
                         >
                           <PlayCircle className="w-16 h-16" />
@@ -604,11 +613,19 @@ export const Course = () => {
                 {/* Watch Course Button for Enrolled Users */}
                 {isEnrolled && (
                   <button
-                    onClick={() => navigate(`/Courses/${courseId}/watch`)}
+                    onClick={() =>
+                      navigate(
+                        String(course?.uploadType || "").toLowerCase() === "zip"
+                          ? `/Courses/${courseId}/explore`
+                          : `/Courses/${courseId}/watch`,
+                      )
+                    }
                     className="mb-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg flex items-center gap-3"
                   >
                     <PlayCircle className="w-6 h-6" />
-                    {t("Watch Course", "Watch Course") || "Watch Course"}
+                    {String(course?.uploadType || "").toLowerCase() === "zip"
+                      ? t("exploreCourse", "Explore the course")
+                      : t("Watch Course", "Watch Course") || "Watch Course"}
                   </button>
                 )}
 

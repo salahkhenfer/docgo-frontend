@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
@@ -8,6 +8,7 @@ const ContactForm = ({
   context = "landing",
   courseId = null,
   programId = null,
+  enableContextSelection = false,
   title = null,
   className = "",
   showTitle = true,
@@ -15,6 +16,17 @@ const ContactForm = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { user } = useAppContext();
+
+  const canSelectContext = Boolean(
+    enableContextSelection && context === "dashboard" && user,
+  );
+  const [selectedContext, setSelectedContext] = useState(context);
+  const [selectedCourseId, setSelectedCourseId] = useState(courseId);
+  const [selectedProgramId, setSelectedProgramId] = useState(programId);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [availableCourses, setAvailableCourses] = useState([]);
+  const [availablePrograms, setAvailablePrograms] = useState([]);
+
   const [formData, setFormData] = useState({
     name: user ? `${user.firstName} ${user.lastName}` : "",
     email: user?.email || "",
@@ -27,6 +39,81 @@ const ContactForm = ({
   const [error, setError] = useState("");
 
   const isRTL = i18n.language === "ar";
+
+  // Keep local selection in sync when used as contextual (course/program) form.
+  useEffect(() => {
+    if (!canSelectContext) {
+      setSelectedContext(context);
+      setSelectedCourseId(courseId);
+      setSelectedProgramId(programId);
+    }
+  }, [canSelectContext, context, courseId, programId]);
+
+  // Lazy-load enrolled courses/programs when user selects a context that needs it.
+  useEffect(() => {
+    const needsCourses = canSelectContext && selectedContext === "course";
+    const needsPrograms = canSelectContext && selectedContext === "program";
+    if (!user?.id || (!needsCourses && !needsPrograms)) return;
+
+    const load = async () => {
+      try {
+        setProfileLoading(true);
+        const response = await apiClient.get(`/Users/${user.id}/Profile`);
+        const courses = response.data?.data?.enrollments?.courses || [];
+        const programs = response.data?.data?.applications?.programs || [];
+
+        if (needsCourses) {
+          setAvailableCourses(Array.isArray(courses) ? courses : []);
+        }
+        if (needsPrograms) {
+          setAvailablePrograms(Array.isArray(programs) ? programs : []);
+        }
+      } catch {
+        if (needsCourses) setAvailableCourses([]);
+        if (needsPrograms) setAvailablePrograms([]);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    load();
+  }, [canSelectContext, selectedContext, user?.id]);
+
+  const effectiveContext = canSelectContext ? selectedContext : context;
+  const effectiveCourseId = canSelectContext ? selectedCourseId : courseId;
+  const effectiveProgramId = canSelectContext ? selectedProgramId : programId;
+
+  const courseOptions = useMemo(() => {
+    return (availableCourses || [])
+      .map((enrollment) => {
+        const course = enrollment?.Course;
+        const id = enrollment?.CourseId || course?.id;
+        const title =
+          i18n.language === "ar" && course?.Title_ar
+            ? course.Title_ar
+            : course?.Title;
+        return id
+          ? { id, title: title || t("contact.course", "Course") }
+          : null;
+      })
+      .filter(Boolean);
+  }, [availableCourses, i18n.language, t]);
+
+  const programOptions = useMemo(() => {
+    return (availablePrograms || [])
+      .map((application) => {
+        const program = application?.Program;
+        const id = application?.ProgramId || program?.id;
+        const title =
+          i18n.language === "ar" && (program?.title_ar || program?.Title_ar)
+            ? program.title_ar || program.Title_ar
+            : program?.title || program?.Title;
+        return id
+          ? { id, title: title || t("contact.program", "Program") }
+          : null;
+      })
+      .filter(Boolean);
+  }, [availablePrograms, i18n.language, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,15 +130,15 @@ const ContactForm = ({
         name: formData.name,
         email: formData.email,
         message: formData.message,
-        context,
+        context: effectiveContext,
         priority: formData.priority,
       };
 
-      if (context === "course" && courseId) {
-        payload.courseId = courseId;
+      if (effectiveContext === "course" && effectiveCourseId) {
+        payload.courseId = effectiveCourseId;
       }
-      if (context === "program" && programId) {
-        payload.programId = programId;
+      if (effectiveContext === "program" && effectiveProgramId) {
+        payload.programId = effectiveProgramId;
       }
 
       const response = await apiClient.post(post_link, payload);
@@ -85,7 +172,7 @@ const ContactForm = ({
   };
 
   const getContextTitle = () => {
-    switch (context) {
+    switch (effectiveContext) {
       case "course":
         return title || t("contact.courseHelp", "Need help with this course?");
       case "program":
@@ -101,7 +188,7 @@ const ContactForm = ({
   };
 
   const getContextSubtitle = () => {
-    switch (context) {
+    switch (effectiveContext) {
       case "course":
         return t(
           "contact.courseSubtitle",
@@ -185,6 +272,103 @@ const ContactForm = ({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {canSelectContext && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="concernContext"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t("contact.concernType", "Concern type")}
+              </label>
+              <select
+                id="concernContext"
+                value={selectedContext}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSelectedContext(value);
+                  if (value !== "course") setSelectedCourseId(null);
+                  if (value !== "program") setSelectedProgramId(null);
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={loading}
+              >
+                <option value="dashboard">
+                  {t("contact.concernGeneral", "General support")}
+                </option>
+                <option value="course">
+                  {t("contact.concernCourse", "A course")}
+                </option>
+                <option value="program">
+                  {t("contact.concernProgram", "A program")}
+                </option>
+              </select>
+            </div>
+
+            {selectedContext === "course" && (
+              <div>
+                <label
+                  htmlFor="courseId"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  {t("contact.selectCourse", "Select course")}
+                  <span className="text-red-500"> *</span>
+                </label>
+                <select
+                  id="courseId"
+                  value={selectedCourseId || ""}
+                  onChange={(e) => setSelectedCourseId(e.target.value || null)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={loading || profileLoading}
+                  required
+                >
+                  <option value="">
+                    {profileLoading
+                      ? t("contact.loading", "Loading...")
+                      : t("contact.chooseCourse", "Choose a course")}
+                  </option>
+                  {courseOptions.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {selectedContext === "program" && (
+              <div>
+                <label
+                  htmlFor="programId"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  {t("contact.selectProgram", "Select program")}
+                  <span className="text-red-500"> *</span>
+                </label>
+                <select
+                  id="programId"
+                  value={selectedProgramId || ""}
+                  onChange={(e) => setSelectedProgramId(e.target.value || null)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={loading || profileLoading}
+                  required
+                >
+                  <option value="">
+                    {profileLoading
+                      ? t("contact.loading", "Loading...")
+                      : t("contact.chooseProgram", "Choose a program")}
+                  </option>
+                  {programOptions.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
           <div>
             <label
@@ -276,6 +460,7 @@ const ContactForm = ({
             name="message"
             required
             rows={5}
+            maxLength={1000}
             value={formData.message}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
@@ -345,8 +530,9 @@ const ContactForm = ({
 
 ContactForm.propTypes = {
   context: PropTypes.oneOf(["landing", "dashboard", "course", "program"]),
-  courseId: PropTypes.number,
-  programId: PropTypes.number,
+  courseId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  programId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  enableContextSelection: PropTypes.bool,
   title: PropTypes.string,
   className: PropTypes.string,
   showTitle: PropTypes.bool,

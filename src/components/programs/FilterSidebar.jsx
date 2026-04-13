@@ -44,8 +44,7 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
           ...opts,
           universities: Array.isArray(universities) ? universities : [],
         });
-      } catch (error) {
-        console.error("Failed to fetch filter options:", error);
+      } catch {
         setOptions({
           countries: [],
           specialtiesPerCountry: {},
@@ -243,31 +242,6 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
           </div>
         </div>
 
-        {/* Country Filter */}
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-          <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
-            <Globe className="w-3.5 h-3.5 text-blue-600" />
-            {t("Country", "Country") || "Country"}
-          </label>
-          <select
-            value={localFilters.country}
-            onChange={(e) => handleLocalFilterChange("country", e.target.value)}
-            disabled={loading}
-            className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400"
-          >
-            <option value="">
-              {loading
-                ? t("Loading...", "Loading...")
-                : t("Select Country", "Select Country") || "Select Country"}
-            </option>
-            {options.countries.map((country, index) => (
-              <option key={`country-${index}`} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-        </div>
-
         {/* Price Filter */}
         <div className="bg-green-50 p-3 rounded-lg border border-green-200">
           <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-2">
@@ -384,7 +358,30 @@ const FilterSidebar = ({ filters, onApplyFilters, onReset }) => {
             ))}
           </select>
         </div>
-
+        {/* Country Filter */}
+        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+          <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">
+            <Globe className="w-3.5 h-3.5 text-blue-600" />
+            {t("Country", "Country") || "Country"}
+          </label>
+          <select
+            value={localFilters.country}
+            onChange={(e) => handleLocalFilterChange("country", e.target.value)}
+            disabled={loading}
+            className="w-full p-2 border border-gray-200 rounded-lg text-xs bg-white disabled:bg-gray-100 disabled:text-gray-400"
+          >
+            <option value="">
+              {loading
+                ? t("Loading...", "Loading...")
+                : t("Select Country", "Select Country") || "Select Country"}
+            </option>
+            {options.countries.map((country, index) => (
+              <option key={`country-${index}`} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* Specialty Filter */}
         <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
           <label className="flex items-center gap-2 text-xs font-semibold text-gray-900 mb-1.5">

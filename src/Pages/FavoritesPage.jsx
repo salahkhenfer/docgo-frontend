@@ -43,7 +43,10 @@ const FavoritesPage = () => {
           <p className="text-gray-600 text-lg">
             {user
               ? t("favorites.savedCourses", "Your saved courses and programs")
-              : t("favorites.savedCoursesLocal", "Your locally saved courses and programs")}
+              : t(
+                  "favorites.savedCoursesLocal",
+                  "Your locally saved courses and programs",
+                )}
           </p>
         </div>
 
@@ -67,7 +70,8 @@ const FavoritesPage = () => {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t("favorites.courses", "Courses")} ({favorites.courses.length})
+            {t("favorites.courses", "Apprentissage")} (
+            {favorites.courses.length})
           </button>
           <button
             onClick={() => setActiveTab("programs")}
@@ -77,7 +81,8 @@ const FavoritesPage = () => {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            {t("favorites.programs", "Programs")} ({favorites.programs.length})
+            {t("favorites.programs", "Études à l’étranger")} (
+            {favorites.programs.length})
           </button>
         </div>
 
@@ -97,7 +102,10 @@ const FavoritesPage = () => {
               {t("favorites.noFavorites", "No favorites yet")}
             </h3>
             <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
-              {t("favorites.startExploring", "Start exploring courses and programs to add them to your favorites!")}
+              {t(
+                "favorites.startExploring",
+                "Start exploring courses and programs to add them to your favorites!",
+              )}
             </p>
             <Link
               to="/Courses"
@@ -266,7 +274,9 @@ const FavoriteCard = ({ item, type }) => {
                 : "bg-blue-500/90 text-white"
             }`}
           >
-            {isProgram ? t("favorites.programs", "Programs") : t("favorites.courses", "Courses")}
+            {isProgram
+              ? t("favorites.programs", "Études à l’étranger")
+              : t("favorites.courses", "Apprentissage")}
           </span>
         </div>
 
@@ -363,7 +373,9 @@ const FavoriteCard = ({ item, type }) => {
           to={isProgram ? `/programs/${itemId}` : `/Courses/${itemId}`}
           className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
         >
-          {isProgram ? t("favorites.viewProgram", "View Program") : t("favorites.viewCourse", "View Course")}
+          {isProgram
+            ? t("favorites.viewProgram", "View Program")
+            : t("favorites.viewCourse", "View Course")}
         </Link>
       </div>
     </div>

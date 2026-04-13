@@ -36,6 +36,14 @@ const PaymentSuccessPage = () => {
   const itemType =
     location.state?.itemType || (courseId ? "course" : "program");
 
+  const courseAccessPath = (() => {
+    if (!courseId) return null;
+    const uploadType = String(itemData?.uploadType || "").toLowerCase();
+    return uploadType === "zip"
+      ? `/Courses/${courseId}/explore`
+      : `/Courses/${courseId}/watch`;
+  })();
+
   // Fetch admin contact info from public endpoint
   useEffect(() => {
     const fetchAdminContact = async () => {
@@ -74,7 +82,7 @@ const PaymentSuccessPage = () => {
           // Redirect based on item type
           const redirectPath =
             itemType === "course"
-              ? `/MyCourses/${courseId}`
+              ? courseAccessPath || `/Courses/${courseId}/watch`
               : `/my-applications`;
           navigate(redirectPath);
           return 0;
@@ -84,7 +92,15 @@ const PaymentSuccessPage = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [paymentData, itemData, courseId, programId, itemType, navigate]);
+  }, [
+    paymentData,
+    itemData,
+    courseId,
+    programId,
+    itemType,
+    navigate,
+    courseAccessPath,
+  ]);
 
   if (!paymentData || !itemData) {
     return null; // Will redirect
@@ -117,12 +133,20 @@ const PaymentSuccessPage = () => {
             {isCCP && (
               <div className="space-y-2">
                 <p className="text-gray-600">
-                  {t("paymentSuccess.ccpSubmitted", "Your CCP payment has been submitted for verification.")}
+                  {t(
+                    "paymentSuccess.ccpSubmitted",
+                    "Your CCP payment has been submitted for verification.",
+                  )}
                 </p>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                   <p className="text-sm text-yellow-800">
-                    <strong>{t("paymentSuccess.ccpImportant", "Important")}:</strong>{" "}
-                    {t("paymentSuccess.ccpVerifyTime", "We will verify your payment within 24 hours. You will receive an email confirmation once verified.")}
+                    <strong>
+                      {t("paymentSuccess.ccpImportant", "Important")}:
+                    </strong>{" "}
+                    {t(
+                      "paymentSuccess.ccpVerifyTime",
+                      "We will verify your payment within 24 hours. You will receive an email confirmation once verified.",
+                    )}
                   </p>
                 </div>
               </div>
@@ -193,11 +217,19 @@ const PaymentSuccessPage = () => {
               paymentData.status === "completed" ? (
                 <>
                   <Link
-                    to={`/MyCourses/${courseId}`}
+                    to={courseAccessPath || `/Courses/${courseId}/watch`}
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                   >
                     <span className="flex items-center justify-center gap-2">
-                      <span>{t("paymentSuccess.startLearning", "Start Learning")}</span>
+                      <span>
+                        {String(itemData?.uploadType || "").toLowerCase() ===
+                        "zip"
+                          ? t(
+                              "paymentSuccess.exploreCourse",
+                              "Explore the course",
+                            )
+                          : t("paymentSuccess.startLearning", "Start Learning")}
+                      </span>
                       <FaArrowRight />
                     </span>
                   </Link>
@@ -215,7 +247,12 @@ const PaymentSuccessPage = () => {
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                   >
                     <span className="flex items-center justify-center gap-2">
-                      <span>{t("paymentSuccess.viewCourseDetails", "View Course Details")}</span>
+                      <span>
+                        {t(
+                          "paymentSuccess.viewCourseDetails",
+                          "View Course Details",
+                        )}
+                      </span>
                       <FaArrowRight />
                     </span>
                   </Link>
@@ -226,7 +263,9 @@ const PaymentSuccessPage = () => {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <FaDownload />
-                      <span>{t("paymentSuccess.saveReceipt", "Save Receipt")}</span>
+                      <span>
+                        {t("paymentSuccess.saveReceipt", "Save Receipt")}
+                      </span>
                     </span>
                   </button>
                 </>
@@ -238,7 +277,12 @@ const PaymentSuccessPage = () => {
                   className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
                 >
                   <span className="flex items-center justify-center gap-2">
-                    <span>{t("paymentSuccess.viewApplications", "View My Applications")}</span>
+                    <span>
+                      {t(
+                        "paymentSuccess.viewApplications",
+                        "View My Applications",
+                      )}
+                    </span>
                     <FaArrowRight />
                   </span>
                 </Link>
@@ -256,14 +300,20 @@ const PaymentSuccessPage = () => {
             >
               {itemType === "course"
                 ? t("paymentSuccess.browseMoreCourses", "Browse More Courses")
-                : t("paymentSuccess.browseMorePrograms", "Browse More Programs")}
+                : t(
+                    "paymentSuccess.browseMorePrograms",
+                    "Browse More Programs",
+                  )}
             </Link>
           </div>
 
           {/* Support Info */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500 mb-3">
-              {t("paymentSuccess.needHelp", "Need help? Contact our support team:")}
+              {t(
+                "paymentSuccess.needHelp",
+                "Need help? Contact our support team:",
+              )}
             </p>
             <div className="space-y-2">
               {adminContact.phone && (
@@ -329,8 +379,14 @@ const PaymentSuccessPage = () => {
             <div className="px-6 pb-6 pt-4">
               <p className="text-sm text-gray-500 mb-4">
                 {itemType === "course"
-                  ? t("paymentSuccess.paymentContextCourse", "Your message will be tagged as payment support for the course.")
-                  : t("paymentSuccess.paymentContextProgram", "Your message will be tagged as payment support for the program.")}
+                  ? t(
+                      "paymentSuccess.paymentContextCourse",
+                      "Your message will be tagged as payment support for the course.",
+                    )
+                  : t(
+                      "paymentSuccess.paymentContextProgram",
+                      "Your message will be tagged as payment support for the program.",
+                    )}
               </p>
               <ContactForm
                 context="payment"

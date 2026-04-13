@@ -108,42 +108,6 @@ export const useProgram = (programId) => {
 
         // Normalize program data structure
         if (response && response.program) {
-          // Ensure objectives is an array if it exists
-          if (response.program.objectives) {
-            if (typeof response.program.objectives === "string") {
-              try {
-                response.program.objectives = JSON.parse(
-                  response.program.objectives,
-                );
-              } catch {
-                response.program.objectives = [response.program.objectives];
-              }
-            }
-            if (!Array.isArray(response.program.objectives)) {
-              response.program.objectives = [response.program.objectives];
-            }
-          } else {
-            response.program.objectives = [];
-          }
-
-          // Ensure benefits is an array if it exists
-          if (response.program.benefits) {
-            if (typeof response.program.benefits === "string") {
-              try {
-                response.program.benefits = JSON.parse(
-                  response.program.benefits,
-                );
-              } catch {
-                response.program.benefits = [response.program.benefits];
-              }
-            }
-            if (!Array.isArray(response.program.benefits)) {
-              response.program.benefits = [response.program.benefits];
-            }
-          } else {
-            response.program.benefits = [];
-          }
-
           // Ensure requirements is an array if it exists
           if (response.program.requirements) {
             if (typeof response.program.requirements === "string") {
@@ -331,8 +295,11 @@ export const useProgram = (programId) => {
       return;
     }
 
-    // Check if already applied (you might want to add this check)
-    if (programData?.userStatus?.hasApplied) {
+    // Check if already applied (do not block re-apply when status is rejected)
+    if (
+      programData?.userStatus?.hasApplied &&
+      programData.userStatus.applicationStatus !== "rejected"
+    ) {
       const status = programData.userStatus.applicationStatus;
 
       if (status === "approved") {
@@ -492,8 +459,11 @@ export const useProgram = (programId) => {
   }, [fetchProgramData]);
 
   // Computed values
-  const hasApplied = programData?.userStatus?.hasApplied || false;
   const applicationStatus = programData?.userStatus?.applicationStatus || null;
+  // Treat a rejected application as re-applicable (legacy admin-unassign used to set rejected)
+  const hasApplied =
+    (programData?.userStatus?.hasApplied || false) &&
+    applicationStatus !== "rejected";
   const isFree =
     (programData?.program?.discountPrice ||
       programData?.program?.price ||
@@ -504,8 +474,6 @@ export const useProgram = (programId) => {
     programData?.program?.price ||
     programData?.program?.Price ||
     0;
-  const currency =
-    programData?.program?.Currency || programData?.program?.currency || "DZD";
   const hasError = !!error;
   const hasData = !!programData;
 
@@ -533,7 +501,6 @@ export const useProgram = (programId) => {
     applicationStatus,
     isFree,
     programPrice,
-    currency,
     hasData,
 
     // Payment status

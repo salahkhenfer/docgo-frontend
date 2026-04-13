@@ -67,8 +67,12 @@ const AdvancedSearchHero = ({ cms }) => {
           typesPerCountrySpecialty,
         });
       }
-    } catch (error) {
-      console.error("Error loading register options:", error);
+    } catch {
+      setOptions({
+        countries: [],
+        specialtiesPerCountry: {},
+        typesPerCountrySpecialty: {},
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +116,6 @@ const AdvancedSearchHero = ({ cms }) => {
       setSearchResults(response.data?.programs || []);
       setShowModal(true);
     } catch (error) {
-      console.error("Error searching programs:", error);
       setSearchError(
         error.response?.data?.message || "Error fetching programs",
       );
