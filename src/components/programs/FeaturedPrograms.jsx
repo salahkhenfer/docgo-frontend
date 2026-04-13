@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import ImageWithFallback from "../Common/ImageWithFallback";
 import { buildApiUrl } from "../../utils/apiBaseUrl";
+import { getApiErrorMessage } from "../../utils/apiErrorTranslate";
 
 const FeaturedPrograms = ({
   limit = 6,
@@ -50,7 +51,7 @@ const FeaturedPrograms = ({
         );
       }
     } catch (err) {
-      setError(err.message);
+      setError(getApiErrorMessage(err, t));
       setPrograms([]);
     } finally {
       setLoading(false);

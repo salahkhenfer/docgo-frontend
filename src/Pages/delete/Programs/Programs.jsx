@@ -20,6 +20,7 @@ import { clientProgramsAPI } from "../../../API/Programs";
 import { useTranslation } from "react-i18next";
 import InlineLoading from "../../../InlineLoading";
 import { buildApiUrl } from "../../../utils/apiBaseUrl";
+import { getApiErrorMessage } from "../../../utils/apiErrorTranslate";
 
 const resolveProgramMediaUrl = (mediaPath) => {
   if (!mediaPath) return null;
@@ -95,7 +96,7 @@ const Programs = () => {
         throw new Error(response.message || "Failed to fetch programs");
       }
     } catch (err) {
-      setError(err.message);
+      setError(getApiErrorMessage(err, t, t("error", "Error")));
       setPrograms([]);
     } finally {
       setLoading(false);

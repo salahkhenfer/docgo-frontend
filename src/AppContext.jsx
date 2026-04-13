@@ -7,6 +7,10 @@ import {
   useMemo,
 } from "react";
 import apiClient from "./utils/apiClient";
+import {
+  getApiErrorMessage,
+  translateApiError,
+} from "./utils/apiErrorTranslate";
 
 const AppContext = createContext();
 
@@ -308,13 +312,14 @@ export const AppProvider = ({ children }) => {
           }
           return {
             success: false,
-            message: response.data?.message || "Login failed",
+            message:
+              translateApiError(response.data?.message) || "Login failed",
           };
         }
       } catch (error) {
         return {
           success: false,
-          message: error.response?.data?.message || "Login failed",
+          message: getApiErrorMessage(error),
         };
       }
     },
@@ -332,13 +337,14 @@ export const AppProvider = ({ children }) => {
       } else {
         return {
           success: false,
-          message: response.data?.message || "Registration failed",
+          message:
+            translateApiError(response.data?.message) || "Registration failed",
         };
       }
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || "Registration failed",
+        message: getApiErrorMessage(error) || "Registration failed",
       };
     }
   }, []);

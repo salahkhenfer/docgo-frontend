@@ -45,7 +45,7 @@ export default function CourseResources() {
     setLoadingPdfPreview(true);
     setViewingPdfBlobUrl(null);
 
-    axios
+    apiClient
       .get(viewingPdf.url, { responseType: "blob" })
       .then((response) => {
         if (!active) return;

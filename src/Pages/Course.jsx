@@ -929,7 +929,7 @@ export const Course = () => {
         {/* Video Modal */}
         {showVideo && currentVideo && (
           <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-            <div className="bg-black rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden">
+            <div className="bg-black rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between p-4 bg-gray-900">
                 <h3 className="text-lg font-semibold text-white">
                   {currentVideo.title || t("Course Video", "Course Video")}

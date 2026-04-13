@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import apiClient from "../utils/apiClient";
+import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 
 /**
  * Custom hook to fetch homepage content from database
@@ -240,7 +241,7 @@ export const useHomePageContent = () => {
           filterStudyDomains: [],
           filterStudyLocations: [],
         });
-        setError(err.message);
+        setError(getApiErrorMessage(err, t));
       } finally {
         setLoading(false);
       }

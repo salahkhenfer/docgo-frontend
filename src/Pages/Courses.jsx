@@ -21,6 +21,7 @@ import FilterSidebar from "../components/courses/FilterSidebar";
 import { LoadingSpinner } from "../components/UI/LoadingSpinner";
 import ImageWithFallback from "../components/Common/ImageWithFallback";
 import { buildApiUrl } from "../utils/apiBaseUrl";
+import { getApiErrorMessage } from "../utils/apiErrorTranslate";
 
 // Stats Overview Component
 function StatsOverview({ totalCourses, featuredCourses, totalCategories }) {
@@ -197,11 +198,14 @@ export default function Courses() {
         }
       } catch (err) {
         setError(
-          err.message ||
+          getApiErrorMessage(
+            err,
+            t,
             t(
               "An error occurred while fetching courses",
               "An error occurred while fetching courses",
             ),
+          ),
         );
         setCourses([]);
         setPagination((prev) => ({

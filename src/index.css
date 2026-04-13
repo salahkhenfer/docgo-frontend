@@ -160,3 +160,9 @@ body {
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;
 }
+
+/* SweetAlert2: allow scrolling inside popup on small screens */
+.swal2-popup {
+  max-height: 90vh !important;
+  overflow: auto !important;
+}

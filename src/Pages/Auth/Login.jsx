@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import apiClient from "../../utils/apiClient";
 import loginImage from "../../assets/login.png";
+import { getApiErrorMessage } from "../../utils/apiErrorTranslate";
 const Login = () => {
   const backgroundImage = loginImage;
   const { t } = useTranslation();
@@ -102,7 +103,11 @@ const Login = () => {
         });
       } catch (err) {
         setError(
-          err.message || t("auth.loginError", "An error occurred during login"),
+          getApiErrorMessage(
+            err,
+            t,
+            t("auth.loginError", "An error occurred during login"),
+          ),
         );
       } finally {
         setLoading(false);
