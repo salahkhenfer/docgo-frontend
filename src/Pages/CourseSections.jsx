@@ -24,6 +24,7 @@ import VideoPlayer from "../components/Common/VideoPlayer";
 import RichTextDisplay from "../components/Common/RichTextEditor/RichTextDisplay";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
+import useScrollLock from "../hooks/useScrollLock";
 import MainLoading from "../MainLoading";
 import { buildApiUrl, getApiBaseUrl } from "../utils/apiBaseUrl";
 import Certificate from "./Certificate";
@@ -1594,10 +1595,12 @@ export function CourseSections() {
     allQuizItems.length === 0 ||
     allQuizItems.every((qi) => completedItems.has(String(qi.id)));
 
+  useScrollLock(sidebarOpen);
+
   return (
     <div className="w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
       {/* Mobile header */}
-      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50 flex items-center justify-between">
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-[999] flex items-center justify-between">
         <button
           onClick={() => setSidebarOpen(true)}
           className="p-2 rounded-lg text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all"
@@ -1626,14 +1629,14 @@ export function CourseSections() {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[998]"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Mobile sidebar panel */}
       <div
-        className={`md:hidden fixed top-0 left-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 overflow-y-auto px-5 ${
+        className={`md:hidden fixed top-0 left-0 h-[100dvh] w-80 max-w-[90vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-[999] overflow-y-auto overscroll-contain px-5 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

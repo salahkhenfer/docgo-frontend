@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useAppContext } from "../../AppContext";
 import apiClient from "../../services/apiClient";
+import useScrollLock from "../../hooks/useScrollLock";
 
 const UserSidebar = ({ isOpen, onClose }) => {
   const { t, i18n } = useTranslation();
@@ -31,6 +32,8 @@ const UserSidebar = ({ isOpen, onClose }) => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   const isRTL = i18n.language === "ar";
+
+  useScrollLock(isOpen);
 
   const handleMobileNavigate = () => {
     if (window.innerWidth < 1024) {
@@ -176,7 +179,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 lg:hidden "
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 z-[998] lg:hidden"
           onClick={onClose}
         />
       )}
@@ -186,7 +189,7 @@ const UserSidebar = ({ isOpen, onClose }) => {
         className={`fixed top-5 ${
           isRTL ? "right-0" : "left-0"
         } flex flex-col w-64 bg-white border-r border-gray-200
-            z-40 transform transition-transform duration-300 ease-in-out  overflow-auto
+            z-[999] transform transition-transform duration-300 ease-in-out overflow-y-auto overscroll-contain
             lg:translate-x-0   ${
               isOpen
                 ? "translate-x-0"

@@ -15,6 +15,7 @@ function CoursesSection({ featuredCourses, latestCourses }) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
   const carouselRef = useRef(null);
+  const scrollRafRef = useRef(null);
 
   // Use featured courses or fallback to latest courses or null
   const coursesToDisplay =
@@ -40,10 +41,19 @@ function CoursesSection({ featuredCourses, latestCourses }) {
   }, []);
 
   const handleScroll = () => {
-    if (carouselRef.current) {
+    if (!carouselRef.current) return;
+
+    if (scrollRafRef.current != null) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      if (!carouselRef.current) return;
+
       const scrollPos = Math.abs(carouselRef.current.scrollLeft);
-      setScrollPosition(scrollPos);
-    }
+      setScrollPosition((prev) => {
+        // Avoid tiny updates that just cause extra renders
+        return Math.abs(prev - scrollPos) < 1 ? prev : scrollPos;
+      });
+    });
   };
 
   const handleMouseDown = (e) => {
@@ -75,9 +85,15 @@ function CoursesSection({ featuredCourses, latestCourses }) {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    carousel.addEventListener("scroll", handleScroll);
+    carousel.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => carousel.removeEventListener("scroll", handleScroll);
+    return () => {
+      carousel.removeEventListener("scroll", handleScroll);
+      if (scrollRafRef.current != null) {
+        cancelAnimationFrame(scrollRafRef.current);
+        scrollRafRef.current = null;
+      }
+    };
   }, []);
 
   const handleScrollButton = (direction) => {

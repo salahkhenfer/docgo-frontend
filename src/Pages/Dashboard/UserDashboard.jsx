@@ -132,7 +132,7 @@ const UserDashboard = () => {
         <div className={`flex-1 w-full ${isRTL ? "lg:me-64" : "lg:ms-64"}`}>
           {/* <Navigation /> */}
           {/* Mobile header with menu button */}
-          <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30 flex items-center">
+          <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-[999] flex items-center">
             <button
               onClick={() => setSidebarOpen(true)}
               className="text-gray-600 hover:text-gray-900"

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { CourseSidebar } from "./CourseSidebar";
 import { getCourseDetails } from "../../../API/Courses";
+import useScrollLock from "../../../hooks/useScrollLock";
 
 function AllContentVideosCourse() {
   const { courseId } = useParams();
@@ -24,10 +25,12 @@ function AllContentVideosCourse() {
     setSidebarOpen(!sidebarOpen);
   };
 
+  useScrollLock(sidebarOpen);
+
   return (
     <div className="flex w-full flex-col bg-white min-h-screen">
       {/* Mobile Header with Sidebar Toggle */}
-      <div className="md:hidden   bg-white border-b border-gray-200 px-4 py-3 sticky top-0=">
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-[999]">
         <div className="flex  items-center justify-between">
           <h1 className="text-lg font-semibold text-gray-800">
             Course Content
@@ -66,7 +69,7 @@ function AllContentVideosCourse() {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
-          className="md:hidden top-10 sticky inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[998]"
           onClick={toggleSidebar}
         />
       )}
@@ -81,7 +84,7 @@ function AllContentVideosCourse() {
 
           {/* Mobile Sidebar */}
           <div
-            className={`md:hidden fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
+            className={`md:hidden fixed top-0 left-0 h-[100dvh] w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[999] overscroll-contain ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
@@ -89,7 +92,7 @@ function AllContentVideosCourse() {
             <div className="h-full overflow-y-auto pt-16">
               <button
                 onClick={toggleSidebar}
-                className="p-2 rounded-md sticky  z-50 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-md sticky top-3 z-[999] text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
                 aria-label="Toggle course menu"
               >
                 <svg

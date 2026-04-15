@@ -129,12 +129,10 @@ function LandingPage() {
                 </Reveal>
               )}
               {show("showFeaturedCourses") && (
-                <Reveal>
-                  <CoursesSection
-                    featuredCourses={homeData?.featuredCourses}
-                    latestCourses={homeData?.latestCourses}
-                  />
-                </Reveal>
+                <CoursesSection
+                  featuredCourses={homeData?.featuredCourses}
+                  latestCourses={homeData?.latestCourses}
+                />
               )}
               {show("showFeaturedPrograms") && (
                 <Reveal>

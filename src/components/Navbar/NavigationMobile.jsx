@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { BsBell, BsBellFill, BsHeart, BsHeartFill } from "react-icons/bs";
@@ -11,6 +11,7 @@ import { useFavorites } from "../../hooks/useFavorite";
 import { useUserNavigation } from "../../context/UserNavigationContext";
 import NavBarDropDown from "./NavBarDropDown";
 import { getApiBaseUrl } from "../../utils/apiBaseUrl";
+import useScrollLock from "../../hooks/useScrollLock";
 
 function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
   const { t } = useTranslation();
@@ -18,7 +19,6 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const { user, isAuth } = useAppContext();
   const { getActiveNavItem } = useUserNavigation();
-  const navigate = useNavigate();
   const location = useLocation();
 
   const apiBase = getApiBaseUrl();
@@ -35,31 +35,12 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
 
   const { totalCount } = useFavorites();
 
-  const handleScrollToSection = (sectionId) => {
-    setIsOpen(false);
-    if (location.pathname === "/") {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    } else {
-      navigate("/");
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }, 100);
-    }
-  };
+  useScrollLock(isOpen);
 
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <div className="block lg:hidden ">
+    <div className="block lg:hidden sticky top-0 z-[999]">
       <div className="border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-md">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="min-w-0 flex-1" onClick={closeMobileMenu}>
@@ -155,8 +136,8 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
       </div>
 
       {isOpen && (
-        <div className="absolute w-full border-t border-gray-100 bg-white/95 shadow-xl backdrop-blur-md z-[9000] animate-in slide-in-from-top-3 fade-in duration-300">
-          <div className="px-6 py-4">
+        <div className="absolute left-0 right-0 w-full border-t border-gray-100 bg-white/95 shadow-xl backdrop-blur-md z-[999] animate-in slide-in-from-top-3 fade-in duration-300">
+          <div className="px-6 py-4 max-h-[calc(100dvh-7.5rem)] overflow-y-auto overscroll-contain">
             <div className="flex flex-col space-y-2">
               {user && isAuth && (
                 <Link
@@ -176,7 +157,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                 </Link>
               )}
 
-              {user && isAuth && (
+              {/* {user && isAuth && (
                 <>
                   <Link
                     to="/dashboard/my-learning"
@@ -217,7 +198,7 @@ function NavigationMobile({ branding = null, unreadNotifications = 0 }) {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-cyan-50 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                   </Link>
                 </>
-              )}
+              )} */}
 
               <Link
                 to="/"

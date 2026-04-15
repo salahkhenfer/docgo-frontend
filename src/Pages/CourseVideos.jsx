@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EnrollmentAPI } from "../API/Enrollment";
 import { useAppContext } from "../AppContext";
 import { useCourse } from "../hooks/useCourse";
+import useScrollLock from "../hooks/useScrollLock";
 import MainLoading from "../MainLoading";
 import Certificate from "./Certificate";
 import CourseResources from "./CourseResources";
@@ -38,6 +39,8 @@ export function CourseVideos() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showResources, setShowResources] = useState(false);
+
+  useScrollLock(sidebarOpen);
   const [showCertificate, setShowCertificate] = useState(false);
   const [resolvedVideoUrl, setResolvedVideoUrl] = useState(null);
 
@@ -531,7 +534,7 @@ export function CourseVideos() {
   return (
     <div className=" w-full flex-col bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
       {/* Mobile Header with Sidebar Toggle */}
-      <div className="md:hidden bg-transparent mx-auto   px-4 py-3 sticky bottom-0 z-50 ">
+      <div className="md:hidden bg-transparent mx-auto px-4 py-3 sticky bottom-0 z-[998]">
         <div className="flex items-center justify-between">
           <button
             onClick={toggleSidebar}
@@ -567,7 +570,7 @@ export function CourseVideos() {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed  inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[997]"
           onClick={toggleSidebar}
         />
       )}
@@ -827,7 +830,7 @@ export function CourseVideos() {
 
           {/* Mobile Sidebar */}
           <div
-            className={`md:hidden mt-20 fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
+            className={`md:hidden mt-20 fixed top-0 left-0 h-[100dvh] w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[999] overscroll-contain ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
@@ -1040,7 +1043,7 @@ export function CourseVideos() {
               <div className="flex flex-col w-full max-md:mt-8 max-md:max-w-full">
                 {/* Mobile Sidebar */}
                 <div
-                  className={`md:hidden fixed top-0 left-0 h-full w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${
+                  className={`md:hidden fixed top-0 left-0 h-[100dvh] w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[999] overscroll-contain ${
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                   }`}
                 >

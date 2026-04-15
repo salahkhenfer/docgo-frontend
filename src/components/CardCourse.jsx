@@ -66,8 +66,8 @@ const CardCourse = ({ id, url, title, description, price }) => {
         ) : (
           <img
             className={`w-full h-full object-cover transition-all duration-700 ${
-              ImageLoading ? "opacity-0 scale-110" : "opacity-100 scale-100"
-            } group-hover:scale-110`}
+              ImageLoading ? "opacity-0 scale-110" : "opacity-100 scale-100"}
+            } `}
             src={url}
             alt={title}
             onLoad={handleImageLoad}
@@ -92,29 +92,30 @@ const CardCourse = ({ id, url, title, description, price }) => {
         <h3 className="text-base sm:text-lg font-bold text-gray-800 line-clamp-2 leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
           {title}
         </h3>
-
         {/* Description with better styling */}
         {/* <p className="text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed flex-1">
           {description || t("CourseDescription", "The UI/UX design specialization takes a design-centered approach...")}
         </p> */}
-
         {/* Enhanced button with arrow */}
-        <motion.div
-          className="mt-2"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
+        {/* <motion.div */}\
+        <div className="mt-2">
+          {/* // whileHover={{ scale: 1.05 }}
+          // whileTap={{ scale: 0.95 }} >
+          */}
           <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-            <span className="text-sm sm:text-base">{t("ViewMoreDetails", "View more details")}</span>
+            <span className="text-sm sm:text-base">
+              {t("ViewMoreDetails", "View more details")}
+            </span>
             <ArrowRight
               className={`w-4 h-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`}
             />
           </button>
-        </motion.div>
+          {/* </motion.div> */}
+        </div>
       </div>
 
       {/* Bottom decorative line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transform scale-x-0  transition-transform duration-500" />
     </motion.div>
   );
 };

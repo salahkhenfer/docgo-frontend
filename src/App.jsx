@@ -219,7 +219,7 @@ function App() {
 
   return (
     <UserNavigationProvider>
-      <div className="relative">
+      <div className="relative pt-8 lg:pt-0">
         <ScrollToTopOnRouteChange />
         <Seo
           title={seo.title}
@@ -231,6 +231,7 @@ function App() {
           siteName={brand}
         />
         {!shouldHideNavAndFooter && <Navigation branding={siteSettings} />}
+        {/* <div className="pt-28 lg:pt-0"> */}
         <div className="pt-28 lg:pt-0">
           <Outlet />
         </div>
