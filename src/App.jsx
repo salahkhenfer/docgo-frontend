@@ -14,6 +14,7 @@ import { getApiBaseUrl } from "./utils/apiBaseUrl";
 import ScrollToTopOnRouteChange from "./components/Common/ScrollToTopOnRouteChange";
 
 const API_URL_FALLBACK = getApiBaseUrl();
+// const API_URL_FALLBACK = getApiBaseUrl();
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -69,6 +70,20 @@ function App() {
   const brand = siteSettings?.brandName || "healthpathglobal";
 
   const seo = (() => {
+    // if (pathname === "/") {
+    //   return {
+    //     title: "Home",
+    //     description: `${brand}: explore l'apprentissage et les études à l’étranger, enroll, and learn online.`,
+    //   };
+    // }
+
+    // if (pathname === "/courses") {
+    //   return {
+    //     title: "Apprentissage",
+    //     description: `Parcourez tous les apprentissages disponibles sur ${brand}.`,
+    //   };
+    // }
+
     if (pathname === "/") {
       return {
         title: "Home",
